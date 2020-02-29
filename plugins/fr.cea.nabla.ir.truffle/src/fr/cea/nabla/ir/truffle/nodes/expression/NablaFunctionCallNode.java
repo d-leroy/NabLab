@@ -1,0 +1,50 @@
+package fr.cea.nabla.ir.truffle.nodes.expression;
+
+import com.oracle.truffle.api.CompilerAsserts;
+import com.oracle.truffle.api.Truffle;
+import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.instrumentation.StandardTags;
+import com.oracle.truffle.api.instrumentation.Tag;
+import com.oracle.truffle.api.nodes.DirectCallNode;
+import com.oracle.truffle.api.nodes.ExplodeLoop;
+
+import fr.cea.nabla.ir.truffle.nodes.NablaFunctionNode;
+import fr.cea.nabla.ir.truffle.values.NablaValue;
+
+public class NablaFunctionCallNode extends NablaExpressionNode {
+
+	@Child
+	private NablaFunctionNode functionNode;
+	@Children
+	private final NablaExpressionNode[] argumentNodes;
+	@Child
+	private DirectCallNode callNode;
+
+	public NablaFunctionCallNode(NablaFunctionNode functionNode, NablaExpressionNode[] argumentNodes) {
+		this.functionNode = functionNode;
+		this.argumentNodes = argumentNodes;
+		this.callNode = Truffle.getRuntime().createDirectCallNode(Truffle.getRuntime().createCallTarget(functionNode));
+	}
+
+	@ExplodeLoop
+	@Override
+	public NablaValue executeGeneric(VirtualFrame frame) {
+		CompilerAsserts.compilationConstant(argumentNodes.length);
+
+		Object[] argumentValues = new Object[argumentNodes.length];
+		for (int i = 0; i < argumentNodes.length; i++) {
+			argumentValues[i] = argumentNodes[i].executeGeneric(frame);
+		}
+
+		return (NablaValue) callNode.call(argumentValues);
+	}
+
+	@Override
+	public boolean hasTag(Class<? extends Tag> tag) {
+		if (tag == StandardTags.CallTag.class) {
+			return true;
+		}
+		return super.hasTag(tag);
+	}
+
+}

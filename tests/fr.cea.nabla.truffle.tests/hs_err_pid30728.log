@@ -1,0 +1,869 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00007f8d49e84917, pid=30728, tid=0x00007f8d3051d700
+#
+# JRE version: OpenJDK Runtime Environment (8.0_242-b06) (build 1.8.0_242-b06)
+# Java VM: OpenJDK 64-Bit Server VM (25.242-b06-jvmci-20.0-b02 mixed mode linux-amd64 compressed oops)
+# Problematic frame:
+# V  [libjvm.so+0xa42917]  SignatureIterator::expect(char)+0x17
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.java.com/bugreport/crash.jsp
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00007f8d4414a800):  VMThread [stack: 0x00007f8d3041e000,0x00007f8d3051e000] [id=30741]
+
+siginfo: si_signo: 11 (SIGSEGV), si_code: 128 (SI_KERNEL), si_addr: 0x0000000000000000
+
+Registers:
+RAX=0x00007f8d4a3afbd8, RBX=0x00007f8d3051bb40, RCX=0xb6003db80919002f, RDX=0x0000000000000000
+RSP=0x00007f8d3051b9c0, RBP=0x00007f8d3051bae0, RSI=0x0000000000000028, RDI=0x00007f8d3051bb40
+R8 =0x00000000000000cc, R9 =0x0000000000000000, R10=0x00007f8d4af13de7, R11=0x00000000000000b1
+R12=0x00007f8d3051bb30, R13=0x00007f8d3051bb40, R14=0x0000000000000001, R15=0x00000000000000cc
+RIP=0x00007f8d49e84917, EFLAGS=0x0000000000010206, CSGSFS=0x002b000000000033, ERR=0x0000000000000000
+  TRAPNO=0x000000000000000d
+
+Top of Stack: (sp=0x00007f8d3051b9c0)
+0x00007f8d3051b9c0:   00000006900fa140 00000006900fa1a8
+0x00007f8d3051b9d0:   00000006900fa210 00000006900fa280
+0x00007f8d3051b9e0:   00000006900fa280 00000006900fa2e8
+0x00007f8d3051b9f0:   00007f8d4b0c8030 00007f8d4b0c8030
+0x00007f8d3051ba00:   00000006900fa430 00000006900fa4a0
+0x00007f8d3051ba10:   00000006900fa508 00000006900fa570
+0x00007f8d3051ba20:   000000068fc26ee0 00000006900fa5d8
+0x00007f8d3051ba30:   00000006900fa640 00000006900fa6a8
+0x00007f8d3051ba40:   00000006900fa710 00000006900e4778
+0x00007f8d3051ba50:   00000006900fa778 00000006900fa7f0
+0x00007f8d3051ba60:   00000006900fa858 00000006900fa8c8
+0x00007f8d3051ba70:   00000006900fa930 00000006900fa9a0
+0x00007f8d3051ba80:   00000006900faa10 00000006900faa78
+0x00007f8d3051ba90:   00000006900faae0 00000006900fab48
+0x00007f8d3051baa0:   00000006900fabb0 00000006900fac18
+0x00007f8d3051bab0:   00000006900fac80 000000068fc25ba0
+0x00007f8d3051bac0:   00007f8d3051bae0 00007f8d49e83462
+0x00007f8d3051bad0:   000000068fef5c28 0000000000000001
+0x00007f8d3051bae0:   00007f8d3051bb10 00007f8d49e84d64
+0x00007f8d3051baf0:   00007f8d3051c260 00007f8d3051bb30
+0x00007f8d3051bb00:   00007f8d3051bb40 0000000000000001
+0x00007f8d3051bb10:   00007f8d3051bfb0 00007f8d49a29712
+0x00007f8d3051bb20:   00000006900fb038 00000006900fb0a0
+0x00007f8d3051bb30:   00000000460000c9 00000006900fb198
+0x00007f8d3051bb40:   00007f8d4a3afbd8 b6003db80919002f
+0x00007f8d3051bb50:   0000000000000000 000000060000000c
+0x00007f8d3051bb60:   00007f8d3051bb30 0000000600000000
+0x00007f8d3051bb70:   4fffffff4fffffff 000000064fffffff
+0x00007f8d3051bb80:   000000068fd50340 00000006900fb538
+0x00007f8d3051bb90:   00000006900fb5a0 00000006900fb608
+0x00007f8d3051bba0:   00000006900fb670 00000006900fb6e0
+0x00007f8d3051bbb0:   00000006900fb748 00000006900fb7b0 
+
+Instructions: (pc=0x00007f8d49e84917)
+0x00007f8d49e848f7:   00 00 00 5d c3 0f 1f 40 00 55 48 89 e5 53 48 89
+0x00007f8d49e84907:   fb 48 81 ec 18 01 00 00 48 63 57 10 48 8b 4f 08
+0x00007f8d49e84917:   40 3a 74 11 08 48 89 d0 74 39 40 0f be d6 48 8d
+0x00007f8d49e84927:   bd e0 fe ff ff 48 8d 35 09 b7 18 00 31 c0 e8 86 
+
+Register to memory mapping:
+
+RAX=0x00007f8d4a3afbd8: <offset 0xf6dbd8> in /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/server/libjvm.so at 0x00007f8d49442000
+RBX=0x00007f8d3051bb40 is an unknown value
+RCX=0xb6003db80919002f is an unknown value
+RDX=0x0000000000000000 is an unknown value
+RSP=0x00007f8d3051b9c0 is an unknown value
+RBP=0x00007f8d3051bae0 is an unknown value
+RSI=0x0000000000000028 is an unknown value
+RDI=0x00007f8d3051bb40 is an unknown value
+R8 =0x00000000000000cc is an unknown value
+R9 =0x0000000000000000 is an unknown value
+R10=0x00007f8d4af13de7 is an unknown value
+R11=0x00000000000000b1 is an unknown value
+R12=0x00007f8d3051bb30 is an unknown value
+R13=0x00007f8d3051bb40 is an unknown value
+R14=0x0000000000000001 is an unknown value
+R15=0x00000000000000cc is an unknown value
+
+
+Stack: [0x00007f8d3041e000,0x00007f8d3051e000],  sp=0x00007f8d3051b9c0,  free space=1014k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [libjvm.so+0xa42917]  SignatureIterator::expect(char)+0x17
+V  [libjvm.so+0xa42d64]  SignatureIterator::iterate_returntype()+0x24
+V  [libjvm.so+0x5e7712]  GenerateOopMap::do_method(int, int, int, int)+0x72
+V  [libjvm.so+0x5e888f]  GenerateOopMap::interp_bb(BasicBlock*)+0x16f
+V  [libjvm.so+0x5ec39d]  GenerateOopMap::do_interpretation()+0xbd
+V  [libjvm.so+0x5ec77b]  GenerateOopMap::compute_map(Thread*)+0x29b
+V  [libjvm.so+0x96072f]  OopMapForCacheEntry::compute_map(Thread*)+0x8f
+V  [libjvm.so+0x962438]  OopMapCacheEntry::fill(methodHandle, int)+0x2a8
+V  [libjvm.so+0x9633b7]  OopMapCache::compute_one_oop_map(methodHandle, int, InterpreterOopMap*)+0x127
+V  [libjvm.so+0x963c46]  OopMapCache::lookup(methodHandle, int, InterpreterOopMap*) const+0x5c6
+V  [libjvm.so+0x647213]  InstanceKlass::mask_for(methodHandle, int, InterpreterOopMap*)+0x83
+V  [libjvm.so+0x8f4fe1]  Method::mask_for(int, InterpreterOopMap*)+0xb1
+V  [libjvm.so+0x7e2a2a]  VM_GetOrSetLocal::doit()+0x4a
+V  [libjvm.so+0xb3ace6]  VM_Operation::evaluate()+0x46
+V  [libjvm.so+0xb385e6]  VMThread::evaluate_operation(VM_Operation*) [clone .constprop.32]+0xa6
+V  [libjvm.so+0xb3988b]  VMThread::loop()+0x37b
+V  [libjvm.so+0xb39c6c]  VMThread::run()+0xac
+V  [libjvm.so+0x96f4f2]  java_start(Thread*)+0x102
+
+VM_Operation (0x00007f8d30118990): GetOrSetLocal, mode: safepoint, requested by thread 0x00007f8d44197000
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x00007f8d44c5e800 JavaThread "com.google.inject.internal.util.$Finalizer" daemon [_thread_blocked, id=30763, stack(0x00007f8d2aa1d000,0x00007f8d2ab1e000)]
+  0x00007f8d44873800 JavaThread "EMF Reference Cleaner" daemon [_thread_blocked, id=30761, stack(0x00007f8d2ad1e000,0x00007f8d2ae1f000)]
+  0x00007f8d446c1800 JavaThread "ReaderThread" [_thread_in_native, id=30759, stack(0x00007f8d2ae29000,0x00007f8d2af2a000)]
+  0x00007f8d4469c800 JavaThread "Service Thread" daemon [_thread_blocked, id=30757, stack(0x00007f8d2b02b000,0x00007f8d2b12c000)]
+  0x00007f8d44699000 JavaThread "C1 CompilerThread2" daemon [_thread_blocked, id=30756, stack(0x00007f8d2b12d000,0x00007f8d2b22d000)]
+  0x00007f8d44697000 JavaThread "C2 CompilerThread1" daemon [_thread_blocked, id=30755, stack(0x00007f8d2b22e000,0x00007f8d2b32e000)]
+  0x00007f8d44695800 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=30754, stack(0x00007f8d2b32f000,0x00007f8d2b42f000)]
+  0x00007f8cf4001000 JavaThread "JDWP Command Reader" daemon [_thread_in_native, id=30748, stack(0x00007f8d2bbf9000,0x00007f8d2bcfa000)]
+  0x00007f8d4419b000 JavaThread "JDWP Event Helper Thread" daemon [_thread_blocked, id=30747, stack(0x00007f8d2bcfa000,0x00007f8d2bdfb000)]
+  0x00007f8d44197000 JavaThread "JDWP Transport Listener: dt_socket" daemon [_thread_blocked, id=30746, stack(0x00007f8d30019000,0x00007f8d3011a000)]
+  0x00007f8d44186800 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=30744, stack(0x00007f8d3011a000,0x00007f8d3021b000)]
+  0x00007f8d44157000 JavaThread "Finalizer" daemon [_thread_blocked, id=30743, stack(0x00007f8d3021b000,0x00007f8d3031c000)]
+  0x00007f8d44152800 JavaThread "Reference Handler" daemon [_thread_blocked, id=30742, stack(0x00007f8d3031c000,0x00007f8d3041d000)]
+  0x00007f8d44012800 JavaThread "main" [_thread_blocked, id=30733, stack(0x00007f8d4afca000,0x00007f8d4b0ca000)]
+
+Other Threads:
+=>0x00007f8d4414a800 VMThread [stack: 0x00007f8d3041e000,0x00007f8d3051e000] [id=30741]
+  0x00007f8d4469f000 WatcherThread [stack: 0x00007f8d2af2b000,0x00007f8d2b02b000] [id=30758]
+
+VM state:at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x00007f8d440065d0] Threads_lock - owner thread: 0x00007f8d4414a800
+
+heap address: 0x000000068f600000, size: 4874 MB, Compressed Oops mode: Zero based, Oop shift amount: 3
+Narrow klass base: 0x0000000000000000, Narrow klass shift: 3
+Compressed class space size: 1073741824 Address: 0x00000007c0000000
+
+Heap:
+ PSYoungGen      total 170496K, used 80515K [0x000000075a780000, 0x0000000765a80000, 0x00000007c0000000)
+  eden space 157696K, 51% used [0x000000075a780000,0x000000075f620fa8,0x0000000764180000)
+  from space 12800K, 0% used [0x0000000764e00000,0x0000000764e00000,0x0000000765a80000)
+  to   space 12800K, 0% used [0x0000000764180000,0x0000000764180000,0x0000000764e00000)
+ ParOldGen       total 124416K, used 14437K [0x000000068f600000, 0x0000000696f80000, 0x000000075a780000)
+  object space 124416K, 11% used [0x000000068f600000,0x00000006904197e0,0x0000000696f80000)
+ Metaspace       used 26535K, capacity 26986K, committed 27264K, reserved 1073152K
+  class space    used 3351K, capacity 3440K, committed 3456K, reserved 1048576K
+
+Card table byte_map: [0x00007f8d332a2000,0x00007f8d33c28000] byte_map_base: 0x00007f8d2fe27000
+
+Marking Bits: (ParMarkBitMap*) 0x00007f8d4a4820c0
+ Begin Bits: [0x00007f8d0a7b0000, 0x00007f8d0f3d8000)
+ End Bits:   [0x00007f8d0f3d8000, 0x00007f8d14000000)
+
+Polling page: 0x00007f8d4b0ee000
+
+CodeCache: size=245760Kb used=9264Kb max_used=9543Kb free=236495Kb
+ bounds [0x00007f8d33fe8000, 0x00007f8d34948000, 0x00007f8d42fe8000]
+ total_blobs=3243 nmethods=2802 adapters=361
+ compilation: enabled
+
+Compilation events (10 events):
+Event: 6,840 Thread 0x00007f8d44695800 nmethod 2923 0x00007f8d348f3610 code [0x00007f8d348f38c0, 0x00007f8d348f46b8]
+Event: 6,840 Thread 0x00007f8d44695800 2894       4       java.lang.String::toUpperCase (439 bytes)
+Event: 6,883 Thread 0x00007f8d44695800 nmethod 2894 0x00007f8d348efb50 code [0x00007f8d348efd40, 0x00007f8d348f0a18]
+Event: 6,883 Thread 0x00007f8d44695800 2922       4       java.lang.Character::isWhitespace (5 bytes)
+Event: 6,889 Thread 0x00007f8d44695800 nmethod 2922 0x00007f8d348f6590 code [0x00007f8d348f67c0, 0x00007f8d348f6938]
+Event: 6,889 Thread 0x00007f8d44695800 2648       4       java.util.concurrent.locks.AbstractQueuedSynchronizer::compareAndSetState (13 bytes)
+Event: 6,890 Thread 0x00007f8d44695800 nmethod 2648 0x00007f8d348bccd0 code [0x00007f8d348bce20, 0x00007f8d348bce98]
+Event: 8,956 Thread 0x00007f8d44697000 nmethod 2734% 0x00007f8d3491a150 code [0x00007f8d3491ae20, 0x00007f8d349353e8]
+Event: 58,408 Thread 0x00007f8d44699000 2961       3       java.lang.Integer::numberOfLeadingZeros (76 bytes)
+Event: 58,409 Thread 0x00007f8d44699000 nmethod 2961 0x00007f8d3410d590 code [0x00007f8d3410d700, 0x00007f8d3410d9b0]
+
+GC Heap History (10 events):
+Event: 1,954 GC heap before
+{Heap before GC invocations=1 (full 0):
+ PSYoungGen      total 91648K, used 78848K [0x000000075a780000, 0x0000000760d80000, 0x00000007c0000000)
+  eden space 78848K, 100% used [0x000000075a780000,0x000000075f480000,0x000000075f480000)
+  from space 12800K, 0% used [0x0000000760100000,0x0000000760100000,0x0000000760d80000)
+  to   space 12800K, 0% used [0x000000075f480000,0x000000075f480000,0x0000000760100000)
+ ParOldGen       total 208896K, used 0K [0x000000068f600000, 0x000000069c200000, 0x000000075a780000)
+  object space 208896K, 0% used [0x000000068f600000,0x000000068f600000,0x000000069c200000)
+ Metaspace       used 9193K, capacity 9344K, committed 9600K, reserved 1058816K
+  class space    used 1014K, capacity 1048K, committed 1152K, reserved 1048576K
+Event: 1,965 GC heap after
+Heap after GC invocations=1 (full 0):
+ PSYoungGen      total 91648K, used 10086K [0x000000075a780000, 0x0000000760d80000, 0x00000007c0000000)
+  eden space 78848K, 0% used [0x000000075a780000,0x000000075a780000,0x000000075f480000)
+  from space 12800K, 78% used [0x000000075f480000,0x000000075fe599a8,0x0000000760100000)
+  to   space 12800K, 0% used [0x0000000760100000,0x0000000760100000,0x0000000760d80000)
+ ParOldGen       total 208896K, used 8K [0x000000068f600000, 0x000000069c200000, 0x000000075a780000)
+  object space 208896K, 0% used [0x000000068f600000,0x000000068f602000,0x000000069c200000)
+ Metaspace       used 9193K, capacity 9344K, committed 9600K, reserved 1058816K
+  class space    used 1014K, capacity 1048K, committed 1152K, reserved 1048576K
+}
+Event: 3,212 GC heap before
+{Heap before GC invocations=2 (full 0):
+ PSYoungGen      total 91648K, used 88934K [0x000000075a780000, 0x0000000760d80000, 0x00000007c0000000)
+  eden space 78848K, 100% used [0x000000075a780000,0x000000075f480000,0x000000075f480000)
+  from space 12800K, 78% used [0x000000075f480000,0x000000075fe599a8,0x0000000760100000)
+  to   space 12800K, 0% used [0x0000000760100000,0x0000000760100000,0x0000000760d80000)
+ ParOldGen       total 208896K, used 8K [0x000000068f600000, 0x000000069c200000, 0x000000075a780000)
+  object space 208896K, 0% used [0x000000068f600000,0x000000068f602000,0x000000069c200000)
+ Metaspace       used 13166K, capacity 13336K, committed 13440K, reserved 1060864K
+  class space    used 1579K, capacity 1628K, committed 1664K, reserved 1048576K
+Event: 3,239 GC heap after
+Heap after GC invocations=2 (full 0):
+ PSYoungGen      total 91648K, used 12786K [0x000000075a780000, 0x0000000765a80000, 0x00000007c0000000)
+  eden space 78848K, 0% used [0x000000075a780000,0x000000075a780000,0x000000075f480000)
+  from space 12800K, 99% used [0x0000000760100000,0x0000000760d7c9a8,0x0000000760d80000)
+  to   space 12800K, 0% used [0x000000075f480000,0x000000075f480000,0x0000000760100000)
+ ParOldGen       total 208896K, used 2245K [0x000000068f600000, 0x000000069c200000, 0x000000075a780000)
+  object space 208896K, 1% used [0x000000068f600000,0x000000068f831568,0x000000069c200000)
+ Metaspace       used 13166K, capacity 13336K, committed 13440K, reserved 1060864K
+  class space    used 1579K, capacity 1628K, committed 1664K, reserved 1048576K
+}
+Event: 4,379 GC heap before
+{Heap before GC invocations=3 (full 0):
+ PSYoungGen      total 91648K, used 91634K [0x000000075a780000, 0x0000000765a80000, 0x00000007c0000000)
+  eden space 78848K, 100% used [0x000000075a780000,0x000000075f480000,0x000000075f480000)
+  from space 12800K, 99% used [0x0000000760100000,0x0000000760d7c9a8,0x0000000760d80000)
+  to   space 12800K, 0% used [0x000000075f480000,0x000000075f480000,0x0000000760100000)
+ ParOldGen       total 208896K, used 2245K [0x000000068f600000, 0x000000069c200000, 0x000000075a780000)
+  object space 208896K, 1% used [0x000000068f600000,0x000000068f831568,0x000000069c200000)
+ Metaspace       used 17824K, capacity 18056K, committed 18432K, reserved 1064960K
+  class space    used 2125K, capacity 2190K, committed 2304K, reserved 1048576K
+Event: 4,405 GC heap after
+Heap after GC invocations=3 (full 0):
+ PSYoungGen      total 91648K, used 12784K [0x000000075a780000, 0x0000000765a80000, 0x00000007c0000000)
+  eden space 78848K, 0% used [0x000000075a780000,0x000000075a780000,0x000000075f480000)
+  from space 12800K, 99% used [0x000000075f480000,0x00000007600fc060,0x0000000760100000)
+  to   space 12800K, 0% used [0x0000000764e00000,0x0000000764e00000,0x0000000765a80000)
+ ParOldGen       total 208896K, used 5196K [0x000000068f600000, 0x000000069c200000, 0x000000075a780000)
+  object space 208896K, 2% used [0x000000068f600000,0x000000068fb133a0,0x000000069c200000)
+ Metaspace       used 17824K, capacity 18056K, committed 18432K, reserved 1064960K
+  class space    used 2125K, capacity 2190K, committed 2304K, reserved 1048576K
+}
+Event: 4,910 GC heap before
+{Heap before GC invocations=4 (full 0):
+ PSYoungGen      total 91648K, used 65007K [0x000000075a780000, 0x0000000765a80000, 0x00000007c0000000)
+  eden space 78848K, 66% used [0x000000075a780000,0x000000075da7fbb8,0x000000075f480000)
+  from space 12800K, 99% used [0x000000075f480000,0x00000007600fc060,0x0000000760100000)
+  to   space 12800K, 0% used [0x0000000764e00000,0x0000000764e00000,0x0000000765a80000)
+ ParOldGen       total 208896K, used 5196K [0x000000068f600000, 0x000000069c200000, 0x000000075a780000)
+  object space 208896K, 2% used [0x000000068f600000,0x000000068fb133a0,0x000000069c200000)
+ Metaspace       used 20919K, capacity 21002K, committed 21248K, reserved 1069056K
+  class space    used 2486K, capacity 2512K, committed 2560K, reserved 1048576K
+Event: 4,941 GC heap after
+Heap after GC invocations=4 (full 0):
+ PSYoungGen      total 170496K, used 12784K [0x000000075a780000, 0x0000000765a80000, 0x00000007c0000000)
+  eden space 157696K, 0% used [0x000000075a780000,0x000000075a780000,0x0000000764180000)
+  from space 12800K, 99% used [0x0000000764e00000,0x0000000765a7c060,0x0000000765a80000)
+  to   space 12800K, 0% used [0x0000000764180000,0x0000000764180000,0x0000000764e00000)
+ ParOldGen       total 208896K, used 5736K [0x000000068f600000, 0x000000069c200000, 0x000000075a780000)
+  object space 208896K, 2% used [0x000000068f600000,0x000000068fb9a030,0x000000069c200000)
+ Metaspace       used 20919K, capacity 21002K, committed 21248K, reserved 1069056K
+  class space    used 2486K, capacity 2512K, committed 2560K, reserved 1048576K
+}
+Event: 4,941 GC heap before
+{Heap before GC invocations=5 (full 1):
+ PSYoungGen      total 170496K, used 12784K [0x000000075a780000, 0x0000000765a80000, 0x00000007c0000000)
+  eden space 157696K, 0% used [0x000000075a780000,0x000000075a780000,0x0000000764180000)
+  from space 12800K, 99% used [0x0000000764e00000,0x0000000765a7c060,0x0000000765a80000)
+  to   space 12800K, 0% used [0x0000000764180000,0x0000000764180000,0x0000000764e00000)
+ ParOldGen       total 208896K, used 5736K [0x000000068f600000, 0x000000069c200000, 0x000000075a780000)
+  object space 208896K, 2% used [0x000000068f600000,0x000000068fb9a030,0x000000069c200000)
+ Metaspace       used 20919K, capacity 21002K, committed 21248K, reserved 1069056K
+  class space    used 2486K, capacity 2512K, committed 2560K, reserved 1048576K
+Event: 5,011 GC heap after
+Heap after GC invocations=5 (full 1):
+ PSYoungGen      total 170496K, used 0K [0x000000075a780000, 0x0000000765a80000, 0x00000007c0000000)
+  eden space 157696K, 0% used [0x000000075a780000,0x000000075a780000,0x0000000764180000)
+  from space 12800K, 0% used [0x0000000764e00000,0x0000000764e00000,0x0000000765a80000)
+  to   space 12800K, 0% used [0x0000000764180000,0x0000000764180000,0x0000000764e00000)
+ ParOldGen       total 124416K, used 14437K [0x000000068f600000, 0x0000000696f80000, 0x000000075a780000)
+  object space 124416K, 11% used [0x000000068f600000,0x00000006904197e0,0x0000000696f80000)
+ Metaspace       used 20919K, capacity 21002K, committed 21248K, reserved 1069056K
+  class space    used 2486K, capacity 2512K, committed 2560K, reserved 1048576K
+}
+
+Class unloading (0 events):
+No events
+
+Deoptimization events (10 events):
+Event: 5,278 Thread 0x00007f8d44012800 Uncommon trap: reason=range_check action=none pc=0x00007f8d3445ffec method=sun.reflect.generics.parser.SignatureParser.current()C @ 34
+Event: 5,287 Thread 0x00007f8d44012800 Uncommon trap: reason=range_check action=none pc=0x00007f8d3445ffec method=sun.reflect.generics.parser.SignatureParser.current()C @ 34
+Event: 5,594 Thread 0x00007f8d44012800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f8d3453d104 method=org.eclipse.jdt.launching.internal.org.objectweb.asm.ClassReader.readCode(Lorg/eclipse/jdt/launching/internal/org/objectweb/asm/MethodVisitor;Lorg/eclipse/jdt/launching/inte
+Event: 5,594 Thread 0x00007f8d44012800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f8d345ea61c method=org.eclipse.jdt.launching.internal.org.objectweb.asm.MethodWriter.putMethodInfo(Lorg/eclipse/jdt/launching/internal/org/objectweb/asm/ByteVector;)V @ 399
+Event: 5,695 Thread 0x00007f8d44012800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f8d34701780 method=org.eclipse.emf.ecore.impl.MinimalEObjectImpl.fieldIndex(I)I @ 47
+Event: 5,739 Thread 0x00007f8d44012800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f8d3461e8d4 method=org.eclipse.jdt.launching.internal.org.objectweb.asm.ClassWriter.toByteArray()[B @ 149
+Event: 5,756 Thread 0x00007f8d44012800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f8d346bc600 method=java.lang.String.substring(I)Ljava/lang/String; @ 35
+Event: 5,871 Thread 0x00007f8d44012800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f8d342e0c4c method=java.util.Arrays.equals([B[B)Z @ 2
+Event: 6,223 Thread 0x00007f8d44012800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f8d34123820 method=java.lang.CharacterData.of(I)Ljava/lang/CharacterData; @ 4
+Event: 6,395 Thread 0x00007f8d44012800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f8d34716850 method=org.eclipse.emf.ecore.util.EContentsEList$FeatureIteratorImpl.hasNext()Z @ 266
+
+Classes redefined (2 events):
+Event: 85,018 Thread 0x00007f8d4414a800 redefined class name=fr.cea.nabla.truffle.tests.BinaryOperationsInterpreterTest, count=1
+Event: 121,572 Thread 0x00007f8d4414a800 redefined class name=fr.cea.nabla.truffle.tests.BinaryOperationsInterpreterTest, count=2
+
+Internal exceptions (10 events):
+Event: 5,259 Thread 0x00007f8d44012800 Exception <a 'java/lang/ArrayIndexOutOfBoundsException': 83> (0x000000075afa1340) thrown at [/b/b/e/main/graal-jvmci-8/src/share/vm/interpreter/interpreterRuntime.cpp, line 368]
+Event: 5,259 Thread 0x00007f8d44012800 Exception <a 'java/lang/ArrayIndexOutOfBoundsException': 74> (0x000000075afa3590) thrown at [/b/b/e/main/graal-jvmci-8/src/share/vm/interpreter/interpreterRuntime.cpp, line 368]
+Event: 5,259 Thread 0x00007f8d44012800 Exception <a 'java/lang/ArrayIndexOutOfBoundsException': 72> (0x000000075afa5678) thrown at [/b/b/e/main/graal-jvmci-8/src/share/vm/interpreter/interpreterRuntime.cpp, line 368]
+Event: 5,259 Thread 0x00007f8d44012800 Exception <a 'java/lang/ArrayIndexOutOfBoundsException': 77> (0x000000075afa7778) thrown at [/b/b/e/main/graal-jvmci-8/src/share/vm/interpreter/interpreterRuntime.cpp, line 368]
+Event: 5,259 Thread 0x00007f8d44012800 Exception <a 'java/lang/ArrayIndexOutOfBoundsException': 67> (0x000000075afa97f8) thrown at [/b/b/e/main/graal-jvmci-8/src/share/vm/interpreter/interpreterRuntime.cpp, line 368]
+Event: 5,259 Thread 0x00007f8d44012800 Exception <a 'java/lang/ArrayIndexOutOfBoundsException': 65> (0x000000075afab848) thrown at [/b/b/e/main/graal-jvmci-8/src/share/vm/interpreter/interpreterRuntime.cpp, line 368]
+Event: 5,278 Thread 0x00007f8d44012800 Exception <a 'java/lang/ArrayIndexOutOfBoundsException': 96> (0x000000075afdd2e0) thrown at [/b/b/e/main/graal-jvmci-8/src/share/vm/interpreter/interpreterRuntime.cpp, line 368]
+Event: 5,287 Thread 0x00007f8d44012800 Exception <a 'java/lang/ArrayIndexOutOfBoundsException': 75> (0x000000075b06f578) thrown at [/b/b/e/main/graal-jvmci-8/src/share/vm/interpreter/interpreterRuntime.cpp, line 368]
+Event: 5,848 Thread 0x00007f8d44012800 Exception <a 'java/lang/NoSuchFieldError': method resolution failed> (0x000000075c57f450) thrown at [/b/b/e/main/graal-jvmci-8/src/share/vm/prims/methodHandles.cpp, line 1167]
+Event: 5,853 Thread 0x00007f8d44012800 Exception <a 'java/lang/NoSuchFieldError': method resolution failed> (0x000000075c58d780) thrown at [/b/b/e/main/graal-jvmci-8/src/share/vm/prims/methodHandles.cpp, line 1167]
+
+Events (10 events):
+Event: 85,244 Executing VM operation: GetCurrentContendedMonitor done
+Event: 121,541 Executing VM operation: RedefineClasses
+Event: 121,572 Executing VM operation: RedefineClasses done
+Event: 121,584 Executing VM operation: ChangeBreakpoints
+Event: 121,585 Executing VM operation: ChangeBreakpoints done
+Event: 121,713 Executing VM operation: GetOwnedMonitorInfo
+Event: 121,714 Executing VM operation: GetOwnedMonitorInfo done
+Event: 121,715 Executing VM operation: GetCurrentContendedMonitor
+Event: 121,715 Executing VM operation: GetCurrentContendedMonitor done
+Event: 127,346 Executing VM operation: GetOrSetLocal
+
+
+Dynamic libraries:
+00400000-00401000 r-xp 00000000 08:06 1366393                            /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/bin/java
+00600000-00601000 r--p 00000000 08:06 1366393                            /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/bin/java
+00601000-00602000 rw-p 00001000 08:06 1366393                            /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/bin/java
+00ef3000-00f14000 rw-p 00000000 00:00 0                                  [heap]
+68f600000-696f80000 rw-p 00000000 00:00 0 
+696f80000-75a780000 ---p 00000000 00:00 0 
+75a780000-765a80000 rw-p 00000000 00:00 0 
+765a80000-7c0000000 ---p 00000000 00:00 0 
+7c0000000-7c0360000 rw-p 00000000 00:00 0 
+7c0360000-800000000 ---p 00000000 00:00 0 
+7f8ccc000000-7f8ccc021000 rw-p 00000000 00:00 0 
+7f8ccc021000-7f8cd0000000 ---p 00000000 00:00 0 
+7f8cd4000000-7f8cd4021000 rw-p 00000000 00:00 0 
+7f8cd4021000-7f8cd8000000 ---p 00000000 00:00 0 
+7f8cd8000000-7f8cd8021000 rw-p 00000000 00:00 0 
+7f8cd8021000-7f8cdc000000 ---p 00000000 00:00 0 
+7f8cdc000000-7f8cdc021000 rw-p 00000000 00:00 0 
+7f8cdc021000-7f8ce0000000 ---p 00000000 00:00 0 
+7f8ce0000000-7f8ce0021000 rw-p 00000000 00:00 0 
+7f8ce0021000-7f8ce4000000 ---p 00000000 00:00 0 
+7f8ce4000000-7f8ce6ade000 rw-p 00000000 00:00 0 
+7f8ce6ade000-7f8ce8000000 ---p 00000000 00:00 0 
+7f8ce8000000-7f8ce8eb0000 rw-p 00000000 00:00 0 
+7f8ce8eb0000-7f8cec000000 ---p 00000000 00:00 0 
+7f8cec000000-7f8cec021000 rw-p 00000000 00:00 0 
+7f8cec021000-7f8cf0000000 ---p 00000000 00:00 0 
+7f8cf0000000-7f8cf2201000 rw-p 00000000 00:00 0 
+7f8cf2201000-7f8cf4000000 ---p 00000000 00:00 0 
+7f8cf4000000-7f8cf403b000 rw-p 00000000 00:00 0 
+7f8cf403b000-7f8cf8000000 ---p 00000000 00:00 0 
+7f8cf8000000-7f8cf8021000 rw-p 00000000 00:00 0 
+7f8cf8021000-7f8cfc000000 ---p 00000000 00:00 0 
+7f8cfc000000-7f8cfc021000 rw-p 00000000 00:00 0 
+7f8cfc021000-7f8d00000000 ---p 00000000 00:00 0 
+7f8d00000000-7f8d00021000 rw-p 00000000 00:00 0 
+7f8d00021000-7f8d04000000 ---p 00000000 00:00 0 
+7f8d04000000-7f8d04021000 rw-p 00000000 00:00 0 
+7f8d04021000-7f8d08000000 ---p 00000000 00:00 0 
+7f8d0a7b0000-7f8d14000000 rw-p 00000000 00:00 0 
+7f8d14000000-7f8d14021000 rw-p 00000000 00:00 0 
+7f8d14021000-7f8d18000000 ---p 00000000 00:00 0 
+7f8d18000000-7f8d182dc000 rw-p 00000000 00:00 0 
+7f8d182dc000-7f8d1c000000 ---p 00000000 00:00 0 
+7f8d1c000000-7f8d1c021000 rw-p 00000000 00:00 0 
+7f8d1c021000-7f8d20000000 ---p 00000000 00:00 0 
+7f8d24000000-7f8d24021000 rw-p 00000000 00:00 0 
+7f8d24021000-7f8d28000000 ---p 00000000 00:00 0 
+7f8d29a44000-7f8d29b84000 rw-p 00000000 00:00 0 
+7f8d29b84000-7f8d29c44000 ---p 00000000 00:00 0 
+7f8d29c44000-7f8d29e44000 rw-p 00000000 00:00 0 
+7f8d29e44000-7f8d2a044000 rw-p 00000000 00:00 0 
+7f8d2a044000-7f8d2a244000 rw-p 00000000 00:00 0 
+7f8d2a244000-7f8d2a444000 rw-p 00000000 00:00 0 
+7f8d2a444000-7f8d2a644000 rw-p 00000000 00:00 0 
+7f8d2a644000-7f8d2a844000 rw-p 00000000 00:00 0 
+7f8d2aa13000-7f8d2aa14000 r--s 00010000 08:06 1744080                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/ext/zipfs.jar
+7f8d2aa14000-7f8d2aa19000 r--s 0008a000 08:06 1744019                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/jvmci/jvmci-hotspot.jar
+7f8d2aa19000-7f8d2aa1d000 r--s 0004e000 08:06 1744017                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/jvmci/jvmci-api.jar
+7f8d2aa1d000-7f8d2aa20000 ---p 00000000 00:00 0 
+7f8d2aa20000-7f8d2ad1e000 rw-p 00000000 00:00 0 
+7f8d2ad1e000-7f8d2ad21000 ---p 00000000 00:00 0 
+7f8d2ad21000-7f8d2ae1f000 rw-p 00000000 00:00 0 
+7f8d2ae1f000-7f8d2ae29000 r--s 00116000 08:06 1744085                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/ext/localedata.jar
+7f8d2ae29000-7f8d2ae2c000 ---p 00000000 00:00 0 
+7f8d2ae2c000-7f8d2af2a000 rw-p 00000000 00:00 0 
+7f8d2af2a000-7f8d2af2b000 ---p 00000000 00:00 0 
+7f8d2af2b000-7f8d2b02b000 rw-p 00000000 00:00 0 
+7f8d2b02b000-7f8d2b02e000 ---p 00000000 00:00 0 
+7f8d2b02e000-7f8d2b12c000 rw-p 00000000 00:00 0 
+7f8d2b12c000-7f8d2b12d000 ---p 00000000 00:00 0 
+7f8d2b12d000-7f8d2b130000 ---p 00000000 00:00 0 
+7f8d2b130000-7f8d2b22d000 rw-p 00000000 00:00 0 
+7f8d2b22d000-7f8d2b22e000 ---p 00000000 00:00 0 
+7f8d2b22e000-7f8d2b231000 ---p 00000000 00:00 0 
+7f8d2b231000-7f8d2b32e000 rw-p 00000000 00:00 0 
+7f8d2b32e000-7f8d2b32f000 ---p 00000000 00:00 0 
+7f8d2b32f000-7f8d2b332000 ---p 00000000 00:00 0 
+7f8d2b332000-7f8d2b42f000 rw-p 00000000 00:00 0 
+7f8d2b42f000-7f8d2b442000 r--s 00346000 08:06 1743997                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/resources.jar
+7f8d2b442000-7f8d2b459000 r-xp 00000000 08:06 1744045                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libnet.so
+7f8d2b459000-7f8d2b658000 ---p 00017000 08:06 1744045                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libnet.so
+7f8d2b658000-7f8d2b659000 r--p 00016000 08:06 1744045                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libnet.so
+7f8d2b659000-7f8d2b65a000 rw-p 00017000 08:06 1744045                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libnet.so
+7f8d2b65a000-7f8d2b66b000 r-xp 00000000 08:06 1744066                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libnio.so
+7f8d2b66b000-7f8d2b86a000 ---p 00011000 08:06 1744066                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libnio.so
+7f8d2b86a000-7f8d2b86b000 r--p 00010000 08:06 1744066                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libnio.so
+7f8d2b86b000-7f8d2b86c000 rw-p 00011000 08:06 1744066                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libnio.so
+7f8d2b86c000-7f8d2b86e000 r--s 00016000 08:06 1743999                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/jce.jar
+7f8d2b86e000-7f8d2b873000 r--s 000a3000 08:06 1744005                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/jsse.jar
+7f8d2b873000-7f8d2b876000 r--s 0001f000 08:06 3042006                    /home/dorian/eclipse/dsl-latest-released/eclipse/configuration/org.eclipse.osgi/259/0/.cp/lib/javaagent-shaded.jar
+7f8d2b876000-7f8d2b878000 r--s 00009000 08:06 4354400                    /home/dorian/.p2/pool/plugins/org.slf4j.api_1.7.10.v20170428-1633.jar
+7f8d2b878000-7f8d2b89f000 r--s 0028c000 08:06 4354549                    /home/dorian/.p2/pool/plugins/org.eclipse.jgit_5.6.0.201912101111-r.jar
+7f8d2b89f000-7f8d2b8a4000 r--s 00039000 08:06 4354968                    /home/dorian/.p2/pool/plugins/org.eclipse.xtext.junit4_2.20.0.v20191202-1016.jar
+7f8d2b8a4000-7f8d2b8b0000 r--s 00096000 08:06 4354769                    /home/dorian/.p2/pool/plugins/org.eclipse.ui.workbench.texteditor_3.14.0.v20191122-2108.jar
+7f8d2b8b0000-7f8d2b8b4000 r--s 0001c000 08:06 2007035                    /home/dorian/eclipse-workspace-2/.metadata/.plugins/org.eclipse.pde.core/.external_libraries/org.eclipse.jdt.compiler.tool_1.2.700.v20191001-0515/lib/java13api.jar
+7f8d2b8b4000-7f8d2b8b6000 r--s 00031000 08:06 4354993                    /home/dorian/.p2/pool/plugins/org.eclipse.jdt.compiler.tool_1.2.700.v20191001-0515.jar
+7f8d2b8b6000-7f8d2b8ba000 r--s 00032000 08:06 4354987                    /home/dorian/.p2/pool/plugins/org.eclipse.jdt.compiler.apt_1.3.800.v20190919-0948.jar
+7f8d2b8ba000-7f8d2b8f8000 r--s 00678000 08:06 4354484                    /home/dorian/.p2/pool/plugins/org.eclipse.jdt.core_3.20.0.v20191203-2131.jar
+7f8d2b8f8000-7f8d2b8fc000 r--s 00025000 08:06 4355211                    /home/dorian/.p2/pool/plugins/org.eclipse.xtext.xbase.testing_2.20.0.v20191202-0933.jar
+7f8d2b8fc000-7f8d2b901000 r--s 00091000 08:06 4354775                    /home/dorian/.p2/pool/plugins/org.eclipse.xtext.xbase.ide_2.20.0.v20191202-0933.jar
+7f8d2b901000-7f8d2b90b000 r--s 00081000 08:06 4355028                    /home/dorian/.p2/pool/plugins/org.eclipse.xtext.xbase.ui_2.20.0.v20191202-1016.jar
+7f8d2b90b000-7f8d2b912000 r--s 00051000 08:06 4355122                    /home/dorian/.p2/pool/plugins/org.eclipse.ltk.core.refactoring_3.10.300.v20191104-1954.jar
+7f8d2b912000-7f8d2b916000 r--s 00025000 08:06 4355050                    /home/dorian/.p2/pool/plugins/org.eclipse.emf.common.ui_2.18.0.v20190507-0402.jar
+7f8d2b916000-7f8d2b919000 r--s 00017000 08:06 4355141                    /home/dorian/.p2/pool/plugins/org.eclipse.emf.ecore.change_2.14.0.v20190528-0725.jar
+7f8d2b919000-7f8d2b91f000 r--s 00044000 08:06 4354951                    /home/dorian/.p2/pool/plugins/org.eclipse.emf.edit_2.16.0.v20190920-0401.jar
+7f8d2b91f000-7f8d2b922000 r--s 00018000 08:06 4354427                    /home/dorian/.p2/pool/plugins/org.eclipse.ui.views_3.10.100.v20191114-0830.jar
+7f8d2b922000-7f8d2b92a000 r--s 0004e000 08:06 4355125                    /home/dorian/.p2/pool/plugins/org.eclipse.emf.edit.ui_2.17.0.v20190920-0412.jar
+7f8d2b92a000-7f8d2b930000 r--s 00043000 08:06 4354952                    /home/dorian/.p2/pool/plugins/org.eclipse.text_3.10.0.v20191122-2108.jar
+7f8d2b930000-7f8d2b942000 r--s 000f2000 08:06 4354942                    /home/dorian/.p2/pool/plugins/org.eclipse.jface.text_3.16.100.v20191203-1634.jar
+7f8d2b942000-7f8d2b946000 r--s 0001a000 08:06 4354397                    /home/dorian/.p2/pool/plugins/org.eclipse.core.filebuffers_3.6.800.v20191122-2108.jar
+7f8d2b946000-7f8d2b952000 r--s 00090000 08:06 4354773                    /home/dorian/.p2/pool/plugins/org.eclipse.ui.editors_3.13.0.v20191203-1122.jar
+7f8d2b952000-7f8d2b954000 r--s 00004000 08:06 4354163                    /home/dorian/.p2/pool/plugins/org.eclipse.e4.ui.workbench3_0.15.300.v20190926-0808.jar
+7f8d2b954000-7f8d2b989000 r--s 00350000 08:06 4354543                    /home/dorian/.p2/pool/plugins/org.eclipse.ui.workbench_3.117.0.v20191126-1131.jar
+7f8d2b989000-7f8d2b98d000 r--s 00019000 08:06 4355117                    /home/dorian/.p2/pool/plugins/org.eclipse.core.commands_3.9.600.v20191122-2109.jar
+7f8d2b98d000-7f8d2b99f000 r--s 000ff000 08:06 4354926                    /home/dorian/.p2/pool/plugins/org.eclipse.jface_3.18.0.v20191122-2109.jar
+7f8d2b99f000-7f8d2b9ad000 r--s 00206000 08:06 4354735                    /home/dorian/.p2/pool/plugins/org.eclipse.swt.gtk.linux.x86_64_3.113.0.v20191204-0601.jar
+7f8d2b9ad000-7f8d2b9ae000 r--s 00004000 08:06 4350798                    /home/dorian/.p2/pool/plugins/org.eclipse.swt_3.113.0.v20191204-0601.jar
+7f8d2b9ae000-7f8d2b9b7000 r--s 0006c000 08:06 4354796                    /home/dorian/.p2/pool/plugins/org.eclipse.ui_3.115.0.v20191127-1056.jar
+7f8d2b9b7000-7f8d2b9de000 r--s 001b7000 08:06 4354778                    /home/dorian/.p2/pool/plugins/org.eclipse.xtext.ui_2.20.0.v20191202-1016.jar
+7f8d2b9de000-7f8d2b9e2000 r--s 0002b000 08:06 4355177                    /home/dorian/.p2/pool/plugins/org.eclipse.xtext.xbase.junit_2.20.0.v20191202-1016.jar
+7f8d2b9e2000-7f8d2ba53000 r--s 00c30000 08:06 4354480                    /home/dorian/.p2/pool/plugins/com.ibm.icu_64.2.0.v20190507-1337.jar
+7f8d2ba53000-7f8d2ba5b000 r--s 0005e000 08:06 4337664                    /home/dorian/.p2/pool/plugins/org.apache.log4j_1.2.15.v201012070815.jar
+7f8d2ba5b000-7f8d2ba5d000 r--s 00010000 08:06 4340509                    /home/dorian/.p2/pool/plugins/org.apache.commons.logging_1.2.0.v20180409-1502.jar
+7f8d2ba5d000-7f8d2ba5f000 r--s 0001d000 08:06 4355109                    /home/dorian/.p2/pool/plugins/org.objectweb.asm_7.2.0.v20191010-1910.jar
+7f8d2ba5f000-7f8d2ba61000 r--s 00007000 08:06 4341860                    /home/dorian/.p2/pool/plugins/org.eclipse.emf.mwe2.lib_2.11.1.v20191121-1148.jar
+7f8d2ba61000-7f8d2ba67000 r--s 00033000 08:06 4355218                    /home/dorian/.p2/pool/plugins/org.eclipse.emf.mwe2.language_2.11.1.v20191121-1148.jar
+7f8d2ba67000-7f8d2ba69000 r--s 00004000 08:06 4341843                    /home/dorian/.p2/pool/plugins/org.eclipse.emf.mwe2.launch_2.11.1.v20191121-1148.jar
+7f8d2ba69000-7f8d2ba6f000 r--s 00055000 08:06 4354929                    /home/dorian/.p2/pool/plugins/org.eclipse.emf.codegen_2.19.0.v20190821-1536.jar
+7f8d2ba6f000-7f8d2ba78000 r--s 00105000 08:06 4354843                    /home/dorian/.p2/pool/plugins/org.eclipse.emf.codegen.ecore_2.20.0.v20191012-0918.jar
+7f8d2ba78000-7f8d2ba87000 r--s 000ea000 08:06 4354736                    /home/dorian/.p2/pool/plugins/org.eclipse.xtext.xtext.generator_2.20.0.v20191202-0915.jar
+7f8d2ba87000-7f8d2ba8f000 r--s 0009c000 08:06 5554107                    /home/dorian/git/NabLab/plugins/jlatexmath/jlatexmath-1.0.7.jar
+7f8d2ba8f000-7f8d2ba99000 r--s 00072000 08:06 4355084                    /home/dorian/.p2/pool/plugins/org.eclipse.xtext.common.types_2.20.0.v20191202-0933.jar
+7f8d2ba99000-7f8d2babb000 r--s 00254000 08:06 4354740                    /home/dorian/.p2/pool/plugins/org.eclipse.xtext.xbase_2.20.0.v20191202-0933.jar
+7f8d2babb000-7f8d2bac3000 r--s 0007c000 08:06 5653364                    /home/dorian/git/ale-lang-compiler/plugins/com.oracle.truffle.wrapper/mvn/org.graalvm.sdk.graal-sdk-19.3.1.jar
+7f8d2bac3000-7f8d2baeb000 r--s 004dd000 08:06 5653365                    /home/dorian/git/ale-lang-compiler/plugins/com.oracle.truffle.wrapper/mvn/org.graalvm.truffle.truffle-api-19.3.1.jar
+7f8d2baeb000-7f8d2baf6000 r--s 000d0000 08:06 4354743                    /home/dorian/.p2/pool/plugins/org.eclipse.core.resources_3.13.600.v20191122-2104.jar
+7f8d2baf6000-7f8d2bb04000 r--s 000c3000 08:06 5554102                    /home/dorian/git/NabLab/plugins/jgrapht-core/jgrapht-core-1.3.0.jar
+7f8d2bb04000-7f8d2bb06000 r--s 00003000 08:06 4350700                    /home/dorian/.p2/pool/plugins/org.apiguardian_1.1.0.v20190826-0900.jar
+7f8d2bb06000-7f8d2bb08000 r--s 00004000 08:06 4354175                    /home/dorian/.p2/pool/plugins/org.opentest4j_1.2.0.v20190826-0900.jar
+7f8d2bb08000-7f8d2bb0a000 r--s 00011000 08:06 4355210                    /home/dorian/.p2/pool/plugins/org.junit.vintage.engine_5.5.1.v20190826-0900.jar
+7f8d2bb0a000-7f8d2bb0c000 r--s 00006000 08:06 4354306                    /home/dorian/.p2/pool/plugins/org.junit.platform.suite.api_1.5.1.v20190826-0900.jar
+7f8d2bb0c000-7f8d2bb0e000 r--s 00007000 08:06 4354364                    /home/dorian/.p2/pool/plugins/org.junit.platform.runner_1.5.1.v20190826-0900.jar
+7f8d2bb0e000-7f8d2bb11000 r--s 0001b000 08:06 4355108                    /home/dorian/.p2/pool/plugins/org.junit.platform.launcher_1.5.1.v20190826-0900.jar
+7f8d2bb11000-7f8d2bb16000 r--s 0002a000 08:06 4354465                    /home/dorian/.p2/pool/plugins/org.junit.platform.engine_1.5.1.v20190826-0900.jar
+7f8d2bb16000-7f8d2bb18000 r--s 00019000 08:06 4354430                    /home/dorian/.p2/pool/plugins/org.junit.platform.commons_1.5.1.v20190826-0900.jar
+7f8d2bb18000-7f8d2bb25000 r--s 00085000 08:06 4354776                    /home/dorian/.p2/pool/plugins/org.junit.jupiter.params_5.5.1.v20190826-0900.jar
+7f8d2bb25000-7f8d2bb27000 r--s 00009000 08:06 4354405                    /home/dorian/.p2/pool/plugins/org.junit.jupiter.migrationsupport_5.5.1.v20190826-0900.jar
+7f8d2bb27000-7f8d2bb2c000 r--s 00038000 08:06 4354971                    /home/dorian/.p2/pool/plugins/org.junit.jupiter.engine_5.5.1.v20190826-0900.jar
+7f8d2bb2c000-7f8d2bb30000 r--s 00026000 08:06 4354452                    /home/dorian/.p2/pool/plugins/org.junit.jupiter.api_5.5.1.v20190826-0900.jar
+7f8d2bb30000-7f8d2bb57000 r--s 001f6000 08:06 5549543                    /home/dorian/git/NabLab/plugins/commons-math3/commons-math3-3.6.1.jar
+7f8d2bb57000-7f8d2bb5a000 r--s 00010000 08:06 4354192                    /home/dorian/.p2/pool/plugins/org.eclipse.xtend.lib.macro_2.20.0.v20191202-0907.jar
+7f8d2bb5a000-7f8d2bb5d000 r--s 00018000 08:06 4354466                    /home/dorian/.p2/pool/plugins/org.eclipse.xtend.lib_2.20.0.v20191202-0907.jar
+7f8d2bb5d000-7f8d2bb61000 r--s 00024000 08:06 4355052                    /home/dorian/.p2/pool/plugins/org.eclipse.xtext.xbase.lib_2.20.0.v20191202-0907.jar
+7f8d2bb61000-7f8d2bb63000 r--s 00014000 08:06 4354402                    /home/dorian/.p2/pool/plugins/org.eclipse.equinox.app_1.4.300.v20190815-1535.jar
+7f8d2bb63000-7f8d2bb65000 r--s 00017000 08:06 4355145                    /home/dorian/.p2/pool/plugins/org.eclipse.core.contenttype_3.7.500.v20190916-2125.jar
+7f8d2bb65000-7f8d2bb68000 r--s 0001e000 08:06 4354449                    /home/dorian/.p2/pool/plugins/org.eclipse.equinox.preferences_3.7.600.v20191017-2055.jar
+7f8d2bb68000-7f8d2bb6c000 r--s 0002c000 08:06 4355033                    /home/dorian/.p2/pool/plugins/org.eclipse.equinox.registry_3.8.600.v20191017-2055.jar
+7f8d2bb6c000-7f8d2bb6f000 r--s 00018000 08:06 4354422                    /home/dorian/.p2/pool/plugins/org.eclipse.core.jobs_3.10.600.v20191122-2104.jar
+7f8d2bb6f000-7f8d2bb72000 r--s 0001c000 08:06 4354447                    /home/dorian/.p2/pool/plugins/org.eclipse.equinox.common_3.10.600.v20191004-1420.jar
+7f8d2bb72000-7f8d2bb75000 r--s 0003a000 08:06 4354970                    /home/dorian/.p2/pool/plugins/org.eclipse.osgi.compatibility.state_1.1.600.v20190814-1451.jar
+7f8d2bb75000-7f8d2bb8b000 r--s 00150000 08:06 4354834                    /home/dorian/.p2/pool/plugins/org.eclipse.osgi_3.15.100.v20191114-1701.jar
+7f8d2bb8b000-7f8d2bb95000 r--s 00077000 08:06 4354979                    /home/dorian/.p2/pool/plugins/org.eclipse.xtext.ide_2.20.0.v20191202-0915.jar
+7f8d2bb95000-7f8d2bbc7000 r--s 00295000 08:06 4354548                    /home/dorian/.p2/pool/plugins/com.google.guava_27.1.0.v20190517-1946.jar
+7f8d2bbc7000-7f8d2bbf9000 r--s 00265000 08:06 4354550                    /home/dorian/.p2/pool/plugins/org.eclipse.xtext_2.20.0.v20191202-0915.jar
+7f8d2bbf9000-7f8d2bbfc000 ---p 00000000 00:00 0 
+7f8d2bbfc000-7f8d2bcfa000 rw-p 00000000 00:00 0 
+7f8d2bcfa000-7f8d2bcfd000 ---p 00000000 00:00 0 
+7f8d2bcfd000-7f8d2bdfb000 rw-p 00000000 00:00 0 
+7f8d2bdfb000-7f8d2bdff000 r-xp 00000000 08:06 1744055                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libdt_socket.so
+7f8d2bdff000-7f8d2bffe000 ---p 00004000 08:06 1744055                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libdt_socket.so
+7f8d2bffe000-7f8d2bfff000 r--p 00003000 08:06 1744055                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libdt_socket.so
+7f8d2bfff000-7f8d2c000000 rw-p 00004000 08:06 1744055                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libdt_socket.so
+7f8d2c000000-7f8d2c021000 rw-p 00000000 00:00 0 
+7f8d2c021000-7f8d30000000 ---p 00000000 00:00 0 
+7f8d30000000-7f8d30002000 r--s 00011000 08:06 4354365                    /home/dorian/.p2/pool/plugins/org.eclipse.core.runtime_3.17.0.v20191122-2104.jar
+7f8d30002000-7f8d30008000 r--s 00046000 08:06 4354947                    /home/dorian/.p2/pool/plugins/org.eclipse.xtext.util_2.20.0.v20191202-0915.jar
+7f8d30008000-7f8d3000e000 r--s 0002a000 08:06 4355032                    /home/dorian/.p2/pool/plugins/org.eclipse.emf.mwe.core_1.5.1.v20191121-1148.jar
+7f8d3000e000-7f8d30019000 r--s 00077000 08:06 4354791                    /home/dorian/.p2/pool/plugins/com.google.inject_3.0.0.v201605172100.jar
+7f8d30019000-7f8d3001c000 ---p 00000000 00:00 0 
+7f8d3001c000-7f8d3011a000 rw-p 00000000 00:00 0 
+7f8d3011a000-7f8d3011d000 ---p 00000000 00:00 0 
+7f8d3011d000-7f8d3021b000 rw-p 00000000 00:00 0 
+7f8d3021b000-7f8d3021e000 ---p 00000000 00:00 0 
+7f8d3021e000-7f8d3031c000 rw-p 00000000 00:00 0 
+7f8d3031c000-7f8d3031f000 ---p 00000000 00:00 0 
+7f8d3031f000-7f8d3041d000 rw-p 00000000 00:00 0 
+7f8d3041d000-7f8d3041e000 ---p 00000000 00:00 0 
+7f8d3041e000-7f8d3147b000 rw-p 00000000 00:00 0 
+7f8d3147b000-7f8d3164a000 r--s 03c60000 08:06 1744000                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/rt.jar
+7f8d3164a000-7f8d32845000 rw-p 00000000 00:00 0 
+7f8d32845000-7f8d32846000 ---p 00000000 00:00 0 
+7f8d32846000-7f8d32946000 rw-p 00000000 00:00 0 
+7f8d32946000-7f8d32947000 ---p 00000000 00:00 0 
+7f8d32947000-7f8d32a47000 rw-p 00000000 00:00 0 
+7f8d32a47000-7f8d32a48000 ---p 00000000 00:00 0 
+7f8d32a48000-7f8d32b48000 rw-p 00000000 00:00 0 
+7f8d32b48000-7f8d32b49000 ---p 00000000 00:00 0 
+7f8d32b49000-7f8d32c86000 rw-p 00000000 00:00 0 
+7f8d32c86000-7f8d332a2000 ---p 00000000 00:00 0 
+7f8d332a2000-7f8d332df000 rw-p 00000000 00:00 0 
+7f8d332df000-7f8d338fa000 ---p 00000000 00:00 0 
+7f8d338fa000-7f8d33955000 rw-p 00000000 00:00 0 
+7f8d33955000-7f8d33c27000 ---p 00000000 00:00 0 
+7f8d33c27000-7f8d33c4e000 rw-p 00000000 00:00 0 
+7f8d33c4e000-7f8d33fe8000 ---p 00000000 00:00 0 
+7f8d33fe8000-7f8d34948000 rwxp 00000000 00:00 0 
+7f8d34948000-7f8d42fe8000 ---p 00000000 00:00 0 
+7f8d42fe8000-7f8d43003000 r-xp 00000000 08:06 1744071                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libzip.so
+7f8d43003000-7f8d43203000 ---p 0001b000 08:06 1744071                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libzip.so
+7f8d43203000-7f8d43204000 r--p 0001b000 08:06 1744071                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libzip.so
+7f8d43204000-7f8d43205000 rw-p 0001c000 08:06 1744071                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libzip.so
+7f8d43205000-7f8d43210000 r-xp 00000000 08:06 3936969                    /lib/x86_64-linux-gnu/libnss_files-2.27.so
+7f8d43210000-7f8d4340f000 ---p 0000b000 08:06 3936969                    /lib/x86_64-linux-gnu/libnss_files-2.27.so
+7f8d4340f000-7f8d43410000 r--p 0000a000 08:06 3936969                    /lib/x86_64-linux-gnu/libnss_files-2.27.so
+7f8d43410000-7f8d43411000 rw-p 0000b000 08:06 3936969                    /lib/x86_64-linux-gnu/libnss_files-2.27.so
+7f8d43411000-7f8d43417000 rw-p 00000000 00:00 0 
+7f8d43417000-7f8d4342e000 r-xp 00000000 08:06 3936963                    /lib/x86_64-linux-gnu/libnsl-2.27.so
+7f8d4342e000-7f8d4362d000 ---p 00017000 08:06 3936963                    /lib/x86_64-linux-gnu/libnsl-2.27.so
+7f8d4362d000-7f8d4362e000 r--p 00016000 08:06 3936963                    /lib/x86_64-linux-gnu/libnsl-2.27.so
+7f8d4362e000-7f8d4362f000 rw-p 00017000 08:06 3936963                    /lib/x86_64-linux-gnu/libnsl-2.27.so
+7f8d4362f000-7f8d43631000 rw-p 00000000 00:00 0 
+7f8d43631000-7f8d44000000 r--p 00000000 08:06 924333                     /usr/lib/locale/locale-archive
+7f8d44000000-7f8d45935000 rw-p 00000000 00:00 0 
+7f8d45935000-7f8d48000000 ---p 00000000 00:00 0 
+7f8d48000000-7f8d48001000 r--s 00002000 08:06 4337353                    /home/dorian/.p2/pool/plugins/javax.inject_1.0.0.v20091030.jar
+7f8d48001000-7f8d4800c000 r-xp 00000000 08:06 3936980                    /lib/x86_64-linux-gnu/libnss_nis-2.27.so
+7f8d4800c000-7f8d4820b000 ---p 0000b000 08:06 3936980                    /lib/x86_64-linux-gnu/libnss_nis-2.27.so
+7f8d4820b000-7f8d4820c000 r--p 0000a000 08:06 3936980                    /lib/x86_64-linux-gnu/libnss_nis-2.27.so
+7f8d4820c000-7f8d4820d000 rw-p 0000b000 08:06 3936980                    /lib/x86_64-linux-gnu/libnss_nis-2.27.so
+7f8d4820d000-7f8d48215000 r-xp 00000000 08:06 3936965                    /lib/x86_64-linux-gnu/libnss_compat-2.27.so
+7f8d48215000-7f8d48415000 ---p 00008000 08:06 3936965                    /lib/x86_64-linux-gnu/libnss_compat-2.27.so
+7f8d48415000-7f8d48416000 r--p 00008000 08:06 3936965                    /lib/x86_64-linux-gnu/libnss_compat-2.27.so
+7f8d48416000-7f8d48417000 rw-p 00009000 08:06 3936965                    /lib/x86_64-linux-gnu/libnss_compat-2.27.so
+7f8d48417000-7f8d48421000 r-xp 00000000 08:06 1744058                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libinstrument.so
+7f8d48421000-7f8d48620000 ---p 0000a000 08:06 1744058                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libinstrument.so
+7f8d48620000-7f8d48621000 r--p 00009000 08:06 1744058                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libinstrument.so
+7f8d48621000-7f8d48622000 rw-p 0000a000 08:06 1744058                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libinstrument.so
+7f8d48622000-7f8d48624000 r-xp 00000000 08:06 1744046                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libnpt.so
+7f8d48624000-7f8d48824000 ---p 00002000 08:06 1744046                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libnpt.so
+7f8d48824000-7f8d48825000 r--p 00002000 08:06 1744046                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libnpt.so
+7f8d48825000-7f8d48826000 rw-p 00003000 08:06 1744046                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libnpt.so
+7f8d48826000-7f8d48860000 r-xp 00000000 08:06 1744067                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libjdwp.so
+7f8d48860000-7f8d48a5f000 ---p 0003a000 08:06 1744067                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libjdwp.so
+7f8d48a5f000-7f8d48a60000 r--p 00039000 08:06 1744067                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libjdwp.so
+7f8d48a60000-7f8d48a61000 rw-p 0003a000 08:06 1744067                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libjdwp.so
+7f8d48a61000-7f8d48a89000 r-xp 00000000 08:06 1744038                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libjava.so
+7f8d48a89000-7f8d48c88000 ---p 00028000 08:06 1744038                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libjava.so
+7f8d48c88000-7f8d48c89000 r--p 00027000 08:06 1744038                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libjava.so
+7f8d48c89000-7f8d48c8b000 rw-p 00028000 08:06 1744038                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libjava.so
+7f8d48c8b000-7f8d48c9a000 r-xp 00000000 08:06 1744042                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libverify.so
+7f8d48c9a000-7f8d48e99000 ---p 0000f000 08:06 1744042                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libverify.so
+7f8d48e99000-7f8d48e9b000 r--p 0000e000 08:06 1744042                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libverify.so
+7f8d48e9b000-7f8d48e9c000 rw-p 00010000 08:06 1744042                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/libverify.so
+7f8d48e9c000-7f8d48ea3000 r-xp 00000000 08:06 3937020                    /lib/x86_64-linux-gnu/librt-2.27.so
+7f8d48ea3000-7f8d490a2000 ---p 00007000 08:06 3937020                    /lib/x86_64-linux-gnu/librt-2.27.so
+7f8d490a2000-7f8d490a3000 r--p 00006000 08:06 3937020                    /lib/x86_64-linux-gnu/librt-2.27.so
+7f8d490a3000-7f8d490a4000 rw-p 00007000 08:06 3937020                    /lib/x86_64-linux-gnu/librt-2.27.so
+7f8d490a4000-7f8d49241000 r-xp 00000000 08:06 3936942                    /lib/x86_64-linux-gnu/libm-2.27.so
+7f8d49241000-7f8d49440000 ---p 0019d000 08:06 3936942                    /lib/x86_64-linux-gnu/libm-2.27.so
+7f8d49440000-7f8d49441000 r--p 0019c000 08:06 3936942                    /lib/x86_64-linux-gnu/libm-2.27.so
+7f8d49441000-7f8d49442000 rw-p 0019d000 08:06 3936942                    /lib/x86_64-linux-gnu/libm-2.27.so
+7f8d49442000-7f8d4a1a5000 r-xp 00000000 08:06 1744075                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/server/libjvm.so
+7f8d4a1a5000-7f8d4a3a4000 ---p 00d63000 08:06 1744075                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/server/libjvm.so
+7f8d4a3a4000-7f8d4a46d000 rw-p 00d62000 08:06 1744075                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/amd64/server/libjvm.so
+7f8d4a46d000-7f8d4a49f000 rw-p 00000000 00:00 0 
+7f8d4a49f000-7f8d4a686000 r-xp 00000000 08:06 3936879                    /lib/x86_64-linux-gnu/libc-2.27.so
+7f8d4a686000-7f8d4a886000 ---p 001e7000 08:06 3936879                    /lib/x86_64-linux-gnu/libc-2.27.so
+7f8d4a886000-7f8d4a88a000 r--p 001e7000 08:06 3936879                    /lib/x86_64-linux-gnu/libc-2.27.so
+7f8d4a88a000-7f8d4a88c000 rw-p 001eb000 08:06 3936879                    /lib/x86_64-linux-gnu/libc-2.27.so
+7f8d4a88c000-7f8d4a890000 rw-p 00000000 00:00 0 
+7f8d4a890000-7f8d4a893000 r-xp 00000000 08:06 3936902                    /lib/x86_64-linux-gnu/libdl-2.27.so
+7f8d4a893000-7f8d4aa92000 ---p 00003000 08:06 3936902                    /lib/x86_64-linux-gnu/libdl-2.27.so
+7f8d4aa92000-7f8d4aa93000 r--p 00002000 08:06 3936902                    /lib/x86_64-linux-gnu/libdl-2.27.so
+7f8d4aa93000-7f8d4aa94000 rw-p 00003000 08:06 3936902                    /lib/x86_64-linux-gnu/libdl-2.27.so
+7f8d4aa94000-7f8d4aaaa000 r-xp 00000000 08:06 1519771                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/lib/amd64/jli/libjli.so
+7f8d4aaaa000-7f8d4aca9000 ---p 00016000 08:06 1519771                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/lib/amd64/jli/libjli.so
+7f8d4aca9000-7f8d4acaa000 r--p 00015000 08:06 1519771                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/lib/amd64/jli/libjli.so
+7f8d4acaa000-7f8d4acab000 rw-p 00016000 08:06 1519771                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/lib/amd64/jli/libjli.so
+7f8d4acab000-7f8d4acc5000 r-xp 00000000 08:06 3937012                    /lib/x86_64-linux-gnu/libpthread-2.27.so
+7f8d4acc5000-7f8d4aec4000 ---p 0001a000 08:06 3937012                    /lib/x86_64-linux-gnu/libpthread-2.27.so
+7f8d4aec4000-7f8d4aec5000 r--p 00019000 08:06 3937012                    /lib/x86_64-linux-gnu/libpthread-2.27.so
+7f8d4aec5000-7f8d4aec6000 rw-p 0001a000 08:06 3937012                    /lib/x86_64-linux-gnu/libpthread-2.27.so
+7f8d4aec6000-7f8d4aeca000 rw-p 00000000 00:00 0 
+7f8d4aeca000-7f8d4aef1000 r-xp 00000000 08:06 3936851                    /lib/x86_64-linux-gnu/ld-2.27.so
+7f8d4aef1000-7f8d4aef3000 r--s 00008000 08:06 4353850                    /home/dorian/.p2/pool/plugins/org.eclipse.emf.mwe.utils_1.5.1.v20191121-1148.jar
+7f8d4aef3000-7f8d4aefa000 r--s 00055000 08:06 4355116                    /home/dorian/.p2/pool/plugins/org.eclipse.emf.common_2.17.0.v20190920-0401.jar
+7f8d4aefa000-7f8d4af0e000 r--s 00146000 08:06 4354659                    /home/dorian/.p2/pool/plugins/org.eclipse.emf.ecore_2.20.0.v20190920-0401.jar
+7f8d4af0e000-7f8d4afc9000 rw-p 00000000 00:00 0 
+7f8d4afc9000-7f8d4afca000 ---p 00000000 00:00 0 
+7f8d4afca000-7f8d4afcd000 ---p 00000000 00:00 0 
+7f8d4afcd000-7f8d4b0cc000 rw-p 00000000 00:00 0 
+7f8d4b0cc000-7f8d4b0cd000 r--s 00003000 08:06 4350698                    /home/dorian/.p2/pool/plugins/org.eclipse.emf.mwe2.runtime_2.11.1.v20191121-1148.jar
+7f8d4b0cd000-7f8d4b0ce000 r--s 0000b000 08:06 4338240                    /home/dorian/.p2/pool/plugins/org.apache.commons.cli_1.2.0.v201404270220.jar
+7f8d4b0ce000-7f8d4b0d2000 r--s 00031000 08:06 4338229                    /home/dorian/.p2/pool/plugins/org.antlr.runtime_3.2.0.v201101311130.jar
+7f8d4b0d2000-7f8d4b0d6000 r--s 00036000 08:06 4354973                    /home/dorian/.p2/pool/plugins/org.eclipse.emf.ecore.xmi_2.16.0.v20190528-0725.jar
+7f8d4b0d6000-7f8d4b0da000 r--s 0002c000 08:06 4355030                    /home/dorian/.p2/pool/plugins/org.eclipse.xtext.testing_2.20.0.v20191202-0915.jar
+7f8d4b0da000-7f8d4b0dc000 r--s 0000f000 08:06 4337523                    /home/dorian/.p2/pool/plugins/org.hamcrest.core_1.3.0.v20180420-1519.jar
+7f8d4b0dc000-7f8d4b0e4000 r--s 00045000 08:06 4857612                    /home/dorian/.p2/pool/plugins/org.junit_4.12.0.v201504281640/junit.jar
+7f8d4b0e4000-7f8d4b0e5000 r--s 00005000 08:06 1744001                    /home/dorian/Téléchargements/openjdk1.8.0_242-jvmci-20.0-b02/jre/lib/jvmci-services.jar
+7f8d4b0e5000-7f8d4b0ed000 rw-s 00000000 08:06 8652065                    /tmp/hsperfdata_dorian/30728
+7f8d4b0ed000-7f8d4b0ee000 rw-p 00000000 00:00 0 
+7f8d4b0ee000-7f8d4b0ef000 ---p 00000000 00:00 0 
+7f8d4b0ef000-7f8d4b0f1000 rw-p 00000000 00:00 0 
+7f8d4b0f1000-7f8d4b0f2000 r--p 00027000 08:06 3936851                    /lib/x86_64-linux-gnu/ld-2.27.so
+7f8d4b0f2000-7f8d4b0f3000 rw-p 00028000 08:06 3936851                    /lib/x86_64-linux-gnu/ld-2.27.so
+7f8d4b0f3000-7f8d4b0f4000 rw-p 00000000 00:00 0 
+7fffa7d47000-7fffa7d6a000 rw-p 00000000 00:00 0                          [stack]
+7fffa7d9f000-7fffa7da2000 r--p 00000000 00:00 0                          [vvar]
+7fffa7da2000-7fffa7da4000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+
+VM Arguments:
+jvm_args: -agentlib:jdwp=transport=dt_socket,suspend=y,address=localhost:34585 -ea -javaagent:/home/dorian/eclipse/dsl-latest-released/eclipse/configuration/org.eclipse.osgi/259/0/.cp/lib/javaagent-shaded.jar -Dfile.encoding=UTF-8 
+java_command: org.eclipse.jdt.internal.junit.runner.RemoteTestRunner -version 3 -port 42301 -testLoaderClass org.eclipse.jdt.internal.junit4.runner.JUnit4TestLoader -loaderpluginname org.eclipse.jdt.junit4.runtime -test fr.cea.nabla.truffle.tests.BinaryOperationsInterpreterTest:testGetValueOfNV0Bool_NV0Bool
+java_class_path (initial): /home/dorian/.p2/pool/plugins/org.junit_4.12.0.v201504281640/junit.jar:/home/dorian/.p2/pool/plugins/org.hamcrest.core_1.3.0.v20180420-1519.jar:/home/dorian/.p2/pool/plugins/org.eclipse.xtext.testing_2.20.0.v20191202-0915.jar:/home/dorian/.p2/pool/plugins/org.eclipse.xtext_2.20.0.v20191202-0915.jar:/home/dorian/.p2/pool/plugins/org.eclipse.emf.ecore.xmi_2.16.0.v20190528-0725.jar:/home/dorian/.p2/pool/plugins/org.eclipse.emf.ecore_2.20.0.v20190920-0401.jar:/home/dorian/.p2/pool/plugins/org.eclipse.emf.common_2.17.0.v20190920-0401.jar:/home/dorian/.p2/pool/plugins/org.antlr.runtime_3.2.0.v201101311130.jar:/home/dorian/.p2/pool/plugins/com.google.inject_3.0.0.v201605172100.jar:/home/dorian/.p2/pool/plugins/org.eclipse.emf.mwe.core_1.5.1.v20191121-1148.jar:/home/dorian/.p2/pool/plugins/org.apache.commons.cli_1.2.0.v201404270220.jar:/home/dorian/.p2/pool/plugins/org.eclipse.emf.mwe2.runtime_2.11.1.v20191121-1148.jar:/home/dorian/.p2/pool/plugins/org.eclipse.emf.mwe.utils_1.5.1.v20191121-1148.jar:/home/dorian/.p2/pool/plugins/org.eclipse.xtext.util_2.20.0.v20191202-0915.jar:/home/dorian/.p2/pool/plugins/com.google.guava_27.1.0.v20190517-1946.jar:/home/dorian/.p2/pool/plugins/javax.inject_1.0.0.v20091030.jar:/home/dorian/.p2/pool/plugins/org.eclipse.xtext.ide_2.20.0.v20191202-0915.jar:/home/dorian/.p2/pool/plugins/org.eclipse.core.runtime_3.17.0.v20191122-2104.jar:/home/dorian/.p2/pool/plugins/org.eclipse.osgi_3.15.100.v20191114-1701.jar:/home/dorian/.p2/pool/plugins/org.eclipse.osgi.compatibility.state_1.1.600.v20190814-1451.jar:/home/dorian/.p2/pool/plugins/org.eclipse.equinox.common_3.10.600.v20191004-1420.jar:/home/dorian/.p2/pool/plugins/org.eclipse.core.jobs_3.10.600.v20191122-2104.jar:/home/dorian/.p2/pool/plugins/org.eclipse.equinox.registry_3.8.600.v20191017-2055.jar:/home/dorian/.p2/pool/plugins/org.eclipse.equinox.preferences_3.7.600.v20191017-2055.jar:/home/dorian/.p2/pool/plugins/org.eclipse.core.contenttype_3.7.500.v20190916-2125.
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=/usr/lib/jvm/java-10-oracle
+PATH=/home/dorian/.local/bin:/home/dorian/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/dorian/.dotnet/tools:/usr/lib/jvm/java-10-oracle/bin:/usr/lib/jvm/java-10-oracle/db/bin
+USERNAME=dorian
+SHELL=/bin/bash
+DISPLAY=:0
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0xb32a50], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGBUS: [libjvm.so+0xb32a50], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGFPE: [libjvm.so+0x96d500], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGPIPE: [libjvm.so+0x96d500], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGXFSZ: [libjvm.so+0x96d500], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGILL: [libjvm.so+0x96d500], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGUSR1: SIG_DFL, sa_mask[0]=00000000000000000000000000000000, sa_flags=none
+SIGUSR2: [libjvm.so+0x96d3d0], sa_mask[0]=00100000000000000000000000000000, sa_flags=SA_RESTART|SA_SIGINFO
+SIGHUP: [libjvm.so+0x96d9f0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGINT: [libjvm.so+0x96d9f0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGTERM: [libjvm.so+0x96d9f0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGQUIT: [libjvm.so+0x96d9f0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+
+
+---------------  S Y S T E M  ---------------
+
+OS:DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=18.04
+DISTRIB_CODENAME=bionic
+DISTRIB_DESCRIPTION="Ubuntu 18.04.4 LTS"
+
+uname:Linux 4.15.0-88-generic #88-Ubuntu SMP Tue Feb 11 20:11:34 UTC 2020 x86_64
+libc:glibc 2.27 NPTL 2.27 
+rlimit: STACK 8192k, CORE 0k, NPROC 77787, NOFILE 4096, AS infinity
+load average:1,39 1,67 1,42
+
+/proc/meminfo:
+MemTotal:       19958308 kB
+MemFree:          514624 kB
+MemAvailable:    1527864 kB
+Buffers:          262720 kB
+Cached:          3267108 kB
+SwapCached:         1144 kB
+Active:         16855664 kB
+Inactive:        2052832 kB
+Active(anon):   16228632 kB
+Inactive(anon):  1456988 kB
+Active(file):     627032 kB
+Inactive(file):   595844 kB
+Unevictable:         144 kB
+Mlocked:             144 kB
+SwapTotal:       2097148 kB
+SwapFree:        1772748 kB
+Dirty:              1324 kB
+Writeback:             0 kB
+AnonPages:      15377936 kB
+Mapped:          1985504 kB
+Shmem:           2307472 kB
+Slab:             258964 kB
+SReclaimable:     134108 kB
+SUnreclaim:       124856 kB
+KernelStack:       20448 kB
+PageTables:       119336 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:    12076300 kB
+Committed_AS:   25401396 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:           0 kB
+VmallocChunk:          0 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:         0 kB
+ShmemHugePages:        0 kB
+ShmemPmdMapped:        0 kB
+CmaTotal:              0 kB
+CmaFree:               0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:      395012 kB
+DirectMap2M:    16828416 kB
+DirectMap1G:     3145728 kB
+
+container (cgroup) information:
+container_type: cgroupv1
+cpu_cpuset_cpus: 0-3
+cpu_memory_nodes: 0
+active_processor_count: 4
+cpu_quota: -1
+cpu_period: 100000
+cpu_shares: -1
+memory_limit_in_bytes: -1
+memory_and_swap_limit_in_bytes: -2
+memory_soft_limit_in_bytes: -1
+memory_usage_in_bytes: 19143966720
+memory_max_usage_in_bytes: 19517931520
+
+
+CPU:total 4 (initial active 4) (2 cores per cpu, 2 threads per core) family 6 model 78 stepping 3, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, erms, rtm, 3dnowpref, lzcnt, ht, tsc, tscinvbit, bmi1, bmi2, adx
+
+/proc/cpuinfo:
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 78
+model name	: Intel(R) Core(TM) i7-6600U CPU @ 2.60GHz
+stepping	: 3
+microcode	: 0xd6
+cpu MHz		: 2277.627
+cache size	: 4096 KB
+physical id	: 0
+siblings	: 4
+core id		: 0
+cpu cores	: 2
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb invpcid_single pti ssbd ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp md_clear flush_l1d
+bugs		: cpu_meltdown spectre_v1 spectre_v2 spec_store_bypass l1tf mds swapgs taa itlb_multihit
+bogomips	: 5616.00
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 78
+model name	: Intel(R) Core(TM) i7-6600U CPU @ 2.60GHz
+stepping	: 3
+microcode	: 0xd6
+cpu MHz		: 2245.756
+cache size	: 4096 KB
+physical id	: 0
+siblings	: 4
+core id		: 1
+cpu cores	: 2
+apicid		: 2
+initial apicid	: 2
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb invpcid_single pti ssbd ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp md_clear flush_l1d
+bugs		: cpu_meltdown spectre_v1 spectre_v2 spec_store_bypass l1tf mds swapgs taa itlb_multihit
+bogomips	: 5616.00
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 2
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 78
+model name	: Intel(R) Core(TM) i7-6600U CPU @ 2.60GHz
+stepping	: 3
+microcode	: 0xd6
+cpu MHz		: 2223.021
+cache size	: 4096 KB
+physical id	: 0
+siblings	: 4
+core id		: 0
+cpu cores	: 2
+apicid		: 1
+initial apicid	: 1
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb invpcid_single pti ssbd ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp md_clear flush_l1d
+bugs		: cpu_meltdown spectre_v1 spectre_v2 spec_store_bypass l1tf mds swapgs taa itlb_multihit
+bogomips	: 5616.00
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 3
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 78
+model name	: Intel(R) Core(TM) i7-6600U CPU @ 2.60GHz
+stepping	: 3
+microcode	: 0xd6
+cpu MHz		: 2220.106
+cache size	: 4096 KB
+physical id	: 0
+siblings	: 4
+core id		: 1
+cpu cores	: 2
+apicid		: 3
+initial apicid	: 3
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb invpcid_single pti ssbd ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp md_clear flush_l1d
+bugs		: cpu_meltdown spectre_v1 spectre_v2 spec_store_bypass l1tf mds swapgs taa itlb_multihit
+bogomips	: 5616.00
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+
+
+Memory: 4k page, physical 19958308k(514868k free), swap 2097148k(1772748k free)
+
+vm_info: OpenJDK 64-Bit Server VM (25.242-b06-jvmci-20.0-b02) for linux-amd64 JRE (8u242), built on Jan 20 2020 20:45:17 by "buildslave" with gcc 7.3.0
+
+time: Fri Feb 28 17:48:57 2020
+timezone: CET
+elapsed time: 127 seconds (0d 0h 2m 7s)
+

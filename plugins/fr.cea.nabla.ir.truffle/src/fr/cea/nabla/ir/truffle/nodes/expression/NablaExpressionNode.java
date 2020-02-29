@@ -1,0 +1,103 @@
+package fr.cea.nabla.ir.truffle.nodes.expression;
+
+import com.oracle.truffle.api.dsl.TypeSystemReference;
+import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.instrumentation.GenerateWrapper;
+import com.oracle.truffle.api.instrumentation.InstrumentableNode;
+import com.oracle.truffle.api.instrumentation.ProbeNode;
+import com.oracle.truffle.api.instrumentation.StandardTags;
+import com.oracle.truffle.api.instrumentation.Tag;
+import com.oracle.truffle.api.nodes.NodeInfo;
+import com.oracle.truffle.api.nodes.UnexpectedResultException;
+
+import fr.cea.nabla.ir.truffle.NablaNode;
+import fr.cea.nabla.ir.truffle.NablaTypes;
+import fr.cea.nabla.ir.truffle.NablaTypesGen;
+import fr.cea.nabla.ir.truffle.values.NV0Bool;
+import fr.cea.nabla.ir.truffle.values.NV0Int;
+import fr.cea.nabla.ir.truffle.values.NV0Real;
+import fr.cea.nabla.ir.truffle.values.NV1Int;
+import fr.cea.nabla.ir.truffle.values.NV1Real;
+import fr.cea.nabla.ir.truffle.values.NV2Int;
+import fr.cea.nabla.ir.truffle.values.NV2Real;
+import fr.cea.nabla.ir.truffle.values.NV3Int;
+import fr.cea.nabla.ir.truffle.values.NV3Real;
+import fr.cea.nabla.ir.truffle.values.NV4Int;
+import fr.cea.nabla.ir.truffle.values.NV4Real;
+
+@TypeSystemReference(NablaTypes.class)
+@NodeInfo(description = "The abstract base node for all expressions")
+@GenerateWrapper
+public abstract class NablaExpressionNode extends NablaNode implements InstrumentableNode {
+
+	private boolean hasExpressionTag;
+	
+	public NV0Bool executeNV0Bool(VirtualFrame frame) throws UnexpectedResultException {
+		return NablaTypesGen.expectNV0Bool(frame);
+	}
+	
+	public NV0Int executeNV0Int(VirtualFrame frame) throws UnexpectedResultException {
+		return NablaTypesGen.expectNV0Int(frame);
+	}
+	
+	public NV0Real executeNV0Real(VirtualFrame frame) throws UnexpectedResultException {
+		return NablaTypesGen.expectNV0Real(frame);
+	}
+	
+	public NV1Int executeNV1Int(VirtualFrame frame) throws UnexpectedResultException {
+		return NablaTypesGen.expectNV1Int(frame);
+	}
+	
+	public NV1Real executeNV1Real(VirtualFrame frame) throws UnexpectedResultException {
+		return NablaTypesGen.expectNV1Real(frame);
+	}
+	
+	public NV2Int executeNV2Int(VirtualFrame frame) throws UnexpectedResultException {
+		return NablaTypesGen.expectNV2Int(frame);
+	}
+	
+	public NV2Real executeNV2Real(VirtualFrame frame) throws UnexpectedResultException {
+		return NablaTypesGen.expectNV2Real(frame);
+	}
+	
+	public NV3Int executeNV3Int(VirtualFrame frame) throws UnexpectedResultException {
+		return NablaTypesGen.expectNV3Int(frame);
+	}
+	
+	public NV3Real executeNV3Real(VirtualFrame frame) throws UnexpectedResultException {
+		return NablaTypesGen.expectNV3Real(frame);
+	}
+	
+	public NV4Int executeNV4Int(VirtualFrame frame) throws UnexpectedResultException {
+		return NablaTypesGen.expectNV4Int(frame);
+	}
+	
+	public NV4Real executeNV4Real(VirtualFrame frame) throws UnexpectedResultException {
+		return NablaTypesGen.expectNV4Real(frame);
+	}
+	
+	public abstract Object executeGeneric(VirtualFrame frame);
+
+	@Override
+	public WrapperNode createWrapper(ProbeNode probeNode) {
+		return new NablaExpressionNodeWrapper(this, probeNode);
+	}
+	
+	@Override
+	public boolean isInstrumentable() {
+		return true;
+	}
+	
+	@Override
+    public boolean hasTag(Class<? extends Tag> tag) {
+        if (tag == StandardTags.ExpressionTag.class) {
+            return hasExpressionTag;
+        }
+        return false;
+    }
+	
+	public final void addExpressionTag() {
+        hasExpressionTag = true;
+    }
+
+}
