@@ -13,15 +13,12 @@ import fr.cea.nabla.ir.truffle.values.NablaValue;
 
 public class NablaFunctionCallNode extends NablaExpressionNode {
 
-	@Child
-	private NablaFunctionNode functionNode;
 	@Children
 	private final NablaExpressionNode[] argumentNodes;
 	@Child
 	private DirectCallNode callNode;
 
 	public NablaFunctionCallNode(NablaFunctionNode functionNode, NablaExpressionNode[] argumentNodes) {
-		this.functionNode = functionNode;
 		this.argumentNodes = argumentNodes;
 		this.callNode = Truffle.getRuntime().createDirectCallNode(Truffle.getRuntime().createCallTarget(functionNode));
 	}

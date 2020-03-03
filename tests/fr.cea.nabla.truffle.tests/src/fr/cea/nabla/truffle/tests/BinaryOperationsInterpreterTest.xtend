@@ -41,9 +41,8 @@ class BinaryOperationsInterpreterTest {
 			ℾ b12 = true < false; // -> false
 		'''
 
-		val result = TruffleTestUtils::executeModel(model)
-		
-		
+		val result = executeModel(model)
+
 		assertVariableValue(result, "b1", true)
 		assertVariableValue(result, "b2", true)
 		assertVariableValue(result, "b3", false)
@@ -88,8 +87,8 @@ class BinaryOperationsInterpreterTest {
 			ℕ n5 = 7 / 3; // -> 2
 			ℕ n6 = 7 % 3; // -> 1
 		'''
-		
-		val result = TruffleTestUtils::executeModel(model)
+
+		val result = executeModel(model)
 
 		assertVariableValue(result, "b1", false)
 		assertVariableValue(result, "b2", true)
@@ -139,8 +138,8 @@ class BinaryOperationsInterpreterTest {
 			ℝ n4 = 6 / 3.; // -> 2.
 			ℝ n5 = 7 / 2.; // -> 3.5.
 		'''
-		
-		val result = TruffleTestUtils::executeModel(model)
+
+		val result = executeModel(model)
 
 		assertVariableValue(result, "b1", false)
 		assertVariableValue(result, "b2", true)
@@ -169,12 +168,11 @@ class BinaryOperationsInterpreterTest {
 			ℕ[2] n2 = 3 + n1;
 			ℕ[2] n3 = 3 * n1;
 		'''
-		
-		
-		val result = TruffleTestUtils::executeModel(model)
 
-		assertVariableValue(result, "n1", #[1, 2])
-		assertVariableValue(result, "n2", #[4, 5])
-		assertVariableValue(result, "n3", #[3, 6])
+		val result = executeModel(model)
+
+		assertVariableValue(result, "n1", #[1, 2] as int[])
+		assertVariableValue(result, "n2", #[4, 5] as int[])
+		assertVariableValue(result, "n3", #[3, 6] as int[])
 	}
 }

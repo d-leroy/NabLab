@@ -5,18 +5,18 @@ import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeCost;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
-import fr.cea.nabla.ir.truffle.nodes.expression.NablaInt1LiteralNode;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaReal1Node;
 
-@GeneratedBy(NablaInt1LiteralNode.class)
-public final class NablaInt1LiteralNodeGen extends NablaInt1LiteralNode {
+@GeneratedBy(NablaReal1Node.class)
+public final class NablaReal1NodeGen extends NablaReal1Node {
 
-    private NablaInt1LiteralNodeGen(NablaExpressionNode[] values) {
+    private NablaReal1NodeGen(NablaExpressionNode[] values) {
         super(values);
     }
 
     @Override
     public Object executeGeneric(VirtualFrame frameValue) {
-        return executeNV1Int(frameValue);
+        return executeNV1Real(frameValue);
     }
 
     @Override
@@ -24,8 +24,8 @@ public final class NablaInt1LiteralNodeGen extends NablaInt1LiteralNode {
         return NodeCost.MONOMORPHIC;
     }
 
-    public static NablaInt1LiteralNode create(NablaExpressionNode[] values) {
-        return new NablaInt1LiteralNodeGen(values);
+    public static NablaReal1Node create(NablaExpressionNode[] values) {
+        return new NablaReal1NodeGen(values);
     }
 
 }

@@ -75,12 +75,12 @@ import fr.cea.nabla.ir.truffle.nodes.NablaWriteVariableNode;
 import fr.cea.nabla.ir.truffle.nodes.NablaWriteVariableNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaBoolConstantNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
-import fr.cea.nabla.ir.truffle.nodes.expression.NablaInt1LiteralNodeGen;
-import fr.cea.nabla.ir.truffle.nodes.expression.NablaInt2LiteralNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaInt1NodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaInt2NodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaIntConstantNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaReadVariableNodeGen;
-import fr.cea.nabla.ir.truffle.nodes.expression.NablaReal1LiteralNodeGen;
-import fr.cea.nabla.ir.truffle.nodes.expression.NablaReal2LiteralNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaReal1NodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaReal2NodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaRealConstantNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.binary.NablaAddNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.binary.NablaAndNodeGen;
@@ -248,14 +248,14 @@ public class NablaNodeFactory {
 				}
 			case INT:
 				switch (dimensions.length) {
-				case 1: return NablaInt1LiteralNodeGen.create(values);
-				case 2: return NablaInt2LiteralNodeGen.create(values, dimensions);
+				case 1: return NablaInt1NodeGen.create(values);
+				case 2: return NablaInt2NodeGen.create(values, dimensions);
 				default: throw new UnsupportedOperationException();
 				}
 			case REAL:
 				switch (dimensions.length) {
-				case 1: return NablaReal1LiteralNodeGen.create(values);
-				case 2: return NablaReal2LiteralNodeGen.create(values, dimensions);
+				case 1: return NablaReal1NodeGen.create(values);
+				case 2: return NablaReal2NodeGen.create(values, dimensions);
 				default: throw new UnsupportedOperationException();
 				}
 			default: throw new UnsupportedOperationException();

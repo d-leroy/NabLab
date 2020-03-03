@@ -15,7 +15,9 @@ public abstract class NablaInt2ConstantNode extends NablaExpressionNode {
 	@CompilationFinal
 	private NV2Int value;
 
+	@Children
 	private final NablaExpressionNode[] values;
+	@Children
 	private final NablaExpressionNode[] dimensions;
 
 	public NablaInt2ConstantNode(NablaExpressionNode[] values, NablaExpressionNode[] dimensions) {

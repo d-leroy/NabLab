@@ -8,12 +8,12 @@ import com.oracle.truffle.api.nodes.ExplodeLoop;
 import fr.cea.nabla.ir.truffle.NablaTypesGen;
 import fr.cea.nabla.ir.truffle.values.NV1Real;
 
-public abstract class NablaReal1LiteralNode extends NablaExpressionNode {
+public abstract class NablaReal1Node extends NablaExpressionNode {
 
 	@Children
 	private final NablaExpressionNode[] values;
 	
-	public NablaReal1LiteralNode(NablaExpressionNode[] values) {
+	public NablaReal1Node(NablaExpressionNode[] values) {
 		this.values = values;
 	}
 
