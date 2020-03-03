@@ -43,7 +43,7 @@ public class TruffleTestUtils {
 			Assert.assertTrue(val.getArrayElement(i).fitsInInt());
 			valArray[i] = val.getArrayElement(i).asInt();
 		}
-		Assert.assertEquals(value, valArray);
+		Assert.assertArrayEquals(value, valArray);
 		System.out.println(variableName + " = " + value);
 	}
 	

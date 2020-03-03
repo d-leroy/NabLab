@@ -12,6 +12,7 @@ import com.oracle.truffle.api.source.Source;
 
 import fr.cea.nabla.ir.truffle.parser.NablaParser;
 import fr.cea.nabla.ir.truffle.runtime.NablaContext;
+import fr.cea.nabla.ir.truffle.values.NablaOutput;
 import fr.cea.nabla.ir.truffle.values.NablaValue;
 
 @TruffleLanguage.Registration(

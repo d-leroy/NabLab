@@ -10,9 +10,9 @@ import com.oracle.truffle.api.instrumentation.Tag;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
 
-import fr.cea.nabla.ir.truffle.NablaNode;
 import fr.cea.nabla.ir.truffle.NablaTypes;
 import fr.cea.nabla.ir.truffle.NablaTypesGen;
+import fr.cea.nabla.ir.truffle.nodes.NablaNode;
 import fr.cea.nabla.ir.truffle.values.NV0Bool;
 import fr.cea.nabla.ir.truffle.values.NV0Int;
 import fr.cea.nabla.ir.truffle.values.NV0Real;
@@ -33,47 +33,47 @@ public abstract class NablaExpressionNode extends NablaNode implements Instrumen
 	private boolean hasExpressionTag;
 	
 	public NV0Bool executeNV0Bool(VirtualFrame frame) throws UnexpectedResultException {
-		return NablaTypesGen.expectNV0Bool(frame);
+		return NablaTypesGen.expectNV0Bool(executeGeneric(frame));
 	}
 	
 	public NV0Int executeNV0Int(VirtualFrame frame) throws UnexpectedResultException {
-		return NablaTypesGen.expectNV0Int(frame);
+		return NablaTypesGen.expectNV0Int(executeGeneric(frame));
 	}
 	
 	public NV0Real executeNV0Real(VirtualFrame frame) throws UnexpectedResultException {
-		return NablaTypesGen.expectNV0Real(frame);
+		return NablaTypesGen.expectNV0Real(executeGeneric(frame));
 	}
 	
 	public NV1Int executeNV1Int(VirtualFrame frame) throws UnexpectedResultException {
-		return NablaTypesGen.expectNV1Int(frame);
+		return NablaTypesGen.expectNV1Int(executeGeneric(frame));
 	}
 	
 	public NV1Real executeNV1Real(VirtualFrame frame) throws UnexpectedResultException {
-		return NablaTypesGen.expectNV1Real(frame);
+		return NablaTypesGen.expectNV1Real(executeGeneric(frame));
 	}
 	
 	public NV2Int executeNV2Int(VirtualFrame frame) throws UnexpectedResultException {
-		return NablaTypesGen.expectNV2Int(frame);
+		return NablaTypesGen.expectNV2Int(executeGeneric(frame));
 	}
 	
 	public NV2Real executeNV2Real(VirtualFrame frame) throws UnexpectedResultException {
-		return NablaTypesGen.expectNV2Real(frame);
+		return NablaTypesGen.expectNV2Real(executeGeneric(frame));
 	}
 	
 	public NV3Int executeNV3Int(VirtualFrame frame) throws UnexpectedResultException {
-		return NablaTypesGen.expectNV3Int(frame);
+		return NablaTypesGen.expectNV3Int(executeGeneric(frame));
 	}
 	
 	public NV3Real executeNV3Real(VirtualFrame frame) throws UnexpectedResultException {
-		return NablaTypesGen.expectNV3Real(frame);
+		return NablaTypesGen.expectNV3Real(executeGeneric(frame));
 	}
 	
 	public NV4Int executeNV4Int(VirtualFrame frame) throws UnexpectedResultException {
-		return NablaTypesGen.expectNV4Int(frame);
+		return NablaTypesGen.expectNV4Int(executeGeneric(frame));
 	}
 	
 	public NV4Real executeNV4Real(VirtualFrame frame) throws UnexpectedResultException {
-		return NablaTypesGen.expectNV4Real(frame);
+		return NablaTypesGen.expectNV4Real(executeGeneric(frame));
 	}
 	
 	public abstract Object executeGeneric(VirtualFrame frame);

@@ -10,18 +10,47 @@
 package fr.cea.nabla.ir.truffle.values;
 
 import java.util.Arrays;
+
 import org.eclipse.xtend.lib.annotations.Data;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+import com.oracle.truffle.api.interop.InteropLibrary;
+import com.oracle.truffle.api.interop.UnsupportedMessageException;
+import com.oracle.truffle.api.library.ExportLibrary;
+import com.oracle.truffle.api.library.ExportMessage;
+
 @Data
-@SuppressWarnings("all")
-public class NV1Int implements NablaValue {
+@ExportLibrary(InteropLibrary.class)
+public final class NV1Int implements NablaValue {
   private final int[] data;
   
   public NV1Int(final int[] data) {
     super();
     this.data = data;
+  }
+  
+  @ExportMessage
+  boolean hasArrayElements() {
+	  return data.length > 0;
+  }
+  
+  @ExportMessage
+  long getArraySize() throws UnsupportedMessageException {
+	  return data.length;
+  }
+  
+  @ExportMessage
+  boolean isArrayElementReadable(long index) {
+	  return index < data.length;
+  }
+  
+  @ExportMessage
+  Object readArrayElement(long index) {
+	  if (index < data.length) {
+		  return data[(int) index];
+	  }
+	  throw new ArrayIndexOutOfBoundsException();
   }
   
   @Override

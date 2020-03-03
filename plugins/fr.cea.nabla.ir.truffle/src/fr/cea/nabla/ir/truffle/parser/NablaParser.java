@@ -3,9 +3,6 @@ package fr.cea.nabla.ir.truffle.parser;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.xtext.testing.InjectWith;
-
-import com.google.inject.Inject;
 import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.nodes.RootNode;

@@ -67,18 +67,21 @@ import fr.cea.nabla.ir.ir.SizeTypeOperation;
 import fr.cea.nabla.ir.ir.SizeTypeSymbol;
 import fr.cea.nabla.ir.ir.Variable;
 import fr.cea.nabla.ir.ir.VectorConstant;
-import fr.cea.nabla.ir.truffle.NablaJobNode;
 import fr.cea.nabla.ir.truffle.NablaLanguage;
 import fr.cea.nabla.ir.truffle.nodes.NablaFunctionNode;
+import fr.cea.nabla.ir.truffle.nodes.NablaJobNode;
 import fr.cea.nabla.ir.truffle.nodes.NablaModuleNode;
 import fr.cea.nabla.ir.truffle.nodes.NablaWriteVariableNode;
 import fr.cea.nabla.ir.truffle.nodes.NablaWriteVariableNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaBoolConstantNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaInt1LiteralNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaInt2LiteralNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaIntConstantNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaReadVariableNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaReal1LiteralNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaReal2LiteralNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaRealConstantNode;
-import fr.cea.nabla.ir.truffle.nodes.expression.NablaVectorLiteralNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.binary.NablaAddNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.binary.NablaAndNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.binary.NablaDivNodeGen;
@@ -237,16 +240,26 @@ public class NablaNodeFactory {
 					.collect(Collectors.toList()).toArray(new NablaExpressionNode[0]);
 			
 			switch (baseType.getPrimitive()) {
-			case BOOL: 
-				break;
+			case BOOL:
+				switch (dimensions.length) {
+				case 1: throw new UnsupportedOperationException();
+				case 2: throw new UnsupportedOperationException();
+				default: throw new UnsupportedOperationException();
+				}
 			case INT:
-				break;
+				switch (dimensions.length) {
+				case 1: return NablaInt1LiteralNodeGen.create(values);
+				case 2: return NablaInt2LiteralNodeGen.create(values, dimensions);
+				default: throw new UnsupportedOperationException();
+				}
 			case REAL:
-				break;
+				switch (dimensions.length) {
+				case 1: return NablaReal1LiteralNodeGen.create(values);
+				case 2: return NablaReal2LiteralNodeGen.create(values, dimensions);
+				default: throw new UnsupportedOperationException();
+				}
 			default: throw new UnsupportedOperationException();
 			}
-			
-			return new NablaVectorLiteralNode(values, dimensions);
 		}
 		case IrPackage.CONNECTIVITY_TYPE:
 			throw new UnsupportedOperationException();

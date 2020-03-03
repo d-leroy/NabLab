@@ -44,7 +44,6 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.RootNode;
 
 import fr.cea.nabla.ir.truffle.NablaLanguage;
-import fr.cea.nabla.ir.truffle.NablaRootNode;
 import fr.cea.nabla.ir.truffle.runtime.NablaUndefinedNameException;
 
 /**

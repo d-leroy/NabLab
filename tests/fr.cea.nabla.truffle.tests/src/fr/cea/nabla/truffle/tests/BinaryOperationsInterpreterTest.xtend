@@ -42,7 +42,8 @@ class BinaryOperationsInterpreterTest {
 		'''
 
 		val result = TruffleTestUtils::executeModel(model)
-
+		
+		
 		assertVariableValue(result, "b1", true)
 		assertVariableValue(result, "b2", true)
 		assertVariableValue(result, "b3", false)
@@ -172,7 +173,6 @@ class BinaryOperationsInterpreterTest {
 		
 		val result = TruffleTestUtils::executeModel(model)
 
-		assertVariableValue(result, "n1", #[1, 2])
 		assertVariableValue(result, "n1", #[1, 2])
 		assertVariableValue(result, "n2", #[4, 5])
 		assertVariableValue(result, "n3", #[3, 6])

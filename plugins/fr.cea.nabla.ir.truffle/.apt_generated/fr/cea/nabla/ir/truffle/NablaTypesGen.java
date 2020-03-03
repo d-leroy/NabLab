@@ -3,7 +3,6 @@ package fr.cea.nabla.ir.truffle;
 
 import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
-import fr.cea.nabla.ir.truffle.NablaOutput;
 import fr.cea.nabla.ir.truffle.NablaTypes;
 import fr.cea.nabla.ir.truffle.values.NV0Bool;
 import fr.cea.nabla.ir.truffle.values.NV0Int;
@@ -16,6 +15,7 @@ import fr.cea.nabla.ir.truffle.values.NV3Int;
 import fr.cea.nabla.ir.truffle.values.NV3Real;
 import fr.cea.nabla.ir.truffle.values.NV4Int;
 import fr.cea.nabla.ir.truffle.values.NV4Real;
+import fr.cea.nabla.ir.truffle.values.NablaOutput;
 
 @GeneratedBy(NablaTypes.class)
 public final class NablaTypesGen extends NablaTypes {

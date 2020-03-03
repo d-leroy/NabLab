@@ -1,4 +1,4 @@
-package fr.cea.nabla.ir.truffle;
+package fr.cea.nabla.ir.truffle.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 
