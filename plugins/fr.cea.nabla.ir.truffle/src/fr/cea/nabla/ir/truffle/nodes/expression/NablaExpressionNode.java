@@ -16,8 +16,10 @@ import fr.cea.nabla.ir.truffle.nodes.NablaNode;
 import fr.cea.nabla.ir.truffle.values.NV0Bool;
 import fr.cea.nabla.ir.truffle.values.NV0Int;
 import fr.cea.nabla.ir.truffle.values.NV0Real;
+import fr.cea.nabla.ir.truffle.values.NV1Bool;
 import fr.cea.nabla.ir.truffle.values.NV1Int;
 import fr.cea.nabla.ir.truffle.values.NV1Real;
+import fr.cea.nabla.ir.truffle.values.NV2Bool;
 import fr.cea.nabla.ir.truffle.values.NV2Int;
 import fr.cea.nabla.ir.truffle.values.NV2Real;
 import fr.cea.nabla.ir.truffle.values.NV3Int;
@@ -44,12 +46,20 @@ public abstract class NablaExpressionNode extends NablaNode implements Instrumen
 		return NablaTypesGen.expectNV0Real(executeGeneric(frame));
 	}
 	
+	public NV1Bool executeNV1Bool(VirtualFrame frame) throws UnexpectedResultException {
+		return NablaTypesGen.expectNV1Bool(executeGeneric(frame));
+	}
+	
 	public NV1Int executeNV1Int(VirtualFrame frame) throws UnexpectedResultException {
 		return NablaTypesGen.expectNV1Int(executeGeneric(frame));
 	}
 	
 	public NV1Real executeNV1Real(VirtualFrame frame) throws UnexpectedResultException {
 		return NablaTypesGen.expectNV1Real(executeGeneric(frame));
+	}
+	
+	public NV2Bool executeNV2Bool(VirtualFrame frame) throws UnexpectedResultException {
+		return NablaTypesGen.expectNV2Bool(executeGeneric(frame));
 	}
 	
 	public NV2Int executeNV2Int(VirtualFrame frame) throws UnexpectedResultException {

@@ -28,6 +28,7 @@ public class NV0Real implements NablaValue {
 	}
 	
 	@ExportMessage
+	@TruffleBoundary
 	boolean isNumber() {
 		return fitsInDouble();
 	}

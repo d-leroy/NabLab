@@ -17,6 +17,7 @@ public abstract class NablaInt1Node extends NablaExpressionNode {
 		this.values = values;
 	}
 
+	@Override
 	@ExplodeLoop
 	@Specialization
 	public NV1Int executeNV1Int(VirtualFrame frame) {

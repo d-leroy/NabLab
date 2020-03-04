@@ -11,8 +11,10 @@ import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.ir.truffle.values.NV0Bool;
 import fr.cea.nabla.ir.truffle.values.NV0Int;
 import fr.cea.nabla.ir.truffle.values.NV0Real;
+import fr.cea.nabla.ir.truffle.values.NV1Bool;
 import fr.cea.nabla.ir.truffle.values.NV1Int;
 import fr.cea.nabla.ir.truffle.values.NV1Real;
+import fr.cea.nabla.ir.truffle.values.NV2Bool;
 import fr.cea.nabla.ir.truffle.values.NV2Int;
 import fr.cea.nabla.ir.truffle.values.NV2Real;
 import fr.cea.nabla.ir.truffle.values.NV3Int;
@@ -174,6 +176,40 @@ final class NablaExpressionNodeWrapper extends NablaExpressionNode implements Wr
     }
 
     @Override
+    public NV1Bool executeNV1Bool(VirtualFrame frame) throws UnexpectedResultException {
+        NV1Bool returnValue;
+        for (;;) {
+            boolean wasOnReturnExecuted = false;
+            try {
+                try {
+                    probeNode.onEnter(frame);
+                    returnValue = delegateNode.executeNV1Bool(frame);
+                    wasOnReturnExecuted = true;
+                    probeNode.onReturnValue(frame, returnValue);
+                    break;
+                } catch (UnexpectedResultException e) {
+                    wasOnReturnExecuted = true;
+                    probeNode.onReturnValue(frame, e.getResult());
+                    throw e;
+                }
+            } catch (Throwable t) {
+                Object result = probeNode.onReturnExceptionalOrUnwind(frame, t, wasOnReturnExecuted);
+                if (result == ProbeNode.UNWIND_ACTION_REENTER) {
+                    continue;
+                }
+                if (result instanceof NV1Bool) {
+                    returnValue = (NV1Bool) result;
+                    break;
+                } else if (result != null) {
+                    throw new UnexpectedResultException(result);
+                }
+                throw t;
+            }
+        }
+        return returnValue;
+    }
+
+    @Override
     public NV1Int executeNV1Int(VirtualFrame frame) throws UnexpectedResultException {
         NV1Int returnValue;
         for (;;) {
@@ -231,6 +267,40 @@ final class NablaExpressionNodeWrapper extends NablaExpressionNode implements Wr
                 }
                 if (result instanceof NV1Real) {
                     returnValue = (NV1Real) result;
+                    break;
+                } else if (result != null) {
+                    throw new UnexpectedResultException(result);
+                }
+                throw t;
+            }
+        }
+        return returnValue;
+    }
+
+    @Override
+    public NV2Bool executeNV2Bool(VirtualFrame frame) throws UnexpectedResultException {
+        NV2Bool returnValue;
+        for (;;) {
+            boolean wasOnReturnExecuted = false;
+            try {
+                try {
+                    probeNode.onEnter(frame);
+                    returnValue = delegateNode.executeNV2Bool(frame);
+                    wasOnReturnExecuted = true;
+                    probeNode.onReturnValue(frame, returnValue);
+                    break;
+                } catch (UnexpectedResultException e) {
+                    wasOnReturnExecuted = true;
+                    probeNode.onReturnValue(frame, e.getResult());
+                    throw e;
+                }
+            } catch (Throwable t) {
+                Object result = probeNode.onReturnExceptionalOrUnwind(frame, t, wasOnReturnExecuted);
+                if (result == ProbeNode.UNWIND_ACTION_REENTER) {
+                    continue;
+                }
+                if (result instanceof NV2Bool) {
+                    returnValue = (NV2Bool) result;
                     break;
                 } else if (result != null) {
                     throw new UnexpectedResultException(result);

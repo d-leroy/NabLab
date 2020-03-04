@@ -28,11 +28,13 @@ public class NV0Bool implements NablaValue {
 	}
 
 	@ExportMessage
+	@TruffleBoundary
 	boolean isBoolean() {
 		return true;
 	}
 
 	@ExportMessage
+	@TruffleBoundary
 	final boolean asBoolean() throws UnsupportedMessageException {
 		return data;
 	}

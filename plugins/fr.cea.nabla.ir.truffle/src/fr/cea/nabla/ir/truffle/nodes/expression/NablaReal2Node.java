@@ -20,6 +20,7 @@ public abstract class NablaReal2Node extends NablaExpressionNode {
 		this.dimensions = dimensions;
 	}
 
+	@Override
 	@ExplodeLoop
 	@Specialization
 	public NV2Real executeNV2Real(VirtualFrame frame) {

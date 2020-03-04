@@ -52,6 +52,7 @@ import com.oracle.truffle.api.frame.FrameSlotKind;
 import fr.cea.nabla.ir.ir.ArgOrVar;
 import fr.cea.nabla.ir.ir.ArgOrVarRef;
 import fr.cea.nabla.ir.ir.BaseType;
+import fr.cea.nabla.ir.ir.BaseTypeConstant;
 import fr.cea.nabla.ir.ir.BinaryExpression;
 import fr.cea.nabla.ir.ir.BoolConstant;
 import fr.cea.nabla.ir.ir.Expression;
@@ -73,15 +74,17 @@ import fr.cea.nabla.ir.truffle.nodes.NablaJobNode;
 import fr.cea.nabla.ir.truffle.nodes.NablaModuleNode;
 import fr.cea.nabla.ir.truffle.nodes.NablaWriteVariableNode;
 import fr.cea.nabla.ir.truffle.nodes.NablaWriteVariableNodeGen;
-import fr.cea.nabla.ir.truffle.nodes.expression.NablaBoolConstantNode;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaBool1NodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaBool2NodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaBoolConstantNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaInt1NodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaInt2NodeGen;
-import fr.cea.nabla.ir.truffle.nodes.expression.NablaIntConstantNode;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaIntConstantNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaReadVariableNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaReal1NodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaReal2NodeGen;
-import fr.cea.nabla.ir.truffle.nodes.expression.NablaRealConstantNode;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaRealConstantNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.binary.NablaAddNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.binary.NablaAndNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.binary.NablaDivNodeGen;
@@ -181,6 +184,8 @@ public class NablaNodeFactory {
 
 	private NablaExpressionNode createNablaExpressionNode(Expression expression) {
 		switch (expression.eClass().getClassifierID()) {
+		case IrPackage.BASE_TYPE_CONSTANT:
+			return createBaseTypeConstantNode((BaseTypeConstant) expression);
 		case IrPackage.BOOL_CONSTANT:
 			return createNablaBoolConstantNode((BoolConstant) expression);
 		case IrPackage.INT_CONSTANT:
@@ -217,16 +222,28 @@ public class NablaNodeFactory {
 		throw new UnsupportedOperationException();
 	}
 
+	private NablaExpressionNode createBaseTypeConstantNode(BaseTypeConstant baseTypeConstant) {
+		final IrType type = baseTypeConstant.getType();
+		switch (type.eClass().getClassifierID()) {
+		case IrPackage.BASE_TYPE: {
+			throw new UnsupportedOperationException();
+		}
+		case IrPackage.CONNECTIVITY_TYPE:
+			throw new UnsupportedOperationException();
+		}
+		throw new UnsupportedOperationException();
+	}
+
 	private NablaExpressionNode createNablaBoolConstantNode(BoolConstant boolConstant) {
-		return new NablaBoolConstantNode(boolConstant);
+		return NablaBoolConstantNodeGen.create(boolConstant);
 	}
 
 	private NablaExpressionNode createNablaIntConstantNode(int value) {
-		return new NablaIntConstantNode(value);
+		return NablaIntConstantNodeGen.create(value);
 	}
 
 	private NablaExpressionNode createNablaRealConstantNode(RealConstant realConstant) {
-		return new NablaRealConstantNode(realConstant);
+		return NablaRealConstantNodeGen.create(realConstant);
 	}
 	
 	private NablaExpressionNode createNablaVectorLiteralNode(VectorConstant vectorConstant) {
@@ -242,8 +259,8 @@ public class NablaNodeFactory {
 			switch (baseType.getPrimitive()) {
 			case BOOL:
 				switch (dimensions.length) {
-				case 1: throw new UnsupportedOperationException();
-				case 2: throw new UnsupportedOperationException();
+				case 1: return NablaBool1NodeGen.create(values);
+				case 2: return NablaBool2NodeGen.create(values, dimensions);
 				default: throw new UnsupportedOperationException();
 				}
 			case INT:

@@ -28,36 +28,43 @@ public final class NV0Int implements NablaValue {
 	}
 
 	@ExportMessage
+	@TruffleBoundary
 	boolean isNumber() {
 		return fitsInInt();
 	}
 
 	@ExportMessage
+	@TruffleBoundary
 	boolean fitsInByte() {
 		return false;
 	}
 
 	@ExportMessage
+	@TruffleBoundary
 	boolean fitsInShort() {
 		return false;
 	}
 
 	@ExportMessage
+	@TruffleBoundary
 	boolean fitsInFloat() {
 		return false;
 	}
 
 	@ExportMessage
+	@TruffleBoundary
 	boolean fitsInLong() {
 		return true;
 	}
 
 	@ExportMessage
+	@TruffleBoundary
 	boolean fitsInInt() {
 		return true;
 	}
 
 	@ExportMessage
+	@TruffleBoundary
 	boolean fitsInDouble() {
 		return true;
 	}

@@ -23,8 +23,8 @@ public class NablaFunctionCallNode extends NablaExpressionNode {
 		this.callNode = Truffle.getRuntime().createDirectCallNode(Truffle.getRuntime().createCallTarget(functionNode));
 	}
 
-	@ExplodeLoop
 	@Override
+	@ExplodeLoop
 	public NablaValue executeGeneric(VirtualFrame frame) {
 		CompilerAsserts.compilationConstant(argumentNodes.length);
 

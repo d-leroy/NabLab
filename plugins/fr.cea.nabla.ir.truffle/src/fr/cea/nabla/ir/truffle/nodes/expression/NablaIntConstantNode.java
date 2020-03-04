@@ -1,12 +1,11 @@
 package fr.cea.nabla.ir.truffle.nodes.expression;
 
+import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.UnexpectedResultException;
 
 import fr.cea.nabla.ir.truffle.values.NV0Int;
-import fr.cea.nabla.ir.truffle.values.NablaValue;
 
-public class NablaIntConstantNode extends NablaExpressionNode {
+public abstract class NablaIntConstantNode extends NablaExpressionNode {
 
 	private final NV0Int value;
 	
@@ -15,18 +14,13 @@ public class NablaIntConstantNode extends NablaExpressionNode {
 	}
 	
 	@Override
-	public boolean isInstrumentable() {
-		return false;
-	}
-
-	@Override
-	public NablaValue executeGeneric(VirtualFrame frame) {
+	@Specialization
+	public NV0Int executeNV0Int(VirtualFrame frame) {
 		return this.value;
 	}
 	
 	@Override
-	public NV0Int executeNV0Int(VirtualFrame frame) throws UnexpectedResultException {
-		return this.value;
+	public boolean isInstrumentable() {
+		return false;
 	}
-
 }

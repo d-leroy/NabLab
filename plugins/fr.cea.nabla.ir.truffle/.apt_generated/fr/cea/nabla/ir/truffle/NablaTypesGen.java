@@ -7,12 +7,16 @@ import fr.cea.nabla.ir.truffle.NablaTypes;
 import fr.cea.nabla.ir.truffle.values.NV0Bool;
 import fr.cea.nabla.ir.truffle.values.NV0Int;
 import fr.cea.nabla.ir.truffle.values.NV0Real;
+import fr.cea.nabla.ir.truffle.values.NV1Bool;
 import fr.cea.nabla.ir.truffle.values.NV1Int;
 import fr.cea.nabla.ir.truffle.values.NV1Real;
+import fr.cea.nabla.ir.truffle.values.NV2Bool;
 import fr.cea.nabla.ir.truffle.values.NV2Int;
 import fr.cea.nabla.ir.truffle.values.NV2Real;
+import fr.cea.nabla.ir.truffle.values.NV3Bool;
 import fr.cea.nabla.ir.truffle.values.NV3Int;
 import fr.cea.nabla.ir.truffle.values.NV3Real;
+import fr.cea.nabla.ir.truffle.values.NV4Bool;
 import fr.cea.nabla.ir.truffle.values.NV4Int;
 import fr.cea.nabla.ir.truffle.values.NV4Real;
 import fr.cea.nabla.ir.truffle.values.NablaOutput;
@@ -73,6 +77,22 @@ public final class NablaTypesGen extends NablaTypes {
         throw new UnexpectedResultException(value);
     }
 
+    public static boolean isNV1Bool(Object value) {
+        return value instanceof NV1Bool;
+    }
+
+    public static NV1Bool asNV1Bool(Object value) {
+        assert value instanceof NV1Bool : "NablaTypesGen.asNV1Bool: NV1Bool expected";
+        return (NV1Bool) value;
+    }
+
+    public static NV1Bool expectNV1Bool(Object value) throws UnexpectedResultException {
+        if (value instanceof NV1Bool) {
+            return (NV1Bool) value;
+        }
+        throw new UnexpectedResultException(value);
+    }
+
     public static boolean isNV1Int(Object value) {
         return value instanceof NV1Int;
     }
@@ -101,6 +121,22 @@ public final class NablaTypesGen extends NablaTypes {
     public static NV1Real expectNV1Real(Object value) throws UnexpectedResultException {
         if (value instanceof NV1Real) {
             return (NV1Real) value;
+        }
+        throw new UnexpectedResultException(value);
+    }
+
+    public static boolean isNV2Bool(Object value) {
+        return value instanceof NV2Bool;
+    }
+
+    public static NV2Bool asNV2Bool(Object value) {
+        assert value instanceof NV2Bool : "NablaTypesGen.asNV2Bool: NV2Bool expected";
+        return (NV2Bool) value;
+    }
+
+    public static NV2Bool expectNV2Bool(Object value) throws UnexpectedResultException {
+        if (value instanceof NV2Bool) {
+            return (NV2Bool) value;
         }
         throw new UnexpectedResultException(value);
     }
@@ -137,6 +173,22 @@ public final class NablaTypesGen extends NablaTypes {
         throw new UnexpectedResultException(value);
     }
 
+    public static boolean isNV3Bool(Object value) {
+        return value instanceof NV3Bool;
+    }
+
+    public static NV3Bool asNV3Bool(Object value) {
+        assert value instanceof NV3Bool : "NablaTypesGen.asNV3Bool: NV3Bool expected";
+        return (NV3Bool) value;
+    }
+
+    public static NV3Bool expectNV3Bool(Object value) throws UnexpectedResultException {
+        if (value instanceof NV3Bool) {
+            return (NV3Bool) value;
+        }
+        throw new UnexpectedResultException(value);
+    }
+
     public static boolean isNV3Int(Object value) {
         return value instanceof NV3Int;
     }
@@ -165,6 +217,22 @@ public final class NablaTypesGen extends NablaTypes {
     public static NV3Real expectNV3Real(Object value) throws UnexpectedResultException {
         if (value instanceof NV3Real) {
             return (NV3Real) value;
+        }
+        throw new UnexpectedResultException(value);
+    }
+
+    public static boolean isNV4Bool(Object value) {
+        return value instanceof NV4Bool;
+    }
+
+    public static NV4Bool asNV4Bool(Object value) {
+        assert value instanceof NV4Bool : "NablaTypesGen.asNV4Bool: NV4Bool expected";
+        return (NV4Bool) value;
+    }
+
+    public static NV4Bool expectNV4Bool(Object value) throws UnexpectedResultException {
+        if (value instanceof NV4Bool) {
+            return (NV4Bool) value;
         }
         throw new UnexpectedResultException(value);
     }

@@ -54,7 +54,22 @@ public class TruffleTestUtils {
 	}
 
 	public static void assertVariableValue(Value result, String variableName, int[][] value) {
-		Assert.assertFalse("Feature not yet supported", true);
+		final Value val = getVariable(result, variableName);
+		Assert.assertTrue(val.hasArrayElements());
+		Assert.assertTrue(val.getArrayElement(0).hasArrayElements());
+		final int iSize = (int) val.getArraySize();
+		final int jSize = (int) val.getArrayElement(0).getArraySize();
+		final int[][] valArray = new int[iSize][jSize];
+		for (int i = 0; i < iSize; i++) {
+			final Value iValue = val.getArrayElement(i);
+			for (int j = 0; j < jSize; j++) {
+				Assert.assertTrue(iValue.getArrayElement(j).fitsInInt());
+				valArray[i][j] = iValue.getArrayElement(j).asInt();
+			}
+		}
+		for (int i = 0; i < iSize; i++) {
+			Assert.assertArrayEquals(value[i], valArray[i]);
+		}
 	}
 
 	public static void assertVariableValue(Value result, String variableName, double value) {
@@ -77,7 +92,21 @@ public class TruffleTestUtils {
 	}
 
 	public static void assertVariableValue(Value result, String variableName, double[][] value) {
-		Assert.assertFalse("Feature not yet supported", true);
+		final Value val = getVariable(result, variableName);
+		Assert.assertTrue(val.hasArrayElements());
+		Assert.assertTrue(val.getArrayElement(0).hasArrayElements());
+		final int iSize = (int) val.getArraySize();
+		final int jSize = (int) val.getArrayElement(0).getArraySize();
+		final double[][] valArray = new double[iSize][jSize];
+		for (int i = 0; i < iSize; i++) {
+			final Value iValue = val.getArrayElement(i);
+			for (int j = 0; j < jSize; j++) {
+				Assert.assertTrue(iValue.getArrayElement(j).fitsInDouble());
+				valArray[i][j] = iValue.getArrayElement(j).asDouble();
+			}
+		}
+		for (int i = 0; i < iSize; i++) {
+			Assert.assertArrayEquals(value[i], valArray[i], DOUBLE_TOLERANCE);
+		}
 	}
-
 }
