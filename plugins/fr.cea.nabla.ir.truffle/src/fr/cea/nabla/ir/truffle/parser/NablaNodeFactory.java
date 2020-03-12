@@ -41,6 +41,7 @@
 package fr.cea.nabla.ir.truffle.parser;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -55,17 +56,24 @@ import fr.cea.nabla.ir.ir.BaseType;
 import fr.cea.nabla.ir.ir.BaseTypeConstant;
 import fr.cea.nabla.ir.ir.BinaryExpression;
 import fr.cea.nabla.ir.ir.BoolConstant;
+import fr.cea.nabla.ir.ir.ContractedIf;
 import fr.cea.nabla.ir.ir.Expression;
+import fr.cea.nabla.ir.ir.Function;
+import fr.cea.nabla.ir.ir.FunctionCall;
 import fr.cea.nabla.ir.ir.IntConstant;
 import fr.cea.nabla.ir.ir.IrModule;
 import fr.cea.nabla.ir.ir.IrPackage;
 import fr.cea.nabla.ir.ir.IrType;
+import fr.cea.nabla.ir.ir.MaxConstant;
+import fr.cea.nabla.ir.ir.MinConstant;
+import fr.cea.nabla.ir.ir.Parenthesis;
 import fr.cea.nabla.ir.ir.RealConstant;
 import fr.cea.nabla.ir.ir.SimpleVariable;
 import fr.cea.nabla.ir.ir.SizeType;
 import fr.cea.nabla.ir.ir.SizeTypeInt;
 import fr.cea.nabla.ir.ir.SizeTypeOperation;
 import fr.cea.nabla.ir.ir.SizeTypeSymbol;
+import fr.cea.nabla.ir.ir.UnaryExpression;
 import fr.cea.nabla.ir.ir.Variable;
 import fr.cea.nabla.ir.ir.VectorConstant;
 import fr.cea.nabla.ir.truffle.NablaLanguage;
@@ -76,15 +84,15 @@ import fr.cea.nabla.ir.truffle.nodes.NablaWriteVariableNode;
 import fr.cea.nabla.ir.truffle.nodes.NablaWriteVariableNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaBool1NodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaBool2NodeGen;
-import fr.cea.nabla.ir.truffle.nodes.expression.NablaBoolConstantNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaContractedIfNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaInt1NodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaInt2NodeGen;
-import fr.cea.nabla.ir.truffle.nodes.expression.NablaIntConstantNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaParenthesisNode;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaReadArrayNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaReadVariableNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaReal1NodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaReal2NodeGen;
-import fr.cea.nabla.ir.truffle.nodes.expression.NablaRealConstantNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.binary.NablaAddNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.binary.NablaAndNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.binary.NablaDivNodeGen;
@@ -98,12 +106,23 @@ import fr.cea.nabla.ir.truffle.nodes.expression.binary.NablaMulNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.binary.NablaNeqNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.binary.NablaOrNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.binary.NablaSubNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.constant.NablaBool1ConstantNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.constant.NablaBool2ConstantNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.constant.NablaBoolConstantNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.constant.NablaInt1ConstantNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.constant.NablaInt2ConstantNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.constant.NablaIntConstantNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.constant.NablaReal1ConstantNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.constant.NablaReal2ConstantNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.constant.NablaRealConstantNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.unary.NablaMinusNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.unary.NablaNotNodeGen;
 
 public class NablaNodeFactory {
 
 	static class LexicalScope {
-		protected final LexicalScope outer;
 		protected final Map<String, FrameSlot> locals;
+		protected final LexicalScope outer;
 
 		LexicalScope(LexicalScope outer) {
 			this.outer = outer;
@@ -114,9 +133,9 @@ public class NablaNodeFactory {
 		}
 	}
 
+	private final Map<Function, NablaFunctionNode> functions;
 	/* State while parsing an ir model. */
 	private FrameDescriptor frameDescriptor;
-	private final Map<String, RootCallTarget> callTargets;
 
 	/* State while parsing a function. */
 //    private String functionName;
@@ -124,13 +143,61 @@ public class NablaNodeFactory {
 //    private int parameterCount;
 //    private List<NablaInstructionNode> methodNodes;
 
+	private final NablaLanguage language;
 	/* State while parsing a block. */
 	private LexicalScope lexicalScope;
-	private final NablaLanguage language;
 
 	public NablaNodeFactory(NablaLanguage language, Map<String, RootCallTarget> callTargets) {
 		this.language = language;
 		this.callTargets = callTargets;
+	}
+
+	private NablaExpressionNode createBaseTypeConstantNode(BaseTypeConstant baseTypeConstant) {
+		final IrType type = baseTypeConstant.getType();
+		switch (type.eClass().getClassifierID()) {
+		case IrPackage.BASE_TYPE: {
+			final BaseType baseType = (BaseType) type;
+			final List<NablaExpressionNode> sizes = baseType.getSizes().stream()
+					.map(s -> createNablaSizeTypeNode(s)).collect(Collectors.toList());
+			final NablaExpressionNode value = createNablaExpressionNode(baseTypeConstant.getValue());
+			switch (baseType.getPrimitive()) {
+			case BOOL:
+				if (sizes == null) {
+					return value;
+				}
+				switch (sizes.size()) {
+				case 0: return value;
+				case 1: return NablaBool1ConstantNodeGen.create(value, sizes.get(0));
+				case 2: return NablaBool2ConstantNodeGen.create(value, sizes.toArray(new NablaExpressionNode[0]));
+				default: throw new UnsupportedOperationException();
+				}
+			case INT:
+				if (sizes == null) {
+					return value;
+				}
+				switch (sizes.size()) {
+				case 0: return value;
+				case 1: return NablaInt1ConstantNodeGen.create(value, sizes.get(0));
+				case 2: return NablaInt2ConstantNodeGen.create(value, sizes.toArray(new NablaExpressionNode[0]));
+				default: throw new UnsupportedOperationException();
+				}
+			case REAL:
+				if (sizes == null) {
+					return value;
+				}
+				switch (sizes.size()) {
+				case 0: return value;
+				case 1: return NablaReal1ConstantNodeGen.create(value, sizes.get(0));
+				case 2: return NablaReal2ConstantNodeGen.create(value, sizes.toArray(new NablaExpressionNode[0]));
+				default: throw new UnsupportedOperationException();
+				}
+			default: throw new UnsupportedOperationException();
+			}
+		}
+		case IrPackage.CONNECTIVITY_TYPE:
+			throw new UnsupportedOperationException();
+		}
+		throw new UnsupportedOperationException();
 	}
 
 	public NablaModuleNode createModule(IrModule module) {
@@ -161,25 +228,40 @@ public class NablaNodeFactory {
 		return moduleNode;
 	}
 
-	private NablaWriteVariableNode createVariableDeclaration(Variable variable) {
-		switch (variable.eClass().getClassifierID()) {
-		case IrPackage.SIMPLE_VARIABLE: {
-			final SimpleVariable simpleVariable = (SimpleVariable) variable;
-			final String name = simpleVariable.getName();
-			final FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(name, null, FrameSlotKind.Illegal);
-			lexicalScope.locals.put(name, frameSlot);
-			final Expression defaultValue = simpleVariable.getDefaultValue();
-			if (defaultValue != null) {
-				final NablaExpressionNode truffleDefaultValue = createNablaExpressionNode(defaultValue);
-				return NablaWriteVariableNodeGen.create(truffleDefaultValue, frameSlot);
-			}
-			return null;
-		}
-		case IrPackage.CONNECTIVITY_VARIABLE: {
-			throw new UnsupportedOperationException();
-		}
+	private NablaExpressionNode createNablaBinaryExpressionNode(NablaExpressionNode leftNode, String operator, NablaExpressionNode rightNode) {
+		switch (operator) {
+		case "||":
+			return NablaOrNodeGen.create(leftNode, rightNode);
+		case "&&":
+			return NablaAndNodeGen.create(leftNode, rightNode);
+		case "==":
+			return NablaEqNodeGen.create(leftNode, rightNode);
+		case "!=":
+			return NablaNeqNodeGen.create(leftNode, rightNode);
+		case ">=":
+			return NablaGeqNodeGen.create(leftNode, rightNode);
+		case "<=":
+			return NablaLeqNodeGen.create(leftNode, rightNode);
+		case ">":
+			return NablaGtNodeGen.create(leftNode, rightNode);
+		case "<":
+			return NablaLtNodeGen.create(leftNode, rightNode);
+		case "+":
+			return NablaAddNodeGen.create(leftNode, rightNode);
+		case "-":
+			return NablaSubNodeGen.create(leftNode, rightNode);
+		case "*":
+			return NablaMulNodeGen.create(leftNode, rightNode);
+		case "/":
+			return NablaDivNodeGen.create(leftNode, rightNode);
+		case "%":
+			return NablaModNodeGen.create(leftNode, rightNode);
 		}
 		throw new UnsupportedOperationException();
+	}
+	
+	private NablaExpressionNode createNablaBoolConstantNode(boolean value) {
+		return NablaBoolConstantNodeGen.create(value);
 	}
 
 	private NablaExpressionNode createNablaExpressionNode(Expression expression) {
@@ -187,15 +269,30 @@ public class NablaNodeFactory {
 		case IrPackage.BASE_TYPE_CONSTANT:
 			return createBaseTypeConstantNode((BaseTypeConstant) expression);
 		case IrPackage.BOOL_CONSTANT:
-			return createNablaBoolConstantNode((BoolConstant) expression);
+			return createNablaBoolConstantNode(((BoolConstant) expression).isValue());
 		case IrPackage.INT_CONSTANT:
 			return createNablaIntConstantNode(((IntConstant) expression).getValue());
 		case IrPackage.REAL_CONSTANT:
-			return createNablaRealConstantNode((RealConstant) expression);
+			return createNablaRealConstantNode(((RealConstant) expression).getValue());
 		case IrPackage.VECTOR_CONSTANT:
 			return createNablaVectorLiteralNode((VectorConstant) expression);
+		case IrPackage.MAX_CONSTANT:
+			return createNablaMaxConstant((MaxConstant) expression);
+		case IrPackage.MIN_CONSTANT:
+			return createNablaMinConstant((MinConstant) expression);
 		case IrPackage.ARG_OR_VAR_REF:
 			return createNablaReadArgOrVariableNode((ArgOrVarRef) expression);
+		case IrPackage.PARENTHESIS:
+			return createNablaParenthesisNode((Parenthesis) expression);
+		case IrPackage.CONTRACTED_IF:
+			return createNablaContractedIfNode((ContractedIf) expression);
+		case IrPackage.FUNCTION_CALL:
+			return createNablaFunctionCallNode((FunctionCall) expression);
+		case IrPackage.UNARY_EXPRESSION: {
+			final UnaryExpression unaryExpression = (UnaryExpression) expression;
+			final NablaExpressionNode subNode = createNablaExpressionNode(unaryExpression.getExpression());
+			return createNablaUnaryExpressionNode(subNode, unaryExpression.getOperator());
+		}
 		case IrPackage.BINARY_EXPRESSION: {
 			final BinaryExpression binaryExpression = (BinaryExpression) expression;
 			final NablaExpressionNode leftNode = createNablaExpressionNode(binaryExpression.getLeft());
@@ -206,6 +303,108 @@ public class NablaNodeFactory {
 		throw new UnsupportedOperationException();
 	}
 	
+	private NablaExpressionNode createNablaFunctionCallNode(FunctionCall functionCall) {
+		// On function call: create function AST and DirectCallTarget 
+//		functionCall.getFunction().getBody()
+		return null;
+	}
+
+	private NablaExpressionNode createNablaContractedIfNode(ContractedIf contractedIf) {
+		return new NablaContractedIfNode(createNablaExpressionNode(contractedIf.getCondition()),
+				createNablaExpressionNode(contractedIf.getThenExpression()),
+				createNablaExpressionNode(contractedIf.getElseExpression()));
+	}
+
+	private NablaExpressionNode createNablaUnaryExpressionNode(NablaExpressionNode subNode, String operator) {
+		switch (operator) {
+		case "!":
+			return NablaNotNodeGen.create(subNode);
+		case "-":
+			return NablaMinusNodeGen.create(subNode);
+		}
+		throw new UnsupportedOperationException();
+	}
+
+	private NablaExpressionNode createNablaParenthesisNode(Parenthesis expression) {
+		return new NablaParenthesisNode(createNablaExpressionNode(expression.getExpression()));
+	}
+
+	private NablaExpressionNode createNablaIntConstantNode(int value) {
+		return NablaIntConstantNodeGen.create(value);
+	}
+
+	private NablaExpressionNode createNablaMaxConstant(MaxConstant maxConstant) {
+		final IrType type = maxConstant.getType();
+		switch (type.eClass().getClassifierID()) {
+		case IrPackage.BASE_TYPE: {
+			final BaseType baseType = (BaseType) type;
+			switch (baseType.getPrimitive()) {
+			case BOOL:
+				throw new UnsupportedOperationException();
+			case INT:
+				return createNablaIntConstantNode(Integer.MAX_VALUE);
+			case REAL:
+				return createNablaRealConstantNode(Double.MAX_VALUE);
+			}
+		}
+		case IrPackage.CONNECTIVITY_TYPE:
+			throw new UnsupportedOperationException();
+		}
+		throw new UnsupportedOperationException();
+	}
+
+	private NablaExpressionNode createNablaMinConstant(MinConstant minConstant) {
+		final IrType type = minConstant.getType();
+		switch (type.eClass().getClassifierID()) {
+		case IrPackage.BASE_TYPE: {
+			final BaseType baseType = (BaseType) type;
+			switch (baseType.getPrimitive()) {
+			case BOOL:
+				throw new UnsupportedOperationException();
+			case INT:
+				return createNablaIntConstantNode(Integer.MIN_VALUE);
+			case REAL:
+				return createNablaRealConstantNode(Double.MIN_VALUE);
+			}
+		}
+		case IrPackage.CONNECTIVITY_TYPE:
+			throw new UnsupportedOperationException();
+		}
+		throw new UnsupportedOperationException();
+	}
+
+	private NablaExpressionNode createNablaReadArgOrVariableNode(ArgOrVarRef ref) {
+		final ArgOrVar target = ref.getTarget();
+		switch (target.eClass().getClassifierID()) {
+		case IrPackage.SIMPLE_VARIABLE: {
+			final SimpleVariable simpleVariable = (SimpleVariable) target;
+			final String name = simpleVariable.getName();
+			final FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(name, null, FrameSlotKind.Illegal);
+			lexicalScope.locals.put(name, frameSlot);
+			if (ref.getIndices().isEmpty()) {
+				return NablaReadVariableNodeGen.create(frameSlot);
+			} else {
+				return new NablaReadArrayNode(NablaReadVariableNodeGen.create(frameSlot));
+			}
+		}
+		case IrPackage.CONNECTIVITY_VARIABLE: {
+			throw new UnsupportedOperationException();
+		}
+		}
+		throw new UnsupportedOperationException();
+	}
+
+	private NablaExpressionNode createNablaReadSizeTypeSymbolNode(SizeTypeSymbol symbol) {
+		final String name = symbol.getName();
+		final FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(name, null, FrameSlotKind.Illegal);
+		lexicalScope.locals.put(name, frameSlot);
+		return NablaReadVariableNodeGen.create(frameSlot);
+	}
+	
+	private NablaExpressionNode createNablaRealConstantNode(double value) {
+		return NablaRealConstantNodeGen.create(value);
+	}
+
 	private NablaExpressionNode createNablaSizeTypeNode(SizeType sizeType) {
 		switch (sizeType.eClass().getClassifierID()) {
 		case IrPackage.SIZE_TYPE_INT:
@@ -220,30 +419,6 @@ public class NablaNodeFactory {
 		}
 		}
 		throw new UnsupportedOperationException();
-	}
-
-	private NablaExpressionNode createBaseTypeConstantNode(BaseTypeConstant baseTypeConstant) {
-		final IrType type = baseTypeConstant.getType();
-		switch (type.eClass().getClassifierID()) {
-		case IrPackage.BASE_TYPE: {
-			throw new UnsupportedOperationException();
-		}
-		case IrPackage.CONNECTIVITY_TYPE:
-			throw new UnsupportedOperationException();
-		}
-		throw new UnsupportedOperationException();
-	}
-
-	private NablaExpressionNode createNablaBoolConstantNode(BoolConstant boolConstant) {
-		return NablaBoolConstantNodeGen.create(boolConstant);
-	}
-
-	private NablaExpressionNode createNablaIntConstantNode(int value) {
-		return NablaIntConstantNodeGen.create(value);
-	}
-
-	private NablaExpressionNode createNablaRealConstantNode(RealConstant realConstant) {
-		return NablaRealConstantNodeGen.create(realConstant);
 	}
 	
 	private NablaExpressionNode createNablaVectorLiteralNode(VectorConstant vectorConstant) {
@@ -275,7 +450,6 @@ public class NablaNodeFactory {
 				case 2: return NablaReal2NodeGen.create(values, dimensions);
 				default: throw new UnsupportedOperationException();
 				}
-			default: throw new UnsupportedOperationException();
 			}
 		}
 		case IrPackage.CONNECTIVITY_TYPE:
@@ -284,58 +458,23 @@ public class NablaNodeFactory {
 		throw new UnsupportedOperationException();
 	}
 
-	private NablaExpressionNode createNablaReadArgOrVariableNode(ArgOrVarRef ref) {
-		final ArgOrVar target = ref.getTarget();
-		switch (target.eClass().getClassifierID()) {
+	private NablaWriteVariableNode createVariableDeclaration(Variable variable) {
+		switch (variable.eClass().getClassifierID()) {
 		case IrPackage.SIMPLE_VARIABLE: {
-			final SimpleVariable simpleVariable = (SimpleVariable) target;
+			final SimpleVariable simpleVariable = (SimpleVariable) variable;
 			final String name = simpleVariable.getName();
 			final FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(name, null, FrameSlotKind.Illegal);
 			lexicalScope.locals.put(name, frameSlot);
-			return NablaReadVariableNodeGen.create(frameSlot);
+			final Expression defaultValue = simpleVariable.getDefaultValue();
+			if (defaultValue != null) {
+				final NablaExpressionNode truffleDefaultValue = createNablaExpressionNode(defaultValue);
+				return NablaWriteVariableNodeGen.create(truffleDefaultValue, frameSlot);
+			}
+			return null;
 		}
 		case IrPackage.CONNECTIVITY_VARIABLE: {
 			throw new UnsupportedOperationException();
 		}
-		}
-		throw new UnsupportedOperationException();
-	}
-	
-	private NablaExpressionNode createNablaReadSizeTypeSymbolNode(SizeTypeSymbol symbol) {
-		final String name = symbol.getName();
-		final FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(name, null, FrameSlotKind.Illegal);
-		lexicalScope.locals.put(name, frameSlot);
-		return NablaReadVariableNodeGen.create(frameSlot);
-	}
-
-	private NablaExpressionNode createNablaBinaryExpressionNode(NablaExpressionNode leftNode, String operator, NablaExpressionNode rightNode) {
-		switch (operator) {
-		case "||":
-			return NablaOrNodeGen.create(leftNode, rightNode);
-		case "&&":
-			return NablaAndNodeGen.create(leftNode, rightNode);
-		case "==":
-			return NablaEqNodeGen.create(leftNode, rightNode);
-		case "!=":
-			return NablaNeqNodeGen.create(leftNode, rightNode);
-		case ">=":
-			return NablaGeqNodeGen.create(leftNode, rightNode);
-		case "<=":
-			return NablaLeqNodeGen.create(leftNode, rightNode);
-		case ">":
-			return NablaGtNodeGen.create(leftNode, rightNode);
-		case "<":
-			return NablaLtNodeGen.create(leftNode, rightNode);
-		case "+":
-			return NablaAddNodeGen.create(leftNode, rightNode);
-		case "-":
-			return NablaSubNodeGen.create(leftNode, rightNode);
-		case "*":
-			return NablaMulNodeGen.create(leftNode, rightNode);
-		case "/":
-			return NablaDivNodeGen.create(leftNode, rightNode);
-		case "%":
-			return NablaModNodeGen.create(leftNode, rightNode);
 		}
 		throw new UnsupportedOperationException();
 	}

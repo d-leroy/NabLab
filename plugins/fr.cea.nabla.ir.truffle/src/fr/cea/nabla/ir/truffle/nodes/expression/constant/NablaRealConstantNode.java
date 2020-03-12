@@ -1,17 +1,17 @@
-package fr.cea.nabla.ir.truffle.nodes.expression;
+package fr.cea.nabla.ir.truffle.nodes.expression.constant;
 
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
-import fr.cea.nabla.ir.ir.RealConstant;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.ir.truffle.values.NV0Real;
 
 public abstract class NablaRealConstantNode extends NablaExpressionNode {
 
 	private final NV0Real value;
 	
-	public NablaRealConstantNode(RealConstant realConstant) {
-		this.value = new NV0Real(realConstant.getValue());
+	public NablaRealConstantNode(double value) {
+		this.value = new NV0Real(value);
 	}
 
 	@Override

@@ -1,8 +1,9 @@
-package fr.cea.nabla.ir.truffle.nodes.expression;
+package fr.cea.nabla.ir.truffle.nodes.expression.constant;
 
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.ir.truffle.values.NV0Int;
 
 public abstract class NablaIntConstantNode extends NablaExpressionNode {
