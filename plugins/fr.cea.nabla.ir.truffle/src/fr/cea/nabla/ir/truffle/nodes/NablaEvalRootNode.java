@@ -40,8 +40,6 @@
  */
 package fr.cea.nabla.ir.truffle.nodes;
 
-import java.util.Map;
-
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
 import com.oracle.truffle.api.RootCallTarget;
@@ -66,14 +64,19 @@ import fr.cea.nabla.ir.truffle.runtime.NablaNull;
  */
 public final class NablaEvalRootNode extends RootNode {
 
-    private final Map<String, RootCallTarget> functions;
+//    private final Map<String, RootCallTarget> functions;
     @CompilationFinal private boolean registered;
 
     @Child private DirectCallNode mainCallNode;
 
-    public NablaEvalRootNode(NablaLanguage language, RootCallTarget rootFunction, Map<String, RootCallTarget> functions) {
+//    public NablaEvalRootNode(NablaLanguage language, RootCallTarget rootFunction, Map<String, RootCallTarget> functions) {
+//        super(language);
+//        this.functions = functions;
+//        this.mainCallNode = rootFunction != null ? DirectCallNode.create(rootFunction) : null;
+//    }
+
+    public NablaEvalRootNode(NablaLanguage language, RootCallTarget rootFunction) {
         super(language);
-        this.functions = functions;
         this.mainCallNode = rootFunction != null ? DirectCallNode.create(rootFunction) : null;
     }
 
@@ -103,7 +106,7 @@ public final class NablaEvalRootNode extends RootNode {
         if (!registered) {
             /* Function registration is a slow-path operation that must not be compiled. */
             CompilerDirectives.transferToInterpreterAndInvalidate();
-            lookupContextReference(NablaLanguage.class).get().getFunctionRegistry().register(functions);
+//            lookupContextReference(NablaLanguage.class).get().getFunctionRegistry().register(functions);
             registered = true;
         }
 

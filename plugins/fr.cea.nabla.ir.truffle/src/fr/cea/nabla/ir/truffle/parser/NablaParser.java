@@ -1,8 +1,5 @@
 package fr.cea.nabla.ir.truffle.parser;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.nodes.RootNode;
@@ -48,10 +45,9 @@ public class NablaParser {
 		CompilationChainHelper helper = new CompilationChainHelper();
 		inj.getInjector().injectMembers(helper);
 		final IrModule irModule = helper.getIrModule(model, getGenModel());
-		final Map<String, RootCallTarget> callTargets = new HashMap<>();
 		final RootCallTarget moduleCallTarget = Truffle.getRuntime()
-				.createCallTarget(new NablaNodeFactory(nablaLanguage, callTargets).createModule(irModule));
-        final RootNode evalModule = new NablaEvalRootNode(nablaLanguage, moduleCallTarget, callTargets);
+				.createCallTarget(new NablaNodeFactory(nablaLanguage).createModule(irModule));
+        final RootNode evalModule = new NablaEvalRootNode(nablaLanguage, moduleCallTarget);
         return Truffle.getRuntime().createCallTarget(evalModule);
 	}
 }

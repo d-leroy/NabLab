@@ -45,37 +45,39 @@ import com.oracle.truffle.api.nodes.UnexpectedResultException;
 import com.oracle.truffle.api.profiles.ConditionProfile;
 
 import fr.cea.nabla.ir.truffle.NablaException;
-import fr.cea.nabla.ir.truffle.NablaTypesGen;
-
 
 public class NablaContractedIfNode extends NablaExpressionNode {
 
-    @Child private NablaExpressionNode conditionNode;
-    @Child private NablaExpressionNode thenNode;
-    @Child private NablaExpressionNode elseNode;
-    
-    private final ConditionProfile condition = ConditionProfile.createCountingProfile();
+	@Child
+	private NablaExpressionNode conditionNode;
+	@Child
+	private NablaExpressionNode thenNode;
+	@Child
+	private NablaExpressionNode elseNode;
 
-    public NablaContractedIfNode(NablaExpressionNode conditionNode, NablaExpressionNode thenNode, NablaExpressionNode elseNode) {
-        this.conditionNode = conditionNode;
-        this.thenNode = thenNode;
-        this.elseNode = elseNode;
-    }
+	private final ConditionProfile condition = ConditionProfile.createCountingProfile();
 
-    @Override
-    public Object executeGeneric(VirtualFrame frame) {
-        if (condition.profile(evaluateCondition(frame))) {
-            return thenNode.executeGeneric(frame);
-        } else {
-            return elseNode.executeGeneric(frame);
-        }
-    }
+	public NablaContractedIfNode(NablaExpressionNode conditionNode, NablaExpressionNode thenNode,
+			NablaExpressionNode elseNode) {
+		this.conditionNode = conditionNode;
+		this.thenNode = thenNode;
+		this.elseNode = elseNode;
+	}
 
-    private boolean evaluateCondition(VirtualFrame frame) {
-        try {
-        	return NablaTypesGen.asNV0Bool(conditionNode.executeNV0Bool(frame)).isData();
-        } catch (UnexpectedResultException ex) {
-            throw NablaException.typeError(this, ex.getResult());
-        }
-    }
+	@Override
+	public Object executeGeneric(VirtualFrame frame) {
+		if (condition.profile(evaluateCondition(frame))) {
+			return thenNode.executeGeneric(frame);
+		} else {
+			return elseNode.executeGeneric(frame);
+		}
+	}
+
+	private boolean evaluateCondition(VirtualFrame frame) {
+		try {
+			return conditionNode.executeNV0Bool(frame).isData();
+		} catch (UnexpectedResultException ex) {
+			throw NablaException.typeError(this, ex.getResult());
+		}
+	}
 }

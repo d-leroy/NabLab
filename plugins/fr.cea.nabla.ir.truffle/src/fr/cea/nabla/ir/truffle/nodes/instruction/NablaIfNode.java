@@ -11,9 +11,12 @@ import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
 @NodeInfo(shortName = "if", description = "The node implementing a condional statement")
 public class NablaIfNode extends NablaInstructionNode {
 
-	@Child private NablaExpressionNode conditionNode;
-	@Child private NablaInstructionNode thenPartNode;
-	@Child private NablaInstructionNode elsePartNode;
+	@Child
+	private NablaExpressionNode conditionNode;
+	@Child
+	private NablaInstructionNode thenPartNode;
+	@Child
+	private NablaInstructionNode elsePartNode;
 
 	private final ConditionProfile condition = ConditionProfile.createCountingProfile();
 
@@ -29,9 +32,7 @@ public class NablaIfNode extends NablaInstructionNode {
 		if (condition.profile(evaluateCondition(frame))) {
 			return thenPartNode.executeGeneric(frame);
 		} else {
-//            if (elsePartNode != null) {
 			return elsePartNode.executeGeneric(frame);
-//            }
 		}
 	}
 
@@ -42,5 +43,4 @@ public class NablaIfNode extends NablaInstructionNode {
 			throw NablaException.typeError(this, ex.getResult());
 		}
 	}
-
 }

@@ -6,9 +6,12 @@ public class NablaInstructionBlockNode extends NablaInstructionNode {
 
 	@Children NablaInstructionNode[] instructions;
 
+	public NablaInstructionBlockNode(NablaInstructionNode[] instructions) {
+		this.instructions = instructions;
+	}
+	
 	@Override
 	public Object executeGeneric(VirtualFrame frame) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 }
