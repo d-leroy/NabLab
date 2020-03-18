@@ -95,4 +95,14 @@ public class NV2Real implements NablaValue {
 	public double[][] getData() {
 		return this.data;
 	}
+	
+	@Override
+	public int getDimension(int dimension) {
+		assert (dimension <= 2);
+		switch (dimension) {
+		case 1: return data.length;
+		case 2: return data[0].length;
+		default: throw new UnsupportedOperationException();
+		}
+	}
 }

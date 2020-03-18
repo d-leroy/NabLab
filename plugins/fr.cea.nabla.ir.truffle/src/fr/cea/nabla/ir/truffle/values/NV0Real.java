@@ -135,4 +135,9 @@ public class NV0Real implements NablaValue {
 	public void setData(final double data) {
 		this.data = data;
 	}
+	
+	@Override
+	public int getDimension(int dimension) {
+		throw new UnsupportedOperationException();
+	}
 }

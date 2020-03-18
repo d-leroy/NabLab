@@ -92,4 +92,10 @@ public final class NV1Int implements NablaValue {
 	public int[] getData() {
 		return this.data;
 	}
+	
+	@Override
+	public int getDimension(int dimension) {
+		assert (dimension == 1);
+		return data.length;
+	}
 }

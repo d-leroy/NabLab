@@ -40,9 +40,13 @@
  */
 package fr.cea.nabla.ir.truffle.parser;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.oracle.truffle.api.frame.FrameDescriptor;
@@ -50,6 +54,7 @@ import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotKind;
 
 import fr.cea.nabla.ir.ir.Affectation;
+import fr.cea.nabla.ir.ir.Arg;
 import fr.cea.nabla.ir.ir.ArgOrVar;
 import fr.cea.nabla.ir.ir.ArgOrVarRef;
 import fr.cea.nabla.ir.ir.BaseType;
@@ -65,27 +70,32 @@ import fr.cea.nabla.ir.ir.Instruction;
 import fr.cea.nabla.ir.ir.InstructionBlock;
 import fr.cea.nabla.ir.ir.InstructionJob;
 import fr.cea.nabla.ir.ir.IntConstant;
+import fr.cea.nabla.ir.ir.IntervalIterationBlock;
 import fr.cea.nabla.ir.ir.IrModule;
 import fr.cea.nabla.ir.ir.IrPackage;
 import fr.cea.nabla.ir.ir.IrType;
+import fr.cea.nabla.ir.ir.IterationBlock;
 import fr.cea.nabla.ir.ir.Job;
+import fr.cea.nabla.ir.ir.Loop;
 import fr.cea.nabla.ir.ir.MaxConstant;
 import fr.cea.nabla.ir.ir.MinConstant;
 import fr.cea.nabla.ir.ir.Parenthesis;
 import fr.cea.nabla.ir.ir.RealConstant;
+import fr.cea.nabla.ir.ir.Return;
 import fr.cea.nabla.ir.ir.SimpleVariable;
 import fr.cea.nabla.ir.ir.SizeType;
 import fr.cea.nabla.ir.ir.SizeTypeInt;
 import fr.cea.nabla.ir.ir.SizeTypeOperation;
 import fr.cea.nabla.ir.ir.SizeTypeSymbol;
+import fr.cea.nabla.ir.ir.SizeTypeSymbolRef;
+import fr.cea.nabla.ir.ir.SpaceIterationBlock;
 import fr.cea.nabla.ir.ir.UnaryExpression;
+import fr.cea.nabla.ir.ir.VarDefinition;
 import fr.cea.nabla.ir.ir.Variable;
 import fr.cea.nabla.ir.ir.VectorConstant;
 import fr.cea.nabla.ir.truffle.NablaLanguage;
 import fr.cea.nabla.ir.truffle.nodes.NablaFunctionNode;
 import fr.cea.nabla.ir.truffle.nodes.NablaModuleNode;
-import fr.cea.nabla.ir.truffle.nodes.NablaWriteVariableNode;
-import fr.cea.nabla.ir.truffle.nodes.NablaWriteVariableNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaBool1NodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaBool2NodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaContractedIfNode;
@@ -94,7 +104,9 @@ import fr.cea.nabla.ir.truffle.nodes.expression.NablaFunctionCallNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaInt1NodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaInt2NodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaParenthesisNode;
-import fr.cea.nabla.ir.truffle.nodes.expression.NablaReadArrayNode;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaReadArgumentNode;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaReadArgumentNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaReadArrayNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaReadVariableNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaReadVariableNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaReal1NodeGen;
@@ -128,6 +140,12 @@ import fr.cea.nabla.ir.truffle.nodes.expression.unary.NablaNotNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.instruction.NablaIfNode;
 import fr.cea.nabla.ir.truffle.nodes.instruction.NablaInstructionBlockNode;
 import fr.cea.nabla.ir.truffle.nodes.instruction.NablaInstructionNode;
+import fr.cea.nabla.ir.truffle.nodes.instruction.NablaLoopNode;
+import fr.cea.nabla.ir.truffle.nodes.instruction.NablaReturnNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.instruction.NablaWriteArrayNode;
+import fr.cea.nabla.ir.truffle.nodes.instruction.NablaWriteArrayNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.instruction.NablaWriteVariableNode;
+import fr.cea.nabla.ir.truffle.nodes.instruction.NablaWriteVariableNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.job.NablaInstructionJobNode;
 import fr.cea.nabla.ir.truffle.nodes.job.NablaJobNode;
 
@@ -150,14 +168,7 @@ public class NablaNodeFactory {
 	private FrameDescriptor frameDescriptor;
 	private final Map<Function, NablaFunctionNode> functions = new HashMap<>();
 
-	/* State while parsing a function. */
-//    private String functionName;
-//    private int functionBodyStartPos; // includes parameter list
-//    private int parameterCount;
-//    private List<NablaInstructionNode> methodNodes;
-
 	private final NablaLanguage language;
-	/* State while parsing a block. */
 	private LexicalScope lexicalScope;
 
 	public NablaNodeFactory(NablaLanguage language) {
@@ -224,6 +235,63 @@ public class NablaNodeFactory {
 		}
 		throw new UnsupportedOperationException();
 	}
+	
+	private NablaExpressionNode createNablaDefaultValueNode(BaseType baseType) {
+		final List<NablaExpressionNode> sizes = baseType.getSizes().stream().map(s -> createNablaSizeTypeNode(s))
+				.collect(Collectors.toList());
+		switch (baseType.getPrimitive()) {
+		case BOOL: {
+			final NablaExpressionNode value = createNablaBoolConstantNode(false);
+			if (sizes == null) {
+				return value;
+			}
+			switch (sizes.size()) {
+			case 0:
+				return value;
+			case 1:
+				return NablaBool1ConstantNodeGen.create(value, sizes.get(0));
+			case 2:
+				return NablaBool2ConstantNodeGen.create(value, sizes.toArray(new NablaExpressionNode[0]));
+			default:
+				throw new UnsupportedOperationException();
+			}
+		}
+		case INT: {
+			final NablaExpressionNode value = createNablaIntConstantNode(0);
+			if (sizes == null) {
+				return value;
+			}
+			switch (sizes.size()) {
+			case 0:
+				return value;
+			case 1:
+				return NablaInt1ConstantNodeGen.create(value, sizes.get(0));
+			case 2:
+				return NablaInt2ConstantNodeGen.create(value, sizes.toArray(new NablaExpressionNode[0]));
+			default:
+				throw new UnsupportedOperationException();
+			}
+		}
+		case REAL: {
+			final NablaExpressionNode value = createNablaRealConstantNode(0);
+			if (sizes == null) {
+				return value;
+			}
+			switch (sizes.size()) {
+			case 0:
+				return value;
+			case 1:
+				return NablaReal1ConstantNodeGen.create(value, sizes.get(0));
+			case 2:
+				return NablaReal2ConstantNodeGen.create(value, sizes.toArray(new NablaExpressionNode[0]));
+			default:
+				throw new UnsupportedOperationException();
+			}
+		}
+		default:
+			throw new UnsupportedOperationException();
+		}
+	}
 
 	public NablaModuleNode createModule(IrModule module) {
 		assert lexicalScope == null;
@@ -248,9 +316,10 @@ public class NablaNodeFactory {
 				.filter(v -> v instanceof SimpleVariable && !v.isConst()).map(v -> createVariableDeclaration(v))
 				.filter(n -> n != null).collect(Collectors.toList()).toArray(new NablaWriteVariableNode[0]);
 
-		final NablaFunctionNode[] functionNodes = new NablaFunctionNode[module.getFunctions().size()];
+		final NablaFunctionNode[] functionNodes = module.getFunctions().stream().map(f -> createNablaFunctionNode(f))
+				.collect(Collectors.toList()).toArray(new NablaFunctionNode[0]);
 
-		final NablaJobNode[] jobNodes = module.getJobs().stream().map(j -> createNablaJobNode(j))
+		final NablaJobNode[] jobNodes = module.getJobs().stream().map(j -> createNablaJobNode(j, moduleFrameDescriptor))
 				.collect(Collectors.toList()).toArray(new NablaJobNode[0]);
 
 		final NablaModuleNode moduleNode = new NablaModuleNode(language, moduleFrameDescriptor, moduleName,
@@ -259,10 +328,17 @@ public class NablaNodeFactory {
 		return moduleNode;
 	}
 
-	private NablaJobNode createNablaJobNode(Job job) {
+	private NablaJobNode createNablaJobNode(Job job, FrameDescriptor moduleFrameDescriptor) {
+		final NablaJobNode result;
+
+		frameDescriptor = new FrameDescriptor();
+		lexicalScope = new LexicalScope(lexicalScope);
+
 		switch (job.eClass().getClassifierID()) {
 		case IrPackage.INSTRUCTION_JOB:
-			return createNablaInstructionJobNode((InstructionJob) job);
+			result = createNablaInstructionJobNode((InstructionJob) job);
+			lexicalScope = lexicalScope.outer;
+			return result;
 		case IrPackage.TIME_LOOP_COPY_JOB:
 			throw new UnsupportedOperationException();
 		}
@@ -270,7 +346,8 @@ public class NablaNodeFactory {
 	}
 
 	private NablaInstructionJobNode createNablaInstructionJobNode(InstructionJob job) {
-		return new NablaInstructionJobNode(createNablaInstructionNode(job.getInstruction()));
+		return new NablaInstructionJobNode(language, frameDescriptor, job.getName(),
+				new NablaInstructionBlockNode(createNablaInstructionNode(job.getInstruction())));
 	}
 
 	private NablaExpressionNode createNablaBinaryExpressionNode(NablaExpressionNode leftNode, String operator,
@@ -363,32 +440,182 @@ public class NablaNodeFactory {
 		return new NablaFunctionCallNode(functionNode, argNodes);
 	}
 
-	private NablaFunctionNode createNablaFunctionNode(Function function) {
-		final NablaInstructionNode bodyNode = createNablaInstructionNode(function.getBody());
-		return new NablaFunctionNode(language, frameDescriptor, bodyNode, function.getName());
+	private String getSizeTypeName(SizeType sizeType) {
+		switch (sizeType.eClass().getClassifierID()) {
+		case IrPackage.SIZE_TYPE_INT:
+			return "";
+		case IrPackage.SIZE_TYPE_SYMBOL:
+			return ((SizeTypeSymbol) sizeType).getName();
+		case IrPackage.SIZE_TYPE_SYMBOL_REF:
+			return ((SizeTypeSymbolRef) sizeType).getTarget().getName();
+		}
+		throw new IllegalArgumentException();
 	}
 
-	private NablaInstructionBlockNode createNablaInstructionBlockNode(InstructionBlock instructionBlock) {
+	private NablaFunctionNode createNablaFunctionNode(Function function) {
+		if (function.getBody() != null) {
+			frameDescriptor = new FrameDescriptor();
+			lexicalScope = new LexicalScope(lexicalScope);
+			final List<NablaInstructionNode> functionInstructions = new ArrayList<>();
+			final Set<String> sizeVarSet = new HashSet<>();
+			int nbSizeVars = function.getVariables().size();
+			for (int i = 0; i < nbSizeVars; i++) {
+				final String varName = function.getVariables().get(i).getName();
+				sizeVarSet.add(varName);
+				final FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(varName, null, FrameSlotKind.Illegal);
+				lexicalScope.locals.put(varName, frameSlot);
+			}
+
+			int nbArgs = function.getInArgs().size();
+			for (int i = 0; i < nbArgs; i++) {
+				final Arg arg = function.getInArgs().get(i);
+				boolean[] providesSizes = new boolean[] { false };
+				final FrameSlot[] sizeSlots = arg.getType().getSizes().stream().map(s -> getSizeTypeName(s)).map(s -> {
+					if (sizeVarSet.remove(s)) {
+						providesSizes[0] = true;
+						return lexicalScope.locals.get(s);
+					}
+					return null;
+				}).collect(Collectors.toList()).toArray(new FrameSlot[0]);
+				final String argName = arg.getName();
+				final NablaReadArgumentNode readArg;
+				if (providesSizes[0]) {
+					readArg = NablaReadArgumentNodeGen.create(i, sizeSlots);
+				} else {
+					readArg = NablaReadArgumentNodeGen.create(i);
+				}
+				final FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(argName, null, FrameSlotKind.Illegal);
+				lexicalScope.locals.put(argName, frameSlot);
+				functionInstructions.add(createNablaWriteVariableNode(argName, readArg, i));
+			}
+			functionInstructions.addAll(Arrays.asList(createNablaInstructionNode(function.getBody())));
+			final NablaInstructionNode bodyNode = new NablaInstructionBlockNode(
+					functionInstructions.toArray(new NablaInstructionNode[0]));
+			final NablaFunctionNode result = new NablaFunctionNode(language, frameDescriptor, bodyNode,
+					function.getName());
+			lexicalScope = lexicalScope.outer;
+			return result;
+		}
+		throw new UnsupportedOperationException();
+	}
+
+	private NablaInstructionNode createNablaInstructionBlockNode(InstructionBlock instructionBlock) {
+		lexicalScope = new LexicalScope(lexicalScope);
 		final NablaInstructionNode[] instructions = instructionBlock.getInstructions().stream()
-				.map(i -> createNablaInstructionNode(i)).collect(Collectors.toList())
+				.flatMap(i -> Arrays.stream(createNablaInstructionNode(i))).collect(Collectors.toList())
 				.toArray(new NablaInstructionNode[0]);
+		lexicalScope = lexicalScope.outer;
 		return new NablaInstructionBlockNode(instructions);
 	}
+	
+//	private NablaInstructionNode createNablaWriteArrayNode() {
+//		switch (baseType.getPrimitive()) {
+//		case BOOL:
+//			if (sizes == null) {
+//				return value;
+//			}
+//			switch (sizes.size()) {
+//			case 0:
+//				return value;
+//			case 1:
+//				return NablaBool1ConstantNodeGen.create(value, sizes.get(0));
+//			case 2:
+//				return NablaBool2ConstantNodeGen.create(value, sizes.toArray(new NablaExpressionNode[0]));
+//			default:
+//				throw new UnsupportedOperationException();
+//			}
+//		case INT:
+//			if (sizes == null) {
+//				return value;
+//			}
+//			switch (sizes.size()) {
+//			case 0:
+//				return value;
+//			case 1:
+//				return NablaInt1ConstantNodeGen.create(value, sizes.get(0));
+//			case 2:
+//				return NablaInt2ConstantNodeGen.create(value, sizes.toArray(new NablaExpressionNode[0]));
+//			default:
+//				throw new UnsupportedOperationException();
+//			}
+//		case REAL:
+//			if (sizes == null) {
+//				return value;
+//			}
+//			switch (sizes.size()) {
+//			case 0:
+//				return value;
+//			case 1:
+//				return NablaReal1ConstantNodeGen.create(value, sizes.get(0));
+//			case 2:
+//				return NablaReal2ConstantNodeGen.create(value, sizes.toArray(new NablaExpressionNode[0]));
+//			default:
+//				throw new UnsupportedOperationException();
+//			}
+//		default:
+//			throw new UnsupportedOperationException();
+//		}
+//	}
 
-	private NablaInstructionNode createNablaInstructionNode(Instruction instruction) {
+	private NablaInstructionNode[] createNablaInstructionNode(Instruction instruction) {
 		switch (instruction.eClass().getClassifierID()) {
-		case IrPackage.AFFECTATION:
-			((Affectation) instruction).getLeft()
-			throw new UnsupportedOperationException();
+		case IrPackage.AFFECTATION: {
+			final Affectation affectation = (Affectation) instruction;
+			final NablaExpressionNode right = createNablaExpressionNode(affectation.getRight());
+			final ArgOrVarRef argOrVarRef = affectation.getLeft();
+			final ArgOrVar argOrVar = argOrVarRef.getTarget();
+			final String name = argOrVar.getName();
+			if (argOrVarRef.getIndices().isEmpty() && argOrVarRef.getIterators().isEmpty()) {
+				return new NablaInstructionNode[] { createNablaWriteVariableNode(name, right) };
+			} else {
+				final NablaExpressionNode[] indices = argOrVarRef.getIndices().stream().map(s -> createNablaSizeTypeNode(s))
+						.collect(Collectors.toList()).toArray(new NablaExpressionNode[0]);
+				return new NablaInstructionNode[] { createNablaWriteArrayNode(name, indices, right) };
+			}
+		}
 		case IrPackage.IF:
-			return createNablaIfNode((If) instruction);
+			return new NablaInstructionNode[] { createNablaIfNode((If) instruction) };
 		case IrPackage.INSTRUCTION_BLOCK:
-			return createNablaInstructionBlockNode((InstructionBlock) instruction);
+			return new NablaInstructionNode[] { createNablaInstructionBlockNode((InstructionBlock) instruction) };
 		case IrPackage.ITERABLE_INSTRUCTION:
 			throw new UnsupportedOperationException();
+		case IrPackage.LOOP:
+			return new NablaInstructionNode[] { createNablaLoopNode((Loop) instruction) };
 		case IrPackage.RETURN:
-			throw new UnsupportedOperationException();
+			return new NablaInstructionNode[] { createNablaReturnNode((Return) instruction) };
 		case IrPackage.VAR_DEFINITION:
+			final VarDefinition varDefinition = (VarDefinition) instruction;
+			final NablaInstructionNode[] varDefs = varDefinition.getVariables().stream()
+					.map(v -> createVariableDeclaration(v)).filter(n -> n != null).collect(Collectors.toList())
+					.toArray(new NablaInstructionNode[0]);
+			return varDefs;
+		}
+		throw new UnsupportedOperationException();
+	}
+
+	private NablaInstructionNode createNablaReturnNode(Return ret) {
+		return NablaReturnNodeGen.create(createNablaExpressionNode(ret.getExpression()));
+	}
+
+	private NablaInstructionNode createNablaLoopNode(Loop loop) {
+		final IterationBlock iterationBlock = loop.getIterationBlock();
+		switch (iterationBlock.eClass().getClassifierID()) {
+		case IrPackage.INTERVAL_ITERATION_BLOCK:
+			lexicalScope = new LexicalScope(lexicalScope);
+			final IntervalIterationBlock intervalIterationBlock = (IntervalIterationBlock) iterationBlock;
+			final String indexName = intervalIterationBlock.getIndex().getName();
+			final FrameSlot indexSlot = frameDescriptor.findOrAddFrameSlot(indexName, null, FrameSlotKind.Illegal);
+			lexicalScope.locals.put(indexName, indexSlot);
+			final NablaInstructionNode bodyNode = new NablaInstructionBlockNode(
+					createNablaInstructionNode(loop.getBody()));
+			final NablaExpressionNode iterationCount = createNablaSizeTypeNode(intervalIterationBlock.getNbElems());
+			final NablaInstructionNode result = new NablaLoopNode(indexSlot, iterationCount, bodyNode);
+			lexicalScope = lexicalScope.outer;
+			return result;
+		case IrPackage.SPACE_ITERATION_BLOCK:
+			lexicalScope = new LexicalScope(lexicalScope);
+			final SpaceIterationBlock spaceIterationBlock = (SpaceIterationBlock) iterationBlock;
+//			final String indexName = spaceIterationBlock.get
 			throw new UnsupportedOperationException();
 		}
 		throw new UnsupportedOperationException();
@@ -396,8 +623,10 @@ public class NablaNodeFactory {
 
 	private NablaIfNode createNablaIfNode(If ifInstruction) {
 		final NablaExpressionNode conditionNode = createNablaExpressionNode(ifInstruction.getCondition());
-		final NablaInstructionNode thenNode = createNablaInstructionNode(ifInstruction.getThenInstruction());
-		final NablaInstructionNode elseNode = createNablaInstructionNode(ifInstruction.getElseInstruction());
+		final NablaInstructionNode thenNode = new NablaInstructionBlockNode(
+				createNablaInstructionNode(ifInstruction.getThenInstruction()));
+		final NablaInstructionNode elseNode = new NablaInstructionBlockNode(
+				createNablaInstructionNode(ifInstruction.getElseInstruction()));
 		return new NablaIfNode(conditionNode, thenNode, elseNode);
 	}
 
@@ -452,15 +681,15 @@ public class NablaNodeFactory {
 	private NablaExpressionNode createNablaReadArgOrVariableNode(ArgOrVarRef ref) {
 		final ArgOrVar target = ref.getTarget();
 		switch (target.eClass().getClassifierID()) {
+		case IrPackage.ARG:
 		case IrPackage.SIMPLE_VARIABLE: {
-			final SimpleVariable simpleVariable = (SimpleVariable) target;
-			final String name = simpleVariable.getName();
-			final FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(name, null, FrameSlotKind.Illegal);
-			lexicalScope.locals.put(name, frameSlot);
+			final FrameSlot frameSlot = lexicalScope.locals.get(target.getName());
 			if (ref.getIndices().isEmpty()) {
 				return NablaReadVariableNodeGen.create(frameSlot);
 			} else {
-				return new NablaReadArrayNode(NablaReadVariableNodeGen.create(frameSlot));
+				final NablaExpressionNode[] indices = ref.getIndices().stream().map(s -> createNablaSizeTypeNode(s))
+						.collect(Collectors.toList()).toArray(new NablaExpressionNode[0]);
+				return NablaReadArrayNodeGen.create(indices, NablaReadVariableNodeGen.create(frameSlot));
 			}
 		}
 		case IrPackage.CONNECTIVITY_VARIABLE: {
@@ -472,8 +701,8 @@ public class NablaNodeFactory {
 
 	private NablaReadVariableNode createNablaReadSizeTypeSymbolNode(SizeTypeSymbol symbol) {
 		final String name = symbol.getName();
-		final FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(name, null, FrameSlotKind.Illegal);
-		lexicalScope.locals.put(name, frameSlot);
+		final FrameSlot frameSlot = lexicalScope.locals.get(name);
+		assert (frameSlot != null);
 		return NablaReadVariableNodeGen.create(frameSlot);
 	}
 
@@ -493,6 +722,8 @@ public class NablaNodeFactory {
 			final NablaExpressionNode rightNode = createNablaSizeTypeNode(operation.getRight());
 			return createNablaBinaryExpressionNode(leftNode, ((SizeTypeOperation) sizeType).getOperator(), rightNode);
 		}
+		case IrPackage.SIZE_TYPE_SYMBOL_REF:
+			return createNablaReadSizeTypeSymbolNode(((SizeTypeSymbolRef) sizeType).getTarget());
 		}
 		throw new UnsupportedOperationException();
 	}
@@ -554,25 +785,24 @@ public class NablaNodeFactory {
 		throw new UnsupportedOperationException();
 	}
 
-	private NablaWriteVariableNode createWriteVariableNode(Variable variable) {
-		switch (variable.eClass().getClassifierID()) {
-		case IrPackage.SIMPLE_VARIABLE: {
-			final SimpleVariable simpleVariable = (SimpleVariable) variable;
-			final String name = simpleVariable.getName();
-			final FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(name, null, FrameSlotKind.Illegal);
-			lexicalScope.locals.put(name, frameSlot);
-			final Expression defaultValue = simpleVariable.getDefaultValue();
-			if (defaultValue != null) {
-				final NablaExpressionNode truffleDefaultValue = createNablaExpressionNode(defaultValue);
-				return NablaWriteVariableNodeGen.create(truffleDefaultValue, frameSlot);
-			}
-			return null;
-		}
-		case IrPackage.CONNECTIVITY_VARIABLE: {
-			throw new UnsupportedOperationException();
-		}
-		}
-		throw new UnsupportedOperationException();
+	private NablaWriteVariableNode createNablaWriteVariableNode(String name, NablaExpressionNode value) {
+		return createNablaWriteVariableNode(name, value, null);
+	}
+
+	private NablaWriteVariableNode createNablaWriteVariableNode(String name, NablaExpressionNode value,
+			Integer paramaterIndex) {
+		final FrameSlot frameSlot = lexicalScope.locals.get(name);
+		return NablaWriteVariableNodeGen.create(frameSlot, value);
+	}
+
+	private NablaWriteArrayNode createNablaWriteArrayNode(String name, NablaExpressionNode[] indices, NablaExpressionNode value) {
+		return createNablaWriteArrayNode(name, indices, value, null);
+	}
+
+	private NablaWriteArrayNode createNablaWriteArrayNode(String name, NablaExpressionNode[] indices, NablaExpressionNode value,
+			Integer paramaterIndex) {
+		final FrameSlot frameSlot = lexicalScope.locals.get(name);
+		return NablaWriteArrayNodeGen.create(frameSlot, indices, value);
 	}
 
 	private NablaWriteVariableNode createVariableDeclaration(Variable variable) {
@@ -585,9 +815,12 @@ public class NablaNodeFactory {
 			final Expression defaultValue = simpleVariable.getDefaultValue();
 			if (defaultValue != null) {
 				final NablaExpressionNode truffleDefaultValue = createNablaExpressionNode(defaultValue);
-				return NablaWriteVariableNodeGen.create(truffleDefaultValue, frameSlot);
+				return NablaWriteVariableNodeGen.create(frameSlot, truffleDefaultValue);
 			}
-			return null;
+			else {
+				final NablaExpressionNode truffleDefaultValue = createNablaDefaultValueNode(simpleVariable.getType());
+				return NablaWriteVariableNodeGen.create(frameSlot, truffleDefaultValue);
+			}
 		}
 		case IrPackage.CONNECTIVITY_VARIABLE: {
 			throw new UnsupportedOperationException();
@@ -595,472 +828,4 @@ public class NablaNodeFactory {
 		}
 		throw new UnsupportedOperationException();
 	}
-
-//	public void startFunction(Function function) {
-//		assert parameterCount == 0;
-//		assert frameDescriptor == null;
-//		assert lexicalScope == null;
-//
-//		functionStartPos = nameToken.getStartIndex();
-//		functionName = nameToken.getText();
-//		functionBodyStartPos = bodyStartToken.getStartIndex();
-//		frameDescriptor = new FrameDescriptor();
-//		methodNodes = new ArrayList<>();
-//		startBlock();
-//	}
-//
-//	public void addFormalParameter(Token nameToken) {
-//		/*
-//		 * Method parameters are assigned to local variables at the beginning of the
-//		 * method. This ensures that accesses to parameters are specialized the same way
-//		 * as local variables are specialized.
-//		 */
-//		final SLReadArgumentNode readArg = new SLReadArgumentNode(parameterCount);
-//		SLExpressionNode assignment = createAssignment(createStringLiteral(nameToken, false), readArg, parameterCount);
-//		methodNodes.add(assignment);
-//		parameterCount++;
-//	}
-//
-//	public void finishFunction(SLStatementNode bodyNode) {
-//		if (bodyNode == null) {
-//			// a state update that would otherwise be performed by finishBlock
-//			lexicalScope = lexicalScope.outer;
-//		} else {
-//			methodNodes.add(bodyNode);
-//			final int bodyEndPos = bodyNode.getSourceEndIndex();
-//			final SourceSection functionSrc = source.createSection(functionStartPos, bodyEndPos - functionStartPos);
-//			final SLStatementNode methodBlock = finishBlock(methodNodes, functionBodyStartPos,
-//					bodyEndPos - functionBodyStartPos);
-//			assert lexicalScope == null : "Wrong scoping of blocks in parser";
-//
-//			final SLFunctionBodyNode functionBodyNode = new SLFunctionBodyNode(methodBlock);
-//			functionBodyNode.setSourceSection(functionSrc.getCharIndex(), functionSrc.getCharLength());
-//
-//			final SLRootNode rootNode = new SLRootNode(language, frameDescriptor, functionBodyNode, functionSrc,
-//					functionName);
-//			allFunctions.put(functionName, Truffle.getRuntime().createCallTarget(rootNode));
-//		}
-//
-//		functionStartPos = 0;
-//		functionName = null;
-//		functionBodyStartPos = 0;
-//		parameterCount = 0;
-//		frameDescriptor = null;
-//		lexicalScope = null;
-//	}
-//
-//	public void startBlock() {
-//		lexicalScope = new LexicalScope(lexicalScope);
-//	}
-//
-//	public SLStatementNode finishBlock(List<SLStatementNode> bodyNodes, int startPos, int length) {
-//		lexicalScope = lexicalScope.outer;
-//
-//		if (containsNull(bodyNodes)) {
-//			return null;
-//		}
-//
-//		List<SLStatementNode> flattenedNodes = new ArrayList<>(bodyNodes.size());
-//		flattenBlocks(bodyNodes, flattenedNodes);
-//		for (SLStatementNode statement : flattenedNodes) {
-//			if (statement.hasSource() && !isHaltInCondition(statement)) {
-//				statement.addStatementTag();
-//			}
-//		}
-//		SLBlockNode blockNode = new SLBlockNode(flattenedNodes.toArray(new SLStatementNode[flattenedNodes.size()]));
-//		blockNode.setSourceSection(startPos, length);
-//		return blockNode;
-//	}
-//
-//	private static boolean isHaltInCondition(SLStatementNode statement) {
-//		return (statement instanceof SLIfNode) || (statement instanceof SLWhileNode);
-//	}
-//
-//	private void flattenBlocks(Iterable<? extends SLStatementNode> bodyNodes, List<SLStatementNode> flattenedNodes) {
-//		for (SLStatementNode n : bodyNodes) {
-//			if (n instanceof SLBlockNode) {
-//				flattenBlocks(((SLBlockNode) n).getStatements(), flattenedNodes);
-//			} else {
-//				flattenedNodes.add(n);
-//			}
-//		}
-//	}
-//
-//	/**
-//	 * Returns an {@link SLDebuggerNode} for the given token.
-//	 *
-//	 * @param debuggerToken The token containing the debugger node's info.
-//	 * @return A SLDebuggerNode for the given token.
-//	 */
-//	SLStatementNode createDebugger(Token debuggerToken) {
-//		final SLDebuggerNode debuggerNode = new SLDebuggerNode();
-//		srcFromToken(debuggerNode, debuggerToken);
-//		return debuggerNode;
-//	}
-//
-//	/**
-//	 * Returns an {@link SLBreakNode} for the given token.
-//	 *
-//	 * @param breakToken The token containing the break node's info.
-//	 * @return A SLBreakNode for the given token.
-//	 */
-//	public SLStatementNode createBreak(Token breakToken) {
-//		final SLBreakNode breakNode = new SLBreakNode();
-//		srcFromToken(breakNode, breakToken);
-//		return breakNode;
-//	}
-//
-//	/**
-//	 * Returns an {@link SLContinueNode} for the given token.
-//	 *
-//	 * @param continueToken The token containing the continue node's info.
-//	 * @return A SLContinueNode built using the given token.
-//	 */
-//	public SLStatementNode createContinue(Token continueToken) {
-//		final SLContinueNode continueNode = new SLContinueNode();
-//		srcFromToken(continueNode, continueToken);
-//		return continueNode;
-//	}
-//
-//	/**
-//	 * Returns an {@link SLWhileNode} for the given parameters.
-//	 *
-//	 * @param whileToken    The token containing the while node's info
-//	 * @param conditionNode The conditional node for this while loop
-//	 * @param bodyNode      The body of the while loop
-//	 * @return A SLWhileNode built using the given parameters. null if either
-//	 *         conditionNode or bodyNode is null.
-//	 */
-//	public SLStatementNode createWhile(Token whileToken, SLExpressionNode conditionNode, SLStatementNode bodyNode) {
-//		if (conditionNode == null || bodyNode == null) {
-//			return null;
-//		}
-//
-//		conditionNode.addStatementTag();
-//		final int start = whileToken.getStartIndex();
-//		final int end = bodyNode.getSourceEndIndex();
-//		final SLWhileNode whileNode = new SLWhileNode(conditionNode, bodyNode);
-//		whileNode.setSourceSection(start, end - start);
-//		return whileNode;
-//	}
-//
-//	/**
-//	 * Returns an {@link SLIfNode} for the given parameters.
-//	 *
-//	 * @param ifToken       The token containing the if node's info
-//	 * @param conditionNode The condition node of this if statement
-//	 * @param thenPartNode  The then part of the if
-//	 * @param elsePartNode  The else part of the if (null if no else part)
-//	 * @return An SLIfNode for the given parameters. null if either conditionNode or
-//	 *         thenPartNode is null.
-//	 */
-//	public SLStatementNode createIf(Token ifToken, SLExpressionNode conditionNode, SLStatementNode thenPartNode,
-//			SLStatementNode elsePartNode) {
-//		if (conditionNode == null || thenPartNode == null) {
-//			return null;
-//		}
-//
-//		conditionNode.addStatementTag();
-//		final int start = ifToken.getStartIndex();
-//		final int end = elsePartNode == null ? thenPartNode.getSourceEndIndex() : elsePartNode.getSourceEndIndex();
-//		final SLIfNode ifNode = new SLIfNode(conditionNode, thenPartNode, elsePartNode);
-//		ifNode.setSourceSection(start, end - start);
-//		return ifNode;
-//	}
-//
-//	/**
-//	 * Returns an {@link SLReturnNode} for the given parameters.
-//	 *
-//	 * @param t         The token containing the return node's info
-//	 * @param valueNode The value of the return (null if not returning a value)
-//	 * @return An SLReturnNode for the given parameters.
-//	 */
-//	public SLStatementNode createReturn(Token t, SLExpressionNode valueNode) {
-//		final int start = t.getStartIndex();
-//		final int length = valueNode == null ? t.getText().length() : valueNode.getSourceEndIndex() - start;
-//		final SLReturnNode returnNode = new SLReturnNode(valueNode);
-//		returnNode.setSourceSection(start, length);
-//		return returnNode;
-//	}
-//
-//	/**
-//	 * Returns the corresponding subclass of {@link SLExpressionNode} for binary
-//	 * expressions. </br>
-//	 * These nodes are currently not instrumented.
-//	 *
-//	 * @param opToken   The operator of the binary expression
-//	 * @param leftNode  The left node of the expression
-//	 * @param rightNode The right node of the expression
-//	 * @return A subclass of SLExpressionNode using the given parameters based on
-//	 *         the given opToken. null if either leftNode or rightNode is null.
-//	 */
-//	public SLExpressionNode createBinary(Token opToken, SLExpressionNode leftNode, SLExpressionNode rightNode) {
-//		if (leftNode == null || rightNode == null) {
-//			return null;
-//		}
-//		final SLExpressionNode leftUnboxed = SLUnboxNodeGen.create(leftNode);
-//		final SLExpressionNode rightUnboxed = SLUnboxNodeGen.create(rightNode);
-//
-//		final SLExpressionNode result;
-//		switch (opToken.getText()) {
-//		case "+":
-//			result = SLAddNodeGen.create(leftUnboxed, rightUnboxed);
-//			break;
-//		case "*":
-//			result = SLMulNodeGen.create(leftUnboxed, rightUnboxed);
-//			break;
-//		case "/":
-//			result = SLDivNodeGen.create(leftUnboxed, rightUnboxed);
-//			break;
-//		case "-":
-//			result = SLSubNodeGen.create(leftUnboxed, rightUnboxed);
-//			break;
-//		case "<":
-//			result = SLLessThanNodeGen.create(leftUnboxed, rightUnboxed);
-//			break;
-//		case "<=":
-//			result = SLLessOrEqualNodeGen.create(leftUnboxed, rightUnboxed);
-//			break;
-//		case ">":
-//			result = SLLogicalNotNodeGen.create(SLLessOrEqualNodeGen.create(leftUnboxed, rightUnboxed));
-//			break;
-//		case ">=":
-//			result = SLLogicalNotNodeGen.create(SLLessThanNodeGen.create(leftUnboxed, rightUnboxed));
-//			break;
-//		case "==":
-//			result = SLEqualNodeGen.create(leftUnboxed, rightUnboxed);
-//			break;
-//		case "!=":
-//			result = SLLogicalNotNodeGen.create(SLEqualNodeGen.create(leftUnboxed, rightUnboxed));
-//			break;
-//		case "&&":
-//			result = new SLLogicalAndNode(leftUnboxed, rightUnboxed);
-//			break;
-//		case "||":
-//			result = new SLLogicalOrNode(leftUnboxed, rightUnboxed);
-//			break;
-//		default:
-//			throw new RuntimeException("unexpected operation: " + opToken.getText());
-//		}
-//
-//		int start = leftNode.getSourceCharIndex();
-//		int length = rightNode.getSourceEndIndex() - start;
-//		result.setSourceSection(start, length);
-//		result.addExpressionTag();
-//
-//		return result;
-//	}
-//
-//	/**
-//	 * Returns an {@link SLInvokeNode} for the given parameters.
-//	 *
-//	 * @param functionNode   The function being called
-//	 * @param parameterNodes The parameters of the function call
-//	 * @param finalToken     A token used to determine the end of the
-//	 *                       sourceSelection for this call
-//	 * @return An SLInvokeNode for the given parameters. null if functionNode or any
-//	 *         of the parameterNodes are null.
-//	 */
-//	public SLExpressionNode createCall(SLExpressionNode functionNode, List<SLExpressionNode> parameterNodes,
-//			Token finalToken) {
-//		if (functionNode == null || containsNull(parameterNodes)) {
-//			return null;
-//		}
-//
-//		final SLExpressionNode result = new SLInvokeNode(functionNode,
-//				parameterNodes.toArray(new SLExpressionNode[parameterNodes.size()]));
-//
-//		final int startPos = functionNode.getSourceCharIndex();
-//		final int endPos = finalToken.getStartIndex() + finalToken.getText().length();
-//		result.setSourceSection(startPos, endPos - startPos);
-//		result.addExpressionTag();
-//
-//		return result;
-//	}
-//
-//	/**
-//	 * Returns an {@link SLWriteLocalVariableNode} for the given parameters.
-//	 *
-//	 * @param nameNode  The name of the variable being assigned
-//	 * @param valueNode The value to be assigned
-//	 * @return An SLExpressionNode for the given parameters. null if nameNode or
-//	 *         valueNode is null.
-//	 */
-//	public SLExpressionNode createAssignment(SLExpressionNode nameNode, SLExpressionNode valueNode) {
-//		return createAssignment(nameNode, valueNode, null);
-//	}
-//
-//	/**
-//	 * Returns an {@link SLWriteLocalVariableNode} for the given parameters.
-//	 *
-//	 * @param nameNode      The name of the variable being assigned
-//	 * @param valueNode     The value to be assigned
-//	 * @param argumentIndex null or index of the argument the assignment is
-//	 *                      assigning
-//	 * @return An SLExpressionNode for the given parameters. null if nameNode or
-//	 *         valueNode is null.
-//	 */
-//	public SLExpressionNode createAssignment(SLExpressionNode nameNode, SLExpressionNode valueNode,
-//			Integer argumentIndex) {
-//		if (nameNode == null || valueNode == null) {
-//			return null;
-//		}
-//
-//		String name = ((SLStringLiteralNode) nameNode).executeGeneric(null);
-//		FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(name, argumentIndex, FrameSlotKind.Illegal);
-//		lexicalScope.locals.put(name, frameSlot);
-//		final SLExpressionNode result = SLWriteLocalVariableNodeGen.create(valueNode, frameSlot);
-//
-//		if (valueNode.hasSource()) {
-//			final int start = nameNode.getSourceCharIndex();
-//			final int length = valueNode.getSourceEndIndex() - start;
-//			result.setSourceSection(start, length);
-//		}
-//		result.addExpressionTag();
-//
-//		return result;
-//	}
-//
-//	/**
-//	 * Returns a {@link SLReadLocalVariableNode} if this read is a local variable or
-//	 * a {@link SLFunctionLiteralNode} if this read is global. In SL, the only
-//	 * global names are functions.
-//	 *
-//	 * @param nameNode The name of the variable/function being read
-//	 * @return either:
-//	 *         <ul>
-//	 *         <li>A SLReadLocalVariableNode representing the local variable being
-//	 *         read.</li>
-//	 *         <li>A SLFunctionLiteralNode representing the function
-//	 *         definition.</li>
-//	 *         <li>null if nameNode is null.</li>
-//	 *         </ul>
-//	 */
-//	public SLExpressionNode createRead(SLExpressionNode nameNode) {
-//		if (nameNode == null) {
-//			return null;
-//		}
-//
-//		String name = ((SLStringLiteralNode) nameNode).executeGeneric(null);
-//		final SLExpressionNode result;
-//		final FrameSlot frameSlot = lexicalScope.locals.get(name);
-//		if (frameSlot != null) {
-//			/* Read of a local variable. */
-//			result = SLReadLocalVariableNodeGen.create(frameSlot);
-//		} else {
-//			/*
-//			 * Read of a global name. In our language, the only global names are functions.
-//			 */
-//			result = new SLFunctionLiteralNode(name);
-//		}
-//		result.setSourceSection(nameNode.getSourceCharIndex(), nameNode.getSourceLength());
-//		result.addExpressionTag();
-//		return result;
-//	}
-//
-//	public SLExpressionNode createStringLiteral(Token literalToken, boolean removeQuotes) {
-//		/* Remove the trailing and ending " */
-//		String literal = literalToken.getText();
-//		if (removeQuotes) {
-//			assert literal.length() >= 2 && literal.startsWith("\"") && literal.endsWith("\"");
-//			literal = literal.substring(1, literal.length() - 1);
-//		}
-//
-//		final SLStringLiteralNode result = new SLStringLiteralNode(literal.intern());
-//		srcFromToken(result, literalToken);
-//		result.addExpressionTag();
-//		return result;
-//	}
-//
-//	public SLExpressionNode createNumericLiteral(Token literalToken) {
-//		SLExpressionNode result;
-//		try {
-//			/* Try if the literal is small enough to fit into a long value. */
-//			result = new SLLongLiteralNode(Long.parseLong(literalToken.getText()));
-//		} catch (NumberFormatException ex) {
-//			/* Overflow of long value, so fall back to BigInteger. */
-//			result = new SLBigIntegerLiteralNode(new BigInteger(literalToken.getText()));
-//		}
-//		srcFromToken(result, literalToken);
-//		result.addExpressionTag();
-//		return result;
-//	}
-//
-//	public SLExpressionNode createParenExpression(SLExpressionNode expressionNode, int start, int length) {
-//		if (expressionNode == null) {
-//			return null;
-//		}
-//
-//		final SLParenExpressionNode result = new SLParenExpressionNode(expressionNode);
-//		result.setSourceSection(start, length);
-//		return result;
-//	}
-//
-//	/**
-//	 * Returns an {@link SLReadPropertyNode} for the given parameters.
-//	 *
-//	 * @param receiverNode The receiver of the property access
-//	 * @param nameNode     The name of the property being accessed
-//	 * @return An SLExpressionNode for the given parameters. null if receiverNode or
-//	 *         nameNode is null.
-//	 */
-//	public SLExpressionNode createReadProperty(SLExpressionNode receiverNode, SLExpressionNode nameNode) {
-//		if (receiverNode == null || nameNode == null) {
-//			return null;
-//		}
-//
-//		final SLExpressionNode result = SLReadPropertyNodeGen.create(receiverNode, nameNode);
-//
-//		final int startPos = receiverNode.getSourceCharIndex();
-//		final int endPos = nameNode.getSourceEndIndex();
-//		result.setSourceSection(startPos, endPos - startPos);
-//		result.addExpressionTag();
-//
-//		return result;
-//	}
-//
-//	/**
-//	 * Returns an {@link SLWritePropertyNode} for the given parameters.
-//	 *
-//	 * @param receiverNode The receiver object of the property assignment
-//	 * @param nameNode     The name of the property being assigned
-//	 * @param valueNode    The value to be assigned
-//	 * @return An SLExpressionNode for the given parameters. null if receiverNode,
-//	 *         nameNode or valueNode is null.
-//	 */
-//	public SLExpressionNode createWriteProperty(SLExpressionNode receiverNode, SLExpressionNode nameNode,
-//			SLExpressionNode valueNode) {
-//		if (receiverNode == null || nameNode == null || valueNode == null) {
-//			return null;
-//		}
-//
-//		final SLExpressionNode result = SLWritePropertyNodeGen.create(receiverNode, nameNode, valueNode);
-//
-//		final int start = receiverNode.getSourceCharIndex();
-//		final int length = valueNode.getSourceEndIndex() - start;
-//		result.setSourceSection(start, length);
-//		result.addExpressionTag();
-//
-//		return result;
-//	}
-//
-//	/**
-//	 * Creates source description of a single token.
-//	 */
-//	private static void srcFromToken(SLStatementNode node, Token token) {
-//		node.setSourceSection(token.getStartIndex(), token.getText().length());
-//	}
-//
-//	/**
-//	 * Checks whether a list contains a null.
-//	 */
-//	private static boolean containsNull(List<?> list) {
-//		for (Object e : list) {
-//			if (e == null) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-
 }

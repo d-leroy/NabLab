@@ -97,4 +97,10 @@ public class NV1Bool implements NablaValue {
 	public boolean[] getData() {
 		return this.data;
 	}
+	
+	@Override
+	public int getDimension(int dimension) {
+		assert (dimension == 1);
+		return data.length;
+	}
 }

@@ -96,4 +96,10 @@ public class NV1Real implements NablaValue {
 	public double[] getData() {
 		return this.data;
 	}
+	
+	@Override
+	public int getDimension(int dimension) {
+		assert (dimension == 1);
+		return data.length;
+	}
 }

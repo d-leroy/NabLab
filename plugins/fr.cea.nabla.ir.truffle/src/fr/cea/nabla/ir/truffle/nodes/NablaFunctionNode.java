@@ -19,6 +19,4 @@ public class NablaFunctionNode extends NablaRootNode {
 	public Object execute(VirtualFrame frame) {
 		return bodyNode.executeGeneric(frame);
 	}
-	
-	
 }

@@ -30,19 +30,16 @@ public final class NablaReadVariableNodeGen extends NablaReadVariableNode {
     public Object executeGeneric(VirtualFrame frameValue) {
         int state = state_;
         if ((state & 0b1) != 0 /* is-active readBoolean(VirtualFrame) */) {
-            if ((frameValue.isBoolean(getSlot()))) {
-                return readBoolean(frameValue);
-            }
+            assert (isBoolean());
+            return readBoolean(frameValue);
         }
         if ((state & 0b10) != 0 /* is-active readInt(VirtualFrame) */) {
-            if ((frameValue.isInt(getSlot()))) {
-                return readInt(frameValue);
-            }
+            assert (isInt());
+            return readInt(frameValue);
         }
         if ((state & 0b100) != 0 /* is-active readDouble(VirtualFrame) */) {
-            if ((frameValue.isDouble(getSlot()))) {
-                return readDouble(frameValue);
-            }
+            assert (isDouble());
+            return readDouble(frameValue);
         }
         if ((state & 0b1000) != 0 /* is-active readObject(VirtualFrame) */) {
             return readObject(frameValue);
@@ -59,7 +56,7 @@ public final class NablaReadVariableNodeGen extends NablaReadVariableNode {
         int exclude = exclude_;
         try {
             if (((exclude & 0b1)) == 0 /* is-not-excluded readBoolean(VirtualFrame) */) {
-                if ((frameValue.isBoolean(getSlot()))) {
+                if ((isBoolean())) {
                     this.state_ = state = state | 0b1 /* add-active readBoolean(VirtualFrame) */;
                     lock.unlock();
                     hasLock = false;
@@ -67,7 +64,7 @@ public final class NablaReadVariableNodeGen extends NablaReadVariableNode {
                 }
             }
             if (((exclude & 0b10)) == 0 /* is-not-excluded readInt(VirtualFrame) */) {
-                if ((frameValue.isInt(getSlot()))) {
+                if ((isInt())) {
                     this.state_ = state = state | 0b10 /* add-active readInt(VirtualFrame) */;
                     lock.unlock();
                     hasLock = false;
@@ -75,7 +72,7 @@ public final class NablaReadVariableNodeGen extends NablaReadVariableNode {
                 }
             }
             if (((exclude & 0b100)) == 0 /* is-not-excluded readDouble(VirtualFrame) */) {
-                if ((frameValue.isDouble(getSlot()))) {
+                if ((isDouble())) {
                     this.state_ = state = state | 0b100 /* add-active readDouble(VirtualFrame) */;
                     lock.unlock();
                     hasLock = false;

@@ -17,47 +17,62 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 @Data
 @SuppressWarnings("all")
 public class NV3Real implements NablaValue {
-  private final double[][][] data;
-  
-  public NV3Real(final double[][][] data) {
-    super();
-    this.data = data;
-  }
-  
-  @Override
-  @Pure
-  public int hashCode() {
-    return 31 * 1 + ((this.data== null) ? 0 : Arrays.deepHashCode(this.data));
-  }
-  
-  @Override
-  @Pure
-  public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    NV3Real other = (NV3Real) obj;
-    if (this.data == null) {
-      if (other.data != null)
-        return false;
-    } else if (!Arrays.deepEquals(this.data, other.data))
-      return false;
-    return true;
-  }
-  
-  @Override
-  @Pure
-  public String toString() {
-    ToStringBuilder b = new ToStringBuilder(this);
-    b.add("data", this.data);
-    return b.toString();
-  }
-  
-  @Pure
-  public double[][][] getData() {
-    return this.data;
-  }
+	private final double[][][] data;
+
+	public NV3Real(final double[][][] data) {
+		super();
+		this.data = data;
+	}
+
+	@Override
+	@Pure
+	public int hashCode() {
+		return 31 * 1 + ((this.data == null) ? 0 : Arrays.deepHashCode(this.data));
+	}
+
+	@Override
+	@Pure
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		NV3Real other = (NV3Real) obj;
+		if (this.data == null) {
+			if (other.data != null)
+				return false;
+		} else if (!Arrays.deepEquals(this.data, other.data))
+			return false;
+		return true;
+	}
+
+	@Override
+	@Pure
+	public String toString() {
+		ToStringBuilder b = new ToStringBuilder(this);
+		b.add("data", this.data);
+		return b.toString();
+	}
+
+	@Pure
+	public double[][][] getData() {
+		return this.data;
+	}
+
+	@Override
+	public int getDimension(int dimension) {
+		assert (dimension <= 3);
+		switch (dimension) {
+		case 1:
+			return data.length;
+		case 2:
+			return data[0].length;
+		case 3:
+			return data[0][0].length;
+		default:
+			throw new UnsupportedOperationException();
+		}
+	}
 }

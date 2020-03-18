@@ -135,4 +135,9 @@ public final class NV0Int implements NablaValue {
 	public void setData(final int data) {
 		this.data = data;
 	}
+	
+	@Override
+	public int getDimension(int dimension) {
+		throw new UnsupportedOperationException();
+	}
 }

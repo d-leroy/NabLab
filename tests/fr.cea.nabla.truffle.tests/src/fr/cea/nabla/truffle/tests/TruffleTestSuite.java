@@ -6,8 +6,12 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 
 @Suite.SuiteClasses({
+	BinaryOperationsInterpreterTest.class,
 	ExpressionInterpreterTest.class,
-	BinaryOperationsInterpreterTest.class
+	InstructionInterpreterTest.class,
+	JobInterpreterTest.class,
+	ModuleInterpreterTest.class,
+	NablaExamplesInterpreterTest.class
 })
 
 public class TruffleTestSuite {}

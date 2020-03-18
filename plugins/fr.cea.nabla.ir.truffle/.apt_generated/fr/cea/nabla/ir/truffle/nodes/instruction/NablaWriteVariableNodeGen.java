@@ -1,5 +1,5 @@
 // CheckStyle: start generated
-package fr.cea.nabla.ir.truffle.nodes;
+package fr.cea.nabla.ir.truffle.nodes.instruction;
 
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
@@ -9,25 +9,19 @@ import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
-import fr.cea.nabla.ir.truffle.nodes.NablaWriteVariableNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
+import fr.cea.nabla.ir.truffle.nodes.instruction.NablaWriteVariableNode;
 import fr.cea.nabla.ir.truffle.values.NablaValue;
 
 @GeneratedBy(NablaWriteVariableNode.class)
 public final class NablaWriteVariableNodeGen extends NablaWriteVariableNode {
 
-    private final FrameSlot slot;
     @Child private NablaExpressionNode defaultValue_;
     @CompilationFinal private int state_;
 
-    private NablaWriteVariableNodeGen(NablaExpressionNode defaultValue, FrameSlot slot) {
-        this.slot = slot;
+    private NablaWriteVariableNodeGen(FrameSlot slot, NablaExpressionNode defaultValue) {
+        super(slot);
         this.defaultValue_ = defaultValue;
-    }
-
-    @Override
-    public FrameSlot getSlot() {
-        return this.slot;
     }
 
     @Override
@@ -62,8 +56,8 @@ public final class NablaWriteVariableNodeGen extends NablaWriteVariableNode {
         }
     }
 
-    public static NablaWriteVariableNode create(NablaExpressionNode defaultValue, FrameSlot slot) {
-        return new NablaWriteVariableNodeGen(defaultValue, slot);
+    public static NablaWriteVariableNode create(FrameSlot slot, NablaExpressionNode defaultValue) {
+        return new NablaWriteVariableNodeGen(slot, defaultValue);
     }
 
 }

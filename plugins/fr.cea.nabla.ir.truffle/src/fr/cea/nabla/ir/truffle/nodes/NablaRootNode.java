@@ -3,7 +3,6 @@ package fr.cea.nabla.ir.truffle.nodes;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
 import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.frame.FrameDescriptor;
-import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.RootNode;
 
 public abstract class NablaRootNode extends RootNode {
@@ -17,11 +16,6 @@ public abstract class NablaRootNode extends RootNode {
 	public NablaRootNode(TruffleLanguage<?> language, FrameDescriptor frameDescriptor, String name) {
 		super(language, frameDescriptor);
 		this.name = name;
-	}
-
-	@Override
-	public Object execute(VirtualFrame frame) {
-		return null;
 	}
 	
 	@Override

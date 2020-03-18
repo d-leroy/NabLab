@@ -137,7 +137,7 @@ class ExpressionInterpreterTest {
 		'''
 
 		val result = executeModel(model)
-		
+
 		assertVariableValue(result, "n1", 1)
 		val int[] n2Expected = #[1, 1]
 		assertVariableValue(result, "n2", n2Expected)
@@ -326,7 +326,7 @@ class ExpressionInterpreterTest {
 		assertVariableValue(result, "r4", #[2.0, 3.0])
 		assertVariableValue(result, "r6", #[#[2.0, 3.0], #[4.0, 5.0], #[6.0, 7.0]])
 	}
-	
+
 	@Test
 	def void testInterpreteVarRefWithArrayRead() {
 		val model = getTestModuleForSimulation + '''

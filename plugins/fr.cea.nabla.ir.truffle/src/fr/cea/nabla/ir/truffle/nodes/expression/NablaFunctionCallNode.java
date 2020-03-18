@@ -43,5 +43,4 @@ public class NablaFunctionCallNode extends NablaExpressionNode {
 		}
 		return super.hasTag(tag);
 	}
-
 }

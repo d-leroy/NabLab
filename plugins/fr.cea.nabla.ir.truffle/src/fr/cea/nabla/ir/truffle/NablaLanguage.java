@@ -1,15 +1,22 @@
 package fr.cea.nabla.ir.truffle;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.CompilerDirectives;
+import com.oracle.truffle.api.Scope;
 import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.TruffleLanguage.ContextPolicy;
+import com.oracle.truffle.api.frame.Frame;
 import com.oracle.truffle.api.instrumentation.ProvidedTags;
 import com.oracle.truffle.api.instrumentation.StandardTags;
 import com.oracle.truffle.api.interop.InteropLibrary;
 import com.oracle.truffle.api.interop.UnsupportedMessageException;
+import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.source.Source;
 
+import fr.cea.nabla.ir.truffle.nodes.local.NablaLexicalScope;
 import fr.cea.nabla.ir.truffle.parser.NablaParser;
 import fr.cea.nabla.ir.truffle.runtime.NablaContext;
 import fr.cea.nabla.ir.truffle.values.NablaOutput;
@@ -90,9 +97,54 @@ public final class NablaLanguage extends TruffleLanguage<NablaContext> {
         }
     }
 	
+	@Override
+    public Iterable<Scope> findLocalScopes(NablaContext context, Node node, Frame frame) {
+        final NablaLexicalScope scope = NablaLexicalScope.createScope(node);
+        return new Iterable<Scope>() {
+            @Override
+            public Iterator<Scope> iterator() {
+                return new Iterator<Scope>() {
+                    private NablaLexicalScope previousScope;
+                    private NablaLexicalScope nextScope = scope;
+
+                    @Override
+                    public boolean hasNext() {
+                        if (nextScope == null) {
+                            nextScope = previousScope.findParent();
+                        }
+                        return nextScope != null;
+                    }
+
+                    @Override
+                    public Scope next() {
+                        if (!hasNext()) {
+                            throw new NoSuchElementException();
+                        }
+                        Object functionObject = findFunctionObject();
+                        Scope vscope = Scope.newBuilder(nextScope.getName(), nextScope.getVariables(frame)).node(nextScope.getNode()).arguments(nextScope.getArguments(frame)).rootInstance(
+                                        functionObject).build();
+                        previousScope = nextScope;
+                        nextScope = null;
+                        return vscope;
+                    }
+
+                    private Object findFunctionObject() {
+                        String name = node.getRootNode().getName();
+                        return context.getFunctionRegistry().getFunction(name);
+                    }
+                };
+            }
+        };
+    }
+
+    @Override
+    protected Iterable<Scope> findTopScopes(NablaContext context) {
+        return context.getTopScopes();
+    }
+	
 	public static NablaContext getCurrentContext() {
         return getCurrentContext(NablaLanguage.class);
     }
 	
-//	private static final List<NodeFactory<? extends NablaBuiltinNode>> EXTERNAL_BUILTINS = Collections.synchronizedList(new ArrayList<>());
+	
 }

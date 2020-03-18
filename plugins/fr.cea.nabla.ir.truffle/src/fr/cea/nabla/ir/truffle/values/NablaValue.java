@@ -11,4 +11,6 @@ package fr.cea.nabla.ir.truffle.values;
 
 import com.oracle.truffle.api.interop.TruffleObject;
 
-public interface NablaValue extends TruffleObject {}
+public interface NablaValue extends TruffleObject {
+	int getDimension(int dimension);
+}

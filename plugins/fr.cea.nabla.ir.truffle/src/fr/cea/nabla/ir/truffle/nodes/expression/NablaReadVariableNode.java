@@ -1,64 +1,114 @@
 package fr.cea.nabla.ir.truffle.nodes.expression;
 
 import com.oracle.truffle.api.CompilerDirectives;
+import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
+import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.dsl.NodeField;
 import com.oracle.truffle.api.dsl.Specialization;
+import com.oracle.truffle.api.frame.FrameInstance.FrameAccess;
+import com.oracle.truffle.api.frame.Frame;
+import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlot;
+import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.frame.FrameSlotTypeException;
-import com.oracle.truffle.api.frame.FrameUtil;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
 @NodeField(name = "slot", type = FrameSlot.class)
 public abstract class NablaReadVariableNode extends NablaExpressionNode {
 
-    protected abstract FrameSlot getSlot();
+	protected abstract FrameSlot getSlot();
+	
+	// Whether the node was initialized and which type of variable it reads
+	@CompilationFinal private boolean initialized;
+	@CompilationFinal private FrameSlotKind slotKind;
 
-	public static interface FrameGet<T> {
-		public T get(VirtualFrame frame, FrameSlot slot) throws FrameSlotTypeException;
-	}
-
-	public <T> T readUpStack(FrameGet<T> getter, VirtualFrame frame) {
-		try {
-			T value = getter.get(frame, this.getSlot());
-			while (value == null) {
-				if (frame == null) {
-					throw new RuntimeException("Unknown variable: " + this.getSlot().getIdentifier());
-				}
-				value = getter.get(frame, this.getSlot());
-			}
-			return value;
-		} catch (FrameSlotTypeException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	@Specialization(guards = "frame.isBoolean(getSlot())")
+	@Specialization(guards = "isBoolean()")
 	protected boolean readBoolean(VirtualFrame frame) {
-		return readUpStack(FrameUtil::getBooleanSafe, frame);
+		return Truffle.getRuntime().iterateFrames(f -> {
+			try {
+				return f.getFrame(FrameAccess.READ_ONLY).getBoolean(getSlot());
+			} catch (IllegalArgumentException e) {
+				return null;
+			} catch (FrameSlotTypeException e) {
+				return null;
+			}
+		});
 	}
 
-	@Specialization(guards = "frame.isInt(getSlot())")
+	@Specialization(guards = "isInt()")
 	protected int readInt(VirtualFrame frame) {
-		return readUpStack(FrameUtil::getIntSafe, frame);
+		return Truffle.getRuntime().iterateFrames(f -> {
+			try {
+				return f.getFrame(FrameAccess.READ_ONLY).getInt(getSlot());
+			} catch (IllegalArgumentException e) {
+				return null;
+			} catch (FrameSlotTypeException e) {
+				return null;
+			}
+		});
 	}
 
-	@Specialization(guards = "frame.isDouble(getSlot())")
+	@Specialization(guards = "isDouble()")
 	protected double readDouble(VirtualFrame frame) {
-		return FrameUtil.getDoubleSafe(frame, getSlot());
+		return Truffle.getRuntime().iterateFrames(f -> {
+			try {
+				return f.getFrame(FrameAccess.READ_ONLY).getDouble(getSlot());
+			} catch (IllegalArgumentException e) {
+				return null;
+			} catch (FrameSlotTypeException e) {
+				return null;
+			}
+		});
 	}
 
 	@Specialization(replaces = { "readBoolean", "readInt", "readDouble" })
 	protected Object readObject(VirtualFrame frame) {
-		if (!frame.isObject(getSlot())) {
-			CompilerDirectives.transferToInterpreter();
-			Object result = frame.getValue(getSlot());
-			// Write slot as object so we don't go through this path again
-			frame.setObject(getSlot(), result);
-			return result;
-		}
-
-		return FrameUtil.getObjectSafe(frame, getSlot());
+		return Truffle.getRuntime().iterateFrames(f -> {
+			try {
+				return f.getFrame(FrameAccess.READ_ONLY).getObject(getSlot());
+			} catch (IllegalArgumentException e) {
+				return null;
+			} catch (FrameSlotTypeException e) {
+				return null;
+			}
+		});
 	}
-
+	
+	private void initialize() {
+		final FrameSlot slot = getSlot();
+		CompilerDirectives.transferToInterpreterAndInvalidate();
+		slotKind = Truffle.getRuntime().iterateFrames(f -> {
+			final Frame frame = f.getFrame(FrameAccess.READ_ONLY);
+			final FrameDescriptor descriptor = frame.getFrameDescriptor();
+			if (descriptor.getSlots().contains(slot)) {
+				return descriptor.getFrameSlotKind(slot);
+			} else {
+				return null;
+			}
+		});
+		initialized = true;
+	}
+	
+	private boolean isKind(FrameSlotKind kind) {
+		if (!initialized) {
+			initialize();
+		}
+		if (slotKind == kind) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	protected boolean isBoolean() {
+		return isKind(FrameSlotKind.Boolean);
+	}
+	
+	protected boolean isInt() {
+		return isKind(FrameSlotKind.Int);
+	}
+	
+	protected boolean isDouble() {
+		return isKind(FrameSlotKind.Double);
+	}
 }
