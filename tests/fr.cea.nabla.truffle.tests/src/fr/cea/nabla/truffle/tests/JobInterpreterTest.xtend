@@ -77,5 +77,6 @@ class JobInterpreterTest {
 		assertVariableValue(result, "u_n", #[1.0, 2.0])
 //		val X_n0 = context.getVariableValue("X_n0")
 //		assertVariableValue(result, "X_n", X_n0)
+		assertVariableValue(result, "X_n", "X_n0")
 	}
 }

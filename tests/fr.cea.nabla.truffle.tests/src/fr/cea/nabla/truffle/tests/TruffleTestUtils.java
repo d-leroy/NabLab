@@ -20,6 +20,12 @@ public class TruffleTestUtils {
 		return result.getMember(variableName);
 	}
 
+	public static void assertVariableValue(Value result, String variableName, String otherVariableName) {
+		final Value val1 = getVariable(result, variableName);
+		final Value val2 = getVariable(result, variableName);
+		Assert.assertEquals(val1, val2);
+	}
+
 	public static void assertVariableValue(Value result, String variableName, boolean value) {
 		final Value val = getVariable(result, variableName);
 		Assert.assertTrue(val.isBoolean());
