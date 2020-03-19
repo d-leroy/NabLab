@@ -11,37 +11,37 @@ package test;
 
 public class TestFunctions
 {
-	static int getOne()
+	public static int getOne()
 	{
 		return 1;
 	}
 
-	static int addOne(int a)
+	public static int addOne(int a)
 	{
 		return a + 1;
 	}
 
-	static int add(int a, int b)
+	public static int add(int a, int b)
 	{
 		return a + b;
 	}
 
-	static double addOne(double a)
+	public static double addOne(double a)
 	{
 		return a + 1;
 	}
 
-	static double add(double a, int b)
+	public static double add(double a, int b)
 	{
 		return a + b;
 	}
 
-	static double add(double a, double b)
+	public static double add(double a, double b)
 	{
 		return a + b;
 	}
 
-	static double[] add(double[] a, double[] b)
+	public static double[] add(double[] a, double[] b)
 	{
 		double[] sum = new double[a.length];
 		for (int i=0 ; i < a.length ; i++)
@@ -49,7 +49,7 @@ public class TestFunctions
 		return sum;
 	}
 
-	static double[][] add(double[][] a, double[][] b)
+	public static double[][] add(double[][] a, double[][] b)
 	{
 		int rows = a.length, columns = a[0].length;
 		double[][] sum = new double[rows][columns];
