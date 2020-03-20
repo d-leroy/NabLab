@@ -171,18 +171,26 @@ public class NablaNodeFactory {
 	static class LexicalScope {
 		protected final Map<String, FrameSlot> locals;
 		protected final LexicalScope outer;
+		protected final FrameDescriptor descriptor;
 
 		LexicalScope(LexicalScope outer) {
+			this(outer, false);
+		}
+
+		LexicalScope(LexicalScope outer, boolean newDescriptor) {
 			this.outer = outer;
 			this.locals = new HashMap<>();
 			if (outer != null) {
 				locals.putAll(outer.locals);
 			}
+			if (newDescriptor || outer == null) {
+				this.descriptor = new FrameDescriptor();
+			} else {
+				this.descriptor = outer.descriptor;
+			}
 		}
 	}
 
-	/* State while parsing an ir model. */
-	private FrameDescriptor frameDescriptor;
 	private final Map<Function, NablaFunctionNode> functions = new HashMap<>();
 
 	private final NablaLanguage language;
@@ -310,13 +318,14 @@ public class NablaNodeFactory {
 		}
 	}
 
+	private FrameDescriptor moduleFrameDescriptor; 
+	
 	public NablaModuleNode createModule(IrModule module) {
 		assert lexicalScope == null;
 
-		frameDescriptor = new FrameDescriptor();
 		lexicalScope = new LexicalScope(lexicalScope);
 
-		final FrameDescriptor moduleFrameDescriptor = frameDescriptor;
+		moduleFrameDescriptor = lexicalScope.descriptor;
 
 		final String moduleName = module.getName();
 
@@ -351,21 +360,26 @@ public class NablaNodeFactory {
 		final NablaJobNode result;
 		switch (job.eClass().getClassifierID()) {
 		case IrPackage.INSTRUCTION_JOB:
-			frameDescriptor = new FrameDescriptor();
-			lexicalScope = new LexicalScope(lexicalScope);
+			lexicalScope = new LexicalScope(lexicalScope, true);
 			result = createNablaInstructionJobNode((InstructionJob) job);
 			lexicalScope = lexicalScope.outer;
 			return result;
 		case IrPackage.BEFORE_TIME_LOOP_JOB:
-			return createNablaBeforeTimeLoopJobNode((BeforeTimeLoopJob) job);
+			lexicalScope = new LexicalScope(lexicalScope, true);
+			result = createNablaBeforeTimeLoopJobNode((BeforeTimeLoopJob) job);
+			lexicalScope = lexicalScope.outer;
+			return result;
 		case IrPackage.TIME_LOOP_JOB:
-			return createNablaTimeLoopJobNode((TimeLoopJob) job);
+			lexicalScope = new LexicalScope(lexicalScope, true);
+			result = createNablaTimeLoopJobNode((TimeLoopJob) job);
+			lexicalScope = lexicalScope.outer;
+			return result;
 		}
 		throw new UnsupportedOperationException();
 	}
 
 	private NablaInstructionJobNode createNablaInstructionJobNode(InstructionJob job) {
-		return new NablaInstructionJobNode(language, frameDescriptor, job.getName(),
+		return new NablaInstructionJobNode(language, lexicalScope.descriptor, job.getName(),
 				new NablaInstructionBlockNode(createNablaInstructionNode(job.getInstruction())));
 	}
 
@@ -376,18 +390,19 @@ public class NablaNodeFactory {
 			final FrameSlot destination = lexicalScope.locals.get(c.getDestination().getName());
 			return NablaWriteVariableNodeGen.create(destination, sourceReadNode);
 		}).collect(Collectors.toList()).toArray(new NablaInstructionNode[0]);
-		return new NablaBeforeTimeLoopJobNode(language, frameDescriptor, job.getName(), copyInstructions);
+		return new NablaBeforeTimeLoopJobNode(language, lexicalScope.descriptor, job.getName(), copyInstructions);
 	}
 	
+	//FIXME: use module frame descriptor or more local one?
 	private NablaTimeLoopJobNode createNablaTimeLoopJobNode(TimeLoopJob job) {
 		final String indexName = job.getTimeLoop().getIterationCounter().getName();
-		final FrameSlot indexSlot = frameDescriptor.findOrAddFrameSlot(indexName, null, FrameSlotKind.Illegal);
+		final FrameSlot indexSlot = moduleFrameDescriptor.findOrAddFrameSlot(indexName, null, FrameSlotKind.Illegal);
 		lexicalScope.locals.put(indexName, indexSlot);
 		final List<FrameSlot[]> copies = job.getCopies().stream().map(c -> {
 			final String source = c.getSource().getName();
 			final String destination = c.getDestination().getName();
-			final FrameSlot sourceSlot = frameDescriptor.findOrAddFrameSlot(source, null, FrameSlotKind.Illegal);
-			final FrameSlot destinationSlot = frameDescriptor.findOrAddFrameSlot(destination, null, FrameSlotKind.Illegal);
+			final FrameSlot sourceSlot = moduleFrameDescriptor.findOrAddFrameSlot(source, null, FrameSlotKind.Illegal);
+			final FrameSlot destinationSlot = moduleFrameDescriptor.findOrAddFrameSlot(destination, null, FrameSlotKind.Illegal);
 			lexicalScope.locals.put(source, sourceSlot);
 			lexicalScope.locals.put(destination, destinationSlot);
 			return new FrameSlot[] { sourceSlot, destinationSlot };
@@ -399,7 +414,7 @@ public class NablaNodeFactory {
 				.map(j -> createNablaJobNode(j))
 				.collect(Collectors.toList())
 				.toArray(new NablaJobNode[0]);
-		return new NablaTimeLoopJobNode(language, frameDescriptor, job.getName(),
+		return new NablaTimeLoopJobNode(language, lexicalScope.descriptor, job.getName(),
 				indexSlot, copies, conditionNode, innerJobs);
 	}
 
@@ -566,15 +581,14 @@ public class NablaNodeFactory {
 	}
 
 	private NablaFunctionNode createNablaFunctionNode(Function function) {
-		frameDescriptor = new FrameDescriptor();
-		lexicalScope = new LexicalScope(lexicalScope);
+		lexicalScope = new LexicalScope(lexicalScope, true);
 		final List<NablaInstructionNode> functionInstructions = new ArrayList<>();
 		final Set<String> sizeVarSet = new HashSet<>();
 		int nbSizeVars = function.getVariables().size();
 		for (int i = 0; i < nbSizeVars; i++) {
 			final String varName = function.getVariables().get(i).getName();
 			sizeVarSet.add(varName);
-			final FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(varName, null, FrameSlotKind.Illegal);
+			final FrameSlot frameSlot = lexicalScope.descriptor.findOrAddFrameSlot(varName, null, FrameSlotKind.Illegal);
 			lexicalScope.locals.put(varName, frameSlot);
 		}
 
@@ -596,14 +610,14 @@ public class NablaNodeFactory {
 			} else {
 				readArg = NablaReadArgumentNodeGen.create(i);
 			}
-			final FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(argName, null, FrameSlotKind.Illegal);
+			final FrameSlot frameSlot = lexicalScope.descriptor.findOrAddFrameSlot(argName, null, FrameSlotKind.Illegal);
 			lexicalScope.locals.put(argName, frameSlot);
 			functionInstructions.add(createNablaWriteVariableNode(argName, readArg, i));
 		}
 		functionInstructions.addAll(Arrays.asList(createNablaInstructionNode(function.getBody())));
 		final NablaInstructionNode bodyNode = new NablaInstructionBlockNode(
 				functionInstructions.toArray(new NablaInstructionNode[0]));
-		final NablaFunctionNode result = new NablaFunctionNode(language, frameDescriptor, bodyNode, function.getName());
+		final NablaFunctionNode result = new NablaFunctionNode(language, lexicalScope.descriptor, bodyNode, function.getName());
 		lexicalScope = lexicalScope.outer;
 		return result;
 	}
@@ -714,7 +728,7 @@ public class NablaNodeFactory {
 			lexicalScope = new LexicalScope(lexicalScope);
 			final IntervalIterationBlock intervalIterationBlock = (IntervalIterationBlock) iterationBlock;
 			final String indexName = intervalIterationBlock.getIndex().getName();
-			final FrameSlot indexSlot = frameDescriptor.findOrAddFrameSlot(indexName, null, FrameSlotKind.Illegal);
+			final FrameSlot indexSlot = lexicalScope.descriptor.findOrAddFrameSlot(indexName, null, FrameSlotKind.Illegal);
 			lexicalScope.locals.put(indexName, indexSlot);
 			final NablaInstructionNode bodyNode = new NablaInstructionBlockNode(
 					createNablaInstructionNode(loop.getBody()));
@@ -921,7 +935,7 @@ public class NablaNodeFactory {
 		case IrPackage.SIMPLE_VARIABLE: {
 			final SimpleVariable simpleVariable = (SimpleVariable) variable;
 			final String name = simpleVariable.getName();
-			final FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(name, null, FrameSlotKind.Illegal);
+			final FrameSlot frameSlot = lexicalScope.descriptor.findOrAddFrameSlot(name, null, FrameSlotKind.Illegal);
 			lexicalScope.locals.put(name, frameSlot);
 			final Expression defaultValue = simpleVariable.getDefaultValue();
 			if (defaultValue != null) {

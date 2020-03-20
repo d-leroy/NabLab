@@ -84,10 +84,10 @@ public class NablaTimeLoopJobNode extends NablaJobNode {
 			if (continueLoop) {
 				for (FrameSlot[] copy : copies) {
 					try {
-						final Object left = frame.getObject(copy[1]);
-						final Object right = frame.getObject(copy[0]);
-						frame.setObject(copy[0], left);
-						frame.setObject(copy[1], right);
+						final Object left = frameToWrite.getObject(copy[1]);
+						final Object right = frameToWrite.getObject(copy[0]);
+						frameToWrite.setObject(copy[0], left);
+						frameToWrite.setObject(copy[1], right);
 					} catch (FrameSlotTypeException e) {
 						e.printStackTrace();
 					}
