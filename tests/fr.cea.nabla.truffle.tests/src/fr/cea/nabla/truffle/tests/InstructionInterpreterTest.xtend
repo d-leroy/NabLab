@@ -9,6 +9,7 @@
  *******************************************************************************/
 package fr.cea.nabla.truffle.tests
 
+import com.google.inject.Inject
 import fr.cea.nabla.tests.NablaInjectorProvider
 import fr.cea.nabla.tests.TestUtils
 import org.eclipse.xtext.testing.InjectWith
@@ -16,12 +17,13 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import static fr.cea.nabla.tests.TestUtils.*
 import static fr.cea.nabla.truffle.tests.TruffleTestUtils.*
 
 @RunWith(XtextRunner)
 @InjectWith(NablaInjectorProvider)
 class InstructionInterpreterTest {
+
+	@Inject extension TestUtils
 
 	@Test
 	def void testInterpreteVarDefinition() {
@@ -60,7 +62,7 @@ class InstructionInterpreterTest {
 	def void testInterpreteLoop() {
 		val xQuads = 100
 		val yQuads = 100
-		val model = TestUtils::getTestModule(xQuads, yQuads) + '''
+		val model = getTestModule(xQuads, yQuads) + '''
 			ℝ U{cells};
 			ℝ[2] C{cells, nodesOfCell};
 			InitU : ∀r∈cells(), U{r} = 1.0;

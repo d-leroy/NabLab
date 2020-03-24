@@ -9,6 +9,7 @@
  *******************************************************************************/
 package fr.cea.nabla.truffle.tests
 
+import com.google.inject.Inject
 import fr.cea.nabla.tests.NablaInjectorProvider
 import fr.cea.nabla.tests.TestUtils
 import org.eclipse.xtext.testing.InjectWith
@@ -16,16 +17,17 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import static fr.cea.nabla.tests.TestUtils.*
 import static fr.cea.nabla.truffle.tests.TruffleTestUtils.*
 
 @RunWith(XtextRunner)
 @InjectWith(NablaInjectorProvider)
 class JobInterpreterTest {
 
+	@Inject extension TestUtils
+
 	@Test
 	def void testInterpreteInstructionJob() {
-		val model = TestUtils::testModuleForSimulation + '''
+		val model = testModuleForSimulation + '''
 			initT : t = 5.;
 		'''
 
@@ -36,7 +38,7 @@ class JobInterpreterTest {
 
 	@Test
 	def void testInterpreteTimeLoopJob() {
-		val model = TestUtils::testModuleForSimulation + '''
+		val model = testModuleForSimulation + '''
 			// Simulation options
 			const ℝ option_stoptime = 0.2;
 			const ℕ option_max_iterations = 10;

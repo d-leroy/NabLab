@@ -79,11 +79,12 @@ import fr.cea.nabla.ir.ir.Instruction;
 import fr.cea.nabla.ir.ir.InstructionBlock;
 import fr.cea.nabla.ir.ir.InstructionJob;
 import fr.cea.nabla.ir.ir.IntConstant;
-import fr.cea.nabla.ir.ir.IntervalIterationBlock;
+import fr.cea.nabla.ir.ir.Interval;
 import fr.cea.nabla.ir.ir.IrModule;
 import fr.cea.nabla.ir.ir.IrPackage;
 import fr.cea.nabla.ir.ir.IrType;
 import fr.cea.nabla.ir.ir.IterationBlock;
+import fr.cea.nabla.ir.ir.Iterator;
 import fr.cea.nabla.ir.ir.Job;
 import fr.cea.nabla.ir.ir.Loop;
 import fr.cea.nabla.ir.ir.MaxConstant;
@@ -98,11 +99,10 @@ import fr.cea.nabla.ir.ir.SizeTypeInt;
 import fr.cea.nabla.ir.ir.SizeTypeOperation;
 import fr.cea.nabla.ir.ir.SizeTypeSymbol;
 import fr.cea.nabla.ir.ir.SizeTypeSymbolRef;
-import fr.cea.nabla.ir.ir.SpaceIterationBlock;
 import fr.cea.nabla.ir.ir.TimeLoopJob;
 import fr.cea.nabla.ir.ir.UnaryExpression;
-import fr.cea.nabla.ir.ir.VarDefinition;
 import fr.cea.nabla.ir.ir.Variable;
+import fr.cea.nabla.ir.ir.VariablesDefinition;
 import fr.cea.nabla.ir.ir.VectorConstant;
 import fr.cea.nabla.ir.truffle.NablaLanguage;
 import fr.cea.nabla.ir.truffle.nodes.NablaFunctionNode;
@@ -707,8 +707,8 @@ public class NablaNodeFactory {
 			return new NablaInstructionNode[] { createNablaLoopNode((Loop) instruction) };
 		case IrPackage.RETURN:
 			return new NablaInstructionNode[] { createNablaReturnNode((Return) instruction) };
-		case IrPackage.VAR_DEFINITION:
-			final VarDefinition varDefinition = (VarDefinition) instruction;
+		case IrPackage.VARIABLES_DEFINITION:
+			final VariablesDefinition varDefinition = (VariablesDefinition) instruction;
 			final NablaInstructionNode[] varDefs = varDefinition.getVariables().stream()
 					.map(v -> createVariableDeclaration(v)).filter(n -> n != null).collect(Collectors.toList())
 					.toArray(new NablaInstructionNode[0]);
@@ -724,21 +724,21 @@ public class NablaNodeFactory {
 	private NablaInstructionNode createNablaLoopNode(Loop loop) {
 		final IterationBlock iterationBlock = loop.getIterationBlock();
 		switch (iterationBlock.eClass().getClassifierID()) {
-		case IrPackage.INTERVAL_ITERATION_BLOCK:
+		case IrPackage.INTERVAL:
 			lexicalScope = new LexicalScope(lexicalScope);
-			final IntervalIterationBlock intervalIterationBlock = (IntervalIterationBlock) iterationBlock;
-			final String indexName = intervalIterationBlock.getIndex().getName();
+			final Interval interval = (Interval) iterationBlock;
+			final String indexName = interval.getIndex().getName();
 			final FrameSlot indexSlot = lexicalScope.descriptor.findOrAddFrameSlot(indexName, null, FrameSlotKind.Illegal);
 			lexicalScope.locals.put(indexName, indexSlot);
 			final NablaInstructionNode bodyNode = new NablaInstructionBlockNode(
 					createNablaInstructionNode(loop.getBody()));
-			final NablaExpressionNode iterationCount = createNablaSizeTypeNode(intervalIterationBlock.getNbElems());
+			final NablaExpressionNode iterationCount = createNablaSizeTypeNode(interval.getNbElems());
 			final NablaInstructionNode result = new NablaLoopNode(indexSlot, iterationCount, bodyNode);
 			lexicalScope = lexicalScope.outer;
 			return result;
-		case IrPackage.SPACE_ITERATION_BLOCK:
+		case IrPackage.ITERATOR:
 			lexicalScope = new LexicalScope(lexicalScope);
-			final SpaceIterationBlock spaceIterationBlock = (SpaceIterationBlock) iterationBlock;
+			final Iterator iterator = (Iterator) iterationBlock;
 //			final String indexName = spaceIterationBlock.get
 			throw new UnsupportedOperationException();
 		}

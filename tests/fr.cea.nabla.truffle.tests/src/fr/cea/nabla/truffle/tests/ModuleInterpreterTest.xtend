@@ -9,6 +9,7 @@
  *******************************************************************************/
 package fr.cea.nabla.truffle.tests
 
+import com.google.inject.Inject
 import fr.cea.nabla.tests.NablaInjectorProvider
 import fr.cea.nabla.tests.TestUtils
 import org.eclipse.xtext.testing.InjectWith
@@ -21,9 +22,12 @@ import static fr.cea.nabla.truffle.tests.TruffleTestUtils.*
 @RunWith(XtextRunner)
 @InjectWith(NablaInjectorProvider)
 class ModuleInterpreterTest {
+
+	@Inject extension TestUtils
+	
 	@Test
 	def void testInterpreteModule() {
-		val model = TestUtils::getTestModule(10, 10) + '''
+		val model = getTestModule(10, 10) + '''
 			// Simulation options
 			const ℝ option_stoptime = 0.2;
 			const ℕ option_max_iterations = 20000;

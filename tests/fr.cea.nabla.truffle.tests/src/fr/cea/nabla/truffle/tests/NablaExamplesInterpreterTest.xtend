@@ -9,19 +9,23 @@
  *******************************************************************************/
 package fr.cea.nabla.truffle.tests
 
+import com.google.inject.Inject
 import fr.cea.nabla.tests.NablaInjectorProvider
+import fr.cea.nabla.tests.TestUtils
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import static fr.cea.nabla.tests.TestUtils.*
 import static fr.cea.nabla.truffle.tests.TruffleTestUtils.*
 
 @RunWith(XtextRunner)
 @InjectWith(NablaInjectorProvider)
 class NablaExamplesInterpreterTest {
+
+	@Inject extension TestUtils
+	
 	static String wsPath
 	static String examplesProjectSubPath
 	static String examplesProjectPath
