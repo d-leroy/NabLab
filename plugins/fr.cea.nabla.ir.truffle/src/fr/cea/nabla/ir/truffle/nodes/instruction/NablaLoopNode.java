@@ -1,38 +1,56 @@
 package fr.cea.nabla.ir.truffle.nodes.instruction;
 
+import com.oracle.truffle.api.dsl.NodeChild;
+import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 
-import fr.cea.nabla.ir.truffle.NablaTypesGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.ir.truffle.values.NV0Int;
+import fr.cea.nabla.ir.truffle.values.NV1Int;
 
-public class NablaLoopNode extends NablaInstructionNode {
+@NodeChild(value="count", type=NablaExpressionNode.class)
+public abstract class NablaLoopNode extends NablaInstructionNode {
 
-	@Child NablaInstructionNode instruction;
-	@Child NablaExpressionNode count;
 	private final FrameSlot indexSlot;
 
-	public NablaLoopNode(FrameSlot indexSlot, NablaExpressionNode count, NablaInstructionNode instruction) {
+	@Child private NablaInstructionNode body;
+	
+	public NablaLoopNode(FrameSlot indexSlot, NablaInstructionNode body) {
 		this.indexSlot = indexSlot;
-		this.count = count;
-		this.instruction = instruction;
+		this.body = body;
 	}
 	
-	@Override
+	@Specialization
 	@ExplodeLoop
-	public Object executeGeneric(VirtualFrame frame) {
-		final int iterationCount = NablaTypesGen.asNV0Int(count.executeGeneric(frame)).getData();
+	public Object doLoop(VirtualFrame frame, NV0Int count) {
+		final int iterationCount = count.getData();
 		frame.setObject(indexSlot, new NV0Int(0));
 		frame.getFrameDescriptor().setFrameSlotKind(indexSlot, FrameSlotKind.Object);
-		instruction.executeGeneric(frame);
+		body.executeGeneric(frame);
 		for (int i = 1; i < iterationCount - 1; i++) {
 			frame.setObject(indexSlot, new NV0Int(i));
-			instruction.executeGeneric(frame);
+			body.executeGeneric(frame);
 		}
 		frame.setObject(indexSlot, new NV0Int(iterationCount - 1));
-		return instruction.executeGeneric(frame);
+		return body.executeGeneric(frame);
+	}
+	
+	@Specialization
+	@ExplodeLoop
+	public Object doLoop(VirtualFrame frame, NV1Int elements_) {
+		final int[] elements = elements_.getData();
+		final int iterationCount = elements.length;
+		frame.setObject(indexSlot, new NV0Int(0));
+		frame.getFrameDescriptor().setFrameSlotKind(indexSlot, FrameSlotKind.Object);
+		body.executeGeneric(frame);
+		for (int i = 1; i < iterationCount - 1; i++) {
+			frame.setObject(indexSlot, new NV0Int(i));
+			body.executeGeneric(frame);
+		}
+		frame.setObject(indexSlot, new NV0Int(iterationCount-1));
+		return body.executeGeneric(frame);
 	}
 }

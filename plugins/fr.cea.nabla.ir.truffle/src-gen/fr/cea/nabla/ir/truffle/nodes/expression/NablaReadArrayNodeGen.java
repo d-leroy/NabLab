@@ -16,6 +16,8 @@ import fr.cea.nabla.ir.truffle.values.NV1Real;
 import fr.cea.nabla.ir.truffle.values.NV2Bool;
 import fr.cea.nabla.ir.truffle.values.NV2Int;
 import fr.cea.nabla.ir.truffle.values.NV2Real;
+import fr.cea.nabla.ir.truffle.values.NV3Real;
+import fr.cea.nabla.ir.truffle.values.NV4Real;
 
 @GeneratedBy(NablaReadArrayNode.class)
 public final class NablaReadArrayNodeGen extends NablaReadArrayNode {
@@ -26,11 +28,6 @@ public final class NablaReadArrayNodeGen extends NablaReadArrayNode {
     private NablaReadArrayNodeGen(NablaExpressionNode[] indices, NablaExpressionNode arrayNode) {
         super(indices);
         this.arrayNode_ = arrayNode;
-    }
-
-    @Override
-    protected NablaExpressionNode getArrayNode() {
-        return this.arrayNode_;
     }
 
     @Override
@@ -69,18 +66,52 @@ public final class NablaReadArrayNodeGen extends NablaReadArrayNode {
                 return readNV2Real2Indices(frameValue, arrayNodeValue__);
             }
         }
-        if ((state & 0b1000000) != 0 /* is-active readNV1Bool1Index(VirtualFrame, NV1Bool) */ && arrayNodeValue_ instanceof NV1Bool) {
+        if ((state & 0b111000000) != 0 /* is-active readNV3Real1Index(VirtualFrame, NV3Real) || readNV3Real2Indices(VirtualFrame, NV3Real) || readNV3Real3Indices(VirtualFrame, NV3Real) */ && arrayNodeValue_ instanceof NV3Real) {
+            NV3Real arrayNodeValue__ = (NV3Real) arrayNodeValue_;
+            if ((state & 0b1000000) != 0 /* is-active readNV3Real1Index(VirtualFrame, NV3Real) */) {
+                assert (indices.length == 1);
+                return readNV3Real1Index(frameValue, arrayNodeValue__);
+            }
+            if ((state & 0b10000000) != 0 /* is-active readNV3Real2Indices(VirtualFrame, NV3Real) */) {
+                assert (indices.length == 2);
+                return readNV3Real2Indices(frameValue, arrayNodeValue__);
+            }
+            if ((state & 0b100000000) != 0 /* is-active readNV3Real3Indices(VirtualFrame, NV3Real) */) {
+                assert (indices.length == 3);
+                return readNV3Real3Indices(frameValue, arrayNodeValue__);
+            }
+        }
+        if ((state & 0b1111000000000) != 0 /* is-active readNV4Real1Index(VirtualFrame, NV4Real) || readNV4Real2Indices(VirtualFrame, NV4Real) || readNV4Real3Indices(VirtualFrame, NV4Real) || readNV4Real4Indices(VirtualFrame, NV4Real) */ && arrayNodeValue_ instanceof NV4Real) {
+            NV4Real arrayNodeValue__ = (NV4Real) arrayNodeValue_;
+            if ((state & 0b1000000000) != 0 /* is-active readNV4Real1Index(VirtualFrame, NV4Real) */) {
+                assert (indices.length == 1);
+                return readNV4Real1Index(frameValue, arrayNodeValue__);
+            }
+            if ((state & 0b10000000000) != 0 /* is-active readNV4Real2Indices(VirtualFrame, NV4Real) */) {
+                assert (indices.length == 2);
+                return readNV4Real2Indices(frameValue, arrayNodeValue__);
+            }
+            if ((state & 0b100000000000) != 0 /* is-active readNV4Real3Indices(VirtualFrame, NV4Real) */) {
+                assert (indices.length == 3);
+                return readNV4Real3Indices(frameValue, arrayNodeValue__);
+            }
+            if ((state & 0b1000000000000) != 0 /* is-active readNV4Real4Indices(VirtualFrame, NV4Real) */) {
+                assert (indices.length == 4);
+                return readNV4Real4Indices(frameValue, arrayNodeValue__);
+            }
+        }
+        if ((state & 0b10000000000000) != 0 /* is-active readNV1Bool1Index(VirtualFrame, NV1Bool) */ && arrayNodeValue_ instanceof NV1Bool) {
             NV1Bool arrayNodeValue__ = (NV1Bool) arrayNodeValue_;
             assert (indices.length == 1);
             return readNV1Bool1Index(frameValue, arrayNodeValue__);
         }
-        if ((state & 0b110000000) != 0 /* is-active readNV2Bool1Index(VirtualFrame, NV2Bool) || readNV2Bool2Indices(VirtualFrame, NV2Bool) */ && arrayNodeValue_ instanceof NV2Bool) {
+        if ((state & 0b1100000000000000) != 0 /* is-active readNV2Bool1Index(VirtualFrame, NV2Bool) || readNV2Bool2Indices(VirtualFrame, NV2Bool) */ && arrayNodeValue_ instanceof NV2Bool) {
             NV2Bool arrayNodeValue__ = (NV2Bool) arrayNodeValue_;
-            if ((state & 0b10000000) != 0 /* is-active readNV2Bool1Index(VirtualFrame, NV2Bool) */) {
+            if ((state & 0b100000000000000) != 0 /* is-active readNV2Bool1Index(VirtualFrame, NV2Bool) */) {
                 assert (indices.length == 1);
                 return readNV2Bool1Index(frameValue, arrayNodeValue__);
             }
-            if ((state & 0b100000000) != 0 /* is-active readNV2Bool2Indices(VirtualFrame, NV2Bool) */) {
+            if ((state & 0b1000000000000000) != 0 /* is-active readNV2Bool2Indices(VirtualFrame, NV2Bool) */) {
                 assert (indices.length == 2);
                 return readNV2Bool2Indices(frameValue, arrayNodeValue__);
             }
@@ -127,21 +158,55 @@ public final class NablaReadArrayNodeGen extends NablaReadArrayNode {
                 return readNV2Real2Indices(frameValue, arrayNodeValue_);
             }
         }
+        if (arrayNodeValue instanceof NV3Real) {
+            NV3Real arrayNodeValue_ = (NV3Real) arrayNodeValue;
+            if ((indices.length == 1)) {
+                this.state_ = state = state | 0b1000000 /* add-active readNV3Real1Index(VirtualFrame, NV3Real) */;
+                return readNV3Real1Index(frameValue, arrayNodeValue_);
+            }
+            if ((indices.length == 2)) {
+                this.state_ = state = state | 0b10000000 /* add-active readNV3Real2Indices(VirtualFrame, NV3Real) */;
+                return readNV3Real2Indices(frameValue, arrayNodeValue_);
+            }
+            if ((indices.length == 3)) {
+                this.state_ = state = state | 0b100000000 /* add-active readNV3Real3Indices(VirtualFrame, NV3Real) */;
+                return readNV3Real3Indices(frameValue, arrayNodeValue_);
+            }
+        }
+        if (arrayNodeValue instanceof NV4Real) {
+            NV4Real arrayNodeValue_ = (NV4Real) arrayNodeValue;
+            if ((indices.length == 1)) {
+                this.state_ = state = state | 0b1000000000 /* add-active readNV4Real1Index(VirtualFrame, NV4Real) */;
+                return readNV4Real1Index(frameValue, arrayNodeValue_);
+            }
+            if ((indices.length == 2)) {
+                this.state_ = state = state | 0b10000000000 /* add-active readNV4Real2Indices(VirtualFrame, NV4Real) */;
+                return readNV4Real2Indices(frameValue, arrayNodeValue_);
+            }
+            if ((indices.length == 3)) {
+                this.state_ = state = state | 0b100000000000 /* add-active readNV4Real3Indices(VirtualFrame, NV4Real) */;
+                return readNV4Real3Indices(frameValue, arrayNodeValue_);
+            }
+            if ((indices.length == 4)) {
+                this.state_ = state = state | 0b1000000000000 /* add-active readNV4Real4Indices(VirtualFrame, NV4Real) */;
+                return readNV4Real4Indices(frameValue, arrayNodeValue_);
+            }
+        }
         if (arrayNodeValue instanceof NV1Bool) {
             NV1Bool arrayNodeValue_ = (NV1Bool) arrayNodeValue;
             if ((indices.length == 1)) {
-                this.state_ = state = state | 0b1000000 /* add-active readNV1Bool1Index(VirtualFrame, NV1Bool) */;
+                this.state_ = state = state | 0b10000000000000 /* add-active readNV1Bool1Index(VirtualFrame, NV1Bool) */;
                 return readNV1Bool1Index(frameValue, arrayNodeValue_);
             }
         }
         if (arrayNodeValue instanceof NV2Bool) {
             NV2Bool arrayNodeValue_ = (NV2Bool) arrayNodeValue;
             if ((indices.length == 1)) {
-                this.state_ = state = state | 0b10000000 /* add-active readNV2Bool1Index(VirtualFrame, NV2Bool) */;
+                this.state_ = state = state | 0b100000000000000 /* add-active readNV2Bool1Index(VirtualFrame, NV2Bool) */;
                 return readNV2Bool1Index(frameValue, arrayNodeValue_);
             }
             if ((indices.length == 2)) {
-                this.state_ = state = state | 0b100000000 /* add-active readNV2Bool2Indices(VirtualFrame, NV2Bool) */;
+                this.state_ = state = state | 0b1000000000000000 /* add-active readNV2Bool2Indices(VirtualFrame, NV2Bool) */;
                 return readNV2Bool2Indices(frameValue, arrayNodeValue_);
             }
         }

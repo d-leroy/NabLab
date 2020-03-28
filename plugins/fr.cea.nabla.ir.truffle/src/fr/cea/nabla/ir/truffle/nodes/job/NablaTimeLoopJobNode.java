@@ -1,10 +1,13 @@
 package fr.cea.nabla.ir.truffle.nodes.job;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
 
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.TruffleLanguage;
+import com.oracle.truffle.api.TruffleLogger;
 import com.oracle.truffle.api.frame.Frame;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlot;
@@ -19,6 +22,7 @@ import fr.cea.nabla.ir.truffle.NablaTypesGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaReadVariableNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.instruction.NablaWriteVariableNode;
+import fr.cea.nabla.ir.truffle.runtime.NablaContext;
 import fr.cea.nabla.ir.truffle.values.NV0Int;
 
 public class NablaTimeLoopJobNode extends NablaJobNode {
@@ -64,18 +68,21 @@ public class NablaTimeLoopJobNode extends NablaJobNode {
 		}
 		int i = 0;
 		boolean continueLoop = true;
+
+		int[] iPtr = new int[] { 0 };
+		final Frame frameToWrite = Truffle.getRuntime().iterateFrames(f -> {
+			if (iPtr[0] < depth) {
+				iPtr[0]++;
+				return null;
+			}
+			return f.getFrame(FrameAccess.READ_WRITE);
+		});
+		
 		do  {
 			i++;
-			int[] iPtr = new int[] { 0 };
-			final Frame frameToWrite = Truffle.getRuntime().iterateFrames(f -> {
-				if (iPtr[0] < depth) {
-					iPtr[0]++;
-					return null;
-				}
-				return f.getFrame(FrameAccess.READ_WRITE);
-			});
 			frameToWrite.setObject(indexSlot, new NV0Int(i));
-//			frame.setObject(indexSlot, new NV0Int(i));
+			TruffleLogger.getLogger("nabla").log(Level.FINE, "TimeLoop iteration: " + i);
+			
 			//TODO dump variables (interop message?)
 			for (int j = 0; j < innerJobs.length; j++) {
 				innerJobs[j].call();

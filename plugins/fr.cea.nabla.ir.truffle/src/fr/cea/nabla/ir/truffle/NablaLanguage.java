@@ -3,6 +3,8 @@ package fr.cea.nabla.ir.truffle;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.graalvm.options.OptionDescriptors;
+
 import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.Scope;
@@ -39,6 +41,11 @@ public final class NablaLanguage extends TruffleLanguage<NablaContext> {
 	public static final String ID = "nabla";
 	
 	public static final String MIME_TYPE = "application/x-nabla";
+	
+	@Override
+	protected OptionDescriptors getOptionDescriptors() {
+		return new NablaOptionsOptionDescriptors();
+	}
 	
 	@Override
 	protected NablaContext createContext(Env env) {

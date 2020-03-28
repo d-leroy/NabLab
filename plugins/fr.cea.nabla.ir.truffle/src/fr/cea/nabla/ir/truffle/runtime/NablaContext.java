@@ -76,6 +76,7 @@ public final class NablaContext {
     private final NablaLanguage language;
     private final AllocationReporter allocationReporter;
     private final Iterable<Scope> topScopes; // Cache the top scopes
+    private final MeshWrapper meshWrapper;
 
     public NablaContext(NablaLanguage language, TruffleLanguage.Env env) {
         this.env = env;
@@ -86,6 +87,7 @@ public final class NablaContext {
         this.functionRegistry = new NablaFunctionRegistry(language);
         this.topScopes = Collections.singleton(Scope.newBuilder("global", functionRegistry.getFunctionsObject()).build());
         this.emptyShape = LAYOUT.createShape(NablaObjectType.SINGLETON);
+        this.meshWrapper = new MeshWrapper();
     }
 
     /**
@@ -145,7 +147,11 @@ public final class NablaContext {
     public static NablaContext getCurrent() {
         return NablaLanguage.getCurrentContext();
     }
-
+    
+    public static MeshWrapper getMeshWrapper() {
+    	return getCurrent().meshWrapper;
+    }
+    
 	public static Object fromForeignValue(Object object) {
 		// TODO Auto-generated method stub
 		return null;

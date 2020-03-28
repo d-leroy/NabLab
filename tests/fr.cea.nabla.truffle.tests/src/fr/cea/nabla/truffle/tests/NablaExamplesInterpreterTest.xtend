@@ -10,47 +10,121 @@
 package fr.cea.nabla.truffle.tests
 
 import com.google.inject.Inject
+import fr.cea.nabla.tests.CompilationChainHelper
+import fr.cea.nabla.tests.GitUtils
 import fr.cea.nabla.tests.NablaInjectorProvider
 import fr.cea.nabla.tests.TestUtils
+import java.time.Duration
+import java.time.LocalDateTime
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
+import org.junit.After
+import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import static fr.cea.nabla.truffle.tests.TruffleTestUtils.*
+import java.util.logging.FileHandler
+import java.util.logging.SimpleFormatter
+import java.util.logging.Level
 
 @RunWith(XtextRunner)
 @InjectWith(NablaInjectorProvider)
 class NablaExamplesInterpreterTest {
 
-	@Inject extension TestUtils
-	
-	static String wsPath
-	static String examplesProjectSubPath
+	static String testsProjectSubPath
+	static String originalTestProjectPath
 	static String examplesProjectPath
+	static GitUtils git
+	LocalDateTime startTime
+
+	@Inject CompilationChainHelper compilationHelper
+	@Inject extension TestUtils
 
 	@BeforeClass
-	def static void setup() {
+	def static void setup()
+	{
 		val testProjectPath = System.getProperty("user.dir")
-		wsPath = testProjectPath + "/../../"
-		examplesProjectSubPath = "plugins/fr.cea.nabla.ui/examples/NablaExamples/"
+		testsProjectSubPath = testProjectPath.split('/').reverse.get(1) + '/' + testProjectPath.split('/').reverse.get(0)
+
+		val wsPath = testProjectPath + "/../../"
+		val examplesProjectSubPath = "plugins/fr.cea.nabla.ui/examples/NablaExamples/"
 		examplesProjectPath = wsPath + examplesProjectSubPath
+		originalTestProjectPath = wsPath + "tests/fr.cea.nabla.tests/"
+		git = new GitUtils(wsPath)
+		
+		System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s %n")
+		System.setProperty("java.util.logging.FileHandler.limit", "1024000")
+		System.setProperty("java.util.logging.FileHandler.count", "3")
+	}
+
+	@Before
+	def void initTimer()
+	{
+		startTime = LocalDateTime.now()
+	}
+
+	@After
+	def void endTimer()
+	{
+		val endTime = LocalDateTime.now()
+		val duration = Duration.between(startTime, endTime);
+		println("  Elapsed time : " + duration.seconds + "s")
 	}
 
 	@Test
-	def void testInterpreteGlace2D() {
-		val model = readFileAsString(examplesProjectPath + "src/glace2d/Glace2d.nabla")
-
-		executeModel(model)
+	def void testInterpreteGlace2d()
+	{
+		testInterpreteModule("Glace2d")
 	}
 
 	@Test
-	def void testInterpreteHeatEquation() {
-		val model = readFileAsString(examplesProjectPath + "src/heatequation/HeatEquation.nabla")
+	def void testInterpreteHeatEquation()
+	{
+		testInterpreteModule("HeatEquation")
+	}
 
-		for (var i = 0; i < 10; i++) {
-			executeModel(model)
-		}
+	@Test
+	def void testInterpreteExplicitHeatEquation()
+	{
+		testInterpreteModule("ExplicitHeatEquation")
+	}
+
+	@Test
+	def void testInterpreteImplicitHeatEquation()
+	{
+		testInterpreteModule("ImplicitHeatEquation")
+	}
+
+	@Test
+	def void testInterpreteIterativeHeatEquation()
+	{
+		testInterpreteModule("IterativeHeatEquation")
+	}
+
+	private def void testInterpreteModule(String moduleName)
+	{
+		println("test" + moduleName)
+		val modelFile = String.format("%1$ssrc/%2$s/%3$s.nabla", examplesProjectPath, moduleName.toLowerCase, moduleName)
+		val model = readFileAsString(modelFile)
+		// We use a dedicated genmodel to replaceAllreductions and not to generate code
+		val genmodelFile = String.format("%1$ssrc/%2$s/%3$s.nablagen", originalTestProjectPath, moduleName.toLowerCase, moduleName)
+		val genmodel = readFileAsString(genmodelFile)
+
+//		val logFile = String.format("src/%1$s/Interprete%2$s.log", moduleName.toLowerCase, moduleName)
+//		val handler = new FileHandler(logFile, false)
+
+//		val formatter = new SimpleFormatter
+//		handler.setFormatter(formatter)
+//		handler.level = Level::FINE
+//		TruffleTestUtils.executeModel(model, genmodel, handler);
+//		handler.close
+		TruffleTestUtils.executeModel(model, genmodel);
+
+		testNoGitDiff("/"+moduleName.toLowerCase)
+	}
+
+	private def testNoGitDiff(String moduleName)
+	{
+		git.testNoGitDiff(testsProjectSubPath, moduleName)
 	}
 }

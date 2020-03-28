@@ -14,14 +14,14 @@ import fr.cea.nabla.ir.truffle.values.NV1Real;
 import fr.cea.nabla.ir.truffle.values.NV2Bool;
 import fr.cea.nabla.ir.truffle.values.NV2Int;
 import fr.cea.nabla.ir.truffle.values.NV2Real;
+import fr.cea.nabla.ir.truffle.values.NV3Real;
+import fr.cea.nabla.ir.truffle.values.NV4Real;
 
 @NodeChild("arrayNode")
 public abstract class NablaReadArrayNode extends NablaExpressionNode {
 	
 	@Children
 	protected NablaExpressionNode[] indices;
-	
-	protected abstract NablaExpressionNode getArrayNode();
 	
 	public NablaReadArrayNode(NablaExpressionNode[] indices) {
 		this.indices = indices;
@@ -63,6 +63,57 @@ public abstract class NablaReadArrayNode extends NablaExpressionNode {
 		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
 		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
 		return new NV0Real(array.getData()[idx1][idx2]);
+	}
+	
+	@Specialization(guards = "indices.length == 1")
+	protected NV2Real readNV3Real1Index(VirtualFrame frame, NV3Real array) {
+		final int idx = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
+		return new NV2Real(array.getData()[idx]);
+	}
+	
+	@Specialization(guards = "indices.length == 2")
+	protected NV1Real readNV3Real2Indices(VirtualFrame frame, NV3Real array) {
+		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
+		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
+		return new NV1Real(array.getData()[idx1][idx2]);
+	}
+	
+	@Specialization(guards = "indices.length == 3")
+	protected NV0Real readNV3Real3Indices(VirtualFrame frame, NV3Real array) {
+		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
+		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
+		final int idx3 = NablaTypesGen.asNV0Int(indices[2].executeGeneric(frame)).getData();
+		return new NV0Real(array.getData()[idx1][idx2][idx3]);
+	}
+	
+	@Specialization(guards = "indices.length == 1")
+	protected NV3Real readNV4Real1Index(VirtualFrame frame, NV4Real array) {
+		final int idx = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
+		return new NV3Real(array.getData()[idx]);
+	}
+	
+	@Specialization(guards = "indices.length == 2")
+	protected NV2Real readNV4Real2Indices(VirtualFrame frame, NV4Real array) {
+		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
+		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
+		return new NV2Real(array.getData()[idx1][idx2]);
+	}
+	
+	@Specialization(guards = "indices.length == 3")
+	protected NV1Real readNV4Real3Indices(VirtualFrame frame, NV4Real array) {
+		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
+		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
+		final int idx3 = NablaTypesGen.asNV0Int(indices[2].executeGeneric(frame)).getData();
+		return new NV1Real(array.getData()[idx1][idx2][idx3]);
+	}
+	
+	@Specialization(guards = "indices.length == 4")
+	protected NV0Real readNV4Real4Indices(VirtualFrame frame, NV4Real array) {
+		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
+		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
+		final int idx3 = NablaTypesGen.asNV0Int(indices[2].executeGeneric(frame)).getData();
+		final int idx4 = NablaTypesGen.asNV0Int(indices[3].executeGeneric(frame)).getData();
+		return new NV0Real(array.getData()[idx1][idx2][idx3][idx4]);
 	}
 	
 	@Specialization(guards = "indices.length == 1")

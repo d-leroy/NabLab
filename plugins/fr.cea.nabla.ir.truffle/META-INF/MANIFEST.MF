@@ -13,7 +13,8 @@ Require-Bundle: com.oracle.truffle.wrapper;bundle-version="1.0.0",
  org.eclipse.xtext.xbase.lib,
  org.eclipse.xtend.lib,
  org.eclipse.xtend.lib.macro,
- org.junit
+ org.junit,
+ fr.cea.nabla.javalib;bundle-version="0.1.0"
 Export-Package: fr.cea.nabla.ir.truffle,
  fr.cea.nabla.ir.truffle,
  fr.cea.nabla.ir.truffle.nodes,
@@ -28,3 +29,5 @@ Export-Package: fr.cea.nabla.ir.truffle,
  fr.cea.nabla.ir.truffle.runtime,
  fr.cea.nabla.ir.truffle.values
 Import-Package: com.google.inject
+Bundle-ClassPath: lib/,
+ .

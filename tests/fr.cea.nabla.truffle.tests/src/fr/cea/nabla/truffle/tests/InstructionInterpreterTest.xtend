@@ -18,6 +18,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static fr.cea.nabla.truffle.tests.TruffleTestUtils.*
+import org.junit.Assert
+import fr.cea.nabla.ir.MandatoryOptions
 
 @RunWith(XtextRunner)
 @InjectWith(NablaInjectorProvider)
@@ -78,18 +80,18 @@ class InstructionInterpreterTest {
 
 		assertVariableValue(result, "U", u)
 
-//		val cjr = (context.getVariableValue("C") as NV3Real).data
-//
-//		val nbNodesOfCell = 4
-//		val xEdgeLength = (context.getVariableValue(MandatoryOptions::X_EDGE_LENGTH) as NV0Real).data
-//		val yEdgeLength = (context.getVariableValue(MandatoryOptions::Y_EDGE_LENGTH) as NV0Real).data
-//		for (var j = 0 ; j < nbCells ; j++)
-//		{
-//			for (var r = 0 ; r < nbNodesOfCell; r++)
-//			{
-//				Assert.assertEquals(0.5*(xEdgeLength), Math.abs(cjr.get(j,r).get(0)), TestUtils.DoubleTolerance)
-//				Assert.assertEquals(0.5*(yEdgeLength), Math.abs(cjr.get(j,r).get(1)), TestUtils.DoubleTolerance)
-//			}
-//		}
+		val cjr = getVariableValue(result, "C", typeof(double[][][]))
+
+		val nbNodesOfCell = 4
+		val xEdgeLength = getVariableValue(result, MandatoryOptions.X_EDGE_LENGTH, typeof(double))
+		val yEdgeLength = getVariableValue(result, MandatoryOptions.Y_EDGE_LENGTH, typeof(double))
+		for (var j = 0 ; j < nbCells ; j++)
+		{
+			for (var r = 0 ; r < nbNodesOfCell; r++)
+			{
+				Assert.assertEquals(0.5*(xEdgeLength), Math.abs(cjr.get(j,r).get(0)), TestUtils.DoubleTolerance)
+				Assert.assertEquals(0.5*(yEdgeLength), Math.abs(cjr.get(j,r).get(1)), TestUtils.DoubleTolerance)
+			}
+		}
 	}
 }

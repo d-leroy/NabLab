@@ -16,20 +16,20 @@ import com.oracle.truffle.api.nodes.ExplodeLoop;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.ir.truffle.values.NablaValue;
 
-@NodeChild(value = "defaultValue", type = NablaExpressionNode.class)
+@NodeChild(value = "value", type = NablaExpressionNode.class)
 public abstract class NablaWriteVariableNode extends NablaInstructionNode {
 
 	private final FrameSlot slot;
-	
-	public NablaWriteVariableNode(FrameSlot slot) {
-		this.slot = slot;
-	}
 
 	@CompilationFinal
 	boolean initializationRequired = true;
 
 	@CompilationFinal
 	int depth = 0;
+	
+	public NablaWriteVariableNode(FrameSlot slot) {
+		this.slot = slot;
+	}
 
 	@ExplodeLoop
 	@Specialization

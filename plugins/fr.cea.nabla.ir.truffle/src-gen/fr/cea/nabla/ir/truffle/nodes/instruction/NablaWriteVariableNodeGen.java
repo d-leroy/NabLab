@@ -16,34 +16,34 @@ import fr.cea.nabla.ir.truffle.values.NablaValue;
 @GeneratedBy(NablaWriteVariableNode.class)
 public final class NablaWriteVariableNodeGen extends NablaWriteVariableNode {
 
-    @Child private NablaExpressionNode defaultValue_;
+    @Child private NablaExpressionNode value_;
     @CompilationFinal private int state_;
 
-    private NablaWriteVariableNodeGen(FrameSlot slot, NablaExpressionNode defaultValue) {
+    private NablaWriteVariableNodeGen(FrameSlot slot, NablaExpressionNode value) {
         super(slot);
-        this.defaultValue_ = defaultValue;
+        this.value_ = value;
     }
 
     @Override
     public Object executeGeneric(VirtualFrame frameValue) {
         int state = state_;
-        Object defaultValueValue_ = this.defaultValue_.executeGeneric(frameValue);
-        if (state != 0 /* is-active write(VirtualFrame, NablaValue) */ && defaultValueValue_ instanceof NablaValue) {
-            NablaValue defaultValueValue__ = (NablaValue) defaultValueValue_;
-            return write(frameValue, defaultValueValue__);
+        Object valueValue_ = this.value_.executeGeneric(frameValue);
+        if (state != 0 /* is-active write(VirtualFrame, NablaValue) */ && valueValue_ instanceof NablaValue) {
+            NablaValue valueValue__ = (NablaValue) valueValue_;
+            return write(frameValue, valueValue__);
         }
         CompilerDirectives.transferToInterpreterAndInvalidate();
-        return executeAndSpecialize(frameValue, defaultValueValue_);
+        return executeAndSpecialize(frameValue, valueValue_);
     }
 
-    private Object executeAndSpecialize(VirtualFrame frameValue, Object defaultValueValue) {
+    private Object executeAndSpecialize(VirtualFrame frameValue, Object valueValue) {
         int state = state_;
-        if (defaultValueValue instanceof NablaValue) {
-            NablaValue defaultValueValue_ = (NablaValue) defaultValueValue;
+        if (valueValue instanceof NablaValue) {
+            NablaValue valueValue_ = (NablaValue) valueValue;
             this.state_ = state = state | 0b1 /* add-active write(VirtualFrame, NablaValue) */;
-            return write(frameValue, defaultValueValue_);
+            return write(frameValue, valueValue_);
         }
-        throw new UnsupportedSpecializationException(this, new Node[] {this.defaultValue_}, defaultValueValue);
+        throw new UnsupportedSpecializationException(this, new Node[] {this.value_}, valueValue);
     }
 
     @Override
@@ -56,8 +56,8 @@ public final class NablaWriteVariableNodeGen extends NablaWriteVariableNode {
         }
     }
 
-    public static NablaWriteVariableNode create(FrameSlot slot, NablaExpressionNode defaultValue) {
-        return new NablaWriteVariableNodeGen(slot, defaultValue);
+    public static NablaWriteVariableNode create(FrameSlot slot, NablaExpressionNode value) {
+        return new NablaWriteVariableNodeGen(slot, value);
     }
 
 }

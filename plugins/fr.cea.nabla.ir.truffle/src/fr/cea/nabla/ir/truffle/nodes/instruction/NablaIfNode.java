@@ -32,7 +32,10 @@ public class NablaIfNode extends NablaInstructionNode {
 		if (condition.profile(evaluateCondition(frame))) {
 			return thenPartNode.executeGeneric(frame);
 		} else {
-			return elsePartNode.executeGeneric(frame);
+			if (elsePartNode != null) {
+				return elsePartNode.executeGeneric(frame);
+			}
+			return null;
 		}
 	}
 

@@ -3,7 +3,6 @@ package fr.cea.nabla.ir.truffle.nodes.instruction;
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
 import com.oracle.truffle.api.Truffle;
-import com.oracle.truffle.api.dsl.Fallback;
 import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.Frame;
@@ -13,7 +12,6 @@ import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.frame.FrameUtil;
 import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.ExplodeLoop;
 
 import fr.cea.nabla.ir.truffle.NablaTypesGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
@@ -23,6 +21,10 @@ import fr.cea.nabla.ir.truffle.values.NV1Int;
 import fr.cea.nabla.ir.truffle.values.NV1Real;
 import fr.cea.nabla.ir.truffle.values.NV2Int;
 import fr.cea.nabla.ir.truffle.values.NV2Real;
+import fr.cea.nabla.ir.truffle.values.NV3Int;
+import fr.cea.nabla.ir.truffle.values.NV3Real;
+import fr.cea.nabla.ir.truffle.values.NV4Int;
+import fr.cea.nabla.ir.truffle.values.NV4Real;
 import fr.cea.nabla.ir.truffle.values.NablaValue;
 
 @NodeChild(value = "value", type = NablaExpressionNode.class)
@@ -42,9 +44,13 @@ public abstract class NablaWriteArrayNode extends NablaInstructionNode {
 		this.slot = slot;
 		this.indices = indices;
 	}
-
-	@Fallback
-	public Object write(VirtualFrame frame, Object value) {
+	
+	static class InitializationPerformedException extends Exception {
+		private static final long serialVersionUID = 8778912783151932310L;
+	}
+	
+	@Specialization(rewriteOn = InitializationPerformedException.class)
+	public Object write(VirtualFrame frame, Object value) throws InitializationPerformedException {
 		CompilerDirectives.transferToInterpreterAndInvalidate();
 		FrameDescriptor descriptor = Truffle.getRuntime().iterateFrames(f -> {
 			final FrameDescriptor result = f.getFrame(FrameAccess.READ_ONLY).getFrameDescriptor();
@@ -62,7 +68,7 @@ public abstract class NablaWriteArrayNode extends NablaInstructionNode {
 		arrayClass = array.getClass();
 		initializationRequired = false;
 		
-		return this.executeGeneric(frame);
+		throw new InitializationPerformedException();
 	}
 	
 	private Frame getFrameToWrite() {
@@ -149,6 +155,44 @@ public abstract class NablaWriteArrayNode extends NablaInstructionNode {
 		frameToWrite.setObject(slot, array);
 		return array;
 	}
+	
+	@Specialization(guards = "isNV3Real()")
+	protected NV3Real writeNV3Real(VirtualFrame frame, NV1Real value) {
+		final Frame frameToWrite = getFrameToWrite();
+		NV3Real array = NablaTypesGen.asNV3Real(FrameUtil.getObjectSafe(frameToWrite, slot));
+		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
+		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
+		final double[][][] result = array.getData().clone();
+		result[idx1][idx2] = value.getData();
+		array = new NV3Real(result);
+		frameToWrite.setObject(slot, array);
+		return array;
+	}
+	
+	@Specialization(guards = "isNV3Real()")
+	protected NV3Real writeNV3Real(VirtualFrame frame, NV2Real value) {
+		final Frame frameToWrite = getFrameToWrite();
+		NV3Real array = NablaTypesGen.asNV3Real(FrameUtil.getObjectSafe(frameToWrite, slot));
+		final int idx = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
+		final double[][][] result = array.getData().clone();
+		result[idx] = value.getData();
+		array = new NV3Real(result);
+		frameToWrite.setObject(slot, array);
+		return array;
+	}
+	
+	@Specialization(guards = "isNV4Real()")
+	protected NV4Real writeNV4Real(VirtualFrame frame, NV2Real value) {
+		final Frame frameToWrite = getFrameToWrite();
+		NV4Real array = NablaTypesGen.asNV4Real(FrameUtil.getObjectSafe(frameToWrite, slot));
+		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
+		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
+		final double[][][][] result = array.getData().clone();
+		result[idx1][idx2] = value.getData();
+		array = new NV4Real(result);
+		frameToWrite.setObject(slot, array);
+		return array;
+	}
 
 	public FrameSlot getSlot() {
 		return slot;
@@ -162,11 +206,27 @@ public abstract class NablaWriteArrayNode extends NablaInstructionNode {
 		return !initializationRequired && arrayClass == NV2Int.class;
 	}
 	
+	protected boolean isNV3Int() {
+		return !initializationRequired && arrayClass == NV3Int.class;
+	}
+	
+	protected boolean isNV4Int() {
+		return !initializationRequired && arrayClass == NV4Int.class;
+	}
+	
 	protected boolean isNV1Real() {
 		return !initializationRequired && arrayClass == NV1Real.class;
 	}
 	
 	protected boolean isNV2Real() {
 		return !initializationRequired && arrayClass == NV2Real.class;
+	}
+	
+	protected boolean isNV3Real() {
+		return !initializationRequired && arrayClass == NV3Real.class;
+	}
+	
+	protected boolean isNV4Real() {
+		return !initializationRequired && arrayClass == NV4Real.class;
 	}
 }
