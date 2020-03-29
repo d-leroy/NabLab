@@ -115,7 +115,6 @@ class NablaExamplesInterpreterTest {
 
 		val formatter = new SimpleFormatter
 		handler.setFormatter(formatter)
-		handler.level = Level::FINE
 		TruffleTestUtils.executeModel(model, genmodel, handler)
 		handler.close
 

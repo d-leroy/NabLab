@@ -7,6 +7,7 @@ import com.oracle.truffle.api.instrumentation.InstrumentableNode;
 import com.oracle.truffle.api.instrumentation.ProbeNode;
 import com.oracle.truffle.api.instrumentation.StandardTags;
 import com.oracle.truffle.api.instrumentation.Tag;
+import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
 
@@ -30,7 +31,7 @@ import fr.cea.nabla.ir.truffle.values.NV4Real;
 @TypeSystemReference(NablaTypes.class)
 @NodeInfo(description = "The abstract base node for all expressions")
 @GenerateWrapper
-public abstract class NablaExpressionNode extends NablaNode implements InstrumentableNode {
+public abstract class NablaExpressionNode extends Node implements NablaNode, InstrumentableNode {
 
 	private boolean hasExpressionTag;
 	
@@ -109,5 +110,5 @@ public abstract class NablaExpressionNode extends NablaNode implements Instrumen
 	public final void addExpressionTag() {
         hasExpressionTag = true;
     }
-
+	
 }

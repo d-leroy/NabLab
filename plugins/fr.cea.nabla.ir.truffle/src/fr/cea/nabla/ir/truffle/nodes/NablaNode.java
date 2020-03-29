@@ -1,8 +1,8 @@
 package fr.cea.nabla.ir.truffle.nodes;
 
-import com.oracle.truffle.api.nodes.Node;
+import org.eclipse.emf.ecore.EObject;
 
-public abstract class NablaNode extends Node {
+public interface NablaNode {
 	
-
+//	EObject getSourceObject();
 }

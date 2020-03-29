@@ -5,7 +5,7 @@ import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.nodes.RootNode;
 
-public abstract class NablaRootNode extends RootNode {
+public abstract class NablaRootNode extends RootNode implements NablaNode {
 
 	@CompilationFinal
 	private boolean isCloningAllowed;

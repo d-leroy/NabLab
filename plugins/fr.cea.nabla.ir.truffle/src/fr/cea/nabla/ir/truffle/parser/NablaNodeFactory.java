@@ -393,6 +393,7 @@ public class NablaNodeFactory {
 		deltatVariable = moduleFrameDescriptor.findFrameSlot(module.getDeltatVariable().getName());
 		
 		final NablaJobNode[] jobNodes = module.getJobs().stream()
+				.filter(j -> j.getJobContainer() == module)
 				.sorted((j1, j2) -> Double.compare(j1.getAt(), j2.getAt())).map(j -> createNablaJobNode(j))
 				.collect(Collectors.toList()).toArray(new NablaJobNode[0]);
 
