@@ -2,7 +2,6 @@ package fr.cea.nabla.ir.truffle.nodes.job;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
 
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.Truffle;
@@ -10,22 +9,23 @@ import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.TruffleLogger;
 import com.oracle.truffle.api.frame.Frame;
 import com.oracle.truffle.api.frame.FrameDescriptor;
+import com.oracle.truffle.api.frame.FrameInstance.FrameAccess;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.frame.FrameSlotTypeException;
 import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.frame.FrameInstance.FrameAccess;
 import com.oracle.truffle.api.nodes.DirectCallNode;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 
+import fr.cea.nabla.ir.truffle.NablaLanguage;
+import fr.cea.nabla.ir.truffle.NablaLogLevel;
 import fr.cea.nabla.ir.truffle.NablaTypesGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
-import fr.cea.nabla.ir.truffle.nodes.expression.NablaReadVariableNodeGen;
-import fr.cea.nabla.ir.truffle.nodes.instruction.NablaWriteVariableNode;
-import fr.cea.nabla.ir.truffle.runtime.NablaContext;
 import fr.cea.nabla.ir.truffle.values.NV0Int;
 
 public class NablaTimeLoopJobNode extends NablaJobNode {
+
+	private static final TruffleLogger LOG = TruffleLogger.getLogger(NablaLanguage.ID, NablaTimeLoopJobNode.class);
 
 	@Children
 	private DirectCallNode[] innerJobs;
@@ -34,8 +34,13 @@ public class NablaTimeLoopJobNode extends NablaJobNode {
 	private final FrameSlot indexSlot;
 	private final List<FrameSlot[]> copies;
 
+	private final String indentation;
+	private final FrameSlot timeSlot;
+	private final FrameSlot deltatSlot;
+
 	public NablaTimeLoopJobNode(TruffleLanguage<?> language, FrameDescriptor frameDescriptor, String name,
-			FrameSlot indexSlot, List<FrameSlot[]> copies, NablaExpressionNode conditionNode, NablaJobNode[] innerJobs) {
+			FrameSlot indexSlot, List<FrameSlot[]> copies, NablaExpressionNode conditionNode, NablaJobNode[] innerJobs,
+			String indentation, FrameSlot timeSlot, FrameSlot deltatSlot) {
 		super(language, frameDescriptor, name);
 		this.indexSlot = indexSlot;
 		this.copies = copies;
@@ -45,11 +50,15 @@ public class NablaTimeLoopJobNode extends NablaJobNode {
 			this.innerJobs[i] = Truffle.getRuntime()
 					.createDirectCallNode(Truffle.getRuntime().createCallTarget(innerJobs[i]));
 		}
+
+		this.indentation = indentation;
+		this.timeSlot = timeSlot;
+		this.deltatSlot = deltatSlot;
 	}
 
 	private int depth = 0;
 	private boolean initReq = true;
-	
+
 	@Override
 	@ExplodeLoop
 	public Object execute(VirtualFrame frame) {
@@ -77,13 +86,21 @@ public class NablaTimeLoopJobNode extends NablaJobNode {
 			}
 			return f.getFrame(FrameAccess.READ_WRITE);
 		});
-		
-		do  {
+
+		do {
 			i++;
 			frameToWrite.setObject(indexSlot, new NV0Int(i));
-			TruffleLogger.getLogger("nabla").log(Level.FINE, "TimeLoop iteration: " + i);
-			
-			//TODO dump variables (interop message?)
+
+			try {
+				final String log = String.format(Locale.ENGLISH, "%1$s [%2$d] t: %3$.5f - deltat: %4$.5f", indentation, i,
+						NablaTypesGen.asNV0Real(frameToWrite.getObject(timeSlot)).getData(),
+						NablaTypesGen.asNV0Real(frameToWrite.getObject(deltatSlot)).getData());
+				LOG.log(NablaLogLevel.FINE, log);
+			} catch (FrameSlotTypeException e1) {
+				e1.printStackTrace();
+			}
+
+			// TODO dump variables (interop message?)
 			for (int j = 0; j < innerJobs.length; j++) {
 				innerJobs[j].call();
 			}
@@ -101,7 +118,9 @@ public class NablaTimeLoopJobNode extends NablaJobNode {
 				}
 			}
 		} while (continueLoop);
-		
+		final String log = String.format("%1$s Nb iteration %2$s = %3$d", indentation, indexSlot.getIdentifier(), i);
+		LOG.log(NablaLogLevel.INFO, log);
+
 		return null;
 	}
 }

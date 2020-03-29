@@ -1,7 +1,5 @@
 package fr.cea.nabla.ir.truffle.parser;
 
-import static org.junit.Assert.*;
-
 import java.lang.invoke.CallSite;
 import java.lang.invoke.LambdaMetafactory;
 import java.lang.invoke.MethodHandles;
@@ -74,6 +72,7 @@ import fr.cea.nabla.ir.ir.SizeTypeInt;
 import fr.cea.nabla.ir.ir.SizeTypeOperation;
 import fr.cea.nabla.ir.ir.SizeTypeSymbol;
 import fr.cea.nabla.ir.ir.SizeTypeSymbolRef;
+import fr.cea.nabla.ir.ir.TimeLoop;
 import fr.cea.nabla.ir.ir.TimeLoopJob;
 import fr.cea.nabla.ir.ir.UnaryExpression;
 import fr.cea.nabla.ir.ir.Variable;
@@ -331,6 +330,10 @@ public class NablaNodeFactory {
 
 	private FrameDescriptor moduleFrameDescriptor;
 
+	private FrameSlot timeVariable;
+	
+	private FrameSlot deltatVariable;
+
 	public NablaModuleNode createModule(IrModule module) {
 		assert lexicalScope == null;
 
@@ -386,6 +389,9 @@ public class NablaNodeFactory {
 				.map(f -> functions.computeIfAbsent(f, function -> createNablaFunctionNode(f)))
 				.collect(Collectors.toList()).toArray(new NablaFunctionNode[0]);
 
+		timeVariable = moduleFrameDescriptor.findFrameSlot(module.getTimeVariable().getName());
+		deltatVariable = moduleFrameDescriptor.findFrameSlot(module.getDeltatVariable().getName());
+		
 		final NablaJobNode[] jobNodes = module.getJobs().stream()
 				.sorted((j1, j2) -> Double.compare(j1.getAt(), j2.getAt())).map(j -> createNablaJobNode(j))
 				.collect(Collectors.toList()).toArray(new NablaJobNode[0]);
@@ -468,7 +474,15 @@ public class NablaNodeFactory {
 				.sorted((j1, j2) -> Double.compare(j1.getAt(), j2.getAt())).map(j -> createNablaJobNode(j))
 				.collect(Collectors.toList()).toArray(new NablaJobNode[0]);
 		return new NablaTimeLoopJobNode(language, lexicalScope.descriptor, job.getName(), indexSlot, copies,
-				conditionNode, innerJobs);
+				conditionNode, innerJobs, getIndentation(job.getTimeLoop()), timeVariable, deltatVariable);
+	}
+	
+	private String getIndentation(TimeLoop timeLoop) {
+		if (timeLoop.getOuterTimeLoop() == null) {
+			return "";
+		} else {
+			return getIndentation(timeLoop.getOuterTimeLoop()) + "\t\t";
+		}
 	}
 
 	private NablaExpressionNode createNablaBinaryExpressionNode(NablaExpressionNode leftNode, String operator,

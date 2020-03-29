@@ -1,7 +1,12 @@
 package fr.cea.nabla.truffle.tests;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
 import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.PolyglotAccess;
@@ -44,7 +49,6 @@ public class TruffleTestUtils {
 	public static Value executeModel(String model, String genModel) {
 		final Context context = Context.newBuilder().allowPolyglotAccess(PolyglotAccess.ALL)
 				.allowExperimentalOptions(true)
-				.option("log.level", "FINE")
 				.option("nabla.Properties.genModel", genModel)
 				.build();
 		return context.eval("nabla", model);
@@ -54,7 +58,7 @@ public class TruffleTestUtils {
 		final Context context = Context.newBuilder().allowPolyglotAccess(PolyglotAccess.ALL)
 				.allowExperimentalOptions(true)
 				.logHandler(handler)
-				.option("log.level", "FINE")
+				.option("log.nabla.fr.cea.nabla.ir.truffle.nodes.job.NablaTimeLoopJobNode.level", "FINE")
 				.option("nabla.Properties.genModel", genModel)
 				.build();
 		return context.eval("nabla", model);

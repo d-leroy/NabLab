@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.oracle.truffle.api.CompilerAsserts;
 import com.oracle.truffle.api.Truffle;
+import com.oracle.truffle.api.TruffleLogger;
 import com.oracle.truffle.api.dsl.TypeSystemReference;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlot;
@@ -14,11 +15,13 @@ import com.oracle.truffle.api.nodes.DirectCallNode;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 
 import fr.cea.nabla.ir.truffle.NablaLanguage;
+import fr.cea.nabla.ir.truffle.NablaLogLevel;
 import fr.cea.nabla.ir.truffle.NablaTypes;
 import fr.cea.nabla.ir.truffle.NablaTypesGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.ir.truffle.nodes.instruction.NablaWriteVariableNode;
 import fr.cea.nabla.ir.truffle.nodes.job.NablaJobNode;
+import fr.cea.nabla.ir.truffle.nodes.job.NablaTimeLoopJobNode;
 import fr.cea.nabla.ir.truffle.runtime.NablaContext;
 import fr.cea.nabla.ir.truffle.values.NV2Real;
 import fr.cea.nabla.ir.truffle.values.NablaOutput;
@@ -55,8 +58,14 @@ public class NablaModuleNode extends NablaRootNode {
 		}
 	}
 
+	private static final TruffleLogger LOG = TruffleLogger.getLogger(NablaLanguage.ID, NablaTimeLoopJobNode.class);
+
+	
 	@ExplodeLoop
 	public Object execute(VirtualFrame frame) {
+		
+		LOG.log(NablaLogLevel.INFO, " Start interpreting " + getName() + " module ");
+		
 		CompilerAsserts.compilationConstant(constants.length);
 		for (int i = 0; i < constants.length; i++) {
 			constants[i].executeGeneric(frame);
@@ -87,6 +96,8 @@ public class NablaModuleNode extends NablaRootNode {
 			jobs[i].call();
 		}
 
+		LOG.log(NablaLogLevel.INFO, " End interpreting");
+		
 		final Map<String, NablaValue> outputMap = new HashMap<>();
 		frame.getFrameDescriptor().getSlots().forEach(s -> {
 			Object key = s.getIdentifier();
