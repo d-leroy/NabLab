@@ -11,7 +11,6 @@ package fr.cea.nabla.ir.generator.cpp
 
 import fr.cea.nabla.ir.ir.Affectation
 import fr.cea.nabla.ir.ir.ConnectivityVariable
-import fr.cea.nabla.ir.ir.Function
 import fr.cea.nabla.ir.ir.If
 import fr.cea.nabla.ir.ir.Instruction
 import fr.cea.nabla.ir.ir.InstructionBlock
@@ -25,6 +24,7 @@ import fr.cea.nabla.ir.ir.SimpleVariable
 import fr.cea.nabla.ir.ir.VariablesDefinition
 import org.eclipse.xtend.lib.annotations.Data
 
+import static extension fr.cea.nabla.ir.Utils.*
 import static extension fr.cea.nabla.ir.generator.IterationBlockExtensions.*
 import static extension fr.cea.nabla.ir.generator.Utils.*
 import static extension fr.cea.nabla.ir.generator.cpp.ItemIndexAndIdValueContentProvider.*
@@ -140,11 +140,34 @@ class SequentialInstructionContentProvider extends InstructionContentProvider
 }
 
 @Data
+class StlThreadInstructionContentProvider extends InstructionContentProvider
+{
+	override getReductionContent(ReductionInstruction it)
+	'''
+		«result.cppType» «result.name»;
+		«iterationBlock.defineInterval('''
+		«result.name» = parallel::parallel_reduce(«iterationBlock.nbElems», «result.defaultValue.content», [&](«result.cppType»& accu, const int& «iterationBlock.indexName»)
+			{
+				return (accu = «binaryFunction.getCodeName('.')»(accu, «lambda.content»));
+			},
+			std::bind(&«irModule.name»::«binaryFunction.name», this, std::placeholders::_1, std::placeholders::_2));''')»
+	'''
+
+	override getLoopContent(Loop it)
+	'''
+		parallel::parallel_exec(«iterationBlock.nbElems», [&](const int& «iterationBlock.indexName»)
+		{
+			«body.innerContent»
+		});
+	'''
+}
+
+@Data
 class KokkosInstructionContentProvider extends InstructionContentProvider
 {
 	override getReductionContent(ReductionInstruction it)
 	'''
-		«result.cppType» «result.name»«result.defaultValueContent»;
+		«result.cppType» «result.name»;
 		«iterationBlock.defineInterval('''
 		Kokkos::parallel_reduce(«firstArgument», KOKKOS_LAMBDA(const int& «iterationBlock.indexName», «result.cppType»& accu)
 		{
@@ -152,7 +175,7 @@ class KokkosInstructionContentProvider extends InstructionContentProvider
 			«innerInstruction.content»
 			«ENDFOR»
 			accu = «binaryFunction.getCodeName('.')»(accu, «lambda.content»);
-		}, Kokkos::«binaryFunction.kokkosName»<«result.cppType»>(«result.name»));''')»
+		}, KokkosJoiner<«result.cppType»>(«result.name», «result.defaultValue.content», std::bind(&«irModule.name»::«binaryFunction.name», this, std::placeholders::_1, std::placeholders::_2)));''')»
 	'''
 
 	override getLoopContent(Loop it)
@@ -166,15 +189,6 @@ class KokkosInstructionContentProvider extends InstructionContentProvider
 	protected def String getFirstArgument(ReductionInstruction it) 
 	{
 		iterationBlock.nbElems
-	}
-
-	private def getKokkosName(Function it)
-	{
-		if (name.startsWith("sum")) "Sum"
-		else if (name.startsWith("prod")) "Prod"
-		else if (name.startsWith("min")) "Min"
-		else if (name.startsWith("max")) "Max"
-		else throw new RuntimeException("Reduction not implemented in Kokkos: " + name)
 	}
 }
 

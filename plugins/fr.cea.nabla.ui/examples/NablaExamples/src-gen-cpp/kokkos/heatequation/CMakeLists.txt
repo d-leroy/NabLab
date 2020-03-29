@@ -1,0 +1,17 @@
+#
+# Generated file - Do not overwrite
+#
+
+cmake_minimum_required(VERSION 3.1)
+SET(CMAKE_CXX_COMPILER /usr/bin/g++)
+project(HeatEquationProject CXX)
+
+add_subdirectory(${CMAKE_SOURCE_DIR}/../libcppnabla libcppnabla)
+
+add_executable(heatequation HeatEquation.cc)
+target_include_directories(heatequation PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_link_libraries(heatequation cppnabla cppnablakokkos)
+
+if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/Project.cmake)
+include(Project.cmake)
+endif()
