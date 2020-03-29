@@ -110,15 +110,14 @@ class NablaExamplesInterpreterTest {
 		val genmodelFile = String.format("%1$ssrc/%2$s/%3$s.nablagen", originalTestProjectPath, moduleName.toLowerCase, moduleName)
 		val genmodel = readFileAsString(genmodelFile)
 
-//		val logFile = String.format("src/%1$s/Interprete%2$s.log", moduleName.toLowerCase, moduleName)
-//		val handler = new FileHandler(logFile, false)
+		val logFile = String.format("%1$ssrc/%2$s/Interprete%3$s.log", originalTestProjectPath, moduleName.toLowerCase, moduleName)
+		val handler = new FileHandler(logFile, false)
 
-//		val formatter = new SimpleFormatter
-//		handler.setFormatter(formatter)
-//		handler.level = Level::FINE
-//		TruffleTestUtils.executeModel(model, genmodel, handler);
-//		handler.close
-		TruffleTestUtils.executeModel(model, genmodel);
+		val formatter = new SimpleFormatter
+		handler.setFormatter(formatter)
+		handler.level = Level::FINE
+		TruffleTestUtils.executeModel(model, genmodel, handler)
+		handler.close
 
 		testNoGitDiff("/"+moduleName.toLowerCase)
 	}
