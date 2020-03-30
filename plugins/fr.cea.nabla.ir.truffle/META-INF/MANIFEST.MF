@@ -4,16 +4,12 @@ Bundle-Name: Truffle
 Bundle-SymbolicName: fr.cea.nabla.ir.truffle
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: fr.cea.nabla.ir.truffle
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.xtext.testing;bundle-version="2.20.0",
  fr.cea.nabla.utils;bundle-version="1.0.0",
  fr.cea.nabla.ir;bundle-version="0.1.0",
- com.google.guava,
- org.eclipse.xtext.xbase.lib,
- org.eclipse.xtend.lib,
- org.eclipse.xtend.lib.macro,
- org.junit,
- fr.cea.nabla.javalib;bundle-version="0.1.0"
+ fr.cea.nabla.javalib;bundle-version="0.1.0",
+ fr.cea.nabla
 Export-Package: fr.cea.nabla.ir.truffle,
  fr.cea.nabla.ir.truffle,
  fr.cea.nabla.ir.truffle.nodes,
@@ -27,6 +23,5 @@ Export-Package: fr.cea.nabla.ir.truffle,
  fr.cea.nabla.ir.truffle.runtime,
  fr.cea.nabla.ir.truffle.runtime,
  fr.cea.nabla.ir.truffle.values
-Import-Package: com.google.inject
 Bundle-ClassPath: lib/,
  .
