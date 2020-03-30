@@ -35,7 +35,8 @@ final class NV3RealGen {
         @Override
         protected InteropLibrary createUncached(Object receiver) {
             assert receiver instanceof NV3Real;
-            return new Uncached(receiver);
+            InteropLibrary uncached = new Uncached(receiver);
+            return uncached;
         }
 
         @Override

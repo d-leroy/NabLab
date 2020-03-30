@@ -35,7 +35,8 @@ final class NV4BoolGen {
         @Override
         protected InteropLibrary createUncached(Object receiver) {
             assert receiver instanceof NV4Bool;
-            return new Uncached(receiver);
+            InteropLibrary uncached = new Uncached(receiver);
+            return uncached;
         }
 
         @Override

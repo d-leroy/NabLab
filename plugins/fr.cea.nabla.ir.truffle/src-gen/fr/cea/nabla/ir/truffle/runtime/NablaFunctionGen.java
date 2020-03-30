@@ -35,7 +35,8 @@ final class NablaFunctionGen {
         @Override
         protected InteropLibrary createUncached(Object receiver) {
             assert receiver instanceof NablaFunction;
-            return InteropLibraryExports.UNCACHED;
+            InteropLibrary uncached = InteropLibraryExports.UNCACHED;
+            return uncached;
         }
 
         @Override

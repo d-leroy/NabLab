@@ -17,7 +17,6 @@ import com.oracle.truffle.api.library.LibraryFactory;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
-import com.oracle.truffle.api.nodes.ExplodeLoop.LoopExplosionKind;
 import com.oracle.truffle.api.object.DynamicObject;
 import com.oracle.truffle.api.object.Location;
 import com.oracle.truffle.api.object.Shape;
@@ -51,7 +50,8 @@ final class NablaObjectTypeGen {
         @Override
         protected InteropLibrary createUncached(Object receiver) {
             assert receiver instanceof DynamicObject;
-            return new Uncached(receiver);
+            InteropLibrary uncached = new Uncached(receiver);
+            return uncached;
         }
 
         @Override
@@ -96,7 +96,7 @@ final class NablaObjectTypeGen {
                 return;
             }
 
-            @ExplodeLoop(kind = LoopExplosionKind.FULL_EXPLODE_UNTIL_RETURN)
+            @ExplodeLoop
             @Override
             public Object getMembers(Object arg0Value_, boolean arg1Value) throws UnsupportedMessageException {
                 assert assertAdopted();
@@ -186,7 +186,7 @@ final class NablaObjectTypeGen {
                 return NodeCost.POLYMORPHIC;
             }
 
-            @ExplodeLoop(kind = LoopExplosionKind.FULL_EXPLODE_UNTIL_RETURN)
+            @ExplodeLoop
             @Override
             public boolean isMemberReadable(Object arg0Value_, String arg1Value) {
                 assert assertAdopted();
@@ -266,7 +266,7 @@ final class NablaObjectTypeGen {
                 }
             }
 
-            @ExplodeLoop(kind = LoopExplosionKind.FULL_EXPLODE_UNTIL_RETURN)
+            @ExplodeLoop
             @Override
             public boolean isMemberModifiable(Object arg0Value_, String arg1Value) {
                 assert assertAdopted();
@@ -291,7 +291,7 @@ final class NablaObjectTypeGen {
                 return existsMemberAndSpecialize(arg0Value, arg1Value);
             }
 
-            @ExplodeLoop(kind = LoopExplosionKind.FULL_EXPLODE_UNTIL_RETURN)
+            @ExplodeLoop
             @Override
             public boolean isMemberRemovable(Object arg0Value_, String arg1Value) {
                 assert assertAdopted();
@@ -324,7 +324,7 @@ final class NablaObjectTypeGen {
                 return NablaObjectType.isMemberInsertable(arg0Value, arg1Value, (this));
             }
 
-            @ExplodeLoop(kind = LoopExplosionKind.FULL_EXPLODE_UNTIL_RETURN)
+            @ExplodeLoop
             @Override
             public Object readMember(Object arg0Value_, String arg1Value) throws UnsupportedMessageException, UnknownIdentifierException {
                 assert assertAdopted();
@@ -455,7 +455,7 @@ final class NablaObjectTypeGen {
                 }
             }
 
-            @ExplodeLoop(kind = LoopExplosionKind.FULL_EXPLODE_UNTIL_RETURN)
+            @ExplodeLoop
             @Override
             public void writeMember(Object arg0Value_, String arg1Value, Object arg2Value) throws UnsupportedMessageException, UnknownIdentifierException, UnsupportedTypeException {
                 assert assertAdopted();
@@ -652,32 +652,6 @@ final class NablaObjectTypeGen {
                 }
             }
 
-            void removeWriteNewPropertyCached_(Object s2_) {
-                Lock lock = getLock();
-                lock.lock();
-                try {
-                    WriteMemberWriteNewPropertyCachedData prev = null;
-                    WriteMemberWriteNewPropertyCachedData cur = this.writeMember_writeNewPropertyCached_cache;
-                    while (cur != null) {
-                        if (cur == s2_) {
-                            if (prev == null) {
-                                this.writeMember_writeNewPropertyCached_cache = cur.next_;
-                            } else {
-                                prev.next_ = cur.next_;
-                            }
-                            break;
-                        }
-                        prev = cur;
-                        cur = cur.next_;
-                    }
-                    if (this.writeMember_writeNewPropertyCached_cache == null) {
-                        this.state_ = this.state_ & 0xfffffeff /* remove-active writeNewPropertyCached(DynamicObject, String, Object, Object, Shape, Location, Shape, Location) */;
-                    }
-                } finally {
-                    lock.unlock();
-                }
-            }
-
             void removeWriteExistingPropertyCached_(Object s1_) {
                 Lock lock = getLock();
                 lock.lock();
@@ -698,6 +672,32 @@ final class NablaObjectTypeGen {
                     }
                     if (this.writeMember_writeExistingPropertyCached_cache == null) {
                         this.state_ = this.state_ & 0xffffff7f /* remove-active writeExistingPropertyCached(DynamicObject, String, Object, String, Shape, Location) */;
+                    }
+                } finally {
+                    lock.unlock();
+                }
+            }
+
+            void removeWriteNewPropertyCached_(Object s2_) {
+                Lock lock = getLock();
+                lock.lock();
+                try {
+                    WriteMemberWriteNewPropertyCachedData prev = null;
+                    WriteMemberWriteNewPropertyCachedData cur = this.writeMember_writeNewPropertyCached_cache;
+                    while (cur != null) {
+                        if (cur == s2_) {
+                            if (prev == null) {
+                                this.writeMember_writeNewPropertyCached_cache = cur.next_;
+                            } else {
+                                prev.next_ = cur.next_;
+                            }
+                            break;
+                        }
+                        prev = cur;
+                        cur = cur.next_;
+                    }
+                    if (this.writeMember_writeNewPropertyCached_cache == null) {
+                        this.state_ = this.state_ & 0xfffffeff /* remove-active writeNewPropertyCached(DynamicObject, String, Object, Object, Shape, Location, Shape, Location) */;
                     }
                 } finally {
                     lock.unlock();

@@ -1,12 +1,6 @@
 package fr.cea.nabla.truffle.tests;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
 import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
 
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.PolyglotAccess;

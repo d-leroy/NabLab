@@ -38,7 +38,8 @@ final class VariablesMapObjectGen {
         @Override
         protected InteropLibrary createUncached(Object receiver) {
             assert receiver instanceof VariablesMapObject;
-            return InteropLibraryExports.UNCACHED;
+            InteropLibrary uncached = InteropLibraryExports.UNCACHED;
+            return uncached;
         }
 
         @Override

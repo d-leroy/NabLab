@@ -5,8 +5,7 @@ Bundle-SymbolicName: fr.cea.nabla.ir.truffle
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: fr.cea.nabla.ir.truffle
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Require-Bundle: com.oracle.truffle.wrapper;bundle-version="1.0.0",
- org.eclipse.xtext.testing;bundle-version="2.20.0",
+Require-Bundle: org.eclipse.xtext.testing;bundle-version="2.20.0",
  fr.cea.nabla.utils;bundle-version="1.0.0",
  fr.cea.nabla.ir;bundle-version="0.1.0",
  com.google.guava,

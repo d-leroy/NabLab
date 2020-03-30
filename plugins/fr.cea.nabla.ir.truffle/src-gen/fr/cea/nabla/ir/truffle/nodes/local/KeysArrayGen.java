@@ -37,7 +37,8 @@ final class KeysArrayGen {
         @Override
         protected InteropLibrary createUncached(Object receiver) {
             assert receiver instanceof KeysArray;
-            return InteropLibraryExports.UNCACHED;
+            InteropLibrary uncached = InteropLibraryExports.UNCACHED;
+            return uncached;
         }
 
         @Override

@@ -12,6 +12,8 @@ package implicitheatequation;
 import java.text.DecimalFormat;
 
 import org.apache.commons.math3.linear.AbstractRealMatrix;
+import org.apache.commons.math3.linear.Array2DRowRealMatrix;
+import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.ConjugateGradient;
 import org.apache.commons.math3.linear.IterativeLinearSolver;
 import org.apache.commons.math3.linear.RealVector;
@@ -21,6 +23,14 @@ import fr.cea.nabla.javalib.types.Vector;
 
 public class LinearAlgebraFunctions 
 {
+	
+	public static double[] solveLinearSystem(double[][] a, double[] b) {
+		final AbstractRealMatrix mA = new Array2DRowRealMatrix(a);
+		final ArrayRealVector vB = new ArrayRealVector(b);
+		final RealVector x = solveLinearSystem(mA, vB);
+		return x.toArray();
+	}
+	
 	public static Vector solveLinearSystem(Matrix a, Vector b)
 	{
 		final RealVector x = solveLinearSystem(a.getNativeMatrix(), b.getNativeVector());

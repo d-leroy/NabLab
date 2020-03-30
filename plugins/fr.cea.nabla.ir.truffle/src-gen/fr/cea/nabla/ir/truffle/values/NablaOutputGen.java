@@ -37,7 +37,8 @@ final class NablaOutputGen {
         @Override
         protected InteropLibrary createUncached(Object receiver) {
             assert receiver instanceof NablaOutput;
-            return InteropLibraryExports.UNCACHED;
+            InteropLibrary uncached = InteropLibraryExports.UNCACHED;
+            return uncached;
         }
 
         @Override

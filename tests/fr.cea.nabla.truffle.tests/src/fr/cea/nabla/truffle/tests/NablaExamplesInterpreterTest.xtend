@@ -10,12 +10,13 @@
 package fr.cea.nabla.truffle.tests
 
 import com.google.inject.Inject
-import fr.cea.nabla.tests.CompilationChainHelper
 import fr.cea.nabla.tests.GitUtils
 import fr.cea.nabla.tests.NablaInjectorProvider
 import fr.cea.nabla.tests.TestUtils
 import java.time.Duration
 import java.time.LocalDateTime
+import java.util.logging.FileHandler
+import java.util.logging.SimpleFormatter
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.After
@@ -23,9 +24,6 @@ import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.logging.FileHandler
-import java.util.logging.SimpleFormatter
-import java.util.logging.Level
 
 @RunWith(XtextRunner)
 @InjectWith(NablaInjectorProvider)
@@ -37,7 +35,6 @@ class NablaExamplesInterpreterTest {
 	static GitUtils git
 	LocalDateTime startTime
 
-	@Inject CompilationChainHelper compilationHelper
 	@Inject extension TestUtils
 
 	@BeforeClass

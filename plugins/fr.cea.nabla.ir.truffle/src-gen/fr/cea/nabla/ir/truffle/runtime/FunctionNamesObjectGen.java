@@ -37,7 +37,8 @@ final class FunctionNamesObjectGen {
         @Override
         protected InteropLibrary createUncached(Object receiver) {
             assert receiver instanceof FunctionNamesObject;
-            return InteropLibraryExports.UNCACHED;
+            InteropLibrary uncached = InteropLibraryExports.UNCACHED;
+            return uncached;
         }
 
         @Override

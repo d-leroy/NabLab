@@ -8,6 +8,6 @@ import com.oracle.truffle.api.Option;
 
 @Option.Group("nabla")
 public class NablaOptions {
-	@Option(help = "User-defined properties", category = OptionCategory.USER) //
+	@Option(help = "User-defined properties", category = OptionCategory.USER)
     public static final OptionKey<OptionMap<String>> Properties = OptionKey.mapOf(String.class);
 }

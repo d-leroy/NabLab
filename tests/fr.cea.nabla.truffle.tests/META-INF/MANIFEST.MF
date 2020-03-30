@@ -13,5 +13,5 @@ Require-Bundle: org.junit,
  com.google.guava,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.xtend.lib,
- org.eclipse.xtend.lib.macro,
- com.oracle.truffle.wrapper
+ org.eclipse.xtend.lib.macro
+Import-Package: com.oracle.truffle.api
