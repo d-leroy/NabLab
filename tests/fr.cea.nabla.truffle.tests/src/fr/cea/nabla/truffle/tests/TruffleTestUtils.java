@@ -42,6 +42,7 @@ public class TruffleTestUtils {
 	
 	public static Value executeModel(String model, String genModel) {
 		final Context context = Context.newBuilder().allowPolyglotAccess(PolyglotAccess.ALL)
+				.allowAllAccess(true)
 				.allowExperimentalOptions(true)
 				.option("nabla.Properties.genModel", genModel)
 				.build();
@@ -50,6 +51,7 @@ public class TruffleTestUtils {
 	
 	public static Value executeModel(String model, String genModel, Handler handler) {
 		final Context context = Context.newBuilder().allowPolyglotAccess(PolyglotAccess.ALL)
+				.allowAllAccess(true)
 				.allowExperimentalOptions(true)
 				.logHandler(handler)
 				.option("log.nabla.fr.cea.nabla.ir.truffle.nodes.job.NablaTimeLoopJobNode.level", "FINE")

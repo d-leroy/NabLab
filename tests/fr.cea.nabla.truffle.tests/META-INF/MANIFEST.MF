@@ -13,5 +13,6 @@ Require-Bundle: org.junit,
  com.google.guava,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.xtend.lib,
- org.eclipse.xtend.lib.macro
-Import-Package: com.oracle.truffle.api
+ org.eclipse.xtend.lib.macro,
+ commons-math3;bundle-version="3.6.1",
+ fr.cea.nabla.javalib;bundle-version="0.1.0"

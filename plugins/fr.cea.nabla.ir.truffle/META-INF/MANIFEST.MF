@@ -6,22 +6,20 @@ Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: fr.cea.nabla.ir.truffle
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.xtext.testing;bundle-version="2.20.0",
- fr.cea.nabla.utils;bundle-version="1.0.0",
  fr.cea.nabla.ir;bundle-version="0.1.0",
  fr.cea.nabla.javalib;bundle-version="0.1.0",
- fr.cea.nabla
+ fr.cea.nabla,
+ org.eclipse.xtext.xbase;bundle-version="2.20.0"
 Export-Package: fr.cea.nabla.ir.truffle,
- fr.cea.nabla.ir.truffle,
- fr.cea.nabla.ir.truffle.nodes,
  fr.cea.nabla.ir.truffle.nodes,
  fr.cea.nabla.ir.truffle.nodes.expression,
- fr.cea.nabla.ir.truffle.nodes.expression,
+ fr.cea.nabla.ir.truffle.nodes.expression.binary,
+ fr.cea.nabla.ir.truffle.nodes.expression.constant,
+ fr.cea.nabla.ir.truffle.nodes.expression.unary,
  fr.cea.nabla.ir.truffle.nodes.instruction,
- fr.cea.nabla.ir.truffle.nodes.local,
+ fr.cea.nabla.ir.truffle.nodes.job,
  fr.cea.nabla.ir.truffle.nodes.local,
  fr.cea.nabla.ir.truffle.parser,
  fr.cea.nabla.ir.truffle.runtime,
- fr.cea.nabla.ir.truffle.runtime,
  fr.cea.nabla.ir.truffle.values
-Bundle-ClassPath: lib/,
- .
+Bundle-ClassPath: .

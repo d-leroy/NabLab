@@ -87,6 +87,7 @@ import fr.cea.nabla.ir.truffle.nodes.expression.NablaContractedIfNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExternalBiFunctionCallNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExternalFunctionCallNode;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaExternalMethodCallNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExternalSupplierCallNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaFunctionCallNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaGetMeshElementsNode;
@@ -331,7 +332,7 @@ public class NablaNodeFactory {
 	private FrameDescriptor moduleFrameDescriptor;
 
 	private FrameSlot timeVariable;
-	
+
 	private FrameSlot deltatVariable;
 
 	public NablaModuleNode createModule(IrModule module) {
@@ -391,9 +392,8 @@ public class NablaNodeFactory {
 
 		timeVariable = moduleFrameDescriptor.findFrameSlot(module.getTimeVariable().getName());
 		deltatVariable = moduleFrameDescriptor.findFrameSlot(module.getDeltatVariable().getName());
-		
-		final NablaJobNode[] jobNodes = module.getJobs().stream()
-				.filter(j -> j.getJobContainer() == module)
+
+		final NablaJobNode[] jobNodes = module.getJobs().stream().filter(j -> j.getJobContainer() == module)
 				.sorted((j1, j2) -> Double.compare(j1.getAt(), j2.getAt())).map(j -> createNablaJobNode(j))
 				.collect(Collectors.toList()).toArray(new NablaJobNode[0]);
 
@@ -477,7 +477,7 @@ public class NablaNodeFactory {
 		return new NablaTimeLoopJobNode(language, lexicalScope.descriptor, job.getName(), indexSlot, copies,
 				conditionNode, innerJobs, getIndentation(job.getTimeLoop()), timeVariable, deltatVariable);
 	}
-	
+
 	private String getIndentation(TimeLoop timeLoop) {
 		if (timeLoop.getOuterTimeLoop() == null) {
 			return "";
@@ -581,57 +581,62 @@ public class NablaNodeFactory {
 		}
 	}
 
+	private final static boolean GRAALVM = false;
+	
 	private NablaExpressionNode createNablaExternalFunctionCallNode(FunctionCall functionCall) {
 		final Function function = functionCall.getFunction();
-		final IrModule module = (IrModule) function.eContainer();
+ 		final IrModule module = (IrModule) function.eContainer();
 		final ClassLoader tccl = Thread.currentThread().getContextClassLoader();
-		final String receiverClassName = module.getName().toLowerCase() + '.' + function.getProvider()
-				+ Utils.FunctionReductionPrefix;
-		try {
-			final Class<?> receiverClass = Class.forName(receiverClassName, true, tccl);
-			final BaseType baseReturnType = function.getReturnType();
-			final Class<?> javaReturnType = FunctionCallHelper.getJavaType(baseReturnType.getPrimitive(),
-					IrTypeExtensions.getDimension(baseReturnType));
-			final List<Class<?>> javaParameterTypes = function.getInArgs().stream().map(a -> {
-				final PrimitiveType primitiveType = a.getType().getPrimitive();
-				final int dimension = IrTypeExtensions.getDimension(a.getType());
-				return FunctionCallHelper.getJavaType(primitiveType, dimension);
-			}).collect(Collectors.toList());
-			final MethodHandles.Lookup lookup = MethodHandles.lookup();
-			if (javaParameterTypes.isEmpty()) {
-				final MethodType methodType = MethodType.methodType(javaReturnType);
-				CallSite site = LambdaMetafactory.metafactory(lookup, "get", MethodType.methodType(Supplier.class),
-						methodType.generic(), lookup.findStatic(receiverClass, function.getName(), methodType),
-						methodType);
-				final java.util.function.Supplier<Object> externalSupplier = (java.util.function.Supplier<Object>) site
-						.getTarget().invokeExact();
-				return new NablaExternalSupplierCallNode(externalSupplier);
-			} else if (javaParameterTypes.size() == 1) {
-				final MethodType methodType = MethodType.methodType(javaReturnType, javaParameterTypes.get(0));
-				CallSite site = LambdaMetafactory.metafactory(lookup, "apply",
-						MethodType.methodType(java.util.function.Function.class), methodType.generic(),
-						lookup.findStatic(receiverClass, function.getName(), methodType), methodType);
-				final java.util.function.Function<Object, Object> externalFunction = (java.util.function.Function<Object, Object>) site
-						.getTarget().invokeExact();
-				final NablaExpressionNode argNode = functionCall.getArgs().stream()
-						.map(e -> createNablaExpressionNode(e)).findFirst().orElse(null);
-				return new NablaExternalFunctionCallNode(externalFunction, argNode);
-			} else {
-				final MethodType methodType = MethodType.methodType(javaReturnType, javaParameterTypes.get(0),
-						javaParameterTypes.get(1));
-				CallSite site = LambdaMetafactory.metafactory(lookup, "apply", MethodType.methodType(BiFunction.class),
-						methodType.generic(), lookup.findStatic(receiverClass, function.getName(), methodType),
-						methodType);
-				final BiFunction<Object, Object, Object> externalFunction = (BiFunction<Object, Object, Object>) site
-						.getTarget().invokeExact();
-				final NablaExpressionNode[] argNodes = functionCall.getArgs().stream()
-						.map(e -> createNablaExpressionNode(e)).collect(Collectors.toList())
-						.toArray(new NablaExpressionNode[0]);
-				return new NablaExternalBiFunctionCallNode(externalFunction, argNodes);
+ 		final String receiverClassName = module.getName().toLowerCase() + '.' + function.getProvider()
+ 				+ Utils.FunctionReductionPrefix;
+		final BaseType baseReturnType = function.getReturnType();
+		final Class<?> javaReturnType = FunctionCallHelper.getJavaType(baseReturnType.getPrimitive(),
+				IrTypeExtensions.getDimension(baseReturnType));
+		final String methodName = function.getName();
+		final NablaExpressionNode[] argNodes = functionCall.getArgs().stream().map(e -> createNablaExpressionNode(e))
+				.collect(Collectors.toList()).toArray(new NablaExpressionNode[0]);
+		if (GRAALVM) {
+			return new NablaExternalMethodCallNode(receiverClassName, methodName, javaReturnType, argNodes);
+		} else {
+			try {
+				final Class<?> receiverClass = Class.forName(receiverClassName, true, tccl);
+				final List<Class<?>> javaParameterTypes = function.getInArgs().stream().map(a -> {
+					final PrimitiveType primitiveType = a.getType().getPrimitive();
+					final int dimension = IrTypeExtensions.getDimension(a.getType());
+					return FunctionCallHelper.getJavaType(primitiveType, dimension);
+				}).collect(Collectors.toList());
+				final MethodHandles.Lookup lookup = MethodHandles.lookup();
+				if (javaParameterTypes.isEmpty()) {
+					final MethodType methodType = MethodType.methodType(javaReturnType);
+					CallSite site = LambdaMetafactory.metafactory(lookup, "get", MethodType.methodType(Supplier.class),
+							methodType.generic(), lookup.findStatic(receiverClass, function.getName(), methodType),
+							methodType);
+					final java.util.function.Supplier<Object> externalSupplier = (java.util.function.Supplier<Object>) site
+							.getTarget().invokeExact();
+					return new NablaExternalSupplierCallNode(externalSupplier);
+				} else if (javaParameterTypes.size() == 1) {
+					final MethodType methodType = MethodType.methodType(javaReturnType, javaParameterTypes.get(0));
+					CallSite site = LambdaMetafactory.metafactory(lookup, "apply",
+							MethodType.methodType(java.util.function.Function.class), methodType.generic(),
+							lookup.findStatic(receiverClass, function.getName(), methodType), methodType);
+					final java.util.function.Function<Object, Object> externalFunction = (java.util.function.Function<Object, Object>) site
+							.getTarget().invokeExact();
+					final NablaExpressionNode argNode = argNodes[0];
+					return new NablaExternalFunctionCallNode(externalFunction, argNode);
+				} else {
+					final MethodType methodType = MethodType.methodType(javaReturnType, javaParameterTypes.get(0),
+							javaParameterTypes.get(1));
+					CallSite site = LambdaMetafactory.metafactory(lookup, "apply", MethodType.methodType(BiFunction.class),
+							methodType.generic(), lookup.findStatic(receiverClass, function.getName(), methodType),
+							methodType);
+					final BiFunction<Object, Object, Object> externalFunction = (BiFunction<Object, Object, Object>) site
+							.getTarget().invokeExact();
+					return new NablaExternalBiFunctionCallNode(externalFunction, argNodes);
+				}
+			} catch (Throwable e) {
+				e.printStackTrace();
+				throw new UnsupportedOperationException();
 			}
-		} catch (Throwable e) {
-			e.printStackTrace();
-			throw new UnsupportedOperationException();
 		}
 	}
 

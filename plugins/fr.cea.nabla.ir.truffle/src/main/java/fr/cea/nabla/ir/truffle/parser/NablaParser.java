@@ -9,8 +9,6 @@ import fr.cea.nabla.ir.ir.IrModule;
 import fr.cea.nabla.ir.truffle.NablaLanguage;
 import fr.cea.nabla.ir.truffle.NablaOptions;
 import fr.cea.nabla.ir.truffle.nodes.NablaEvalRootNode;
-import fr.cea.nabla.utils.CompilationChainHelper;
-import fr.cea.nabla.utils.NablaInjectorProvider;
 
 public class NablaParser {
 

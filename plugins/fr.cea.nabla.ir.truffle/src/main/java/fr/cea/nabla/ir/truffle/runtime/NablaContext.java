@@ -45,6 +45,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Collections;
 
+import org.graalvm.options.OptionKey;
+
 import com.oracle.truffle.api.Scope;
 import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.TruffleLanguage.Env;
@@ -157,6 +159,10 @@ public final class NablaContext {
 
 	public AllocationReporter getAllocationReporter() {
 		return allocationReporter;
+	}
+
+	public boolean getOption(OptionKey<Boolean> key) {
+		return this.getEnv().getOptions().get(key);
 	}
 
 }
