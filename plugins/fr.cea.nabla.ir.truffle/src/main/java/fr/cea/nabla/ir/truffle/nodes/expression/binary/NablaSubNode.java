@@ -2,7 +2,6 @@ package fr.cea.nabla.ir.truffle.nodes.expression.binary;
 
 import com.oracle.truffle.api.CompilerAsserts;
 import com.oracle.truffle.api.dsl.Specialization;
-import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.NodeInfo;
 
 import fr.cea.nabla.ir.truffle.values.NV0Int;
@@ -38,13 +37,11 @@ public abstract class NablaSubNode extends NablaBinaryExpressionNode {
 	}
 	
 	
-	@ExplodeLoop
+	
 	@Specialization
 	protected NV1Int sub(NV1Int left, NV0Int right) {
 		final int[] leftData = left.getData();
 		final int rightData = right.getData();
-		
-		CompilerAsserts.compilationConstant(leftData.length);
 		
 		final int[] result = new int[leftData.length];
 		
@@ -55,13 +52,11 @@ public abstract class NablaSubNode extends NablaBinaryExpressionNode {
 		return new NV1Int(result);
 	}
 	
-	@ExplodeLoop
+	
 	@Specialization
 	protected NV1Real sub(NV1Int left, NV0Real right) {
 		final int[] leftData = left.getData();
 		final double rightData = right.getData();
-		
-		CompilerAsserts.compilationConstant(leftData.length);
 		
 		final double[] result = new double[leftData.length];
 		
@@ -72,13 +67,11 @@ public abstract class NablaSubNode extends NablaBinaryExpressionNode {
 		return new NV1Real(result);
 	}
 	
-	@ExplodeLoop
+	
 	@Specialization
 	protected NV1Int sub(NV1Int left, NV1Int right) {
 		final int[] leftData = left.getData();
 		final int[] rightData = right.getData();
-		
-		CompilerAsserts.compilationConstant(leftData.length);
 		
 		final int[] result = new int[leftData.length];
 		
@@ -89,14 +82,12 @@ public abstract class NablaSubNode extends NablaBinaryExpressionNode {
 		return new NV1Int(result);
 	}
 	
-	@ExplodeLoop
+	
 	@Specialization
 	protected NV1Real sub(NV1Int left, NV1Real right) {
 		final int[] leftData = left.getData();
 		final double[] rightData = right.getData();
 		
-		CompilerAsserts.compilationConstant(leftData.length);
-		
 		final double[] result = new double[leftData.length];
 		
 		for (int i=0; i < leftData.length; i++) {
@@ -106,14 +97,12 @@ public abstract class NablaSubNode extends NablaBinaryExpressionNode {
 		return new NV1Real(result);
 	}
 	
-	@ExplodeLoop
+	
 	@Specialization
 	protected NV1Real sub(NV1Real left, NV0Int right) {
 		final double[] leftData = left.getData();
 		final int rightData = right.getData();
 		
-		CompilerAsserts.compilationConstant(leftData.length);
-		
 		final double[] result = new double[leftData.length];
 		
 		for (int i=0; i < leftData.length; i++) {
@@ -123,14 +112,12 @@ public abstract class NablaSubNode extends NablaBinaryExpressionNode {
 		return new NV1Real(result);
 	}
 	
-	@ExplodeLoop
+	
 	@Specialization
 	protected NV1Real sub(NV1Real left, NV0Real right) {
 		final double[] leftData = left.getData();
 		final double rightData = right.getData();
 		
-		CompilerAsserts.compilationConstant(leftData.length);
-		
 		final double[] result = new double[leftData.length];
 		
 		for (int i=0; i < leftData.length; i++) {
@@ -140,14 +127,12 @@ public abstract class NablaSubNode extends NablaBinaryExpressionNode {
 		return new NV1Real(result);
 	}
 	
-	@ExplodeLoop
+	
 	@Specialization
 	protected NV1Real sub(NV1Real left, NV1Int right) {
 		final double[] leftData = left.getData();
 		final int[] rightData = right.getData();
 		
-		CompilerAsserts.compilationConstant(leftData.length);
-		
 		final double[] result = new double[leftData.length];
 		
 		for (int i=0; i < leftData.length; i++) {
@@ -157,14 +142,12 @@ public abstract class NablaSubNode extends NablaBinaryExpressionNode {
 		return new NV1Real(result);
 	}
 	
-	@ExplodeLoop
+	
 	@Specialization
 	protected NV1Real sub(NV1Real left, NV1Real right) {
 		final double[] leftData = left.getData();
 		final double[] rightData = right.getData();
 		
-		CompilerAsserts.compilationConstant(leftData.length);
-		
 		final double[] result = new double[leftData.length];
 		
 		for (int i=0; i < leftData.length; i++) {
@@ -174,14 +157,11 @@ public abstract class NablaSubNode extends NablaBinaryExpressionNode {
 		return new NV1Real(result);
 	}
 	
-	@ExplodeLoop
+	
 	@Specialization
 	protected NV2Int sub(NV2Int left, NV0Int right) {
 		final int[][] leftData = left.getData();
 		final int rightData = right.getData();
-		
-		CompilerAsserts.compilationConstant(leftData.length);
-		CompilerAsserts.compilationConstant(leftData[0].length);
 		
 		final int[][] result = new int[leftData.length][leftData[0].length];
 		
@@ -194,14 +174,11 @@ public abstract class NablaSubNode extends NablaBinaryExpressionNode {
 		return new NV2Int(result);
 	}
 	
-	@ExplodeLoop
+	
 	@Specialization
 	protected NV2Real sub(NV2Int left, NV0Real right) {
 		final int[][] leftData = left.getData();
 		final double rightData = right.getData();
-		
-		CompilerAsserts.compilationConstant(leftData.length);
-		CompilerAsserts.compilationConstant(leftData[0].length);
 		
 		final double[][] result = new double[leftData.length][leftData[0].length];
 		
@@ -214,14 +191,11 @@ public abstract class NablaSubNode extends NablaBinaryExpressionNode {
 		return new NV2Real(result);
 	}
 	
-	@ExplodeLoop
+	
 	@Specialization
 	protected NV2Int sub(NV2Int left, NV2Int right) {
 		final int[][] leftData = left.getData();
 		final int[][] rightData = right.getData();
-		
-		CompilerAsserts.compilationConstant(leftData.length);
-		CompilerAsserts.compilationConstant(leftData[0].length);
 		
 		final int[][] result = new int[leftData.length][leftData[0].length];
 		
@@ -234,15 +208,12 @@ public abstract class NablaSubNode extends NablaBinaryExpressionNode {
 		return new NV2Int(result);
 	}
 	
-	@ExplodeLoop
+	
 	@Specialization
 	protected NV2Real sub(NV2Real left, NV0Int right) {
 		final double[][] leftData = left.getData();
 		final int rightData = right.getData();
 		
-		CompilerAsserts.compilationConstant(leftData.length);
-		CompilerAsserts.compilationConstant(leftData[0].length);
-		
 		final double[][] result = new double[leftData.length][leftData[0].length];
 		
 		for (int i=0; i < leftData.length; i++) {
@@ -254,15 +225,12 @@ public abstract class NablaSubNode extends NablaBinaryExpressionNode {
 		return new NV2Real(result);
 	}
 	
-	@ExplodeLoop
+	
 	@Specialization
 	protected NV2Real sub(NV2Real left, NV0Real right) {
 		final double[][] leftData = left.getData();
 		final double rightData = right.getData();
 		
-		CompilerAsserts.compilationConstant(leftData.length);
-		CompilerAsserts.compilationConstant(leftData[0].length);
-		
 		final double[][] result = new double[leftData.length][leftData[0].length];
 		
 		for (int i=0; i < leftData.length; i++) {
@@ -274,14 +242,11 @@ public abstract class NablaSubNode extends NablaBinaryExpressionNode {
 		return new NV2Real(result);
 	}
 	
-	@ExplodeLoop
+	
 	@Specialization
 	protected NV2Real sub(NV2Real left, NV2Real right) {
 		final double[][] leftData = left.getData();
 		final double[][] rightData = right.getData();
-		
-		CompilerAsserts.compilationConstant(leftData.length);
-		CompilerAsserts.compilationConstant(leftData[0].length);
 		
 		final double[][] result = new double[leftData.length][leftData[0].length];
 		

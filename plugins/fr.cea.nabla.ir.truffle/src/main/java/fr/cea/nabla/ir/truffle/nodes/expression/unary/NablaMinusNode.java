@@ -3,7 +3,6 @@ package fr.cea.nabla.ir.truffle.nodes.expression.unary;
 import com.oracle.truffle.api.CompilerAsserts;
 import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
-import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.NodeInfo;
 
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
@@ -29,7 +28,7 @@ public abstract class NablaMinusNode extends NablaExpressionNode {
 		return new NV0Real(-1 * right.getData());
 	}
 	
-	@ExplodeLoop
+	
 	@Specialization
 	protected NV1Int mul(NV1Int right) {
 		final int leftData = -1;
@@ -46,7 +45,7 @@ public abstract class NablaMinusNode extends NablaExpressionNode {
 		return new NV1Int(result);
 	}
 	
-	@ExplodeLoop
+	
 	@Specialization
 	protected NV1Real mul(NV1Real right) {
 		final int leftData = -1;
@@ -63,7 +62,7 @@ public abstract class NablaMinusNode extends NablaExpressionNode {
 		return new NV1Real(result);
 	}
 	
-	@ExplodeLoop
+	
 	@Specialization
 	protected NV2Int mul(NV2Int right) {
 		final int leftData = -1;
@@ -83,7 +82,7 @@ public abstract class NablaMinusNode extends NablaExpressionNode {
 		return new NV2Int(result);
 	}
 	
-	@ExplodeLoop
+	
 	@Specialization
 	protected NV2Real mul(NV2Real right) {
 		final int leftData = -1;

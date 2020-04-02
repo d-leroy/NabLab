@@ -10,6 +10,7 @@ import com.oracle.truffle.api.dsl.TypeSystemReference;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotKind;
+import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.DirectCallNode;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
@@ -60,48 +61,49 @@ public class NablaModuleNode extends NablaRootNode {
 
 	private static final TruffleLogger LOG = TruffleLogger.getLogger(NablaLanguage.ID, NablaTimeLoopJobNode.class);
 
-	
 	@ExplodeLoop
-	public Object execute(VirtualFrame frame) {
+	public final Object execute(VirtualFrame frame) {
+		
+		final MaterializedFrame globalFrame = frame.materialize();
 		
 		LOG.log(NablaLogLevel.INFO, " Start interpreting " + getName() + " module ");
 		
 		CompilerAsserts.compilationConstant(constants.length);
 		for (int i = 0; i < constants.length; i++) {
-			constants[i].executeGeneric(frame);
+			constants[i].executeGeneric(globalFrame);
 		}
 
 		if (mandatoryOptions.length == 4) {
 			NablaContext.getMeshWrapper().initialize(
-					NablaTypesGen.asNV0Int(mandatoryOptions[0].executeGeneric(frame)).getData(),
-					NablaTypesGen.asNV0Int(mandatoryOptions[1].executeGeneric(frame)).getData(),
-					NablaTypesGen.asNV0Real(mandatoryOptions[2].executeGeneric(frame)).getData(),
-					NablaTypesGen.asNV0Real(mandatoryOptions[3].executeGeneric(frame)).getData());
+					NablaTypesGen.asNV0Int(mandatoryOptions[0].executeGeneric(globalFrame)).getData(),
+					NablaTypesGen.asNV0Int(mandatoryOptions[1].executeGeneric(globalFrame)).getData(),
+					NablaTypesGen.asNV0Real(mandatoryOptions[2].executeGeneric(globalFrame)).getData(),
+					NablaTypesGen.asNV0Real(mandatoryOptions[3].executeGeneric(globalFrame)).getData());
 		}
 
 		for (int i = 0; i < connectivityVariables.length; i++) {
-			connectivityVariables[i].executeGeneric(frame);
+			connectivityVariables[i].executeGeneric(globalFrame);
 		}
 
 		CompilerAsserts.compilationConstant(variables.length);
 		for (int i = 0; i < variables.length; i++) {
-			variables[i].executeGeneric(frame);
+			variables[i].executeGeneric(globalFrame);
 		}
 		
-		frame.setObject(coordinatesSlot, new NV2Real(NablaContext.getMeshWrapper().getNodes()));
-		frame.getFrameDescriptor().setFrameSlotKind(coordinatesSlot, FrameSlotKind.Object);
+		globalFrame.setObject(coordinatesSlot, new NV2Real(NablaContext.getMeshWrapper().getNodes()));
+		globalFrame.getFrameDescriptor().setFrameSlotKind(coordinatesSlot, FrameSlotKind.Object);
 
 		CompilerAsserts.compilationConstant(jobs.length);
 		for (int i = 0; i < jobs.length; i++) {
-			jobs[i].call();
+			jobs[i].call(globalFrame);
 		}
 
 		LOG.log(NablaLogLevel.INFO, " End interpreting");
 		
 		final Map<String, NablaValue> outputMap = new HashMap<>();
-		frame.getFrameDescriptor().getSlots().forEach(s -> {
+		globalFrame.getFrameDescriptor().getSlots().forEach(s -> {
 			Object key = s.getIdentifier();
-			Object value = frame.getValue(s);
+			Object value = globalFrame.getValue(s);
 			if (value instanceof NablaValue) {
 				outputMap.put(key.toString(), (NablaValue) value);
 			}

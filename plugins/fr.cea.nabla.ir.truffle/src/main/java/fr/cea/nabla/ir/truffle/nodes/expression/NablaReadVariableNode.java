@@ -1,60 +1,36 @@
 package fr.cea.nabla.ir.truffle.nodes.expression;
 
-import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
-import com.oracle.truffle.api.Truffle;
+import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.Frame;
-import com.oracle.truffle.api.frame.FrameDescriptor;
-import com.oracle.truffle.api.frame.FrameInstance.FrameAccess;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotTypeException;
 import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.ExplodeLoop;
 
+import fr.cea.nabla.ir.truffle.runtime.NablaInternalError;
+import fr.cea.nabla.ir.truffle.utils.GetFrameNode;
+
+@NodeChild(value = "frameToRead", type = GetFrameNode.class)
 public abstract class NablaReadVariableNode extends NablaExpressionNode {
 
 	private final FrameSlot slot;
-	
-	@CompilationFinal
-	boolean initializationRequired = true;
-
-	@CompilationFinal
-	int depth = 0;
 
 	public NablaReadVariableNode(FrameSlot slot) {
 		this.slot = slot;
 	}
-	
-	@ExplodeLoop
+
 	@Specialization
-	protected Object read(VirtualFrame frame) {
-		if (initializationRequired) {
-			CompilerDirectives.transferToInterpreterAndInvalidate();
-			Truffle.getRuntime().iterateFrames(f -> {
-				final FrameDescriptor result = f.getFrame(FrameAccess.READ_ONLY).getFrameDescriptor();
-				if (result.getSlots().contains(slot)) {
-					return result;
-				}
-				depth++;
-				return null;
-			});
-			initializationRequired = false;
-		}
-		int[] i = new int[] { 0 };
-		final Frame frameToRead = Truffle.getRuntime().iterateFrames(f -> {
-			if (i[0] < depth) {
-				i[0]++;
-				return null;
-			}
-			return f.getFrame(FrameAccess.READ_ONLY);
-		});
-		
+	protected Object doRead(VirtualFrame frame, Frame toRead) {
 		try {
-			return frameToRead.getObject(slot);
+			return toRead.getObject(slot);
 		} catch (FrameSlotTypeException e) {
 			e.printStackTrace();
-			return null;
+			throw NablaInternalError.shouldNotReachHere();
 		}
+	}
+	
+	public FrameSlot getSlot() {
+		return slot;
 	}
 }

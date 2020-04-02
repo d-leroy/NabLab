@@ -5,7 +5,6 @@ import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.ExplodeLoop;
 
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.ir.truffle.values.NV0Int;
@@ -24,7 +23,7 @@ public abstract class NablaLoopNode extends NablaInstructionNode {
 	}
 	
 	@Specialization
-	@ExplodeLoop
+	
 	public Object doLoop(VirtualFrame frame, NV0Int count) {
 		final int iterationCount = count.getData();
 		frame.setObject(indexSlot, new NV0Int(0));
@@ -39,7 +38,7 @@ public abstract class NablaLoopNode extends NablaInstructionNode {
 	}
 	
 	@Specialization
-	@ExplodeLoop
+	
 	public Object doLoop(VirtualFrame frame, NV1Int elements_) {
 		final int[] elements = elements_.getData();
 		final int iterationCount = elements.length;

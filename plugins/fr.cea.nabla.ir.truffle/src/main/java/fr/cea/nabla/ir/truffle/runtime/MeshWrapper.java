@@ -13,9 +13,11 @@ public class MeshWrapper {
 	@CompilationFinal
 	private CartesianMesh2D mesh;
 
+	@TruffleBoundary
 	public MeshWrapper() {
 	}
-	
+
+	@TruffleBoundary
 	public MeshWrapper(final int nbXQuads, final int nbYQuads, final double xSize, final double ySize) {
 		this.mesh = CartesianMesh2DGenerator.generate(nbXQuads, nbYQuads, xSize, ySize);
 	}

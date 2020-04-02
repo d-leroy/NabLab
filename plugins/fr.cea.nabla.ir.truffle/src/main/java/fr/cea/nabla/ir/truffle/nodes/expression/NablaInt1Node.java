@@ -3,7 +3,6 @@ package fr.cea.nabla.ir.truffle.nodes.expression;
 import com.oracle.truffle.api.CompilerAsserts;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.ExplodeLoop;
 
 import fr.cea.nabla.ir.truffle.NablaTypesGen;
 import fr.cea.nabla.ir.truffle.values.NV1Int;
@@ -18,7 +17,7 @@ public abstract class NablaInt1Node extends NablaExpressionNode {
 	}
 
 	@Override
-	@ExplodeLoop
+	
 	@Specialization
 	public NV1Int executeNV1Int(VirtualFrame frame) {
 		final int[] computedValues = new int[values.length];

@@ -3,7 +3,6 @@ package fr.cea.nabla.ir.truffle.nodes.expression;
 import com.oracle.truffle.api.CompilerAsserts;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.ExplodeLoop;
 
 import fr.cea.nabla.ir.truffle.NablaTypesGen;
 import fr.cea.nabla.ir.truffle.values.NV2Real;
@@ -21,7 +20,7 @@ public abstract class NablaReal2Node extends NablaExpressionNode {
 	}
 
 	@Override
-	@ExplodeLoop
+	
 	@Specialization
 	public NV2Real executeNV2Real(VirtualFrame frame) {
 

@@ -4,6 +4,7 @@ import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.ExplodeLoop;
 
 import fr.cea.nabla.ir.truffle.runtime.NablaNull;
 import fr.cea.nabla.ir.truffle.values.NV0Int;
@@ -27,18 +28,19 @@ public abstract class NablaReadArgumentNode extends NablaExpressionNode {
 	@Specialization(guards = "sizeSlots == null")
 	public Object doBasic(VirtualFrame frame) {
 		Object[] args = frame.getArguments();
-		if (index < args.length) {
-			return args[index];
+		if (index+1 < args.length) {
+			return args[index+1];
 		} else {
 			return NablaNull.SINGLETON;
 		}
 	}
 	
 	@Specialization
+	@ExplodeLoop
 	public Object doSizeVars(VirtualFrame frame) {
 		Object[] args = frame.getArguments();
-		if (index < args.length) {
-			final NablaValue val = (NablaValue) args[index];
+		if (index+1 < args.length) {
+			final NablaValue val = (NablaValue) args[index+1];
 			for (int i = 0; i < sizeSlots.length; i++) {
 				final FrameSlot s = sizeSlots[i];
 				if (s != null) {
@@ -46,7 +48,7 @@ public abstract class NablaReadArgumentNode extends NablaExpressionNode {
 					frame.getFrameDescriptor().setFrameSlotKind(s, FrameSlotKind.Object);
 				}
 			}
-			return args[index];
+			return args[index+1];
 		} else {
 			return NablaNull.SINGLETON;
 		}

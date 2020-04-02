@@ -23,6 +23,7 @@ import fr.cea.nabla.ir.truffle.NablaTypesGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.ir.truffle.values.NV0Int;
 
+//@NodeChild(value = "toWrite", type = GetFrameNode.class)
 public class NablaTimeLoopJobNode extends NablaJobNode {
 
 	private static final TruffleLogger LOG = TruffleLogger.getLogger(NablaLanguage.ID, NablaTimeLoopJobNode.class);
@@ -102,7 +103,7 @@ public class NablaTimeLoopJobNode extends NablaJobNode {
 
 			// TODO dump variables (interop message?)
 			for (int j = 0; j < innerJobs.length; j++) {
-				innerJobs[j].call();
+				innerJobs[j].call(frame.getArguments()[0]);
 			}
 			continueLoop = NablaTypesGen.asNV0Bool(conditionNode.executeGeneric(frame)).isData();
 			if (continueLoop) {

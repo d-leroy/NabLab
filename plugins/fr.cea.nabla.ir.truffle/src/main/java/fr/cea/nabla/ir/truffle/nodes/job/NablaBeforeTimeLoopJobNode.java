@@ -3,27 +3,22 @@ package fr.cea.nabla.ir.truffle.nodes.job;
 import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.ExplodeLoop;
 
 import fr.cea.nabla.ir.truffle.nodes.instruction.NablaInstructionNode;
 
 public class NablaBeforeTimeLoopJobNode extends NablaJobNode {
 
-	@Children
-	private final NablaInstructionNode[] instructions;
+	@Child
+	private NablaInstructionNode instruction;
 
 	public NablaBeforeTimeLoopJobNode(TruffleLanguage<?> language, FrameDescriptor frameDescriptor, String name,
-			NablaInstructionNode[] instructions) {
+			NablaInstructionNode instruction) {
 		super(language, frameDescriptor, name);
-		this.instructions = instructions;
+		this.instruction = instruction;
 	}
 
 	@Override
-	@ExplodeLoop
 	public Object execute(VirtualFrame frame) {
-		for (NablaInstructionNode instruction : instructions) {
-			instruction.executeGeneric(frame);
-		}
-		return null;
+		return instruction.executeGeneric(frame);
 	}
 }

@@ -2,7 +2,6 @@ package fr.cea.nabla.ir.truffle.nodes.expression.constant;
 
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.ExplodeLoop;
 
 import fr.cea.nabla.ir.truffle.NablaTypesGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
@@ -21,7 +20,7 @@ public abstract class NablaReal1ConstantNode extends NablaExpressionNode {
 		this.size = size;
 	}
 
-	@ExplodeLoop
+	
 	@Specialization
 	public NV1Real executeNV1Real(VirtualFrame frame) {
 		final int size = NablaTypesGen.asNV0Int(this.size.executeGeneric(frame)).getData();

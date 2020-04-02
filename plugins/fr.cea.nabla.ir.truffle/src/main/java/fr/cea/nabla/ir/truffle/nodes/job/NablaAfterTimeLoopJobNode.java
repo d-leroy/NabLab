@@ -9,21 +9,19 @@ import fr.cea.nabla.ir.truffle.nodes.instruction.NablaInstructionNode;
 
 public class NablaAfterTimeLoopJobNode extends NablaJobNode {
 
-	@Children
-	private final NablaInstructionNode[] instructions;
+	@Child
+	private NablaInstructionNode instruction;
 
 	public NablaAfterTimeLoopJobNode(TruffleLanguage<?> language, FrameDescriptor frameDescriptor, String name,
-			NablaInstructionNode[] instructions) {
+			NablaInstructionNode instruction) {
 		super(language, frameDescriptor, name);
-		this.instructions = instructions;
+		this.instruction = instruction;
 	}
 
 	@Override
+
 	@ExplodeLoop
 	public Object execute(VirtualFrame frame) {
-		for (NablaInstructionNode instruction : instructions) {
-			instruction.executeGeneric(frame);
-		}
-		return null;
+		return instruction.executeGeneric(frame);
 	}
 }

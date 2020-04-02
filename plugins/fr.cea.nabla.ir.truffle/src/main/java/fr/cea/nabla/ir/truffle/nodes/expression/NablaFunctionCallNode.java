@@ -1,6 +1,5 @@
 package fr.cea.nabla.ir.truffle.nodes.expression;
 
-import com.oracle.truffle.api.CompilerAsserts;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.instrumentation.StandardTags;
@@ -25,12 +24,11 @@ public class NablaFunctionCallNode extends NablaExpressionNode {
 
 	@Override
 	@ExplodeLoop
-	public NablaValue executeGeneric(VirtualFrame frame) {
-		CompilerAsserts.compilationConstant(argumentNodes.length);
-
-		Object[] argumentValues = new Object[argumentNodes.length];
+	public final NablaValue executeGeneric(VirtualFrame frame) {
+		Object[] argumentValues = new Object[argumentNodes.length+1];
+		argumentValues[0] = frame.getArguments()[0];
 		for (int i = 0; i < argumentNodes.length; i++) {
-			argumentValues[i] = argumentNodes[i].executeGeneric(frame);
+			argumentValues[i+1] = argumentNodes[i].executeGeneric(frame);
 		}
 
 		return (NablaValue) callNode.call(argumentValues);

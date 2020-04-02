@@ -12,11 +12,11 @@ public class NablaFunctionNode extends NablaRootNode {
 	
 	public NablaFunctionNode(TruffleLanguage<?> language, FrameDescriptor frameDescriptor, NablaInstructionNode bodyNode, String name) {
 		super(language, frameDescriptor, name);
-		this.bodyNode = bodyNode; 
+		this.bodyNode = bodyNode;
 	}
 	
 	@Override
-	public Object execute(VirtualFrame frame) {
+	public final Object execute(VirtualFrame frame) {
 		return bodyNode.executeGeneric(frame);
 	}
 }

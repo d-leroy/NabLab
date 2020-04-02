@@ -10,6 +10,7 @@
 package fr.cea.nabla.ir.truffle.values;
 
 import fr.cea.nabla.ir.ir.PrimitiveType;
+import fr.cea.nabla.ir.truffle.runtime.NablaContext;
 import fr.cea.nabla.ir.truffle.values.NV0Bool;
 import fr.cea.nabla.ir.truffle.values.NV0Int;
 import fr.cea.nabla.ir.truffle.values.NV0Real;
@@ -124,7 +125,7 @@ public class FunctionCallHelper {
   }
   
   protected static NablaValue _createNablaValue(final Object x) {
-    throw new RuntimeException("Not yet implemented");
+	  return (NablaValue) NablaContext.getCurrent().getEnv().asGuestValue(x);
   }
   
   protected static NablaValue _createNablaValue(final Boolean x) {

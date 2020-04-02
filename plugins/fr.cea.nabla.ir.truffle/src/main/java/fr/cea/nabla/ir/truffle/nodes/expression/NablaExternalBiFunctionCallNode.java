@@ -6,7 +6,6 @@ import com.oracle.truffle.api.CompilerAsserts;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.instrumentation.StandardTags;
 import com.oracle.truffle.api.instrumentation.Tag;
-import com.oracle.truffle.api.nodes.ExplodeLoop;
 
 import fr.cea.nabla.ir.truffle.values.FunctionCallHelper;
 import fr.cea.nabla.ir.truffle.values.NablaValue;
@@ -23,7 +22,7 @@ public class NablaExternalBiFunctionCallNode extends NablaExpressionNode {
 	}
 
 	@Override
-	@ExplodeLoop
+	
 	public NablaValue executeGeneric(VirtualFrame frame) {
 		CompilerAsserts.compilationConstant(argumentNodes.length);
 
