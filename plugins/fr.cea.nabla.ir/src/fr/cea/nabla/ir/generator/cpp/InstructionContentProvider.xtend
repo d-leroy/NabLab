@@ -14,9 +14,11 @@ import fr.cea.nabla.ir.ir.ConnectivityVariable
 import fr.cea.nabla.ir.ir.If
 import fr.cea.nabla.ir.ir.Instruction
 import fr.cea.nabla.ir.ir.InstructionBlock
+import fr.cea.nabla.ir.ir.Interval
 import fr.cea.nabla.ir.ir.ItemIdDefinition
 import fr.cea.nabla.ir.ir.ItemIndexDefinition
 import fr.cea.nabla.ir.ir.IterationBlock
+import fr.cea.nabla.ir.ir.Iterator
 import fr.cea.nabla.ir.ir.Loop
 import fr.cea.nabla.ir.ir.ReductionInstruction
 import fr.cea.nabla.ir.ir.Return
@@ -25,10 +27,9 @@ import fr.cea.nabla.ir.ir.VariablesDefinition
 import org.eclipse.xtend.lib.annotations.Data
 
 import static extension fr.cea.nabla.ir.Utils.*
-import static extension fr.cea.nabla.ir.generator.IterationBlockExtensions.*
+import static extension fr.cea.nabla.ir.generator.ConnectivityCallExtensions.*
 import static extension fr.cea.nabla.ir.generator.Utils.*
 import static extension fr.cea.nabla.ir.generator.cpp.ItemIndexAndIdValueContentProvider.*
-import static extension fr.cea.nabla.ir.generator.cpp.IterationBlockExtensions.*
 
 @Data
 abstract class InstructionContentProvider
@@ -89,12 +90,12 @@ abstract class InstructionContentProvider
 
 	def dispatch CharSequence getContent(ItemIndexDefinition it)
 	'''
-		const int «index.name»(«value.content»);
+		const size_t «index.name»(«value.content»);
 	'''
 
 	def dispatch CharSequence getContent(ItemIdDefinition it)
 	'''
-		const int «id.name»(«value.content»);
+		const Id «id.name»(«value.content»);
 	'''
 
 	def dispatch CharSequence getContent(Return it) 
@@ -121,6 +122,42 @@ abstract class InstructionContentProvider
 	
 	protected def dispatch getDefaultValueContent(ConnectivityVariable it)
 	'''«IF defaultValue !== null»(«defaultValue.content»)«ENDIF»'''
+
+	// ### IterationBlock Extensions ###
+	protected def dispatch defineInterval(Iterator it, CharSequence innerContent)
+	{
+		if (container.connectivity.indexEqualId)
+			innerContent
+		else
+		'''
+		{
+			const auto «container.name»(mesh->«container.accessor»);
+			const size_t «nbElems»(«container.name».size());
+			«innerContent»
+		}
+		'''
+	}
+
+	protected def dispatch defineInterval(Interval it, CharSequence innerContent)
+	{
+		innerContent
+	}
+	
+	protected def dispatch getIndexName(Iterator it) { index.name }
+	protected def dispatch getIndexName(Interval it) { index.name }
+
+	protected def dispatch getNbElems(Iterator it)
+	{
+		if (container.connectivity.indexEqualId)
+			container.connectivity.nbElems
+		else
+			'nbElems' + indexName.toFirstUpper
+	}
+
+	protected def dispatch getNbElems(Interval it)
+	{
+		nbElems.content
+	}
 }
 
 @Data
@@ -146,7 +183,7 @@ class StlThreadInstructionContentProvider extends InstructionContentProvider
 	'''
 		«result.cppType» «result.name»;
 		«iterationBlock.defineInterval('''
-		«result.name» = parallel::parallel_reduce(«iterationBlock.nbElems», «result.defaultValue.content», [&](«result.cppType»& accu, const int& «iterationBlock.indexName»)
+		«result.name» = parallel::parallel_reduce(«iterationBlock.nbElems», «result.defaultValue.content», [&](«result.cppType»& accu, const size_t& «iterationBlock.indexName»)
 			{
 				return (accu = «binaryFunction.getCodeName('.')»(accu, «lambda.content»));
 			},
@@ -155,7 +192,7 @@ class StlThreadInstructionContentProvider extends InstructionContentProvider
 
 	override getLoopContent(Loop it)
 	'''
-		parallel::parallel_exec(«iterationBlock.nbElems», [&](const int& «iterationBlock.indexName»)
+		parallel::parallel_exec(«iterationBlock.nbElems», [&](const size_t& «iterationBlock.indexName»)
 		{
 			«body.innerContent»
 		});
@@ -169,7 +206,7 @@ class KokkosInstructionContentProvider extends InstructionContentProvider
 	'''
 		«result.cppType» «result.name»;
 		«iterationBlock.defineInterval('''
-		Kokkos::parallel_reduce(«firstArgument», KOKKOS_LAMBDA(const int& «iterationBlock.indexName», «result.cppType»& accu)
+		Kokkos::parallel_reduce(«firstArgument», KOKKOS_LAMBDA(const size_t& «iterationBlock.indexName», «result.cppType»& accu)
 		{
 			«FOR innerInstruction : innerInstructions»
 			«innerInstruction.content»
@@ -180,13 +217,13 @@ class KokkosInstructionContentProvider extends InstructionContentProvider
 
 	override getLoopContent(Loop it)
 	'''
-		Kokkos::parallel_for(«iterationBlock.nbElems», KOKKOS_LAMBDA(const int& «iterationBlock.indexName»)
+		Kokkos::parallel_for(«iterationBlock.nbElems», KOKKOS_LAMBDA(const size_t& «iterationBlock.indexName»)
 		{
 			«body.innerContent»
 		});
 	'''
 
-	protected def String getFirstArgument(ReductionInstruction it) 
+	protected def getFirstArgument(ReductionInstruction it) 
 	{
 		iterationBlock.nbElems
 	}
@@ -205,7 +242,7 @@ class KokkosTeamThreadInstructionContentProvider extends KokkosInstructionConten
 		{
 			«iterationBlock.autoTeamWork»
 
-			Kokkos::parallel_for(Kokkos::TeamThreadRange(teamMember, teamWork.second), KOKKOS_LAMBDA(const int& «iterationBlock.indexName»Team)
+			Kokkos::parallel_for(Kokkos::TeamThreadRange(teamMember, teamWork.second), KOKKOS_LAMBDA(const size_t& «iterationBlock.indexName»Team)
 			{
 				int «iterationBlock.indexName»(«iterationBlock.indexName»Team + teamWork.first);
 				«body.innerContent»
