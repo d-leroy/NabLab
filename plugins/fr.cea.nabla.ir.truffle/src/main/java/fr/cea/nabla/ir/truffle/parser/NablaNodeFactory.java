@@ -67,11 +67,6 @@ import fr.cea.nabla.ir.ir.PrimitiveType;
 import fr.cea.nabla.ir.ir.RealConstant;
 import fr.cea.nabla.ir.ir.Return;
 import fr.cea.nabla.ir.ir.SimpleVariable;
-import fr.cea.nabla.ir.ir.SizeType;
-import fr.cea.nabla.ir.ir.SizeTypeInt;
-import fr.cea.nabla.ir.ir.SizeTypeOperation;
-import fr.cea.nabla.ir.ir.SizeTypeSymbol;
-import fr.cea.nabla.ir.ir.SizeTypeSymbolRef;
 import fr.cea.nabla.ir.ir.TimeLoop;
 import fr.cea.nabla.ir.ir.TimeLoopJob;
 import fr.cea.nabla.ir.ir.UnaryExpression;
@@ -203,7 +198,7 @@ public class NablaNodeFactory {
 		switch (type.eClass().getClassifierID()) {
 		case IrPackage.BASE_TYPE: {
 			final BaseType baseType = (BaseType) type;
-			final List<NablaExpressionNode> sizes = baseType.getSizes().stream().map(s -> createNablaSizeTypeNode(s))
+			final List<NablaExpressionNode> sizes = baseType.getSizes().stream().map(s -> createNablaExpressionNode(s))
 					.collect(Collectors.toList());
 			final NablaExpressionNode value = createNablaExpressionNode(baseTypeConstant.getValue());
 			switch (baseType.getPrimitive()) {
@@ -260,7 +255,7 @@ public class NablaNodeFactory {
 	}
 
 	private NablaExpressionNode createNablaDefaultValueNode(BaseType baseType) {
-		final NablaExpressionNode[] sizes = baseType.getSizes().stream().map(s -> createNablaSizeTypeNode(s))
+		final NablaExpressionNode[] sizes = baseType.getSizes().stream().map(s -> createNablaExpressionNode(s))
 				.collect(Collectors.toList()).toArray(new NablaExpressionNode[0]);
 		return createNablaDefaultValueNode(baseType.getPrimitive(), sizes);
 	}
@@ -651,18 +646,6 @@ public class NablaNodeFactory {
 		}
 	}
 
-	private String getSizeTypeName(SizeType sizeType) {
-		switch (sizeType.eClass().getClassifierID()) {
-		case IrPackage.SIZE_TYPE_INT:
-			return "";
-		case IrPackage.SIZE_TYPE_SYMBOL:
-			return ((SizeTypeSymbol) sizeType).getName();
-		case IrPackage.SIZE_TYPE_SYMBOL_REF:
-			return ((SizeTypeSymbolRef) sizeType).getTarget().getName();
-		}
-		throw new IllegalArgumentException();
-	}
-
 	private NablaFunctionNode createNablaFunctionNode(Function function) {
 		lexicalScope = new LexicalScope(lexicalScope, true);
 		final List<NablaInstructionNode> functionInstructions = new ArrayList<>();
@@ -679,21 +662,8 @@ public class NablaNodeFactory {
 		int nbArgs = function.getInArgs().size();
 		for (int i = 0; i < nbArgs; i++) {
 			final Arg arg = function.getInArgs().get(i);
-			boolean[] providesSizes = new boolean[] { false };
-			final FrameSlot[] sizeSlots = arg.getType().getSizes().stream().map(s -> getSizeTypeName(s)).map(s -> {
-				if (sizeVarSet.remove(s)) {
-					providesSizes[0] = true;
-					return lexicalScope.locals.get(s);
-				}
-				return null;
-			}).collect(Collectors.toList()).toArray(new FrameSlot[0]);
 			final String argName = arg.getName();
-			final NablaReadArgumentNode readArg;
-			if (providesSizes[0]) {
-				readArg = NablaReadArgumentNodeGen.create(i, sizeSlots);
-			} else {
-				readArg = NablaReadArgumentNodeGen.create(i);
-			}
+			final NablaReadArgumentNode readArg = NablaReadArgumentNodeGen.create(i);
 			final FrameSlot frameSlot = lexicalScope.descriptor.findOrAddFrameSlot(argName, null,
 					FrameSlotKind.Illegal);
 			lexicalScope.locals.put(argName, frameSlot);
@@ -850,7 +820,7 @@ public class NablaNodeFactory {
 			lexicalScope.locals.put(indexName, indexSlot);
 			final NablaInstructionNode bodyNode = new NablaInstructionBlockNode(
 					createNablaInstructionNode(loop.getBody()));
-			final NablaExpressionNode iterationCount = createNablaSizeTypeNode(interval.getNbElems());
+			final NablaExpressionNode iterationCount = createNablaExpressionNode(interval.getNbElems());
 			final NablaInstructionNode result = NablaLoopNodeGen.create(indexSlot, bodyNode, iterationCount);
 			lexicalScope = lexicalScope.outer;
 			return result;
@@ -952,41 +922,16 @@ public class NablaNodeFactory {
 			indices[i] = getReadVariableNode(lexicalScope.locals.get(item.getName()));
 			i++;
 		}
-		for (SizeType idx : ref.getIndices()) {
-			indices[i] = createNablaSizeTypeNode(idx);
+		for (Expression idx : ref.getIndices()) {
+			indices[i] = createNablaExpressionNode(idx);
 			i++;
 		}
 
 		return indices;
 	}
 
-	private NablaReadVariableNode createNablaReadSizeTypeSymbolNode(SizeTypeSymbol symbol) {
-		final String name = symbol.getName();
-		final FrameSlot frameSlot = lexicalScope.locals.get(name);
-		assert (frameSlot != null);
-		return getReadVariableNode(frameSlot);
-	}
-
 	private NablaRealConstantNode createNablaRealConstantNode(double value) {
 		return NablaRealConstantNodeGen.create(value);
-	}
-
-	private NablaExpressionNode createNablaSizeTypeNode(SizeType sizeType) {
-		switch (sizeType.eClass().getClassifierID()) {
-		case IrPackage.SIZE_TYPE_INT:
-			return createNablaIntConstantNode(((SizeTypeInt) sizeType).getValue());
-		case IrPackage.SIZE_TYPE_SYMBOL:
-			return createNablaReadSizeTypeSymbolNode((SizeTypeSymbol) sizeType);
-		case IrPackage.SIZE_TYPE_OPERATION: {
-			final SizeTypeOperation operation = (SizeTypeOperation) sizeType;
-			final NablaExpressionNode leftNode = createNablaSizeTypeNode(operation.getLeft());
-			final NablaExpressionNode rightNode = createNablaSizeTypeNode(operation.getRight());
-			return createNablaBinaryExpressionNode(leftNode, ((SizeTypeOperation) sizeType).getOperator(), rightNode);
-		}
-		case IrPackage.SIZE_TYPE_SYMBOL_REF:
-			return createNablaReadSizeTypeSymbolNode(((SizeTypeSymbolRef) sizeType).getTarget());
-		}
-		throw new UnsupportedOperationException();
 	}
 
 	private NablaExpressionNode createNablaUnaryExpressionNode(NablaExpressionNode subNode, String operator) {
@@ -1007,7 +952,7 @@ public class NablaNodeFactory {
 			final NablaExpressionNode[] values = vectorConstant.getValues().stream()
 					.map(e -> createNablaExpressionNode(e)).collect(Collectors.toList())
 					.toArray(new NablaExpressionNode[0]);
-			final NablaExpressionNode[] dimensions = baseType.getSizes().stream().map(s -> createNablaSizeTypeNode(s))
+			final NablaExpressionNode[] dimensions = baseType.getSizes().stream().map(s -> createNablaExpressionNode(s))
 					.collect(Collectors.toList()).toArray(new NablaExpressionNode[0]);
 
 			switch (baseType.getPrimitive()) {
@@ -1095,8 +1040,8 @@ public class NablaNodeFactory {
 					sizeNodes[i] = getReadVariableNode(lexicalScope.locals.get(c.getName()));
 					i++;
 				}
-				for (SizeType s : connectivityVariable.getType().getBase().getSizes()) {
-					sizeNodes[i] = createNablaSizeTypeNode(s);
+				for (Expression s : connectivityVariable.getType().getBase().getSizes()) {
+					sizeNodes[i] = createNablaExpressionNode(s);
 					i++;
 				}
 				final NablaExpressionNode defaultValue = createNablaDefaultValueNode(
