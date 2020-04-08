@@ -1,5 +1,6 @@
 package fr.cea.nabla.ir.truffle.nodes.instruction;
 
+import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
@@ -9,14 +10,14 @@ import fr.cea.nabla.ir.truffle.NablaException;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
 
 @NodeInfo(shortName = "if", description = "The node implementing a condional statement")
-public class NablaIfNode extends NablaInstructionNode {
+public abstract class NablaIfNode extends NablaInstructionNode {
 
 	@Child
 	private NablaExpressionNode conditionNode;
 	@Child
 	private NablaInstructionNode thenPartNode;
 	@Child
-	private NablaInstructionNode elsePartNode;
+	protected NablaInstructionNode elsePartNode;
 
 	private final ConditionProfile condition = ConditionProfile.createCountingProfile();
 
@@ -27,16 +28,21 @@ public class NablaIfNode extends NablaInstructionNode {
 		this.elsePartNode = elsePartNode;
 	}
 
-	@Override
-	public Object executeGeneric(VirtualFrame frame) {
+	@Specialization(guards = "elsePartNode != null")
+	public Object doThenElse(VirtualFrame frame) {
 		if (condition.profile(evaluateCondition(frame))) {
 			return thenPartNode.executeGeneric(frame);
 		} else {
-			if (elsePartNode != null) {
-				return elsePartNode.executeGeneric(frame);
-			}
-			return null;
+			return elsePartNode.executeGeneric(frame);
 		}
+	}
+
+	@Specialization(guards = "elsePartNode == null")
+	public Object doThen(VirtualFrame frame) {
+		if (condition.profile(evaluateCondition(frame))) {
+			return thenPartNode.executeGeneric(frame);
+		}
+		return null;
 	}
 
 	private boolean evaluateCondition(VirtualFrame frame) {

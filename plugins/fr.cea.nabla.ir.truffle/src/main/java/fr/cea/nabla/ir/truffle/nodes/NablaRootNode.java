@@ -1,6 +1,7 @@
 package fr.cea.nabla.ir.truffle.nodes;
 
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
+import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.nodes.RootNode;
@@ -21,6 +22,14 @@ public abstract class NablaRootNode extends RootNode implements NablaNode {
 	@Override
 	public String getName() {
 		return name;
+	}
+	
+	public boolean isCloningAllowed() {
+		return isCloningAllowed;
+	}
+	
+	public void setCloningAllowed(boolean isCloningAllowed) {
+		this.isCloningAllowed = isCloningAllowed;
 	}
 
 }

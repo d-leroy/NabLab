@@ -59,7 +59,7 @@ public class NablaModuleNode extends NablaRootNode {
 		}
 	}
 
-	private static final TruffleLogger LOG = TruffleLogger.getLogger(NablaLanguage.ID, NablaTimeLoopJobNode.class);
+	private static final TruffleLogger LOG = TruffleLogger.getLogger(NablaLanguage.ID, NablaModuleNode.class);
 
 	@ExplodeLoop
 	public final Object execute(VirtualFrame frame) {
