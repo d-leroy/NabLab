@@ -1,8 +1,10 @@
 package fr.cea.nabla.ir.truffle.utils;
 
+import com.oracle.truffle.api.Assumption;
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
 import com.oracle.truffle.api.Truffle;
+import com.oracle.truffle.api.dsl.Cached;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.Frame;
 import com.oracle.truffle.api.frame.FrameDescriptor;
@@ -11,18 +13,22 @@ import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
+import com.oracle.truffle.api.nodes.RootNode;
 
+import fr.cea.nabla.ir.truffle.nodes.NablaRootNode;
 import fr.cea.nabla.ir.truffle.runtime.NablaInitializationPerformedException;
 
 public abstract class GetFrameNode extends Node {
 
 	@CompilationFinal
-	boolean initializationRequired = true;
+	protected boolean initializationRequired = true;
 	@CompilationFinal
-	private int depth = 0;
+	protected int depth = 0;
 	@CompilationFinal
 	private MaterializedFrame globalFrame;
+	// FIXME: rely on FrameDescriptor instead of FrameSlot
 	private final FrameSlot slot;
 
 	public GetFrameNode(FrameSlot slot) {
@@ -31,7 +37,8 @@ public abstract class GetFrameNode extends Node {
 
 	public abstract Frame execute(VirtualFrame frame);
 
-	@Specialization(guards = "initializationRequired", rewriteOn = NablaInitializationPerformedException.class)
+	@Specialization(guards = "initializationRequired", //
+			rewriteOn = NablaInitializationPerformedException.class)
 	protected Frame initialize(VirtualFrame frame) throws NablaInitializationPerformedException {
 		CompilerDirectives.transferToInterpreterAndInvalidate();
 		Frame closestFrame = Truffle.getRuntime().iterateFrames(f -> {
@@ -48,25 +55,32 @@ public abstract class GetFrameNode extends Node {
 		throw new NablaInitializationPerformedException();
 	}
 
-	@Specialization(guards = "isFast()")
+	@Specialization(guards = { "!initializationRequired", "depth == 0" })
 	protected Frame doLocal(VirtualFrame frame) {
 		return frame;
 	}
 
-	@Specialization(guards = "isSlow()")
-	protected Frame doGlobal(VirtualFrame frame) {
-		if (globalFrame == null) {
-			globalFrame = (MaterializedFrame) frame.getArguments()[0];
+	@ExplodeLoop
+	@Specialization(guards = { "!initializationRequired", "depth > 0" }, //
+			assumptions = "resultStable")
+	protected Frame doGlobal(VirtualFrame frame, @Cached("getFrame(frame)") Frame result,
+			@Cached("getResultFrameStable()") Assumption resultStable) {
+		return result;
+	}
+
+	protected Frame getFrame(VirtualFrame frame) {
+		Frame result = (Frame) frame.getArguments()[0];
+		for (int i = 1; i < depth; i++) {
+			result = (Frame) result.getArguments()[0];
 		}
-		return globalFrame;
+		return result;
 	}
 
-	protected boolean isFast() {
-		return !initializationRequired && depth == 0;
+	protected Assumption getResultFrameStable() {
+		final RootNode rootNode = this.getRootNode();
+		if (rootNode instanceof NablaRootNode) {
+			return ((NablaRootNode) rootNode).getFrameStableAssumption();
+		}
+		return null;
 	}
-
-	protected boolean isSlow() {
-		return !initializationRequired && depth > 0;
-	}
-
 }

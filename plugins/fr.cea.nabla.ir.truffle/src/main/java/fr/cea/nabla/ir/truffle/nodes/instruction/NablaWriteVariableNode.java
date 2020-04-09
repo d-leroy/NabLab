@@ -8,7 +8,21 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.ir.truffle.utils.GetFrameNode;
-import fr.cea.nabla.ir.truffle.values.NablaValue;
+import fr.cea.nabla.ir.truffle.values.NV0Bool;
+import fr.cea.nabla.ir.truffle.values.NV0Int;
+import fr.cea.nabla.ir.truffle.values.NV0Real;
+import fr.cea.nabla.ir.truffle.values.NV1Bool;
+import fr.cea.nabla.ir.truffle.values.NV1Int;
+import fr.cea.nabla.ir.truffle.values.NV1Real;
+import fr.cea.nabla.ir.truffle.values.NV2Bool;
+import fr.cea.nabla.ir.truffle.values.NV2Int;
+import fr.cea.nabla.ir.truffle.values.NV2Real;
+import fr.cea.nabla.ir.truffle.values.NV3Bool;
+import fr.cea.nabla.ir.truffle.values.NV3Int;
+import fr.cea.nabla.ir.truffle.values.NV3Real;
+import fr.cea.nabla.ir.truffle.values.NV4Bool;
+import fr.cea.nabla.ir.truffle.values.NV4Int;
+import fr.cea.nabla.ir.truffle.values.NV4Real;
 
 @NodeChild(value = "value", type = NablaExpressionNode.class)
 @NodeChild(value = "frameToWrite", type = GetFrameNode.class)
@@ -21,7 +35,91 @@ public abstract class NablaWriteVariableNode extends NablaInstructionNode {
 	}
 
 	@Specialization
-	protected Object doWrite(VirtualFrame frame, NablaValue value, Frame toWrite) {
+	protected Object doWrite(VirtualFrame frame, NV0Bool value, Frame toWrite) {
+		toWrite.setObject(slot, value);
+		return value;
+	}
+
+	@Specialization
+	protected Object doWrite(VirtualFrame frame, NV1Bool value, Frame toWrite) {
+		toWrite.setObject(slot, value);
+		return value;
+	}
+
+	@Specialization
+	protected Object doWrite(VirtualFrame frame, NV2Bool value, Frame toWrite) {
+		toWrite.setObject(slot, value);
+		return value;
+	}
+
+	@Specialization
+	protected Object doWrite(VirtualFrame frame, NV3Bool value, Frame toWrite) {
+		toWrite.setObject(slot, value);
+		return value;
+	}
+
+	@Specialization
+	protected Object doWrite(VirtualFrame frame, NV4Bool value, Frame toWrite) {
+		toWrite.setObject(slot, value);
+		return value;
+	}
+
+	@Specialization
+	protected Object doWrite(VirtualFrame frame, NV0Int value, Frame toWrite) {
+		toWrite.setObject(slot, value);
+		return value;
+	}
+
+	@Specialization
+	protected Object doWrite(VirtualFrame frame, NV1Int value, Frame toWrite) {
+		toWrite.setObject(slot, value);
+		return value;
+	}
+
+	@Specialization
+	protected Object doWrite(VirtualFrame frame, NV2Int value, Frame toWrite) {
+		toWrite.setObject(slot, value);
+		return value;
+	}
+
+	@Specialization
+	protected Object doWrite(VirtualFrame frame, NV3Int value, Frame toWrite) {
+		toWrite.setObject(slot, value);
+		return value;
+	}
+
+	@Specialization
+	protected Object doWrite(VirtualFrame frame, NV4Int value, Frame toWrite) {
+		toWrite.setObject(slot, value);
+		return value;
+	}
+
+	@Specialization
+	protected Object doWrite(VirtualFrame frame, NV0Real value, Frame toWrite) {
+		toWrite.setObject(slot, value);
+		return value;
+	}
+
+	@Specialization
+	protected Object doWrite(VirtualFrame frame, NV1Real value, Frame toWrite) {
+		toWrite.setObject(slot, value);
+		return value;
+	}
+
+	@Specialization
+	protected Object doWrite(VirtualFrame frame, NV2Real value, Frame toWrite) {
+		toWrite.setObject(slot, value);
+		return value;
+	}
+
+	@Specialization
+	protected Object doWrite(VirtualFrame frame, NV3Real value, Frame toWrite) {
+		toWrite.setObject(slot, value);
+		return value;
+	}
+
+	@Specialization
+	protected Object doWrite(VirtualFrame frame, NV4Real value, Frame toWrite) {
 		toWrite.setObject(slot, value);
 		return value;
 	}

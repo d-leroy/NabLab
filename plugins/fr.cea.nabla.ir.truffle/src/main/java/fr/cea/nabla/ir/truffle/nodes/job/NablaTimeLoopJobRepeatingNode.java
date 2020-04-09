@@ -5,6 +5,8 @@ import java.util.List;
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
+import com.oracle.truffle.api.dsl.NodeChild;
+import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.Frame;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotTypeException;
@@ -17,9 +19,11 @@ import com.oracle.truffle.api.nodes.RepeatingNode;
 import fr.cea.nabla.ir.truffle.NablaTypesGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.ir.truffle.runtime.NablaInternalError;
+import fr.cea.nabla.ir.truffle.utils.GetFrameNode;
 import fr.cea.nabla.ir.truffle.values.NV0Int;
 
-public class NablaTimeLoopJobRepeatingNode extends Node implements RepeatingNode {
+@NodeChild(value = "frameToWrite", type = GetFrameNode.class)
+public abstract class NablaTimeLoopJobRepeatingNode extends Node implements RepeatingNode {
 
 	@Children
 	private DirectCallNode[] innerJobs;
@@ -41,25 +45,37 @@ public class NablaTimeLoopJobRepeatingNode extends Node implements RepeatingNode
 		}
 	}
 
+	/*
+	 * Necessary to avoid errors in generated class.
+	 */
 	@Override
+	public final Object executeRepeatingWithValue(VirtualFrame frame) {
+		if (executeRepeating(frame)) {
+            return CONTINUE_LOOP_STATUS;
+        } else {
+            return BREAK_LOOP_STATUS;
+        }
+	}
+	
 	@ExplodeLoop
-	public boolean executeRepeating(VirtualFrame frame) {
+	@Specialization
+	public boolean doLoop(VirtualFrame frame, Frame toWrite) {
 		try {
-			final Frame frameToWrite = (Frame) frame.getArguments()[0];
-			final int i = NablaTypesGen.asNV0Int(frameToWrite.getObject(indexSlot)).getData() + 1;
-			frameToWrite.setObject(indexSlot, new NV0Int(i));
+			final int i = NablaTypesGen.asNV0Int(frame.getObject(indexSlot)).getData() + 1;
+			frame.setObject(indexSlot, new NV0Int(i));
+			final Frame materializedFrame = frame.materialize();
 			for (int j = 0; j < innerJobs.length; j++) {
-				innerJobs[j].call(frame.getArguments()[0]);
+				innerJobs[j].call(materializedFrame);
 			}
 			final boolean continueLoop = NablaTypesGen.asNV0Bool(conditionNode.executeGeneric(frame)).isData();
 			if (CompilerDirectives.injectBranchProbability(0.9, continueLoop)) {
 				for (int j = 0; j < copies.length; j++) {
 					try {
 						FrameSlot[] copy = copies[j];
-						final Object left = frameToWrite.getObject(copy[1]);
-						final Object right = frameToWrite.getObject(copy[0]);
-						frameToWrite.setObject(copy[0], left);
-						frameToWrite.setObject(copy[1], right);
+						final Object left = toWrite.getObject(copy[1]);
+						final Object right = toWrite.getObject(copy[0]);
+						toWrite.setObject(copy[0], left);
+						toWrite.setObject(copy[1], right);
 					} catch (FrameSlotTypeException e) {
 						e.printStackTrace();
 					}

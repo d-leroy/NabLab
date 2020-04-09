@@ -95,6 +95,8 @@ import fr.cea.nabla.ir.truffle.nodes.expression.NablaInt2NodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaParenthesisNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaReadArgumentNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaReadArgumentNodeGen;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaReadArrayDimensionNode;
+import fr.cea.nabla.ir.truffle.nodes.expression.NablaReadArrayDimensionNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaReadArrayNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaReadVariableNode;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaReadVariableNodeGen;
@@ -460,8 +462,8 @@ public class NablaNodeFactory {
 	// FIXME: use module frame descriptor or more local one?
 	private NablaJobNode createNablaTimeLoopJobNode(TimeLoopJob job) {
 		final String indexName = job.getTimeLoop().getIterationCounter().getName();
-		final FrameSlot indexSlot = lexicalScope.locals.computeIfAbsent(indexName,
-				n -> moduleFrameDescriptor.findOrAddFrameSlot(n, null, FrameSlotKind.Illegal));
+		final FrameSlot indexSlot = lexicalScope.descriptor.findOrAddFrameSlot(indexName, null, FrameSlotKind.Illegal);
+		lexicalScope.locals.put(indexName, indexSlot);
 		final List<FrameSlot[]> copies = job.getCopies().stream().map(c -> {
 			final String source = c.getSource().getName();
 			final String destination = c.getDestination().getName();
@@ -646,6 +648,17 @@ public class NablaNodeFactory {
 		}
 	}
 
+	private SimpleVariable collectSizeVariable(Expression expression) {
+		if (expression instanceof ArgOrVarRef) {
+			final ArgOrVarRef argOrVarRef = (ArgOrVarRef) expression;
+			final ArgOrVar argOrVar = argOrVarRef.getTarget();
+			if (argOrVar instanceof SimpleVariable) {
+				return (SimpleVariable) argOrVar;
+			}
+		}
+		return null;
+	}
+
 	private NablaFunctionNode createNablaFunctionNode(Function function) {
 		lexicalScope = new LexicalScope(lexicalScope, true);
 		final List<NablaInstructionNode> functionInstructions = new ArrayList<>();
@@ -663,11 +676,23 @@ public class NablaNodeFactory {
 		for (int i = 0; i < nbArgs; i++) {
 			final Arg arg = function.getInArgs().get(i);
 			final String argName = arg.getName();
-			final NablaReadArgumentNode readArg = NablaReadArgumentNodeGen.create(i);
+			final NablaReadArgumentNode readArg1 = NablaReadArgumentNodeGen.create(i);
 			final FrameSlot frameSlot = lexicalScope.descriptor.findOrAddFrameSlot(argName, null,
 					FrameSlotKind.Illegal);
 			lexicalScope.locals.put(argName, frameSlot);
-			functionInstructions.add(createNablaWriteVariableNode(argName, readArg, i));
+			functionInstructions.add(createNablaWriteVariableNode(argName, readArg1, i));
+			final List<Expression> sizes = arg.getType().getSizes();
+			for (int j = 0; j < sizes.size(); j++) {
+				final SimpleVariable sizeVariable = collectSizeVariable(sizes.get(j));
+				if (sizeVariable != null) {
+					final String varName = sizeVariable.getName();
+					if (sizeVarSet.remove(varName)) {
+						final NablaReadArgumentNode readArg2 = NablaReadArgumentNodeGen.create(i);
+						final NablaReadArrayDimensionNode readDimension = NablaReadArrayDimensionNodeGen.create(j, readArg2);
+						functionInstructions.add(createNablaWriteVariableNode(varName, readDimension));
+					}
+				}
+			}
 		}
 		functionInstructions.addAll(Arrays.asList(createNablaInstructionNode(function.getBody())));
 		final NablaInstructionNode bodyNode = new NablaInstructionBlockNode(
