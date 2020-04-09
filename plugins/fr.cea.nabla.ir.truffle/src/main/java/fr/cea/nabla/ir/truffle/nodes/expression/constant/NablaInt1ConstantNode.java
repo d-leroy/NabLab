@@ -4,6 +4,7 @@ import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.ExplodeLoop;
 
 import fr.cea.nabla.ir.truffle.NablaTypesGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
@@ -24,7 +25,7 @@ public abstract class NablaInt1ConstantNode extends NablaExpressionNode {
 		this.size = size;
 	}
 
-	
+	@ExplodeLoop
 	@Specialization
 	public NV1Int executeNV1Int(VirtualFrame frame) {
 		if (cachedValue == null) {

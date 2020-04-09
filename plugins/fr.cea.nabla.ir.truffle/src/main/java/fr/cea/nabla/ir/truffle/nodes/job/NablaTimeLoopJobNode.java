@@ -30,9 +30,11 @@ public class NablaTimeLoopJobNode extends NablaJobNode {
 	}
 
 	@Override
-	public Object execute(VirtualFrame frame) {
+	public final Object execute(VirtualFrame frame) {
+		frameStable.invalidate();
 		frame.getFrameDescriptor().setFrameSlotKind(indexSlot, FrameSlotKind.Object);
 		frame.setObject(indexSlot, new NV0Int(0));
-		return loopNode.execute(frame);
+		final Object result = loopNode.execute(frame);
+		return result;
 	}
 }

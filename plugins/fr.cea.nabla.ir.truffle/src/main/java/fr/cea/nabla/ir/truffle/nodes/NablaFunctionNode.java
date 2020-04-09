@@ -17,6 +17,7 @@ public class NablaFunctionNode extends NablaRootNode {
 	
 	@Override
 	public final Object execute(VirtualFrame frame) {
+		frameStable.invalidate();
 		return bodyNode.executeGeneric(frame);
 	}
 	

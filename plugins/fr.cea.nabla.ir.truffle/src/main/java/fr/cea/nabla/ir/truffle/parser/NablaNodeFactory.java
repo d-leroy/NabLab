@@ -144,12 +144,9 @@ import fr.cea.nabla.ir.truffle.nodes.instruction.NablaWriteArrayNode;
 import fr.cea.nabla.ir.truffle.nodes.instruction.NablaWriteArrayNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.instruction.NablaWriteVariableNode;
 import fr.cea.nabla.ir.truffle.nodes.instruction.NablaWriteVariableNodeGen;
-import fr.cea.nabla.ir.truffle.nodes.job.NablaAfterTimeLoopJobNode;
-import fr.cea.nabla.ir.truffle.nodes.job.NablaBeforeTimeLoopJobNode;
 import fr.cea.nabla.ir.truffle.nodes.job.NablaInstructionJobNode;
 import fr.cea.nabla.ir.truffle.nodes.job.NablaJobNode;
 import fr.cea.nabla.ir.truffle.nodes.job.NablaTimeLoopJobNode;
-import fr.cea.nabla.ir.truffle.nodes.job.NablaTimeLoopJobNode2;
 import fr.cea.nabla.ir.truffle.utils.GetFrameNodeGen;
 import fr.cea.nabla.ir.truffle.values.FunctionCallHelper;
 
@@ -378,8 +375,8 @@ public class NablaNodeFactory {
 			connectivityVariables = new NablaWriteVariableNode[0];
 		}
 
-		final NablaWriteVariableNode[] variableDeclarations = module.getVariables().stream()
-				.filter(v -> !(v instanceof SimpleVariable && v.isConst())).map(v -> createVariableDeclaration(v))
+		final List<Variable> vars = module.getVariables().stream().filter(v -> !(v instanceof SimpleVariable && v.isConst())).collect(Collectors.toList());
+		final NablaWriteVariableNode[] variableDeclarations = vars.stream().map(v -> createVariableDeclaration(v))
 				.filter(n -> n != null).collect(Collectors.toList()).toArray(new NablaWriteVariableNode[0]);
 
 		final FrameSlot coordinatesSlot = lexicalScope.locals.get(module.getInitNodeCoordVariable().getName());
@@ -435,7 +432,7 @@ public class NablaNodeFactory {
 				new NablaInstructionBlockNode(createNablaInstructionNode(job.getInstruction())));
 	}
 
-	private NablaAfterTimeLoopJobNode createNablaAfterTimeLoopJobNode(AfterTimeLoopJob job) {
+	private NablaInstructionJobNode createNablaAfterTimeLoopJobNode(AfterTimeLoopJob job) {
 		final NablaInstructionNode[] copyInstructions = job.getCopies().stream().map(c -> {
 			final FrameSlot source = lexicalScope.locals.get(c.getSource().getName());
 			final NablaReadVariableNode sourceReadNode = getReadVariableNode(source);
@@ -443,10 +440,10 @@ public class NablaNodeFactory {
 			return getWriteVariableNode(destination, sourceReadNode);
 		}).collect(Collectors.toList()).toArray(new NablaInstructionNode[0]);
 		final NablaInstructionBlockNode block = new NablaInstructionBlockNode(copyInstructions);
-		return new NablaAfterTimeLoopJobNode(language, lexicalScope.descriptor, job.getName(), block);
+		return new NablaInstructionJobNode(language, lexicalScope.descriptor, job.getName(), block);
 	}
 
-	private NablaBeforeTimeLoopJobNode createNablaBeforeTimeLoopJobNode(BeforeTimeLoopJob job) {
+	private NablaInstructionJobNode createNablaBeforeTimeLoopJobNode(BeforeTimeLoopJob job) {
 		final NablaInstructionNode[] copyInstructions = job.getCopies().stream().map(c -> {
 			final FrameSlot source = lexicalScope.locals.get(c.getSource().getName());
 			final NablaReadVariableNode sourceReadNode = getReadVariableNode(source);
@@ -454,10 +451,8 @@ public class NablaNodeFactory {
 			return getWriteVariableNode(destination, sourceReadNode);
 		}).collect(Collectors.toList()).toArray(new NablaInstructionNode[0]);
 		final NablaInstructionBlockNode block = new NablaInstructionBlockNode(copyInstructions);
-		return new NablaBeforeTimeLoopJobNode(language, lexicalScope.descriptor, job.getName(), block);
+		return new NablaInstructionJobNode(language, lexicalScope.descriptor, job.getName(), block);
 	}
-
-	private static final boolean USE_REPEATING = true;
 
 	// FIXME: use module frame descriptor or more local one?
 	private NablaJobNode createNablaTimeLoopJobNode(TimeLoopJob job) {
@@ -477,13 +472,8 @@ public class NablaNodeFactory {
 		final NablaJobNode[] innerJobs = job.getInnerJobs().stream().filter(j -> j.getAt() > 0)
 				.sorted((j1, j2) -> Double.compare(j1.getAt(), j2.getAt())).map(j -> createNablaJobNode(j))
 				.collect(Collectors.toList()).toArray(new NablaJobNode[0]);
-		if (USE_REPEATING) {
-			return new NablaTimeLoopJobNode(language, lexicalScope.descriptor, job.getName(), indexSlot, copies,
-					conditionNode, innerJobs, getIndentation(job.getTimeLoop()), timeVariable, deltatVariable);
-		} else {
-			return new NablaTimeLoopJobNode2(language, lexicalScope.descriptor, job.getName(), indexSlot, copies,
-					conditionNode, innerJobs, getIndentation(job.getTimeLoop()), timeVariable, deltatVariable);
-		}
+		return new NablaTimeLoopJobNode(language, lexicalScope.descriptor, job.getName(), indexSlot, copies,
+				conditionNode, innerJobs, getIndentation(job.getTimeLoop()), timeVariable, deltatVariable);
 	}
 
 	private String getIndentation(TimeLoop timeLoop) {

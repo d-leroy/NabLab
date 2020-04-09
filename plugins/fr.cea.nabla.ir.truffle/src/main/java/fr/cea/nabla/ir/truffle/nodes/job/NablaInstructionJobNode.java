@@ -18,7 +18,8 @@ public class NablaInstructionJobNode extends NablaJobNode {
 	}
 	
 	@Override
-	public Object execute(VirtualFrame frame) {
+	public final Object execute(VirtualFrame frame) {
+		frameStable.invalidate();
 		return instruction.executeGeneric(frame);
 	}
 }

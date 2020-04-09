@@ -4,7 +4,6 @@ import com.oracle.truffle.api.Assumption;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
 import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.frame.FrameDescriptor;
-import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.utilities.CyclicAssumption;
 
@@ -16,19 +15,12 @@ public abstract class NablaRootNode extends RootNode implements NablaNode {
 	/** The name of the function, for printing purposes only. */
     private final String name;
     
-    private final CyclicAssumption frameStable;
+    protected final CyclicAssumption frameStable;
 
 	public NablaRootNode(TruffleLanguage<?> language, FrameDescriptor frameDescriptor, String name) {
 		super(language, frameDescriptor);
 		this.name = name;
 		this.frameStable = new CyclicAssumption(name);
-	}
-	
-	@Override
-	public Object execute(VirtualFrame frame) {
-		final Object result = this.execute(frame);
-		frameStable.getAssumption().invalidate();
-		return result;
 	}
 	
 	@Override
@@ -47,5 +39,4 @@ public abstract class NablaRootNode extends RootNode implements NablaNode {
 	public Assumption getFrameStableAssumption() {
 		return frameStable.getAssumption();
 	}
-
 }

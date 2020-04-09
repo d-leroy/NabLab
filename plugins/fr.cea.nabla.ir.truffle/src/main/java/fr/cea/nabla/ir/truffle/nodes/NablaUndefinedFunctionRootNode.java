@@ -57,7 +57,7 @@ public class NablaUndefinedFunctionRootNode extends NablaRootNode {
     }
 
     @Override
-    public Object execute(VirtualFrame frame) {
-        throw NablaUndefinedNameException.undefinedFunction(null, getName());
+	public final Object execute(VirtualFrame frame) {
+		throw NablaUndefinedNameException.undefinedFunction(null, getName());
     }
 }

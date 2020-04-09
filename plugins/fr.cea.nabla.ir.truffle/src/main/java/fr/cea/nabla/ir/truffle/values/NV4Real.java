@@ -83,7 +83,6 @@ public class NV4Real implements NablaValue {
 	}
 
 	@Override
-	@TruffleBoundary
 	public int getDimension(int dimension) {
 		assert (dimension <= 4);
 		switch (dimension) {

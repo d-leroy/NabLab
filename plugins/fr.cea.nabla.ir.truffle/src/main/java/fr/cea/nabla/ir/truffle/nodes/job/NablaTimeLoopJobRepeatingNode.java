@@ -3,8 +3,8 @@ package fr.cea.nabla.ir.truffle.nodes.job;
 import java.util.List;
 
 import com.oracle.truffle.api.CompilerDirectives;
-import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
+import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.Frame;
@@ -65,7 +65,7 @@ public abstract class NablaTimeLoopJobRepeatingNode extends Node implements Repe
 			frame.setObject(indexSlot, new NV0Int(i));
 			final Frame materializedFrame = frame.materialize();
 			for (int j = 0; j < innerJobs.length; j++) {
-				innerJobs[j].call(materializedFrame);
+				innerJobs[j].call(materializedFrame, this.getRootNode());
 			}
 			final boolean continueLoop = NablaTypesGen.asNV0Bool(conditionNode.executeGeneric(frame)).isData();
 			if (CompilerDirectives.injectBranchProbability(0.9, continueLoop)) {

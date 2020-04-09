@@ -25,10 +25,11 @@ public class NablaFunctionCallNode extends NablaExpressionNode {
 	@Override
 	@ExplodeLoop
 	public final NablaValue executeGeneric(VirtualFrame frame) {
-		Object[] argumentValues = new Object[argumentNodes.length+1];
+		Object[] argumentValues = new Object[argumentNodes.length+2];
 		argumentValues[0] = frame.getArguments()[0];
+		argumentValues[1] = this.getRootNode();
 		for (int i = 0; i < argumentNodes.length; i++) {
-			argumentValues[i+1] = argumentNodes[i].executeGeneric(frame);
+			argumentValues[i+2] = argumentNodes[i].executeGeneric(frame);
 		}
 
 		return (NablaValue) callNode.call(argumentValues);

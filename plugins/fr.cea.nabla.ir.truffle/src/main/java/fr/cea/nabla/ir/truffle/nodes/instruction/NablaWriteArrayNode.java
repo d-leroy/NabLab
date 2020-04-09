@@ -33,7 +33,7 @@ public abstract class NablaWriteArrayNode extends NablaInstructionNode {
 	@Children
 	private final NablaExpressionNode[] indices;
 	@CompilationFinal
-	Class<?> arrayClass;
+	private Class<?> arrayClass;
 	@CompilationFinal
 	private boolean initializationRequired = true;
 	
@@ -47,8 +47,8 @@ public abstract class NablaWriteArrayNode extends NablaInstructionNode {
 	public Object write(VirtualFrame frame, Object value, Frame toWrite) throws NablaInitializationPerformedException {
 		CompilerDirectives.transferToInterpreterAndInvalidate();
 		NablaValue array = (NablaValue) FrameUtil.getObjectSafe(toWrite, slot);
-		arrayClass = array.getClass();
-		initializationRequired = false;
+		this.arrayClass = array.getClass();
+		this.initializationRequired = false;
 		throw new NablaInitializationPerformedException();
 	}
 	

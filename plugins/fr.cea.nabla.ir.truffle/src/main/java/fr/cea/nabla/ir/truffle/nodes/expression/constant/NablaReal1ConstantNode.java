@@ -1,37 +1,51 @@
 package fr.cea.nabla.ir.truffle.nodes.expression.constant;
 
+import com.oracle.truffle.api.dsl.Cached;
+import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.ExplodeLoop;
 
-import fr.cea.nabla.ir.truffle.NablaTypesGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
+import fr.cea.nabla.ir.truffle.values.NV0Int;
+import fr.cea.nabla.ir.truffle.values.NV0Real;
 import fr.cea.nabla.ir.truffle.values.NV1Real;
 
+@NodeChild(value = "value", type = NablaExpressionNode.class)
+@NodeChild(value = "size", type = NablaExpressionNode.class)
 public abstract class NablaReal1ConstantNode extends NablaExpressionNode {
 
-	@Child
-	private NablaExpressionNode value;
-	@Child
-	private NablaExpressionNode size;
-	
-	//TODO use assumptions
-	public NablaReal1ConstantNode(NablaExpressionNode value, NablaExpressionNode size) {
-		this.value = value;
-		this.size = size;
+	@Specialization(guards = {"cachedSize == size.getData()", "isZero(value.getData())"})
+	protected NV1Real doDefaultCached(VirtualFrame frame, NV0Real value, NV0Int size, //
+			@Cached("size.getData()") int cachedSize, //
+			@Cached("getDefaultResult(cachedSize)") NV1Real result) {
+		return result;
 	}
-
 	
-	@Specialization
-	public NV1Real executeNV1Real(VirtualFrame frame) {
-		final int size = NablaTypesGen.asNV0Int(this.size.executeGeneric(frame)).getData();
-		final double val = NablaTypesGen.asNV0Real(value.executeGeneric(frame)).getData();
+	@Specialization(guards = "cachedSize == size.getData()")
+	public NV1Real doCached(VirtualFrame frame, NV0Real value, NV0Int size, //
+			@Cached("value.getData()") double cachedValue, //
+			@Cached("size.getData()") int cachedSize, //
+			@Cached("getResult(cachedValue, cachedSize)") NV1Real result) {
+		return result;
+	}
+	
+	protected boolean isZero(double d) { return d == 0.0; }
+
+	protected NV1Real getDefaultResult(int size) {
 		final double[] computedValues = new double[size];
-		for (int i = 0; i < size; i++) {
-			computedValues[i] = val;
-		}
 		return new NV1Real(computedValues);
 	}
 
+	@ExplodeLoop
+	protected NV1Real getResult(double value, final int size) {
+		final double[] computedValues = new double[size];
+		for (int i = 0; i < size; i++) {
+			computedValues[i] = value;
+		}
+		return new NV1Real(computedValues);
+	}
+	
 	@Override
 	public boolean isInstrumentable() {
 		return false;

@@ -15,7 +15,6 @@ import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
-import com.oracle.truffle.api.nodes.RootNode;
 
 import fr.cea.nabla.ir.truffle.nodes.NablaRootNode;
 import fr.cea.nabla.ir.truffle.runtime.NablaInitializationPerformedException;
@@ -60,14 +59,14 @@ public abstract class GetFrameNode extends Node {
 		return frame;
 	}
 
-	@ExplodeLoop
 	@Specialization(guards = { "!initializationRequired", "depth > 0" }, //
 			assumptions = "resultStable")
-	protected Frame doGlobal(VirtualFrame frame, @Cached("getFrame(frame)") Frame result,
-			@Cached("getResultFrameStable()") Assumption resultStable) {
+	protected Frame doCached(VirtualFrame frame, @Cached("getFrame(frame)") Frame result,
+			@Cached("getResultFrameStable(frame)") Assumption resultStable) {
 		return result;
 	}
 
+	@ExplodeLoop
 	protected Frame getFrame(VirtualFrame frame) {
 		Frame result = (Frame) frame.getArguments()[0];
 		for (int i = 1; i < depth; i++) {
@@ -76,11 +75,13 @@ public abstract class GetFrameNode extends Node {
 		return result;
 	}
 
-	protected Assumption getResultFrameStable() {
-		final RootNode rootNode = this.getRootNode();
-		if (rootNode instanceof NablaRootNode) {
-			return ((NablaRootNode) rootNode).getFrameStableAssumption();
+	@ExplodeLoop
+	protected Assumption getResultFrameStable(VirtualFrame frame) {
+		Frame result = frame;
+		for (int i = 1; i < depth; i++) {
+			result = (Frame) result.getArguments()[0];
 		}
-		return null;
+		final NablaRootNode rootNode = (NablaRootNode) result.getArguments()[1];
+		return rootNode.getFrameStableAssumption();
 	}
 }

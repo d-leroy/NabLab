@@ -83,7 +83,6 @@ public class NV4Bool implements NablaValue {
 	}
 
 	@Override
-	@TruffleBoundary
 	public int getDimension(int dimension) {
 		assert (dimension <= 4);
 		switch (dimension) {

@@ -22,7 +22,6 @@ import fr.cea.nabla.ir.truffle.NablaTypesGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.ir.truffle.nodes.instruction.NablaWriteVariableNode;
 import fr.cea.nabla.ir.truffle.nodes.job.NablaJobNode;
-import fr.cea.nabla.ir.truffle.nodes.job.NablaTimeLoopJobNode;
 import fr.cea.nabla.ir.truffle.runtime.NablaContext;
 import fr.cea.nabla.ir.truffle.values.NV2Real;
 import fr.cea.nabla.ir.truffle.values.NablaOutput;
@@ -62,8 +61,9 @@ public class NablaModuleNode extends NablaRootNode {
 	private static final TruffleLogger LOG = TruffleLogger.getLogger(NablaLanguage.ID, NablaModuleNode.class);
 
 	@ExplodeLoop
+	@Override
 	public final Object execute(VirtualFrame frame) {
-		
+
 		final MaterializedFrame globalFrame = frame.materialize();
 		
 		LOG.log(NablaLogLevel.INFO, " Start interpreting " + getName() + " module ");
@@ -95,7 +95,7 @@ public class NablaModuleNode extends NablaRootNode {
 
 		CompilerAsserts.compilationConstant(jobs.length);
 		for (int i = 0; i < jobs.length; i++) {
-			jobs[i].call(globalFrame);
+			jobs[i].call(globalFrame, this);
 		}
 
 		LOG.log(NablaLogLevel.INFO, " End interpreting");
