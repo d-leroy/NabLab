@@ -37,6 +37,7 @@ import fr.cea.nabla.ir.ir.BoolConstant;
 import fr.cea.nabla.ir.ir.Connectivity;
 import fr.cea.nabla.ir.ir.ConnectivityCall;
 import fr.cea.nabla.ir.ir.ConnectivityVariable;
+import fr.cea.nabla.ir.ir.Container;
 import fr.cea.nabla.ir.ir.ContractedIf;
 import fr.cea.nabla.ir.ir.Expression;
 import fr.cea.nabla.ir.ir.Function;
@@ -767,20 +768,26 @@ public class NablaNodeFactory {
 		}
 		case IrPackage.ITEM_ID_VALUE_ITERATOR: {
 			final ItemIdValueIterator itemIdValueIterator = (ItemIdValueIterator) value;
-			final ConnectivityCall connectivityCall = itemIdValueIterator.getIterator().getContainer();
-			final NablaExpressionNode indexValueNode = createGetIndexValueNode(itemIdValueIterator);
-			if (connectivityCall.getConnectivity().isIndexEqualId()) {
-				return indexValueNode;
-			}
-			final String connectivityName = connectivityCall.getConnectivity().getName();
-			final NablaExpressionNode[] argIds = connectivityCall.getArgs().stream().map(iId -> iId.getName())
-					.map(s -> lexicalScope.locals.get(s)).map(s -> getReadVariableNode(s)).collect(Collectors.toList())
-					.toArray(new NablaExpressionNode[0]);
-			final NablaExpressionNode[] index = new NablaExpressionNode[] {
-					createGetIndexValueNode(itemIdValueIterator) };
-			final NablaExpressionNode arrayNode = new NablaGetMeshElementsNode(argIds, connectivityName);
+			final Container container = itemIdValueIterator.getIterator().getContainer();
+			switch (container.eClass().getClassifierID()) {
+			case IrPackage.CONNECTIVITY_CALL:
+				final ConnectivityCall connectivityCall = (ConnectivityCall) container;
+				final NablaExpressionNode indexValueNode = createGetIndexValueNode(itemIdValueIterator);
+				if (connectivityCall.getConnectivity().isIndexEqualId()) {
+					return indexValueNode;
+				}
+				final String connectivityName = connectivityCall.getConnectivity().getName();
+				final NablaExpressionNode[] argIds = connectivityCall.getArgs().stream().map(iId -> iId.getName())
+						.map(s -> lexicalScope.locals.get(s)).map(s -> getReadVariableNode(s)).collect(Collectors.toList())
+						.toArray(new NablaExpressionNode[0]);
+				final NablaExpressionNode[] index = new NablaExpressionNode[] {
+						createGetIndexValueNode(itemIdValueIterator) };
+				final NablaExpressionNode arrayNode = new NablaGetMeshElementsNode(argIds, connectivityName);
 
-			return NablaReadArrayNodeGen.create(index, arrayNode);
+				return NablaReadArrayNodeGen.create(index, arrayNode);
+			case IrPackage.SET_REF:
+				throw new UnsupportedOperationException();
+			}
 		}
 		}
 		throw new UnsupportedOperationException();
@@ -811,12 +818,20 @@ public class NablaNodeFactory {
 		if (itemIdValueIterator.getShift() == 0) {
 			return indexValueNode;
 		}
-		final NablaExpressionNode nbElemsNode = getReadVariableNode(
-				lexicalScope.locals.get(itemIdValueIterator.getIterator().getContainer().getConnectivity().getName()));
-		final NablaExpressionNode shiftNode = NablaIntConstantNodeGen.create(itemIdValueIterator.getShift());
+		final Container container = itemIdValueIterator.getIterator().getContainer();
+		switch (container.eClass().getClassifierID()) {
+		case IrPackage.CONNECTIVITY_CALL:
+			final ConnectivityCall connectivityCall = (ConnectivityCall) container;
+			final NablaExpressionNode nbElemsNode = getReadVariableNode(
+					lexicalScope.locals.get(connectivityCall.getConnectivity().getName()));
+			final NablaExpressionNode shiftNode = NablaIntConstantNodeGen.create(itemIdValueIterator.getShift());
 
-		return createNablaBinaryExpressionNode(createNablaBinaryExpressionNode(indexValueNode, "+",
-				createNablaBinaryExpressionNode(shiftNode, "+", nbElemsNode)), "%", nbElemsNode);
+			return createNablaBinaryExpressionNode(createNablaBinaryExpressionNode(indexValueNode, "+",
+					createNablaBinaryExpressionNode(shiftNode, "+", nbElemsNode)), "%", nbElemsNode);
+		case IrPackage.SET_REF:
+			throw new UnsupportedOperationException();
+		}
+		throw new UnsupportedOperationException();
 	}
 
 	private NablaInstructionNode createNablaReturnNode(Return ret) {
@@ -849,14 +864,22 @@ public class NablaNodeFactory {
 			lexicalScope.locals.put(indexName, indexSlot);
 			final NablaInstructionNode bodyNode = new NablaInstructionBlockNode(
 					createNablaInstructionNode(loop.getBody()));
-			final String connectivityName = iterator.getContainer().getConnectivity().getName();
-			final NablaExpressionNode[] argIds = iterator.getContainer().getArgs().stream().map(iId -> iId.getName())
-					.map(s -> lexicalScope.locals.get(s)).map(s -> getReadVariableNode(s)).collect(Collectors.toList())
-					.toArray(new NablaExpressionNode[0]);
-			final NablaExpressionNode elements = new NablaGetMeshElementsNode(argIds, connectivityName);
-			final NablaInstructionNode result = NablaLoopNodeGen.create(indexSlot, bodyNode, elements);
-			lexicalScope = lexicalScope.outer;
-			return result;
+			
+			final Container container = iterator.getContainer();
+			switch (container.eClass().getClassifierID()) {
+			case IrPackage.CONNECTIVITY_CALL:
+				final ConnectivityCall connectivityCall = (ConnectivityCall) container;
+				final String connectivityName = connectivityCall.getConnectivity().getName();
+				final NablaExpressionNode[] argIds = connectivityCall.getArgs().stream().map(iId -> iId.getName())
+						.map(s -> lexicalScope.locals.get(s)).map(s -> getReadVariableNode(s)).collect(Collectors.toList())
+						.toArray(new NablaExpressionNode[0]);
+				final NablaExpressionNode elements = new NablaGetMeshElementsNode(argIds, connectivityName);
+				final NablaInstructionNode result = NablaLoopNodeGen.create(indexSlot, bodyNode, elements);
+				lexicalScope = lexicalScope.outer;
+				return result;
+			case IrPackage.SET_REF:
+				throw new UnsupportedOperationException();
+			}
 		}
 		}
 		throw new UnsupportedOperationException();
