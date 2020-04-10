@@ -426,6 +426,14 @@ public class IrSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case IrPackage.FUNCTION_CALL: {
+				FunctionCall functionCall = (FunctionCall)theEObject;
+				T result = caseFunctionCall(functionCall);
+				if (result == null) result = caseExpression(functionCall);
+				if (result == null) result = caseIrAnnotable(functionCall);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case IrPackage.BASE_TYPE_CONSTANT: {
 				BaseTypeConstant baseTypeConstant = (BaseTypeConstant)theEObject;
 				T result = caseBaseTypeConstant(baseTypeConstant);
@@ -442,11 +450,11 @@ public class IrSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case IrPackage.FUNCTION_CALL: {
-				FunctionCall functionCall = (FunctionCall)theEObject;
-				T result = caseFunctionCall(functionCall);
-				if (result == null) result = caseExpression(functionCall);
-				if (result == null) result = caseIrAnnotable(functionCall);
+			case IrPackage.CARDINALITY: {
+				Cardinality cardinality = (Cardinality)theEObject;
+				T result = caseCardinality(cardinality);
+				if (result == null) result = caseExpression(cardinality);
+				if (result == null) result = caseIrAnnotable(cardinality);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -559,22 +567,6 @@ public class IrSwitch<T> extends Switch<T> {
 				ItemIndexValue itemIndexValue = (ItemIndexValue)theEObject;
 				T result = caseItemIndexValue(itemIndexValue);
 				if (result == null) result = caseIrAnnotable(itemIndexValue);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case IrPackage.ITEM_INDEX_VALUE_ITERATOR: {
-				ItemIndexValueIterator itemIndexValueIterator = (ItemIndexValueIterator)theEObject;
-				T result = caseItemIndexValueIterator(itemIndexValueIterator);
-				if (result == null) result = caseItemIndexValue(itemIndexValueIterator);
-				if (result == null) result = caseIrAnnotable(itemIndexValueIterator);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case IrPackage.ITEM_INDEX_VALUE_ID: {
-				ItemIndexValueId itemIndexValueId = (ItemIndexValueId)theEObject;
-				T result = caseItemIndexValueId(itemIndexValueId);
-				if (result == null) result = caseItemIndexValue(itemIndexValueId);
-				if (result == null) result = caseIrAnnotable(itemIndexValueId);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1303,6 +1295,21 @@ public class IrSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Cardinality</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Cardinality</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseCardinality(Cardinality object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Function Call</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1539,36 +1546,6 @@ public class IrSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseItemIndexValue(ItemIndexValue object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Item Index Value Iterator</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Item Index Value Iterator</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseItemIndexValueIterator(ItemIndexValueIterator object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Item Index Value Id</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Item Index Value Id</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseItemIndexValueId(ItemIndexValueId object) {
 		return null;
 	}
 

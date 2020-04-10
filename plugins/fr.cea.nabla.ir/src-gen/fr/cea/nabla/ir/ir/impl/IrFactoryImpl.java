@@ -93,9 +93,10 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 			case IrPackage.BOOL_CONSTANT: return createBoolConstant();
 			case IrPackage.MIN_CONSTANT: return createMinConstant();
 			case IrPackage.MAX_CONSTANT: return createMaxConstant();
+			case IrPackage.FUNCTION_CALL: return createFunctionCall();
 			case IrPackage.BASE_TYPE_CONSTANT: return createBaseTypeConstant();
 			case IrPackage.VECTOR_CONSTANT: return createVectorConstant();
-			case IrPackage.FUNCTION_CALL: return createFunctionCall();
+			case IrPackage.CARDINALITY: return createCardinality();
 			case IrPackage.ARG_OR_VAR_REF: return createArgOrVarRef();
 			case IrPackage.ITEM_TYPE: return createItemType();
 			case IrPackage.IR_TYPE: return createIrType();
@@ -108,8 +109,7 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 			case IrPackage.ITEM_ID_VALUE_ITERATOR: return createItemIdValueIterator();
 			case IrPackage.ITEM_ID_VALUE_CALL: return createItemIdValueCall();
 			case IrPackage.ITEM_INDEX: return createItemIndex();
-			case IrPackage.ITEM_INDEX_VALUE_ITERATOR: return createItemIndexValueIterator();
-			case IrPackage.ITEM_INDEX_VALUE_ID: return createItemIndexValueId();
+			case IrPackage.ITEM_INDEX_VALUE: return createItemIndexValue();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -569,6 +569,17 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 	 * @generated
 	 */
 	@Override
+	public Cardinality createCardinality() {
+		CardinalityImpl cardinality = new CardinalityImpl();
+		return cardinality;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public FunctionCall createFunctionCall() {
 		FunctionCallImpl functionCall = new FunctionCallImpl();
 		return functionCall;
@@ -712,20 +723,9 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 	 * @generated
 	 */
 	@Override
-	public ItemIndexValueIterator createItemIndexValueIterator() {
-		ItemIndexValueIteratorImpl itemIndexValueIterator = new ItemIndexValueIteratorImpl();
-		return itemIndexValueIterator;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public ItemIndexValueId createItemIndexValueId() {
-		ItemIndexValueIdImpl itemIndexValueId = new ItemIndexValueIdImpl();
-		return itemIndexValueId;
+	public ItemIndexValue createItemIndexValue() {
+		ItemIndexValueImpl itemIndexValue = new ItemIndexValueImpl();
+		return itemIndexValue;
 	}
 
 	/**

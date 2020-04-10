@@ -12,6 +12,7 @@ import fr.cea.nabla.ir.ir.BaseTypeConstant;
 import fr.cea.nabla.ir.ir.BeforeTimeLoopJob;
 import fr.cea.nabla.ir.ir.BinaryExpression;
 import fr.cea.nabla.ir.ir.BoolConstant;
+import fr.cea.nabla.ir.ir.Cardinality;
 import fr.cea.nabla.ir.ir.Connectivity;
 import fr.cea.nabla.ir.ir.ConnectivityCall;
 import fr.cea.nabla.ir.ir.ConnectivityType;
@@ -41,8 +42,6 @@ import fr.cea.nabla.ir.ir.ItemIdValueIterator;
 import fr.cea.nabla.ir.ir.ItemIndex;
 import fr.cea.nabla.ir.ir.ItemIndexDefinition;
 import fr.cea.nabla.ir.ir.ItemIndexValue;
-import fr.cea.nabla.ir.ir.ItemIndexValueId;
-import fr.cea.nabla.ir.ir.ItemIndexValueIterator;
 import fr.cea.nabla.ir.ir.ItemType;
 import fr.cea.nabla.ir.ir.IterableInstruction;
 import fr.cea.nabla.ir.ir.IterationBlock;
@@ -427,6 +426,13 @@ public class IrPackageImpl extends EPackageImpl implements IrPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass cardinalityEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass functionCallEClass = null;
 
 	/**
@@ -533,20 +539,6 @@ public class IrPackageImpl extends EPackageImpl implements IrPackage {
 	 * @generated
 	 */
 	private EClass itemIndexValueEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass itemIndexValueIteratorEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass itemIndexValueIdEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1772,18 +1764,8 @@ public class IrPackageImpl extends EPackageImpl implements IrPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getIterator_IndexValue() {
-		return (EReference)iteratorEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EReference getIterator_Container() {
-		return (EReference)iteratorEClass.getEStructuralFeatures().get(2);
+		return (EReference)iteratorEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2084,6 +2066,26 @@ public class IrPackageImpl extends EPackageImpl implements IrPackage {
 	@Override
 	public EReference getVectorConstant_Values() {
 		return (EReference)vectorConstantEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getCardinality() {
+		return cardinalityEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getCardinality_Container() {
+		return (EReference)cardinalityEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -2492,8 +2494,8 @@ public class IrPackageImpl extends EPackageImpl implements IrPackage {
 	 * @generated
 	 */
 	@Override
-	public EClass getItemIndexValueIterator() {
-		return itemIndexValueIteratorEClass;
+	public EReference getItemIndexValue_Id() {
+		return (EReference)itemIndexValueEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -2502,38 +2504,8 @@ public class IrPackageImpl extends EPackageImpl implements IrPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getItemIndexValueIterator_Iterator() {
-		return (EReference)itemIndexValueIteratorEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getItemIndexValueId() {
-		return itemIndexValueIdEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getItemIndexValueId_Id() {
-		return (EReference)itemIndexValueIdEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getItemIndexValueId_Container() {
-		return (EReference)itemIndexValueIdEClass.getEStructuralFeatures().get(1);
+	public EReference getItemIndexValue_Container() {
+		return (EReference)itemIndexValueEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2724,7 +2696,6 @@ public class IrPackageImpl extends EPackageImpl implements IrPackage {
 
 		iteratorEClass = createEClass(ITERATOR);
 		createEReference(iteratorEClass, ITERATOR__INDEX);
-		createEReference(iteratorEClass, ITERATOR__INDEX_VALUE);
 		createEReference(iteratorEClass, ITERATOR__CONTAINER);
 
 		intervalEClass = createEClass(INTERVAL);
@@ -2764,15 +2735,18 @@ public class IrPackageImpl extends EPackageImpl implements IrPackage {
 
 		maxConstantEClass = createEClass(MAX_CONSTANT);
 
+		functionCallEClass = createEClass(FUNCTION_CALL);
+		createEReference(functionCallEClass, FUNCTION_CALL__FUNCTION);
+		createEReference(functionCallEClass, FUNCTION_CALL__ARGS);
+
 		baseTypeConstantEClass = createEClass(BASE_TYPE_CONSTANT);
 		createEReference(baseTypeConstantEClass, BASE_TYPE_CONSTANT__VALUE);
 
 		vectorConstantEClass = createEClass(VECTOR_CONSTANT);
 		createEReference(vectorConstantEClass, VECTOR_CONSTANT__VALUES);
 
-		functionCallEClass = createEClass(FUNCTION_CALL);
-		createEReference(functionCallEClass, FUNCTION_CALL__FUNCTION);
-		createEReference(functionCallEClass, FUNCTION_CALL__ARGS);
+		cardinalityEClass = createEClass(CARDINALITY);
+		createEReference(cardinalityEClass, CARDINALITY__CONTAINER);
 
 		argOrVarRefEClass = createEClass(ARG_OR_VAR_REF);
 		createEReference(argOrVarRefEClass, ARG_OR_VAR_REF__TARGET);
@@ -2825,13 +2799,8 @@ public class IrPackageImpl extends EPackageImpl implements IrPackage {
 		createEAttribute(itemIndexEClass, ITEM_INDEX__ITEM_NAME);
 
 		itemIndexValueEClass = createEClass(ITEM_INDEX_VALUE);
-
-		itemIndexValueIteratorEClass = createEClass(ITEM_INDEX_VALUE_ITERATOR);
-		createEReference(itemIndexValueIteratorEClass, ITEM_INDEX_VALUE_ITERATOR__ITERATOR);
-
-		itemIndexValueIdEClass = createEClass(ITEM_INDEX_VALUE_ID);
-		createEReference(itemIndexValueIdEClass, ITEM_INDEX_VALUE_ID__ID);
-		createEReference(itemIndexValueIdEClass, ITEM_INDEX_VALUE_ID__CONTAINER);
+		createEReference(itemIndexValueEClass, ITEM_INDEX_VALUE__ID);
+		createEReference(itemIndexValueEClass, ITEM_INDEX_VALUE__CONTAINER);
 
 		// Create enums
 		primitiveTypeEEnum = createEEnum(PRIMITIVE_TYPE);
@@ -2910,9 +2879,10 @@ public class IrPackageImpl extends EPackageImpl implements IrPackage {
 		boolConstantEClass.getESuperTypes().add(this.getExpression());
 		minConstantEClass.getESuperTypes().add(this.getExpression());
 		maxConstantEClass.getESuperTypes().add(this.getExpression());
+		functionCallEClass.getESuperTypes().add(this.getExpression());
 		baseTypeConstantEClass.getESuperTypes().add(this.getExpression());
 		vectorConstantEClass.getESuperTypes().add(this.getExpression());
-		functionCallEClass.getESuperTypes().add(this.getExpression());
+		cardinalityEClass.getESuperTypes().add(this.getExpression());
 		argOrVarRefEClass.getESuperTypes().add(this.getExpression());
 		itemTypeEClass.getESuperTypes().add(this.getIrAnnotable());
 		irTypeEClass.getESuperTypes().add(this.getIrAnnotable());
@@ -2928,8 +2898,6 @@ public class IrPackageImpl extends EPackageImpl implements IrPackage {
 		itemIdValueCallEClass.getESuperTypes().add(this.getItemIdValue());
 		itemIndexEClass.getESuperTypes().add(this.getIrAnnotable());
 		itemIndexValueEClass.getESuperTypes().add(this.getIrAnnotable());
-		itemIndexValueIteratorEClass.getESuperTypes().add(this.getItemIndexValue());
-		itemIndexValueIdEClass.getESuperTypes().add(this.getItemIndexValue());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(irAnnotableEClass, IrAnnotable.class, "IrAnnotable", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3059,7 +3027,7 @@ public class IrPackageImpl extends EPackageImpl implements IrPackage {
 
 		initEClass(itemIndexDefinitionEClass, ItemIndexDefinition.class, "ItemIndexDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getItemIndexDefinition_Index(), this.getItemIndex(), null, "index", null, 1, 1, ItemIndexDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getItemIndexDefinition_Value(), this.getItemIndexValueId(), null, "value", null, 1, 1, ItemIndexDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getItemIndexDefinition_Value(), this.getItemIndexValue(), null, "value", null, 1, 1, ItemIndexDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(itemIdDefinitionEClass, ItemIdDefinition.class, "ItemIdDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getItemIdDefinition_Id(), this.getItemId(), null, "id", null, 1, 1, ItemIdDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3081,7 +3049,6 @@ public class IrPackageImpl extends EPackageImpl implements IrPackage {
 
 		initEClass(iteratorEClass, Iterator.class, "Iterator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIterator_Index(), this.getItemIndex(), null, "index", null, 1, 1, Iterator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIterator_IndexValue(), this.getItemIndexValueIterator(), this.getItemIndexValueIterator_Iterator(), "indexValue", null, 1, 1, Iterator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIterator_Container(), this.getContainer(), null, "container", null, 1, 1, Iterator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(intervalEClass, Interval.class, "Interval", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3121,15 +3088,18 @@ public class IrPackageImpl extends EPackageImpl implements IrPackage {
 
 		initEClass(maxConstantEClass, MaxConstant.class, "MaxConstant", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
+		initEClass(functionCallEClass, FunctionCall.class, "FunctionCall", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getFunctionCall_Function(), this.getFunction(), null, "function", null, 1, 1, FunctionCall.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getFunctionCall_Args(), this.getExpression(), null, "args", null, 0, -1, FunctionCall.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(baseTypeConstantEClass, BaseTypeConstant.class, "BaseTypeConstant", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getBaseTypeConstant_Value(), this.getExpression(), null, "value", null, 1, 1, BaseTypeConstant.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(vectorConstantEClass, VectorConstant.class, "VectorConstant", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getVectorConstant_Values(), this.getExpression(), null, "values", null, 0, -1, VectorConstant.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(functionCallEClass, FunctionCall.class, "FunctionCall", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getFunctionCall_Function(), this.getFunction(), null, "function", null, 1, 1, FunctionCall.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getFunctionCall_Args(), this.getExpression(), null, "args", null, 0, -1, FunctionCall.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(cardinalityEClass, Cardinality.class, "Cardinality", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getCardinality_Container(), this.getContainer(), null, "container", null, 1, 1, Cardinality.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(argOrVarRefEClass, ArgOrVarRef.class, "ArgOrVarRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getArgOrVarRef_Target(), this.getArgOrVar(), null, "target", null, 1, 1, ArgOrVarRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3181,14 +3151,9 @@ public class IrPackageImpl extends EPackageImpl implements IrPackage {
 		initEAttribute(getItemIndex_Name(), ecorePackage.getEString(), "name", null, 1, 1, ItemIndex.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getItemIndex_ItemName(), ecorePackage.getEString(), "itemName", null, 1, 1, ItemIndex.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(itemIndexValueEClass, ItemIndexValue.class, "ItemIndexValue", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(itemIndexValueIteratorEClass, ItemIndexValueIterator.class, "ItemIndexValueIterator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getItemIndexValueIterator_Iterator(), this.getIterator(), this.getIterator_IndexValue(), "iterator", null, 1, 1, ItemIndexValueIterator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(itemIndexValueIdEClass, ItemIndexValueId.class, "ItemIndexValueId", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getItemIndexValueId_Id(), this.getItemId(), null, "id", null, 1, 1, ItemIndexValueId.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getItemIndexValueId_Container(), this.getConnectivityCall(), null, "container", null, 1, 1, ItemIndexValueId.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(itemIndexValueEClass, ItemIndexValue.class, "ItemIndexValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getItemIndexValue_Id(), this.getItemId(), null, "id", null, 1, 1, ItemIndexValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getItemIndexValue_Container(), this.getConnectivityCall(), null, "container", null, 1, 1, ItemIndexValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(primitiveTypeEEnum, PrimitiveType.class, "PrimitiveType");
