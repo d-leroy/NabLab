@@ -93,6 +93,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="expression" eType="#//Expression"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Exit" eSuperTypes="#//Instruction">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="message" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IterationBlock"/>
   <eClassifiers xsi:type="ecore:EClass" name="Container"/>
   <eClassifiers xsi:type="ecore:EClass" name="SetRef" eSuperTypes="#//Container">
@@ -100,6 +103,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SpaceIterator" eSuperTypes="#//IterationBlock">
     <eStructuralFeatures xsi:type="ecore:EReference" name="item" eType="#//Item" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="counter" eType="#//SimpleVar"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="container" eType="#//Container"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="singletons" upperBound="-1"

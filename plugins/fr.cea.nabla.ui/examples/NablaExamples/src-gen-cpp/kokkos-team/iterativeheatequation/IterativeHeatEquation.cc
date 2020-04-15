@@ -78,10 +78,10 @@ public:
 	, nbNodesOfFace(CartesianMesh2D::MaxNbNodesOfFace)
 	, nbCellsOfFace(CartesianMesh2D::MaxNbCellsOfFace)
 	, nbNeighbourCells(CartesianMesh2D::MaxNbNeighbourCells)
+	, lastDump(numeric_limits<int>::min())
 	, t_n(0.0)
 	, t_nplus1(0.0)
 	, deltat(0.001)
-	, lastDump(numeric_limits<int>::min())
 	, X("X", nbNodes)
 	, Xc("Xc", nbCells)
 	, xc("xc", nbCells)
@@ -403,7 +403,7 @@ private:
 			
 		
 			// Evaluate loop condition with variables at time n
-			continueLoop = (residual > options->epsilon && k + 1 < options->option_max_iterations_k);
+			continueLoop = (residual > options->epsilon && check(k + 1 < options->option_max_iterations_k));
 		
 			if (continueLoop)
 			{
@@ -585,6 +585,15 @@ private:
 			cpuTimer.reset();
 			ioTimer.reset();
 		} while (continueLoop);
+	}
+	
+	KOKKOS_INLINE_FUNCTION
+	bool check(bool a) 
+	{
+		if (a) 
+			return true;
+		else
+			throw std::runtime_error("Assertion failed");
 	}
 	
 	template<size_t x>

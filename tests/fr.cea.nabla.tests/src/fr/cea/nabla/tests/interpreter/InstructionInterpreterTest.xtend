@@ -98,7 +98,15 @@ class InstructionInterpreterTest
 		ℝ U{cells};
 		ℝ[2] C{cells, nodesOfCell};
 		InitU : ∀r∈cells(), U{r} = 1.0;
-		ComputeCjr: ∀j∈cells(), ∀r∈nodesOfCell(j), C{j,r} = 0.5 * (X{r+1} - X{r-1});
+		ComputeCjr: ∀j∈ cells(), {
+			set rCellsJ = nodesOfCell(j);
+			const cardRCellsJ = card(rCellsJ);
+			ℝ[cardRCellsJ] tmp;
+			∀r, countr ∈ rCellsJ, {
+				tmp[countr] = 0.5; // stupid but test countr
+				C{j,r} = tmp[countr] * (X{r+1} - X{r-1});
+			}
+		}
 		'''
 
 		val irModule = compilationHelper.getIrModule(model, testGenModel)
@@ -156,5 +164,31 @@ class InstructionInterpreterTest
 			u.set(i, 1.0)
 
 		assertVariableValueInContext(irModule, context, "U", new NV1Real(u))
+	}
+
+	@Test
+	def void testInterpreteExit()
+	{
+		val xQuads = 100
+		val yQuads = 100
+		val model = getTestModule(xQuads, yQuads)
+		+
+		'''
+		let V=100;
+
+		Test : if (V < 100) V = V+1; else exit "V must be less than 100";
+		'''
+
+		val irModule = compilationHelper.getIrModule(model, testGenModel)
+		val handler = new ConsoleHandler
+		handler.level = Level::OFF
+		val moduleInterpreter = new ModuleInterpreter(irModule, handler)
+
+		try {
+			moduleInterpreter.interprete
+			Assert::fail("Should throw exception")
+		} catch (RuntimeException e) {
+			Assert.assertEquals("V must be less than 100", e.message)
+		}
 	}
 }
