@@ -10,8 +10,7 @@ import org.junit.runners.Suite;
 	ExpressionInterpreterTest.class,
 	InstructionInterpreterTest.class,
 	JobInterpreterTest.class,
-	ModuleInterpreterTest.class,
-	NablaExamplesInterpreterTest.class
+	ModuleInterpreterTest.class
 })
 
 public class TruffleTestSuite {}

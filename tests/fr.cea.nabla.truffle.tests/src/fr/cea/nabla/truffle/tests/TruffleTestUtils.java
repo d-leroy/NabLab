@@ -12,29 +12,30 @@ public class TruffleTestUtils {
 	public static final double DOUBLE_TOLERANCE = 1e-15;
 
 	private static final String DEFAULT_GEN_MODEL =
-		"with Test.*;" + "\n" +
-		"workflow TestDefaultGenerationChain transforms Test" + "\n" +
-		"{" + "\n" +
-			"Nabla2Ir nabla2ir" + "\n" +
-			"{" + "\n" +
-				"timeVariable = t;" + "\n" +
-				"deltatVariable = δt;" + "\n" +
-				"nodeCoordVariable = X;" + "\n" +
-			"}" + "\n" +
-			"ReplaceUtf replaceUtf follows nabla2ir" + "\n" +
-			"{" + "\n" +
-			"}" + "\n" +
-			"ReplaceReductions replaceReductions follows replaceUtf" + "\n" +
-			"{" + "\n" +
-			"}" + "\n" +
-			"OptimizeConnectivities optimizeConnectivities follows replaceReductions" + "\n" +
-			"{" + "\n" +
-				"connectivities = nodes;" + "\n" +
-			"}" + "\n" +
-			"FillHLTs fillHlts follows optimizeConnectivities" + "\n" +
-			"{" + "\n" +
-			"}" + "\n" +
-		"}";
+		"with Test.*;\n" + 
+		"\n" + 
+		"		workflow TestDefaultGenerationChain transforms Test\n" + 
+		"		{\n" + 
+		"			Nabla2Ir nabla2ir\n" + 
+		"			{\n" + 
+		"				timeVariable = t;\n" + 
+		"				deltatVariable = δt;\n" + 
+		"				nodeCoordVariable = X;\n" + 
+		"			}\n" + 
+		"			ReplaceUtf replaceUtf follows nabla2ir\n" + 
+		"			{\n" + 
+		"			}\n" + 
+		"			ReplaceReductions replaceReductions follows replaceUtf\n" + 
+		"			{\n" + 
+		"			}\n" + 
+		"			OptimizeConnectivities optimizeConnectivities follows replaceReductions\n" + 
+		"			{\n" + 
+		"				connectivities = nodes;\n" + 
+		"			}\n" + 
+		"			FillHLTs fillHlts follows optimizeConnectivities\n" + 
+		"			{\n" + 
+		"			}\n" + 
+		"		}";
 	
 	public static Value executeModel(String model) {
 		return executeModel(model, DEFAULT_GEN_MODEL);

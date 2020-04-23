@@ -27,15 +27,16 @@ class ModuleInterpreterTest {
 	
 	@Test
 	def void testInterpreteModule() {
-		val model = getTestModule(10, 10) + '''
-			// Simulation options
-			const ℝ option_stoptime = 0.2;
-			const ℕ option_max_iterations = 20000;
-			
-			iterate n while (t^{n} < option_stoptime && n < option_max_iterations);
-			
-			InitT: t^{n=0} = 0.;
-			ComputeTn: t^{n+1} = t^{n} + 0.01;
+		val model = getTestModule(10, 10) +
+		'''
+		// Simulation options
+		const option_stoptime = 0.2;
+		const option_max_iterations = 20000;
+
+		iterate n while (t^{n} < option_stoptime && n < option_max_iterations);
+
+		InitT: t^{n=0} = 0.;
+		ComputeTn: t^{n+1} = t^{n} + 0.01;
 		'''
 
 		val result = executeModel(model)

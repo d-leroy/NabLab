@@ -29,8 +29,9 @@ class InstructionInterpreterTest {
 
 	@Test
 	def void testInterpreteVarDefinition() {
-		val model = testModuleForSimulation + '''
-			Job1: { ℝ r = 1.0; t = r; }
+		val model = testModuleForSimulation +
+		'''
+		Job1: { let r = 1.0; t = r; }
 		'''
 
 		val result = executeModel(model)
@@ -40,8 +41,9 @@ class InstructionInterpreterTest {
 
 	@Test
 	def void testInterpreteInstructionBlock() {
-		val model = testModuleForSimulation + '''
-			Job1: { ℝ r = 1.0; t = r; }
+		val model = testModuleForSimulation +
+		'''
+		Job1: { let r = 1.0; t = r; }
 		'''
 
 		val result = executeModel(model)
@@ -51,8 +53,9 @@ class InstructionInterpreterTest {
 
 	@Test
 	def void testInterpreteAffectation() {
-		val model = testModuleForSimulation + '''
-			Job1: { ℝ r = 1.0; t = r; }
+		val model = testModuleForSimulation +
+		'''
+		Job1: { let r = 1.0; t = r; }
 		'''
 
 		val result = executeModel(model)
@@ -64,11 +67,21 @@ class InstructionInterpreterTest {
 	def void testInterpreteLoop() {
 		val xQuads = 100
 		val yQuads = 100
-		val model = getTestModule(xQuads, yQuads) + '''
-			ℝ U{cells};
-			ℝ[2] C{cells, nodesOfCell};
-			InitU : ∀r∈cells(), U{r} = 1.0;
-			ComputeCjr: ∀j∈cells(), ∀r∈nodesOfCell(j), C{j,r} = 0.5 * (X{r+1} - X{r-1});
+		val model = getTestModule(xQuads, yQuads) +
+		
+		'''
+		ℝ U{cells};
+		ℝ[2] C{cells, nodesOfCell};
+		InitU : ∀r∈cells(), U{r} = 1.0;
+		ComputeCjr: ∀j∈ cells(), {
+			set rCellsJ = nodesOfCell(j);
+			const cardRCellsJ = card(rCellsJ);
+			ℝ[cardRCellsJ] tmp;
+			∀r, countr ∈ rCellsJ, {
+				tmp[countr] = 0.5; // stupid but test countr
+				C{j,r} = tmp[countr] * (X{r+1} - X{r-1});
+			}
+		}
 		'''
 
 		val result = executeModel(model)
@@ -92,6 +105,52 @@ class InstructionInterpreterTest {
 				Assert.assertEquals(0.5*(xEdgeLength), Math.abs(cjr.get(j,r).get(0)), TestUtils.DoubleTolerance)
 				Assert.assertEquals(0.5*(yEdgeLength), Math.abs(cjr.get(j,r).get(1)), TestUtils.DoubleTolerance)
 			}
+		}
+	}
+
+	@Test
+	def void testInterpreteSetDefinition()
+	{
+		val xQuads = 100
+		val yQuads = 100
+		val model = getTestModule(xQuads, yQuads)
+		+
+		'''
+		ℝ U{cells};
+		InitU : {
+			set myCells = cells();
+			∀r∈myCells, U{r} = 1.0;
+		}
+		'''
+
+		val result = executeModel(model)
+
+		val nbCells = xQuads * yQuads
+		val double[] u = newDoubleArrayOfSize(nbCells)
+		for (var i = 0 ; i < u.length ; i++)
+			u.set(i, 1.0)
+
+		assertVariableValue(result, "U", u)
+	}
+
+	@Test
+	def void testInterpreteExit()
+	{
+		val xQuads = 100
+		val yQuads = 100
+		val model = getTestModule(xQuads, yQuads)
+		+
+		'''
+		let V=100;
+
+		Test : if (V < 100) V = V+1; else exit "V must be less than 100";
+		'''
+
+		try {
+			executeModel(model)
+			Assert::fail("Should throw exception")
+		} catch (RuntimeException e) {
+			Assert.assertEquals("V must be less than 100", e.message)
 		}
 	}
 }

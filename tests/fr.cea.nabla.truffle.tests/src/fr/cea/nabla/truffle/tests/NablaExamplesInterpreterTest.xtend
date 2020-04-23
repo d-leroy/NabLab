@@ -98,6 +98,12 @@ class NablaExamplesInterpreterTest {
 		testInterpreteModule("IterativeHeatEquation")
 	}
 
+//	@Test
+//	def void testInterpreteEuclid()
+//	{
+//		testInterpreteModule("Eucclhyd")
+//	}
+
 	private def void testInterpreteModule(String moduleName)
 	{
 		println("test" + moduleName)

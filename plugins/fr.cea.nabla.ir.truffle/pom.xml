@@ -34,7 +34,7 @@
 							<groupId>fr.cea.nabla</groupId>
 							<artifactId>fr.cea.nabla</artifactId>
 							<version>0.1.0</version>
-							<file>/home/dorian/git/NabLab/plugins/fr.cea.nabla.ir.truffle/lib/fr.cea.nabla_0.1.0.202004100938.jar</file>
+							<file>/home/dorian/git/NabLab/plugins/fr.cea.nabla.ir.truffle/lib/fr.cea.nabla_0.1.2.202004160755.jar</file>
 							<packaging>jar</packaging>
 							<generatePom>true</generatePom>
 						</configuration>
@@ -50,7 +50,7 @@
 							<groupId>fr.cea.nabla</groupId>
 							<artifactId>fr.cea.nabla.edit</artifactId>
 							<version>0.1.0</version>
-							<file>/home/dorian/git/NabLab/plugins/fr.cea.nabla.ir.truffle/lib/fr.cea.nabla.edit_0.1.0.202004100938.jar</file>
+							<file>/home/dorian/git/NabLab/plugins/fr.cea.nabla.ir.truffle/lib/fr.cea.nabla.edit_0.1.2.202004160755.jar</file>
 							<packaging>jar</packaging>
 							<generatePom>true</generatePom>
 						</configuration>
@@ -66,7 +66,7 @@
 							<groupId>fr.cea.nabla</groupId>
 							<artifactId>fr.cea.nabla.editor</artifactId>
 							<version>0.1.0</version>
-							<file>/home/dorian/git/NabLab/plugins/fr.cea.nabla.ir.truffle/lib/fr.cea.nabla.editor_0.1.0.202004100938.jar</file>
+							<file>/home/dorian/git/NabLab/plugins/fr.cea.nabla.ir.truffle/lib/fr.cea.nabla.editor_0.1.2.202004160755.jar</file>
 							<packaging>jar</packaging>
 							<generatePom>true</generatePom>
 						</configuration>
@@ -82,7 +82,7 @@
 							<groupId>fr.cea.nabla</groupId>
 							<artifactId>fr.cea.nabla.ide</artifactId>
 							<version>0.1.0</version>
-							<file>/home/dorian/git/NabLab/plugins/fr.cea.nabla.ir.truffle/lib/fr.cea.nabla.ide_0.1.0.202004100938.jar</file>
+							<file>/home/dorian/git/NabLab/plugins/fr.cea.nabla.ir.truffle/lib/fr.cea.nabla.ide_0.1.2.202004160755.jar</file>
 							<packaging>jar</packaging>
 							<generatePom>true</generatePom>
 						</configuration>
@@ -98,7 +98,7 @@
 							<groupId>fr.cea.nabla</groupId>
 							<artifactId>fr.cea.nabla.ir</artifactId>
 							<version>0.1.0</version>
-							<file>/home/dorian/git/NabLab/plugins/fr.cea.nabla.ir.truffle/lib/fr.cea.nabla.ir_0.1.0.202004100938.jar</file>
+							<file>/home/dorian/git/NabLab/plugins/fr.cea.nabla.ir.truffle/lib/fr.cea.nabla.ir_0.1.2.202004160755.jar</file>
 							<packaging>jar</packaging>
 							<generatePom>true</generatePom>
 						</configuration>
@@ -114,7 +114,7 @@
 							<groupId>fr.cea.nabla</groupId>
 							<artifactId>fr.cea.nabla.javalib</artifactId>
 							<version>0.1.0</version>
-							<file>/home/dorian/git/NabLab/plugins/fr.cea.nabla.ir.truffle/lib/fr.cea.nabla.javalib_0.1.0.202004100938.jar</file>
+							<file>/home/dorian/git/NabLab/plugins/fr.cea.nabla.ir.truffle/lib/fr.cea.nabla.javalib_0.1.2.202004160755.jar</file>
 							<packaging>jar</packaging>
 							<generatePom>true</generatePom>
 						</configuration>
@@ -130,7 +130,7 @@
 							<groupId>fr.cea.nabla</groupId>
 							<artifactId>fr.cea.nabla.rcp</artifactId>
 							<version>0.1.0</version>
-							<file>/home/dorian/git/NabLab/plugins/fr.cea.nabla.ir.truffle/lib/fr.cea.nabla.rcp_0.1.0.202004100938.jar</file>
+							<file>/home/dorian/git/NabLab/plugins/fr.cea.nabla.ir.truffle/lib/fr.cea.nabla.rcp_0.1.2.202004160755.jar</file>
 							<packaging>jar</packaging>
 							<generatePom>true</generatePom>
 						</configuration>
@@ -146,7 +146,7 @@
 							<groupId>fr.cea.nabla</groupId>
 							<artifactId>fr.cea.nabla.sirius</artifactId>
 							<version>0.1.0</version>
-							<file>/home/dorian/git/NabLab/plugins/fr.cea.nabla.ir.truffle/lib/fr.cea.nabla.sirius_0.1.0.202004100938.jar</file>
+							<file>/home/dorian/git/NabLab/plugins/fr.cea.nabla.ir.truffle/lib/fr.cea.nabla.sirius_0.1.2.202004160755.jar</file>
 							<packaging>jar</packaging>
 							<generatePom>true</generatePom>
 						</configuration>
@@ -162,7 +162,7 @@
 							<groupId>fr.cea.nabla</groupId>
 							<artifactId>fr.cea.nabla.ui</artifactId>
 							<version>0.1.0</version>
-							<file>/home/dorian/git/NabLab/plugins/fr.cea.nabla.ir.truffle/lib/fr.cea.nabla.ui_0.1.0.202004100938.jar</file>
+							<file>/home/dorian/git/NabLab/plugins/fr.cea.nabla.ir.truffle/lib/fr.cea.nabla.ui_0.1.2.202004160755.jar</file>
 							<packaging>jar</packaging>
 							<generatePom>true</generatePom>
 						</configuration>
