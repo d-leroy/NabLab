@@ -17,6 +17,20 @@
 
 using namespace nablalib;
 
+
+template<size_t x>
+KOKKOS_INLINE_FUNCTION
+RealArray1D<x> sumR1(RealArray1D<x> a, RealArray1D<x> b)
+{
+	return a + b;
+}
+
+KOKKOS_INLINE_FUNCTION
+double sumR0(double a, double b)
+{
+	return a + b;
+}
+
 class HeatEquation
 {
 public:
@@ -38,12 +52,10 @@ private:
 	CartesianMesh2D* mesh;
 	PvdFileWriter2D writer;
 	size_t nbNodes, nbCells, nbFaces, nbNodesOfCell, nbNodesOfFace, nbNeighbourCells;
-	
-	// Global Variables
-	int n, lastDump;
-	double t_n, t_nplus1, deltat;
-	
-	// Connectivity Variables
+	int n;
+	double t_n;
+	double t_nplus1;
+	const double deltat;
 	Kokkos::View<RealArray1D<2>*> X;
 	Kokkos::View<RealArray1D<2>*> center;
 	Kokkos::View<double*> u_n;
@@ -52,6 +64,7 @@ private:
 	Kokkos::View<double*> f;
 	Kokkos::View<double*> outgoingFlux;
 	Kokkos::View<double*> surface;
+	int lastDump;
 	utils::Timer globalTimer;
 	utils::Timer cpuTimer;
 	utils::Timer ioTimer;
@@ -68,7 +81,6 @@ public:
 	, nbNodesOfCell(CartesianMesh2D::MaxNbNodesOfCell)
 	, nbNodesOfFace(CartesianMesh2D::MaxNbNodesOfFace)
 	, nbNeighbourCells(CartesianMesh2D::MaxNbNeighbourCells)
-	, lastDump(numeric_limits<int>::min())
 	, t_n(0.0)
 	, t_nplus1(0.0)
 	, deltat(0.001)
@@ -80,6 +92,7 @@ public:
 	, f("f", nbCells)
 	, outgoingFlux("outgoingFlux", nbCells)
 	, surface("surface", nbFaces)
+	, lastDump(numeric_limits<int>::min())
 	{
 		// Copy node coordinates
 		const auto& gNodes = mesh->getGeometry()->getNodes();
@@ -396,19 +409,6 @@ private:
 			cpuTimer.reset();
 			ioTimer.reset();
 		} while (continueLoop);
-	}
-	
-	template<size_t x>
-	KOKKOS_INLINE_FUNCTION
-	RealArray1D<x> sumR1(RealArray1D<x> a, RealArray1D<x> b) 
-	{
-		return a + b;
-	}
-	
-	KOKKOS_INLINE_FUNCTION
-	double sumR0(double a, double b) 
-	{
-		return a + b;
 	}
 
 	void dumpVariables(int iteration)

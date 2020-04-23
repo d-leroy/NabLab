@@ -14,6 +14,7 @@ import fr.cea.nabla.ir.ir.Connectivity
 import fr.cea.nabla.ir.ir.ConnectivityVariable
 import fr.cea.nabla.ir.ir.IrModule
 import fr.cea.nabla.ir.ir.PrimitiveType
+import fr.cea.nabla.ir.ir.SimpleVariable
 import java.io.File
 import java.net.URI
 import org.eclipse.core.runtime.FileLocator
@@ -22,6 +23,7 @@ import org.eclipse.core.runtime.Platform
 import static extension fr.cea.nabla.ir.IrModuleExtensions.*
 import static extension fr.cea.nabla.ir.Utils.*
 import static extension fr.cea.nabla.ir.generator.Utils.*
+import fr.cea.nabla.ir.ir.Function
 
 class Ir2Cpp extends CodeGenerator
 {
@@ -29,6 +31,7 @@ class Ir2Cpp extends CodeGenerator
 
 	val extension ArgOrVarContentProvider argOrVarContentProvider
 	val extension ExpressionContentProvider expressionContentProvider
+	val extension FunctionContentProvider functionContentProvider
 	val extension JobContainerContentProvider jobContainerContentProvider
 
 	new(File outputDirectory, Backend backend)
@@ -39,6 +42,7 @@ class Ir2Cpp extends CodeGenerator
 		argOrVarContentProvider = backend.argOrVarContentProvider
 		expressionContentProvider = backend.expressionContentProvider
 		jobContainerContentProvider = backend.jobContainerContentProvider
+		functionContentProvider = backend.functionContentProvider
 
 		// check if c++ resources are available in the output folder
 		if (outputDirectory.exists && outputDirectory.isDirectory &&
@@ -67,6 +71,11 @@ class Ir2Cpp extends CodeGenerator
 
 	using namespace nablalib;
 
+	«FOR f : functions.filter(Function).filter[body !== null]»
+
+		«f.content»
+	«ENDFOR»
+
 	class «name»
 	{
 	public:
@@ -92,17 +101,12 @@ class Ir2Cpp extends CodeGenerator
 		, «c.nbElemsVar»(«c.connectivityAccessor»)
 		«ENDFOR»
 		«ENDIF»
-		«val globalsByType = globalVariables.groupBy[cppType]»
-		«FOR type : globalsByType.keySet»
-		«FOR uv : globalsByType.get(type).filter[x|x.defaultValue!==null]»
-		, «uv.name»(«uv.defaultValue.content»)
-		«ENDFOR»
-		«ENDFOR»
-		«FOR a : connectivityVariables»
-		, «a.name»(«a.cstrInit»)
-		«ENDFOR»
-		«FOR a : linearAlgebraVariables»
-		, «a.name»(«a.cstrInit»)
+		«FOR v : variables»
+			«IF v instanceof SimpleVariable && (v as SimpleVariable).defaultValue !== null»
+				, «v.name»(«(v as SimpleVariable).defaultValue.content»)
+			«ELSEIF v instanceof ConnectivityVariable»
+				, «v.name»(«v.cstrInit»)
+			«ENDIF»
 		«ENDFOR»
 		{
 			«IF withMesh»
@@ -146,7 +150,7 @@ class Ir2Cpp extends CodeGenerator
 			«callsHeader»
 			«callsContent»
 			«backend.traceContentProvider.endOfSimuTrace»
-			«IF !linearAlgebraVariables.empty && mainTimeLoop !== null»«backend.traceContentProvider.getCGInfoTrace(mainTimeLoop.iterationCounter.name)»«ENDIF»
+			«IF linearAlgebra && mainTimeLoop !== null»«backend.traceContentProvider.getCGInfoTrace(mainTimeLoop.iterationCounter.name)»«ENDIF»
 		}
 	};
 

@@ -12,6 +12,7 @@ package fr.cea.nabla.ir.generator.cpp
 import fr.cea.nabla.ir.ir.Affectation
 import fr.cea.nabla.ir.ir.ConnectivityCall
 import fr.cea.nabla.ir.ir.ConnectivityVariable
+import fr.cea.nabla.ir.ir.Exit
 import fr.cea.nabla.ir.ir.If
 import fr.cea.nabla.ir.ir.Instruction
 import fr.cea.nabla.ir.ir.InstructionBlock
@@ -25,14 +26,12 @@ import fr.cea.nabla.ir.ir.ReductionInstruction
 import fr.cea.nabla.ir.ir.Return
 import fr.cea.nabla.ir.ir.SetDefinition
 import fr.cea.nabla.ir.ir.SimpleVariable
-import fr.cea.nabla.ir.ir.VariablesDefinition
+import fr.cea.nabla.ir.ir.VariableDefinition
 import org.eclipse.xtend.lib.annotations.Data
 
 import static extension fr.cea.nabla.ir.ContainerExtensions.*
-import static extension fr.cea.nabla.ir.Utils.*
 import static extension fr.cea.nabla.ir.generator.Utils.*
 import static extension fr.cea.nabla.ir.generator.cpp.ItemIndexAndIdValueContentProvider.*
-import fr.cea.nabla.ir.ir.Exit
 
 @Data
 abstract class InstructionContentProvider
@@ -42,11 +41,9 @@ abstract class InstructionContentProvider
 	protected abstract def CharSequence getReductionContent(ReductionInstruction it)
 	protected abstract def CharSequence getLoopContent(Loop it)
 
-	def dispatch CharSequence getContent(VariablesDefinition it)
+	def dispatch CharSequence getContent(VariableDefinition it)
 	'''
-		«FOR v : variables»
-		«IF v.const»const «ENDIF»«v.cppType» «v.name»«v.defaultValueContent»;
-		«ENDFOR»
+		«IF variable.const»const «ENDIF»«variable.cppType» «variable.name»«variable.defaultValueContent»;
 	'''
 
 	def dispatch CharSequence getContent(InstructionBlock it)
@@ -194,7 +191,7 @@ class StlThreadInstructionContentProvider extends InstructionContentProvider
 			{
 				return (accu = «binaryFunction.getCodeName('.')»(accu, «lambda.content»));
 			},
-			std::bind(&«irModule.name»::«binaryFunction.name», this, std::placeholders::_1, std::placeholders::_2));''')»
+			&«binaryFunction.name»);''')»
 	'''
 
 	override getLoopContent(Loop it)
@@ -219,7 +216,7 @@ class KokkosInstructionContentProvider extends InstructionContentProvider
 			«innerInstruction.content»
 			«ENDFOR»
 			accu = «binaryFunction.getCodeName('.')»(accu, «lambda.content»);
-		}, KokkosJoiner<«result.cppType»>(«result.name», «result.defaultValue.content», std::bind(&«irModule.name»::«binaryFunction.name», this, std::placeholders::_1, std::placeholders::_2)));''')»
+		}, KokkosJoiner<«result.cppType»>(«result.name», «result.defaultValue.content», &«binaryFunction.name»));''')»
 	'''
 
 	override getLoopContent(Loop it)

@@ -17,6 +17,47 @@
 
 using namespace nablalib;
 
+
+KOKKOS_INLINE_FUNCTION
+bool check(bool a)
+{
+	if (a) 
+		return true;
+	else
+		throw std::runtime_error("Assertion failed");
+}
+
+template<size_t x>
+KOKKOS_INLINE_FUNCTION
+RealArray1D<x> sumR1(RealArray1D<x> a, RealArray1D<x> b)
+{
+	return a + b;
+}
+
+KOKKOS_INLINE_FUNCTION
+double minR0(double a, double b)
+{
+	return MathFunctions::min(a, b);
+}
+
+KOKKOS_INLINE_FUNCTION
+double sumR0(double a, double b)
+{
+	return a + b;
+}
+
+KOKKOS_INLINE_FUNCTION
+double prodR0(double a, double b)
+{
+	return a * b;
+}
+
+KOKKOS_INLINE_FUNCTION
+double maxR0(double a, double b)
+{
+	return MathFunctions::max(a, b);
+}
+
 class IterativeHeatEquation
 {
 public:
@@ -42,12 +83,11 @@ private:
 	CartesianMesh2D* mesh;
 	PvdFileWriter2D writer;
 	size_t nbNodes, nbCells, nbFaces, nbNodesOfCell, nbNodesOfFace, nbCellsOfFace, nbNeighbourCells;
-	
-	// Global Variables
-	int n, k, lastDump;
-	double t_n, t_nplus1, deltat, residual;
-	
-	// Connectivity Variables
+	int n;
+	int k;
+	double t_n;
+	double t_nplus1;
+	double deltat;
 	Kokkos::View<RealArray1D<2>*> X;
 	Kokkos::View<RealArray1D<2>*> Xc;
 	Kokkos::View<double*> xc;
@@ -61,6 +101,8 @@ private:
 	Kokkos::View<double*> faceLength;
 	Kokkos::View<double*> faceConductivity;
 	Kokkos::View<double**> alpha;
+	double residual;
+	int lastDump;
 	utils::Timer globalTimer;
 	utils::Timer cpuTimer;
 	utils::Timer ioTimer;
@@ -77,7 +119,6 @@ public:
 	, nbNodesOfFace(CartesianMesh2D::MaxNbNodesOfFace)
 	, nbCellsOfFace(CartesianMesh2D::MaxNbCellsOfFace)
 	, nbNeighbourCells(CartesianMesh2D::MaxNbNeighbourCells)
-	, lastDump(numeric_limits<int>::min())
 	, t_n(0.0)
 	, t_nplus1(0.0)
 	, deltat(0.001)
@@ -94,6 +135,7 @@ public:
 	, faceLength("faceLength", nbFaces)
 	, faceConductivity("faceConductivity", nbFaces)
 	, alpha("alpha", nbCells, nbCells)
+	, lastDump(numeric_limits<int>::min())
 	{
 		// Copy node coordinates
 		const auto& gNodes = mesh->getGeometry()->getNodes();
@@ -295,7 +337,7 @@ private:
 		Kokkos::parallel_reduce(nbCells, KOKKOS_LAMBDA(const size_t& jCells, double& accu)
 		{
 			accu = maxR0(accu, MathFunctions::fabs(u_nplus1_kplus1(jCells) - u_nplus1_k(jCells)));
-		}, KokkosJoiner<double>(reduction7, numeric_limits<double>::min(), std::bind(&IterativeHeatEquation::maxR0, this, std::placeholders::_1, std::placeholders::_2)));
+		}, KokkosJoiner<double>(reduction7, numeric_limits<double>::min(), &maxR0));
 		residual = reduction7;
 	}
 	
@@ -374,7 +416,7 @@ private:
 		Kokkos::parallel_reduce(nbCells, KOKKOS_LAMBDA(const size_t& cCells, double& accu)
 		{
 			accu = minR0(accu, options->X_EDGE_LENGTH * options->Y_EDGE_LENGTH / D(cCells));
-		}, KokkosJoiner<double>(reduction1, numeric_limits<double>::max(), std::bind(&IterativeHeatEquation::minR0, this, std::placeholders::_1, std::placeholders::_2)));
+		}, KokkosJoiner<double>(reduction1, numeric_limits<double>::max(), &minR0));
 		deltat = reduction1 * 0.1;
 	}
 	
@@ -410,7 +452,7 @@ private:
 					const size_t dCells(dId);
 					const Id fId(mesh->getCommonFace(cId, dId));
 					const size_t fFaces(fId);
-					double alphaExtraDiag(deltat / V(cCells) * (faceLength(fFaces) * faceConductivity(fFaces)) / MathFunctions::norm(Xc(cCells) - Xc(dCells)));
+					const double alphaExtraDiag(deltat / V(cCells) * (faceLength(fFaces) * faceConductivity(fFaces)) / MathFunctions::norm(Xc(cCells) - Xc(dCells)));
 					alpha(cCells,dCells) = alphaExtraDiag;
 					alphaDiag = alphaDiag + alphaExtraDiag;
 				}
@@ -474,46 +516,6 @@ private:
 			cpuTimer.reset();
 			ioTimer.reset();
 		} while (continueLoop);
-	}
-	
-	KOKKOS_INLINE_FUNCTION
-	bool check(bool a) 
-	{
-		if (a) 
-			return true;
-		else
-			throw std::runtime_error("Assertion failed");
-	}
-	
-	template<size_t x>
-	KOKKOS_INLINE_FUNCTION
-	RealArray1D<x> sumR1(RealArray1D<x> a, RealArray1D<x> b) 
-	{
-		return a + b;
-	}
-	
-	KOKKOS_INLINE_FUNCTION
-	double minR0(double a, double b) 
-	{
-		return MathFunctions::min(a, b);
-	}
-	
-	KOKKOS_INLINE_FUNCTION
-	double sumR0(double a, double b) 
-	{
-		return a + b;
-	}
-	
-	KOKKOS_INLINE_FUNCTION
-	double prodR0(double a, double b) 
-	{
-		return a * b;
-	}
-	
-	KOKKOS_INLINE_FUNCTION
-	double maxR0(double a, double b) 
-	{
-		return MathFunctions::max(a, b);
 	}
 
 	void dumpVariables(int iteration)
