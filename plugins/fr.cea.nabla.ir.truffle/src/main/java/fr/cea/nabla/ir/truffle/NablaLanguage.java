@@ -21,6 +21,7 @@ import com.oracle.truffle.api.source.Source;
 import fr.cea.nabla.ir.truffle.nodes.local.NablaLexicalScope;
 import fr.cea.nabla.ir.truffle.parser.NablaParser;
 import fr.cea.nabla.ir.truffle.runtime.NablaContext;
+import fr.cea.nabla.ir.truffle.tools.NablaTags;
 import fr.cea.nabla.ir.truffle.values.NablaOutput;
 import fr.cea.nabla.ir.truffle.values.NablaValue;
 
@@ -35,7 +36,8 @@ import fr.cea.nabla.ir.truffle.values.NablaValue;
 		StandardTags.CallTag.class,
 		StandardTags.StatementTag.class,
 		StandardTags.RootTag.class,
-		StandardTags.ExpressionTag.class})
+		StandardTags.ExpressionTag.class,
+		NablaTags.DumpTag.class})
 public final class NablaLanguage extends TruffleLanguage<NablaContext> {
 	
 	public static final String ID = "nabla";

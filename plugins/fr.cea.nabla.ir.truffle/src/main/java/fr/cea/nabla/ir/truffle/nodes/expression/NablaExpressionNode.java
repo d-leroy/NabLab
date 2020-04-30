@@ -2,12 +2,8 @@ package fr.cea.nabla.ir.truffle.nodes.expression;
 
 import com.oracle.truffle.api.dsl.TypeSystemReference;
 import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.instrumentation.GenerateWrapper;
-import com.oracle.truffle.api.instrumentation.InstrumentableNode;
-import com.oracle.truffle.api.instrumentation.ProbeNode;
 import com.oracle.truffle.api.instrumentation.StandardTags;
 import com.oracle.truffle.api.instrumentation.Tag;
-import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
 
@@ -30,10 +26,21 @@ import fr.cea.nabla.ir.truffle.values.NV4Real;
 
 @TypeSystemReference(NablaTypes.class)
 @NodeInfo(description = "The abstract base node for all expressions")
-@GenerateWrapper
-public abstract class NablaExpressionNode extends Node implements NablaNode, InstrumentableNode {
+public abstract class NablaExpressionNode extends NablaNode {
 
 	private boolean hasExpressionTag;
+	
+	@Override
+    public boolean hasTag(Class<? extends Tag> tag) {
+        if (tag == StandardTags.ExpressionTag.class) {
+            return hasExpressionTag;
+        }
+        return false;
+    }
+	
+	public final void addExpressionTag() {
+        hasExpressionTag = true;
+    }
 	
 	public NV0Bool executeNV0Bool(VirtualFrame frame) throws UnexpectedResultException {
 		return NablaTypesGen.expectNV0Bool(executeGeneric(frame));
@@ -86,29 +93,5 @@ public abstract class NablaExpressionNode extends Node implements NablaNode, Ins
 	public NV4Real executeNV4Real(VirtualFrame frame) throws UnexpectedResultException {
 		return NablaTypesGen.expectNV4Real(executeGeneric(frame));
 	}
-	
-	public abstract Object executeGeneric(VirtualFrame frame);
-
-	@Override
-	public WrapperNode createWrapper(ProbeNode probeNode) {
-		return new NablaExpressionNodeWrapper(this, probeNode);
-	}
-	
-	@Override
-	public boolean isInstrumentable() {
-		return true;
-	}
-	
-	@Override
-    public boolean hasTag(Class<? extends Tag> tag) {
-        if (tag == StandardTags.ExpressionTag.class) {
-            return hasExpressionTag;
-        }
-        return false;
-    }
-	
-	public final void addExpressionTag() {
-        hasExpressionTag = true;
-    }
 	
 }

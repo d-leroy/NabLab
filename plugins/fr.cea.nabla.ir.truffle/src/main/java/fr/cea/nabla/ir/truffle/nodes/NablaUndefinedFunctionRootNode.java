@@ -53,7 +53,7 @@ import fr.cea.nabla.ir.truffle.runtime.NablaUndefinedNameException;
  */
 public class NablaUndefinedFunctionRootNode extends NablaRootNode {
     public NablaUndefinedFunctionRootNode(NablaLanguage language, String name) {
-        super(language, null, name);
+        super(language, null, null, null, name);
     }
 
     @Override

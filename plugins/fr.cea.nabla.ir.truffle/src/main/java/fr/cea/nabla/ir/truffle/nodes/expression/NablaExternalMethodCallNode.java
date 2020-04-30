@@ -16,7 +16,6 @@ import fr.cea.nabla.ir.truffle.values.BoxValueNode;
 import fr.cea.nabla.ir.truffle.values.BoxValueNodeGen;
 import fr.cea.nabla.ir.truffle.values.CreateNablaValueNode;
 import fr.cea.nabla.ir.truffle.values.CreateNablaValueNodeGen;
-import fr.cea.nabla.ir.truffle.values.FunctionCallHelper;
 import fr.cea.nabla.ir.truffle.values.NablaValue;
 import fr.cea.nabla.ir.truffle.values.UnboxValueNode;
 import fr.cea.nabla.ir.truffle.values.UnboxValueNodeGen;
@@ -55,8 +54,8 @@ public class NablaExternalMethodCallNode extends NablaExpressionNode {
 			argumentValues[i] = unboxArgNodes[i].execute(frame);
 		}
 
-		final NablaValue nablaResult = createNablaValueNode
-				.execute(unboxNode.execute(invokeNode.execute(receiverObject, methodName, argumentValues)));
+		final Object invokeResult = invokeNode.execute(receiverObject, methodName, argumentValues);
+		final NablaValue nablaResult = createNablaValueNode.execute(unboxNode.execute(invokeResult));
 		return nablaResult;
 	}
 

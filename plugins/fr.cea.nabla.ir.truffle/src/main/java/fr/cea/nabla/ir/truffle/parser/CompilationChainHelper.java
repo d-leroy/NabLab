@@ -71,16 +71,15 @@ public class CompilationChainHelper {
 			String _string_1 = new String(_readAllBytes_1);
 			this.nablaParseHelper.parse(_string_1, rs);
 			NablaModule nablaModule = this.nablaParseHelper.parse(model, rs);
+			this._validationTestHelper.assertNoErrors(nablaModule);
 			rs.getResources().add(nablaModule.eResource());
 			NablagenModule nablaGenModule = this.nablagenParseHelper.parse(genModel, rs);
 			this._validationTestHelper.assertNoErrors(nablaGenModule);
 			Workflow workflow = nablaGenModule.getWorkflow();
 			if ((workflow != null)) {
 				WorkflowInterpreter interpretor = this.workflowInterpreterProvider.get();
-				final IWorkflowModelChangedListener _function = new IWorkflowModelChangedListener() {
-					public void modelChanged(final IrModule module) {
-						CompilationChainHelper.this.irModule = module;
-					}
+				final IWorkflowModelChangedListener _function = (IrModule module) -> {
+					this.irModule = module;
 				};
 				interpretor.addWorkflowModelChangedListener(_function);
 				interpretor.launch(workflow, (pluginsPath + "fr.cea.nabla.ui/examples/NablaExamples"));

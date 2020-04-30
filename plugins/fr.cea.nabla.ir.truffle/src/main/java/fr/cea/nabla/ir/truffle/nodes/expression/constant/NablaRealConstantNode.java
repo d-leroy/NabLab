@@ -19,9 +19,4 @@ public abstract class NablaRealConstantNode extends NablaExpressionNode {
 	public NV0Real executeNV0Real(VirtualFrame frame) {
 		return this.value;
 	}
-	
-	@Override
-	public boolean isInstrumentable() {
-		return false;
-	}
 }

@@ -1,5 +1,13 @@
 package fr.cea.nabla.ir.truffle.runtime;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Source;
+import org.graalvm.polyglot.Value;
+
+import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 
@@ -9,7 +17,11 @@ import fr.cea.nabla.javalib.mesh.CartesianMesh2DGenerator;
 import fr.cea.nabla.javalib.mesh.Quad;
 
 public class MeshWrapper {
-	
+
+	@CompilationFinal
+	private Value meshLibrary;
+	@CompilationFinal
+	private Value meshWrapper;
 	@CompilationFinal
 	private CartesianMesh2D mesh;
 
@@ -18,20 +30,45 @@ public class MeshWrapper {
 	}
 
 	@TruffleBoundary
-	public MeshWrapper(final int nbXQuads, final int nbYQuads, final double xSize, final double ySize) {
+	public void initialize(final int nbXQuads, final int nbYQuads, final double xSize, final double ySize) {
+		assert (this.meshWrapper == null);
+		CompilerDirectives.transferToInterpreterAndInvalidate();
 		this.mesh = CartesianMesh2DGenerator.generate(nbXQuads, nbYQuads, xSize, ySize);
+//		final Context polyglot = Context.getCurrent();
+//		final File file = new File(
+//				System.getProperty("user.dir") + "/../../plugins/fr.cea.nabla.ir.truffle/src/resources/MeshWrapper.so");
+//		Source source;
+//		try {
+//			source = Source.newBuilder("llvm", file).build();
+//			meshLibrary = polyglot.eval(source);
+//			meshWrapper = meshLibrary.getMember("get_wrapper").execute(nbXQuads, nbYQuads, xSize, ySize);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			throw NablaInternalError.shouldNotReachHere();
+//		}
 	}
 
-	@TruffleBoundary
-	public void initialize(final int nbXQuads, final int nbYQuads, final double xSize, final double ySize) {
-		assert(this.mesh == null);
-		this.mesh = CartesianMesh2DGenerator.generate(nbXQuads, nbYQuads, xSize, ySize);
+	public Value getMesh() {
+		return meshWrapper;
+	}
+
+	// FIXME ugly getNb
+	public Value connectivityGetter(String connectivityName) {
+		final String getterName;
+		if (connectivityName.equals("nodes") || connectivityName.equals("cells")) {
+			getterName = "getNb" + connectivityName.substring(0, 1).toUpperCase() + connectivityName.substring(1);
+		} else {
+			getterName = "get" + connectivityName.substring(0, 1).toUpperCase() + connectivityName.substring(1);
+		}
+		return meshLibrary.getMember(getterName);
 	}
 
 	@TruffleBoundary
 	public int[] getElements(final String connectivityName, final int[] args) {
 		int[] _switchResult = null;
-		if (connectivityName != null) {
+		if (connectivityName == null || connectivityName.isEmpty() ) {
+			throw new IllegalArgumentException("Connectivity name can't be null or empty");
+		} else {
 			switch (connectivityName) {
 			case "nodes":
 				_switchResult = this.mesh.getNodes();
@@ -66,8 +103,6 @@ public class MeshWrapper {
 			default:
 				throw new RuntimeException((("Not implemented yet (" + connectivityName) + ")"));
 			}
-		} else {
-			throw new RuntimeException((("Not implemented yet (" + connectivityName) + ")"));
 		}
 		return _switchResult;
 	}

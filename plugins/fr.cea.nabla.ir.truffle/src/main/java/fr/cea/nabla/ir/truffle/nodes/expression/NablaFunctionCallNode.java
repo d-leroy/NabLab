@@ -7,7 +7,7 @@ import com.oracle.truffle.api.instrumentation.Tag;
 import com.oracle.truffle.api.nodes.DirectCallNode;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 
-import fr.cea.nabla.ir.truffle.nodes.NablaFunctionNode;
+import fr.cea.nabla.ir.truffle.nodes.NablaRootNode;
 import fr.cea.nabla.ir.truffle.values.NablaValue;
 
 public class NablaFunctionCallNode extends NablaExpressionNode {
@@ -17,7 +17,7 @@ public class NablaFunctionCallNode extends NablaExpressionNode {
 	@Child
 	private DirectCallNode callNode;
 
-	public NablaFunctionCallNode(NablaFunctionNode functionNode, NablaExpressionNode[] argumentNodes) {
+	public NablaFunctionCallNode(NablaRootNode functionNode, NablaExpressionNode[] argumentNodes) {
 		this.argumentNodes = argumentNodes;
 		this.callNode = Truffle.getRuntime().createDirectCallNode(Truffle.getRuntime().createCallTarget(functionNode));
 	}

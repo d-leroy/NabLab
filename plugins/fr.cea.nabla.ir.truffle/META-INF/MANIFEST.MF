@@ -21,5 +21,6 @@ Export-Package: fr.cea.nabla.ir.truffle,
  fr.cea.nabla.ir.truffle.nodes.local,
  fr.cea.nabla.ir.truffle.parser,
  fr.cea.nabla.ir.truffle.runtime,
+ fr.cea.nabla.ir.truffle.tools,
  fr.cea.nabla.ir.truffle.values
 Bundle-ClassPath: .

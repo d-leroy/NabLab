@@ -19,9 +19,4 @@ public abstract class NablaBoolConstantNode extends NablaExpressionNode {
 	public NV0Bool executeNV0Bool(VirtualFrame frame) {
 		return this.value;
 	}
-	
-	@Override
-	public boolean isInstrumentable() {
-		return false;
-	}
 }

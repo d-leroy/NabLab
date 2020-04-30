@@ -52,9 +52,4 @@ public abstract class NablaBool4ConstantNode extends NablaExpressionNode {
 
 		return cachedValue;
 	}
-
-	@Override
-	public boolean isInstrumentable() {
-		return false;
-	}
 }

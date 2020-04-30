@@ -19,13 +19,15 @@ import fr.cea.nabla.ir.truffle.values.NV1Int;
 public abstract class NablaLoopNode extends NablaInstructionNode {
 
 	private final FrameSlot indexSlot;
+	private final FrameSlot counterSlot;
 
 	@Child private NablaInstructionNode body;
 	
 	protected final Assumption lengthUnchanged = Truffle.getRuntime().createAssumption();
 	
-	public NablaLoopNode(FrameSlot indexSlot, NablaInstructionNode body) {
+	public NablaLoopNode(FrameSlot indexSlot, FrameSlot counterSlot, NablaInstructionNode body) {
 		this.indexSlot = indexSlot;
+		this.counterSlot = counterSlot;
 		this.body = body;
 	}
 
@@ -34,6 +36,10 @@ public abstract class NablaLoopNode extends NablaInstructionNode {
 		CompilerDirectives.isPartialEvaluationConstant(cachedCount);
 		frame.setObject(indexSlot, new NV0Int(0));
 		frame.getFrameDescriptor().setFrameSlotKind(indexSlot, FrameSlotKind.Object);
+		if (counterSlot != null) {
+			frame.setObject(counterSlot, new NV0Int(0));
+			frame.getFrameDescriptor().setFrameSlotKind(counterSlot, FrameSlotKind.Object);
+		}
 		body.executeGeneric(frame);
 		//================================
 //		final int offset = 1;
@@ -53,9 +59,15 @@ public abstract class NablaLoopNode extends NablaInstructionNode {
 		//================================
 		for (int i = 1; i < cachedCount - 1; i++) {
 			frame.setObject(indexSlot, new NV0Int(i));
+			if (counterSlot != null) {
+				frame.setObject(counterSlot, new NV0Int(i));
+			}
 			body.executeGeneric(frame);
 		}
 		frame.setObject(indexSlot, new NV0Int(cachedCount - 1));
+		if (counterSlot != null) {
+			frame.setObject(counterSlot, new NV0Int(cachedCount - 1));
+		}
 		return body.executeGeneric(frame);
 	}
 
@@ -65,12 +77,22 @@ public abstract class NablaLoopNode extends NablaInstructionNode {
 		CompilerDirectives.isPartialEvaluationConstant(iterationCount);
 		frame.setObject(indexSlot, new NV0Int(0));
 		frame.getFrameDescriptor().setFrameSlotKind(indexSlot, FrameSlotKind.Object);
+		if (counterSlot != null) {
+			frame.setObject(counterSlot, new NV0Int(0));
+			frame.getFrameDescriptor().setFrameSlotKind(counterSlot, FrameSlotKind.Object);
+		}
 		body.executeGeneric(frame);
 		for (int i = 1; i < iterationCount - 1; i++) {
 			frame.setObject(indexSlot, new NV0Int(i));
+			if (counterSlot != null) {
+				frame.setObject(counterSlot, new NV0Int(i));
+			}
 			body.executeGeneric(frame);
 		}
 		frame.setObject(indexSlot, new NV0Int(iterationCount - 1));
+		if (counterSlot != null) {
+			frame.setObject(counterSlot, new NV0Int(iterationCount - 1));
+		}
 		return body.executeGeneric(frame);
 	}
 
@@ -79,6 +101,10 @@ public abstract class NablaLoopNode extends NablaInstructionNode {
 		CompilerDirectives.isPartialEvaluationConstant(cachedCount);
 		frame.setObject(indexSlot, new NV0Int(0));
 		frame.getFrameDescriptor().setFrameSlotKind(indexSlot, FrameSlotKind.Object);
+		if (counterSlot != null) {
+			frame.setObject(counterSlot, new NV0Int(0));
+			frame.getFrameDescriptor().setFrameSlotKind(counterSlot, FrameSlotKind.Object);
+		}
 		body.executeGeneric(frame);
 		//================================
 //		final int offset = 1;
@@ -98,9 +124,15 @@ public abstract class NablaLoopNode extends NablaInstructionNode {
 		//================================
 		for (int i = 1; i < cachedCount - 1; i++) {
 			frame.setObject(indexSlot, new NV0Int(i));
+			if (counterSlot != null) {
+				frame.setObject(counterSlot, new NV0Int(i));
+			}
 			body.executeGeneric(frame);
 		}
-		frame.setObject(indexSlot, new NV0Int(cachedCount-1));
+		frame.setObject(indexSlot, new NV0Int(cachedCount - 1));
+		if (counterSlot != null) {
+			frame.setObject(counterSlot, new NV0Int(cachedCount - 1));
+		}
 		return body.executeGeneric(frame);
 	}
 	
@@ -111,12 +143,22 @@ public abstract class NablaLoopNode extends NablaInstructionNode {
 		CompilerDirectives.isPartialEvaluationConstant(iterationCount);
 		frame.setObject(indexSlot, new NV0Int(0));
 		frame.getFrameDescriptor().setFrameSlotKind(indexSlot, FrameSlotKind.Object);
+		if (counterSlot != null) {
+			frame.setObject(counterSlot, new NV0Int(0));
+			frame.getFrameDescriptor().setFrameSlotKind(counterSlot, FrameSlotKind.Object);
+		}
 		body.executeGeneric(frame);
 		for (int i = 1; i < iterationCount - 1; i++) {
 			frame.setObject(indexSlot, new NV0Int(i));
+			if (counterSlot != null) {
+				frame.setObject(counterSlot, new NV0Int(i));
+			}
 			body.executeGeneric(frame);
 		}
-		frame.setObject(indexSlot, new NV0Int(iterationCount-1));
+		frame.setObject(indexSlot, new NV0Int(iterationCount - 1));
+		if (counterSlot != null) {
+			frame.setObject(counterSlot, new NV0Int(iterationCount - 1));
+		}
 		return body.executeGeneric(frame);
 	}
 	

@@ -7,6 +7,8 @@ import org.graalvm.polyglot.PolyglotAccess;
 import org.graalvm.polyglot.Value;
 import org.junit.Assert;
 
+import fr.cea.nabla.ir.truffle.tools.NablaDumpVariablesInstrument;
+
 public class TruffleTestUtils {
 
 	public static final double DOUBLE_TOLERANCE = 1e-15;
@@ -14,31 +16,35 @@ public class TruffleTestUtils {
 	private static final String DEFAULT_GEN_MODEL =
 		"with Test.*;\n" + 
 		"\n" + 
-		"		workflow TestDefaultGenerationChain transforms Test\n" + 
-		"		{\n" + 
-		"			Nabla2Ir nabla2ir\n" + 
-		"			{\n" + 
-		"				timeVariable = t;\n" + 
-		"				deltatVariable = δt;\n" + 
-		"				nodeCoordVariable = X;\n" + 
-		"			}\n" + 
-		"			ReplaceUtf replaceUtf follows nabla2ir\n" + 
-		"			{\n" + 
-		"			}\n" + 
-		"			ReplaceReductions replaceReductions follows replaceUtf\n" + 
-		"			{\n" + 
-		"			}\n" + 
-		"			OptimizeConnectivities optimizeConnectivities follows replaceReductions\n" + 
-		"			{\n" + 
-		"				connectivities = nodes;\n" + 
-		"			}\n" + 
-		"			FillHLTs fillHlts follows optimizeConnectivities\n" + 
-		"			{\n" + 
-		"			}\n" + 
-		"		}";
-	
+		"workflow TestDefaultGenerationChain transforms Test\n" + 
+		"{\n" + 
+		"	Nabla2Ir nabla2ir\n" + 
+		"	{\n" + 
+		"		timeVariable = t;\n" + 
+		"		deltatVariable = δt;\n" + 
+		"		nodeCoordVariable = X;\n" + 
+		"	}\n" + 
+		"	ReplaceUtf replaceUtf follows nabla2ir\n" + 
+		"	{\n" + 
+		"	}\n" + 
+		"	ReplaceReductions replaceReductions follows replaceUtf\n" + 
+		"	{\n" + 
+		"	}\n" + 
+		"	OptimizeConnectivities optimizeConnectivities follows replaceReductions\n" + 
+		"	{\n" + 
+		"		connectivities = nodes;\n" + 
+		"	}\n" + 
+		"	FillHLTs fillHlts follows optimizeConnectivities\n" + 
+		"	{\n" + 
+		"	}\n" + 
+		"}";
+
 	public static Value executeModel(String model) {
 		return executeModel(model, DEFAULT_GEN_MODEL);
+	}
+	
+	public static Value executeModel(String model, Handler handler) {
+		return executeModel(model, DEFAULT_GEN_MODEL, handler);
 	}
 	
 	public static Value executeModel(String model, String genModel) {
@@ -57,6 +63,7 @@ public class TruffleTestUtils {
 				.logHandler(handler)
 				.option("log.nabla.fr.cea.nabla.ir.truffle.nodes.job.NablaTimeLoopJobNode.level", "FINE")
 				.option("nabla.Properties.genModel", genModel)
+				.option(NablaDumpVariablesInstrument.ID, "true")
 				.build();
 		return context.eval("nabla", model);
 	}

@@ -27,7 +27,7 @@ public abstract class GetFrameNode extends Node {
 	protected int depth = 0;
 	@CompilationFinal
 	private MaterializedFrame globalFrame;
-	// FIXME: rely on FrameDescriptor instead of FrameSlot
+	// FIXME rely on FrameDescriptor instead of FrameSlot
 	private final FrameSlot slot;
 
 	public GetFrameNode(FrameSlot slot) {
@@ -75,6 +75,7 @@ public abstract class GetFrameNode extends Node {
 		return result;
 	}
 
+	// FIXME shouldn't we get the assumption from the closest rootnode?
 	@ExplodeLoop
 	protected Assumption getResultFrameStable(VirtualFrame frame) {
 		Frame result = frame;

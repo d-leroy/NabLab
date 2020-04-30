@@ -45,9 +45,4 @@ public abstract class NablaReal1ConstantNode extends NablaExpressionNode {
 		}
 		return new NV1Real(computedValues);
 	}
-	
-	@Override
-	public boolean isInstrumentable() {
-		return false;
-	}
 }
