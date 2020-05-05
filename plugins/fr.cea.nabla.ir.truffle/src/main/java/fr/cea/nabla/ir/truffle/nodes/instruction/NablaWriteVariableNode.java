@@ -36,91 +36,91 @@ public abstract class NablaWriteVariableNode extends NablaInstructionNode {
 
 	@Specialization
 	protected Object doWrite(VirtualFrame frame, NV0Bool value, Frame toWrite) {
-		toWrite.setObject(slot, value);
+		toWrite.setObject(slot, new NV0Bool(value.isData()));
 		return value;
 	}
 
 	@Specialization
 	protected Object doWrite(VirtualFrame frame, NV1Bool value, Frame toWrite) {
-		toWrite.setObject(slot, value);
+		toWrite.setObject(slot, new NV1Bool(value.getData().clone()));
 		return value;
 	}
 
 	@Specialization
 	protected Object doWrite(VirtualFrame frame, NV2Bool value, Frame toWrite) {
-		toWrite.setObject(slot, value);
+		toWrite.setObject(slot, new NV2Bool(value.getData().clone()));
 		return value;
 	}
 
 	@Specialization
 	protected Object doWrite(VirtualFrame frame, NV3Bool value, Frame toWrite) {
-		toWrite.setObject(slot, value);
+		toWrite.setObject(slot, new NV3Bool(value.getData().clone()));
 		return value;
 	}
 
 	@Specialization
 	protected Object doWrite(VirtualFrame frame, NV4Bool value, Frame toWrite) {
-		toWrite.setObject(slot, value);
+		toWrite.setObject(slot, new NV4Bool(value.getData().clone()));
 		return value;
 	}
 
 	@Specialization
 	protected Object doWrite(VirtualFrame frame, NV0Int value, Frame toWrite) {
-		toWrite.setObject(slot, value);
+		toWrite.setObject(slot, new NV0Int(value.getData()));
 		return value;
 	}
 
 	@Specialization
 	protected Object doWrite(VirtualFrame frame, NV1Int value, Frame toWrite) {
-		toWrite.setObject(slot, value);
+		toWrite.setObject(slot, new NV1Int(value.getData().clone()));
 		return value;
 	}
 
 	@Specialization
 	protected Object doWrite(VirtualFrame frame, NV2Int value, Frame toWrite) {
-		toWrite.setObject(slot, value);
+		toWrite.setObject(slot, new NV2Int(value.getData().clone()));
 		return value;
 	}
 
 	@Specialization
 	protected Object doWrite(VirtualFrame frame, NV3Int value, Frame toWrite) {
-		toWrite.setObject(slot, value);
+		toWrite.setObject(slot, new NV3Int(value.getData().clone()));
 		return value;
 	}
 
 	@Specialization
 	protected Object doWrite(VirtualFrame frame, NV4Int value, Frame toWrite) {
-		toWrite.setObject(slot, value);
+		toWrite.setObject(slot, new NV4Int(value.getData().clone()));
 		return value;
 	}
 
 	@Specialization
 	protected Object doWrite(VirtualFrame frame, NV0Real value, Frame toWrite) {
-		toWrite.setObject(slot, value);
+		toWrite.setObject(slot, new NV0Real(value.getData()));
 		return value;
 	}
 
 	@Specialization
 	protected Object doWrite(VirtualFrame frame, NV1Real value, Frame toWrite) {
-		toWrite.setObject(slot, value);
+		toWrite.setObject(slot, new NV1Real(value.getData().clone()));
 		return value;
 	}
 
 	@Specialization
 	protected Object doWrite(VirtualFrame frame, NV2Real value, Frame toWrite) {
-		toWrite.setObject(slot, value);
+		toWrite.setObject(slot, new NV2Real(value.getData().clone()));
 		return value;
 	}
 
 	@Specialization
 	protected Object doWrite(VirtualFrame frame, NV3Real value, Frame toWrite) {
-		toWrite.setObject(slot, value);
+		toWrite.setObject(slot, new NV3Real(value.getData().clone()));
 		return value;
 	}
 
 	@Specialization
 	protected Object doWrite(VirtualFrame frame, NV4Real value, Frame toWrite) {
-		toWrite.setObject(slot, value);
+		toWrite.setObject(slot, new NV4Real(value.getData().clone()));
 		return value;
 	}
 	

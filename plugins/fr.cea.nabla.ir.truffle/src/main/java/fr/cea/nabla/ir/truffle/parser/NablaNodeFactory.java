@@ -150,7 +150,6 @@ import fr.cea.nabla.ir.truffle.nodes.instruction.NablaInstructionBlockNode;
 import fr.cea.nabla.ir.truffle.nodes.instruction.NablaInstructionNode;
 import fr.cea.nabla.ir.truffle.nodes.instruction.NablaLoopNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.instruction.NablaReturnNodeGen;
-import fr.cea.nabla.ir.truffle.nodes.instruction.NablaWriteArrayNode;
 import fr.cea.nabla.ir.truffle.nodes.instruction.NablaWriteArrayNodeGen;
 import fr.cea.nabla.ir.truffle.nodes.instruction.NablaWriteVariableNode;
 import fr.cea.nabla.ir.truffle.nodes.instruction.NablaWriteVariableNodeGen;
@@ -1175,12 +1174,12 @@ public class NablaNodeFactory {
 		return getWriteVariableNode(frameSlot, value);
 	}
 
-	private NablaWriteArrayNode createNablaWriteArrayNode(String name, NablaExpressionNode[] indices,
+	private NablaInstructionNode createNablaWriteArrayNode(String name, NablaExpressionNode[] indices,
 			NablaExpressionNode value) {
 		return createNablaWriteArrayNode(name, indices, value, null);
 	}
 
-	private NablaWriteArrayNode createNablaWriteArrayNode(String name, NablaExpressionNode[] indices,
+	private NablaInstructionNode createNablaWriteArrayNode(String name, NablaExpressionNode[] indices,
 			NablaExpressionNode value, Integer paramaterIndex) {
 		final FrameSlot frameSlot = lexicalScope.locals.get(name);
 		return NablaWriteArrayNodeGen.create(frameSlot, indices, value, GetFrameNodeGen.create(frameSlot));

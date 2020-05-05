@@ -26,7 +26,7 @@ import fr.cea.nabla.ir.truffle.values.NV4Real;
 import fr.cea.nabla.ir.truffle.values.NablaValue;
 
 @NodeChild(value = "value", type = NablaExpressionNode.class)
-@NodeChild(value = "frameToWrite", type = GetFrameNode.class)
+@NodeChild(value = "frameToRead", type = GetFrameNode.class)
 public abstract class NablaWriteArrayNode extends NablaInstructionNode {
 
 	private final FrameSlot slot;
@@ -37,121 +37,93 @@ public abstract class NablaWriteArrayNode extends NablaInstructionNode {
 	@CompilationFinal
 	private boolean initializationRequired = true;
 	
-
 	public NablaWriteArrayNode(FrameSlot slot, NablaExpressionNode[] indices) {
 		this.slot = slot;
 		this.indices = indices;
 	}
 		
 	@Specialization(rewriteOn = NablaInitializationPerformedException.class)
-	public Object write(VirtualFrame frame, Object value, Frame toWrite) throws NablaInitializationPerformedException {
+	public Object write(VirtualFrame frame, Object value, Frame toRead) throws NablaInitializationPerformedException {
 		CompilerDirectives.transferToInterpreterAndInvalidate();
-		NablaValue array = (NablaValue) FrameUtil.getObjectSafe(toWrite, slot);
+		NablaValue array = (NablaValue) FrameUtil.getObjectSafe(toRead, slot);
 		this.arrayClass = array.getClass();
 		this.initializationRequired = false;
 		throw new NablaInitializationPerformedException();
 	}
 	
 	@Specialization(guards = "isNV1Int()")
-	protected NV1Int writeNV1Int(VirtualFrame frame, NV0Int value, Frame toWrite) {
-		NV1Int array = NablaTypesGen.asNV1Int(FrameUtil.getObjectSafe(toWrite, slot));
+	protected NV1Int writeNV1Int(VirtualFrame frame, NV0Int value, Frame toRead) {
+		NV1Int array = NablaTypesGen.asNV1Int(FrameUtil.getObjectSafe(toRead, slot));
 		final int idx = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
-		final int[] result = array.getData().clone();
-		result[idx] = value.getData();
-		array = new NV1Int(result);
-		toWrite.setObject(slot, array);
+		array.getData()[idx] = value.getData();
 		return array;
 	}
 	
 	@Specialization(guards = "isNV2Int()")
-	protected NV2Int writeNV2Int(VirtualFrame frame, NV0Int value, Frame toWrite) {
-		NV2Int array = NablaTypesGen.asNV2Int(FrameUtil.getObjectSafe(toWrite, slot));
+	protected NV2Int writeNV2Int(VirtualFrame frame, NV0Int value, Frame toRead) {
+		NV2Int array = NablaTypesGen.asNV2Int(FrameUtil.getObjectSafe(toRead, slot));
 		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
 		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
-		final int[][] result = array.getData().clone();
-		result[idx1][idx2] = value.getData();
-		array = new NV2Int(result);
-		toWrite.setObject(slot, array);
+		array.getData()[idx1][idx2] = value.getData();
 		return array;
 	}
 	
 	@Specialization(guards = "isNV2Int()")
-	protected NV2Int writeNV2Int(VirtualFrame frame, NV1Int value, Frame toWrite) {
-		NV2Int array = NablaTypesGen.asNV2Int(FrameUtil.getObjectSafe(toWrite, slot));
+	protected NV2Int writeNV2Int(VirtualFrame frame, NV1Int value, Frame toRead) {
+		NV2Int array = NablaTypesGen.asNV2Int(FrameUtil.getObjectSafe(toRead, slot));
 		final int idx = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
-		final int[][] result = array.getData().clone();
-		result[idx] = value.getData();
-		array = new NV2Int(result);
-		toWrite.setObject(slot, array);
+		array.getData()[idx] = value.getData();
 		return array;
 	}
 	
 	@Specialization(guards = "isNV1Real()")
-	protected NV1Real writeNV1Real(VirtualFrame frame, NV0Real value, Frame toWrite) {
-		NV1Real array = NablaTypesGen.asNV1Real(FrameUtil.getObjectSafe(toWrite, slot));
+	protected NV1Real writeNV1Real(VirtualFrame frame, NV0Real value, Frame toRead) {
+		NV1Real array = NablaTypesGen.asNV1Real(FrameUtil.getObjectSafe(toRead, slot));
 		final int idx = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
-		final double[] result = array.getData().clone();
-		result[idx] = value.getData();
-		array = new NV1Real(result);
-		toWrite.setObject(slot, array);
+		array.getData()[idx] = value.getData();
 		return array;
 	}
 	
 	@Specialization(guards = "isNV2Real()")
-	protected NV2Real writeNV2Real(VirtualFrame frame, NV0Real value, Frame toWrite) {
-		NV2Real array = NablaTypesGen.asNV2Real(FrameUtil.getObjectSafe(toWrite, slot));
+	protected NV2Real writeNV2Real(VirtualFrame frame, NV0Real value, Frame toRead) {
+		NV2Real array = NablaTypesGen.asNV2Real(FrameUtil.getObjectSafe(toRead, slot));
 		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
 		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
-		final double[][] result = array.getData().clone();
-		result[idx1][idx2] = value.getData();
-		array = new NV2Real(result);
-		toWrite.setObject(slot, array);
+		array.getData()[idx1][idx2] = value.getData();
 		return array;
 	}
 	
 	@Specialization(guards = "isNV2Real()")
-	protected NV2Real writeNV2Real(VirtualFrame frame, NV1Real value, Frame toWrite) {
-		NV2Real array = NablaTypesGen.asNV2Real(FrameUtil.getObjectSafe(toWrite, slot));
+	protected NV2Real writeNV2Real(VirtualFrame frame, NV1Real value, Frame toRead) {
+		NV2Real array = NablaTypesGen.asNV2Real(FrameUtil.getObjectSafe(toRead, slot));
 		final int idx = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
-		final double[][] result = array.getData().clone();
-		result[idx] = value.getData();
-		array = new NV2Real(result);
-		toWrite.setObject(slot, array);
+		array.getData()[idx] = value.getData();
 		return array;
 	}
 	
 	@Specialization(guards = "isNV3Real()")
-	protected NV3Real writeNV3Real(VirtualFrame frame, NV1Real value, Frame toWrite) {
-		NV3Real array = NablaTypesGen.asNV3Real(FrameUtil.getObjectSafe(toWrite, slot));
+	protected NV3Real writeNV3Real(VirtualFrame frame, NV1Real value, Frame toRead) {
+		NV3Real array = NablaTypesGen.asNV3Real(FrameUtil.getObjectSafe(toRead, slot));
 		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
 		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
-		final double[][][] result = array.getData().clone();
-		result[idx1][idx2] = value.getData();
-		array = new NV3Real(result);
-		toWrite.setObject(slot, array);
+		array.getData()[idx1][idx2] = value.getData();
 		return array;
 	}
 	
 	@Specialization(guards = "isNV3Real()")
-	protected NV3Real writeNV3Real(VirtualFrame frame, NV2Real value, Frame toWrite) {
-		NV3Real array = NablaTypesGen.asNV3Real(FrameUtil.getObjectSafe(toWrite, slot));
+	protected NV3Real writeNV3Real(VirtualFrame frame, NV2Real value, Frame toRead) {
+		NV3Real array = NablaTypesGen.asNV3Real(FrameUtil.getObjectSafe(toRead, slot));
 		final int idx = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
-		final double[][][] result = array.getData().clone();
-		result[idx] = value.getData();
-		array = new NV3Real(result);
-		toWrite.setObject(slot, array);
+		array.getData()[idx] = value.getData();
 		return array;
 	}
 	
 	@Specialization(guards = "isNV4Real()")
-	protected NV4Real writeNV4Real(VirtualFrame frame, NV2Real value, Frame toWrite) {
-		NV4Real array = NablaTypesGen.asNV4Real(FrameUtil.getObjectSafe(toWrite, slot));
+	protected NV4Real writeNV4Real(VirtualFrame frame, NV2Real value, Frame toRead) {
+		NV4Real array = NablaTypesGen.asNV4Real(FrameUtil.getObjectSafe(toRead, slot));
 		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
 		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
-		final double[][][][] result = array.getData().clone();
-		result[idx1][idx2] = value.getData();
-		array = new NV4Real(result);
-		toWrite.setObject(slot, array);
+		array.getData()[idx1][idx2] = value.getData();
 		return array;
 	}
 
