@@ -33,6 +33,7 @@ import org.eclipse.xtend.lib.annotations.Data
 import static extension fr.cea.nabla.ir.ContainerExtensions.*
 import static extension fr.cea.nabla.ir.IrTypeExtensions.*
 import static extension fr.cea.nabla.ir.generator.Utils.*
+import fr.cea.nabla.ir.ir.Function
 
 @Data
 class ExpressionContentProvider
@@ -67,7 +68,8 @@ class ExpressionContentProvider
 		switch t
 		{
 			case (t.scalar && t.primitive == PrimitiveType::INT): '''numeric_limits<int>::min()'''
-			case (t.scalar && t.primitive == PrimitiveType::REAL): '''numeric_limits<double>::min()'''
+			// Be careful at MIN_VALUE which is a positive value for double.
+			case (t.scalar && t.primitive == PrimitiveType::REAL): '''-numeric_limits<double>::max()'''
 			default: throw new Exception('Invalid expression Min for type: ' + t.label)
 		}
 	}
@@ -103,13 +105,21 @@ class ExpressionContentProvider
 	def dispatch CharSequence getContent(FunctionCall it)
 	{
 		if (function.name == 'solveLinearSystem')
-			'''«function.getCodeName("::")»(«FOR a:args SEPARATOR ', '»«a.content»«ENDFOR», cg_info)'''
+			'''«function.codeName»(«FOR a:args SEPARATOR ', '»«a.content»«ENDFOR», cg_info)'''
 		else
-			'''«function.getCodeName("::")»(«FOR a:args SEPARATOR ', '»«a.content»«ENDFOR»)'''
+			'''«function.codeName»(«FOR a:args SEPARATOR ', '»«a.content»«ENDFOR»)'''
 	}
 
 	def dispatch CharSequence getContent(ArgOrVarRef it)
 	'''«target.getCodeName('->')»«iteratorsContent»«FOR d:indices BEFORE '['  SEPARATOR '][' AFTER ']'»«d.content»«ENDFOR»'''
+
+	def getCodeName(Function it)
+	{
+		if (body === null)
+			if (provider == "Math") 'std::' + name
+			else provider + 'Functions::' + name
+		else name
+	}
 
 	private def dispatch CharSequence getInnerContent(Expression it) { content }
 	private def dispatch CharSequence getInnerContent(VectorConstant it)

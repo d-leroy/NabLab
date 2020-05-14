@@ -9,6 +9,10 @@
  *******************************************************************************/
 package fr.cea.nabla.ui.wizards
 
+import fr.cea.nabla.nablagen.CppKokkos
+import fr.cea.nabla.nablagen.CppKokkosTeamThread
+import fr.cea.nabla.nablagen.CppStlThread
+import fr.cea.nabla.nablagen.Java
 import fr.cea.nabla.ui.UiUtils
 import fr.cea.nabla.ui.internal.NablaActivator
 import java.io.ByteArrayInputStream
@@ -146,33 +150,33 @@ class NewNablaProjectWizard extends Wizard implements INewWizard
 				modulesFolder.create(false, true, monitor)
 
 				// Create src-gen-java folder
+				val srcGenFoldersByLanguage = new LinkedHashMap<String, IFolder>
 				val srcGenJavaFolder = project.getFolder("src-gen-java")
 				srcGenJavaFolder.create(false, true, monitor)
+				srcGenFoldersByLanguage.put(Java.name, srcGenJavaFolder)
 
 				// Create src-gen-cpp folder
 				val srcGenCppFolder = project.getFolder("src-gen-cpp")
 				srcGenCppFolder.create(false, true, monitor)
 
 				// Create all src-gen-cpp subfolders
-				val cppFoldersByProgrammingModel = new LinkedHashMap<String, IFolder>
-
 				val srcGenStlThreadFolder = srcGenCppFolder.getFolder("stl-thread")
 				srcGenStlThreadFolder.create(false, true, monitor)
-				cppFoldersByProgrammingModel.put("StlThread", srcGenStlThreadFolder)
+				srcGenFoldersByLanguage.put(CppStlThread.name, srcGenStlThreadFolder)
 
 				val srcGenKokkosFolder = srcGenCppFolder.getFolder("kokkos")
 				srcGenKokkosFolder.create(false, true, monitor)
-				cppFoldersByProgrammingModel.put("Kokkos", srcGenKokkosFolder)
+				srcGenFoldersByLanguage.put(CppKokkos.name, srcGenKokkosFolder)
 
 				val srcGenKokkosTeamFolder = srcGenCppFolder.getFolder("kokkos-team")
 				srcGenKokkosTeamFolder.create(false, true, monitor)
-				cppFoldersByProgrammingModel.put("KokkosTeamThread", srcGenKokkosTeamFolder)
+				srcGenFoldersByLanguage.put(CppKokkosTeamThread.name, srcGenKokkosTeamFolder)
 
 				// Create nabla and nablagen models
 				val nablaFile = modulesFolder.getFile(newProjectPage.moduleName + ".nabla")
 				createFile(nablaFile, getNablaModelContent(newProjectPage.moduleName), monitor)
 				val nablagenFile = modulesFolder.getFile(newProjectPage.moduleName + ".nablagen")
-				createFile(nablagenFile, getNablagenModelContent(newProjectPage.moduleName, srcGenJavaFolder, cppFoldersByProgrammingModel), monitor)
+				createFile(nablagenFile, getNablagenModelContent(newProjectPage.moduleName, srcGenFoldersByLanguage), monitor)
 
 				// Create META-INF folder and MANIFEST
 				val metaInf = project.getFolder("META-INF")
@@ -238,7 +242,7 @@ class NewNablaProjectWizard extends Wizard implements INewWizard
 	{
 		val javaProject = JavaCore.create(project)
 		val entries = new ArrayList<IClasspathEntry>()
-		entries.add(JavaCore.newContainerEntry(new Path("org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8")))
+		entries.add(JavaCore.newContainerEntry(new Path("org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11")))
 		entries.add(JavaCore.newContainerEntry(new Path("org.eclipse.pde.core.requiredPlugins")))
 		for (srcFolder : srcFolders)
 		{
@@ -285,75 +289,67 @@ class NewNablaProjectWizard extends Wizard implements INewWizard
 
 		set nodes: → { node };
 
-		const X_EDGE_LENGTH = 0.1;
-		const Y_EDGE_LENGTH = X_EDGE_LENGTH;
-		const X_EDGE_ELEMS = 20;
-		const Y_EDGE_ELEMS = 20;
+		option X_EDGE_LENGTH = 0.1;
+		option Y_EDGE_LENGTH = X_EDGE_LENGTH;
+		option X_EDGE_ELEMS = 20;
+		option Y_EDGE_ELEMS = 20;
 
-		const max_iter = 200;
-		const max_time = 1.0;
+		option maxIter = 200;
+		option maxTime = 1.0;
 
 		ℝ t, δt;
 		ℝ[2] X{nodes};
 		ℝ e{nodes};
 
-		iterate n while (n+1 < max_iter && t^{n+1} < max_time);
+		iterate n while (n+1 < maxIter && t^{n+1} < maxTime);
 	'''
 
-	private def getNablagenModelContent(String nablaModuleName, IFolder srcGenJavaFolder, HashMap<String, IFolder> cppFoldersByProgrammingModel)
+	private def getNablagenModelContent(String nablaModuleName, HashMap<String, IFolder> srcGenFoldersByLanguage)
 	'''
 		with «nablaModuleName».*;
 
-		workflow «nablaModuleName»GenerationChain transforms «nablaModuleName»
+		nablagen for «nablaModuleName»;
+
+		SimulationVariables
 		{
-			Nabla2Ir nabla2ir
-			{
-				timeVariable = t;
-				deltatVariable = δt;
-				nodeCoordVariable = X;
-			}
+			nodeCoord = X;
+			time = t;
+			timeStep = δt;
+			iterationMax = maxIter;
+			timeMax = maxTime;
+		}
 
-			TagPersistentVariables tagPersistentVariables follows nabla2ir
-			{ 
-				dumpedVariables = e as "Energy";
-				period = 1.0 for n;
-			}
+		VtkOutput
+		{
+			periodReferenceVariable = n;
+			outputVariables = e as "Energy";
+		}
 
-			ReplaceUtf replaceUtf follows tagPersistentVariables
-			{
-			}
+		Java
+		{
+			outputPath = "«srcGenFoldersByLanguage.get(Java.name).fullPath»";
+		}
 
-			ReplaceReductions replaceReductions follows replaceUtf
-			{
-			}
+		StlThread
+		{
+			outputPath = "«srcGenFoldersByLanguage.get(CppStlThread.name).fullPath»";
+			compiler = GNU;
+		//		compiler = LLVM;
+		//		compilerPath = "$ENV{HOME}/Utils/clang-9.0.0/bin/clang++";
+		}
 
-			OptimizeConnectivities optimizeConnectivities follows replaceReductions
-			{
-				connectivities = nodes;
-			}
+		Kokkos
+		{
+			outputPath = "«srcGenFoldersByLanguage.get(CppKokkos.name).fullPath»";
+			kokkosPath = "$ENV{HOME}/kokkos/kokkos-install";
+			compiler = GNU;
+		}
 
-			FillHLTs fillHlts follows optimizeConnectivities
-			{
-			}
-
-			Ir2Code javaGenerator follows fillHlts
-			{
-				language = Java;
-				outputDir = "«srcGenJavaFolder.fullPath»";
-			}
-			«FOR cppProgrammingModel : cppFoldersByProgrammingModel.keySet»
-
-			Ir2Code «cppProgrammingModel.toFirstLower»Generator follows fillHlts
-			{
-				language = Cpp
-				{
-					maxIterationVariable = max_iter;
-					stopTimeVariable = max_time;
-					programmingModel = «cppProgrammingModel»
-				}
-				outputDir = "«cppFoldersByProgrammingModel.get(cppProgrammingModel).fullPath»";
-			}
-			«ENDFOR»
+		KokkosTeamThread
+		{
+			outputPath = "«srcGenFoldersByLanguage.get(CppKokkosTeamThread.name).fullPath»";
+			kokkosPath = "$ENV{HOME}/kokkos/kokkos-install";
+			compiler = GNU;
 		}
 	'''
 
@@ -361,16 +357,17 @@ class NewNablaProjectWizard extends Wizard implements INewWizard
 	'''
 		Manifest-Version: 1.0
 		Bundle-ManifestVersion: 2
-		Bundle-Name: nabla.project
-		Bundle-SymbolicName: nabla.project
+		Bundle-Name: «newProjectPage.projectName»
+		Bundle-SymbolicName: «newProjectPage.projectName»
 		Bundle-Version: 0.1.0.qualifier
-		Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-		Automatic-Module-Name: nabla.project
+		Bundle-RequiredExecutionEnvironment: JavaSE-11
+		Automatic-Module-Name: «newProjectPage.projectName»
 		Require-Bundle: fr.cea.nabla,
 		   fr.cea.nabla.ir,
 		   fr.cea.nabla.sirius,
 		   fr.cea.nabla.javalib,
-		   org.eclipse.xtext.xbase.lib
+		   org.eclipse.xtext.xbase.lib,
+		   com.google.gson
 		Export-Package: «newProjectPage.moduleName.toLowerCase»
 	'''
 

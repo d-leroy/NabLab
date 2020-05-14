@@ -19,6 +19,7 @@ abstract class Backend
 	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) IncludesContentProvider includesContentProvider
 	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) TypeContentProvider typeContentProvider
 	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) ExpressionContentProvider expressionContentProvider
+	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) JsonContentProvider jsonContentProvider
 	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) ArgOrVarContentProvider argOrVarContentProvider
 	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) AttributesContentProvider attributesContentProvider
 	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) InstructionContentProvider instructionContentProvider
@@ -31,16 +32,17 @@ abstract class Backend
 
 class SequentialBackend extends Backend
 {
-	new(String maxIterationVarName, String stopTimeVarName)
+	new(String maxIterationVarName, String stopTimeVarName, String compiler, String compilerPath)
 	{
 		name = 'Sequential'
-		ir2Cmake = new StlIr2Cmake
+		ir2Cmake = new StlIr2Cmake(compiler, compilerPath)
 		traceContentProvider = new TraceContentProvider(maxIterationVarName, stopTimeVarName)
 		includesContentProvider = new IncludesContentProvider
 		typeContentProvider = new StlTypeContentProvider
 		argOrVarContentProvider = new StlArgOrVarContentProvider(typeContentProvider)
 		expressionContentProvider = new ExpressionContentProvider(argOrVarContentProvider)
-		attributesContentProvider = new AttributesContentProvider(argOrVarContentProvider)
+		jsonContentProvider = new JsonContentProvider(expressionContentProvider)
+		attributesContentProvider = new AttributesContentProvider(argOrVarContentProvider, expressionContentProvider)
 		instructionContentProvider = new SequentialInstructionContentProvider(argOrVarContentProvider, expressionContentProvider)
 		functionContentProvider = new FunctionContentProvider(typeContentProvider, instructionContentProvider)
 		jobContainerContentProvider = new JobContainerContentProvider
@@ -52,16 +54,17 @@ class SequentialBackend extends Backend
 
 class StlThreadBackend extends Backend
 {
-	new(String maxIterationVarName, String stopTimeVarName)
+	new(String maxIterationVarName, String stopTimeVarName, String compiler, String compilerPath)
 	{
 		name = 'StlThread'
-		ir2Cmake = new StlIr2Cmake
+		ir2Cmake = new StlIr2Cmake(compiler, compilerPath)
 		traceContentProvider = new TraceContentProvider(maxIterationVarName, stopTimeVarName)
 		includesContentProvider = new StlThreadIncludesContentProvider
 		typeContentProvider = new StlTypeContentProvider
 		argOrVarContentProvider = new StlArgOrVarContentProvider(typeContentProvider)
 		expressionContentProvider = new ExpressionContentProvider(argOrVarContentProvider)
-		attributesContentProvider = new AttributesContentProvider(argOrVarContentProvider)
+		jsonContentProvider = new JsonContentProvider(expressionContentProvider)
+		attributesContentProvider = new AttributesContentProvider(argOrVarContentProvider, expressionContentProvider)
 		instructionContentProvider = new StlThreadInstructionContentProvider(argOrVarContentProvider, expressionContentProvider)
 		functionContentProvider = new FunctionContentProvider(typeContentProvider, instructionContentProvider)
 		jobContainerContentProvider = new JobContainerContentProvider
@@ -73,16 +76,17 @@ class StlThreadBackend extends Backend
 
 class KokkosBackend extends Backend
 {
-	new(String maxIterationVarName, String stopTimeVarName)
+	new(String maxIterationVarName, String stopTimeVarName, String compiler, String compilerPath, String kokkosPath)
 	{
 		name = 'Kokkos'
-		ir2Cmake = new KokkosIr2Cmake
+		ir2Cmake = new KokkosIr2Cmake(compiler, compilerPath, kokkosPath)
 		traceContentProvider = new KokkosTraceContentProvider(maxIterationVarName, stopTimeVarName)
 		includesContentProvider = new KokkosIncludesContentProvider
 		typeContentProvider = new KokkosTypeContentProvider
 		argOrVarContentProvider = new KokkosArgOrVarContentProvider(typeContentProvider)
 		expressionContentProvider = new ExpressionContentProvider(argOrVarContentProvider)
-		attributesContentProvider = new AttributesContentProvider(argOrVarContentProvider)
+		jsonContentProvider = new JsonContentProvider(expressionContentProvider)
+		attributesContentProvider = new AttributesContentProvider(argOrVarContentProvider, expressionContentProvider)
 		instructionContentProvider = new KokkosInstructionContentProvider(argOrVarContentProvider, expressionContentProvider)
 		functionContentProvider = new KokkosFunctionContentProvider(typeContentProvider, instructionContentProvider)
 		jobContainerContentProvider = new JobContainerContentProvider
@@ -94,16 +98,17 @@ class KokkosBackend extends Backend
 
 class KokkosTeamThreadBackend extends Backend
 {
-	new(String maxIterationVarName, String stopTimeVarName)
+	new(String maxIterationVarName, String stopTimeVarName, String compiler, String compilerPath, String kokkosPath)
 	{
 		name = 'Kokkos Team Thread'
-		ir2Cmake = new KokkosIr2Cmake
+		ir2Cmake = new KokkosIr2Cmake(compiler, compilerPath, kokkosPath)
 		traceContentProvider = new KokkosTraceContentProvider(maxIterationVarName, stopTimeVarName)
 		includesContentProvider = new KokkosIncludesContentProvider
 		typeContentProvider = new KokkosTypeContentProvider
 		argOrVarContentProvider = new KokkosArgOrVarContentProvider(typeContentProvider)
 		expressionContentProvider = new ExpressionContentProvider(argOrVarContentProvider)
-		attributesContentProvider = new KokkosTeamThreadAttributesContentProvider(argOrVarContentProvider)
+		jsonContentProvider = new JsonContentProvider(expressionContentProvider)
+		attributesContentProvider = new KokkosTeamThreadAttributesContentProvider(argOrVarContentProvider, expressionContentProvider)
 		instructionContentProvider = new KokkosTeamThreadInstructionContentProvider(argOrVarContentProvider, expressionContentProvider)
 		functionContentProvider = new KokkosFunctionContentProvider(typeContentProvider, instructionContentProvider)
 		jobContainerContentProvider = new KokkosTeamThreadJobContainerContentProvider

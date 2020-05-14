@@ -107,26 +107,36 @@ class UnusedValidator extends UniqueNameValidator
 	def checkUnusedFunction(Function it)
 	{
 		val m = EcoreUtil2.getContainerOfType(it, NablaModule)
-		val allCalls = m.eAllContents.filter(FunctionCall)
-		var referenced = false
-		for (c : allCalls.toIterable)
+		// If the module does not contain options and jobs, no unused warning.
+		// It avoids warning on libraries: module with only functions/reductions.
+		if (! (m.definitions.filter[option].empty && m.jobs.empty))
 		{
-			val matchingDeclaration = c.declaration
-			if (matchingDeclaration !== null && matchingDeclaration.model === it)
-				referenced = true
+			val allCalls = m.eAllContents.filter(FunctionCall)
+			var referenced = false
+			for (c : allCalls.toIterable)
+			{
+				val matchingDeclaration = c.declaration
+				if (matchingDeclaration !== null && matchingDeclaration.model === it)
+					referenced = true
+			}
+			if (!referenced)
+				warning(getUnusedMsg(NablaPackage.Literals.FUNCTION, name), NablaPackage.Literals::FUNCTION_OR_REDUCTION__NAME, UNUSED)
 		}
-		if (!referenced)
-			warning(getUnusedMsg(NablaPackage.Literals.FUNCTION, name), NablaPackage.Literals::FUNCTION_OR_REDUCTION__NAME, UNUSED)
 	}
 
 	@Check
 	def checkUnusedReduction(Reduction it)
 	{
 		val m = EcoreUtil2.getContainerOfType(it, NablaModule)
-		val allCalls = m.eAllContents.filter(ReductionCall)
-		val allMatchingDeclarations = allCalls.map[declaration]
-		val referenced = allMatchingDeclarations.exists[x | x !== null && x.model===it]
-		if (!referenced)
-			warning(getUnusedMsg(NablaPackage.Literals.REDUCTION, name), NablaPackage.Literals::FUNCTION_OR_REDUCTION__NAME, UNUSED)
+		// If the module does not contain options and jobs, no unused warning.
+		// It avoids warning on libraries: module with only functions/reductions.
+		if (! (m.definitions.filter[option].empty && m.jobs.empty))
+		{
+			val allCalls = m.eAllContents.filter(ReductionCall)
+			val allMatchingDeclarations = allCalls.map[declaration]
+			val referenced = allMatchingDeclarations.exists[x | x !== null && x.model===it]
+			if (!referenced)
+				warning(getUnusedMsg(NablaPackage.Literals.REDUCTION, name), NablaPackage.Literals::FUNCTION_OR_REDUCTION__NAME, UNUSED)
+		}
 	}
 }

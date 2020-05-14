@@ -50,7 +50,7 @@ class NablaExamplesInterpreterTest
 		val examplesProjectSubPath = "plugins/fr.cea.nabla.ui/examples/NablaExamples/"
 		examplesProjectPath = wsPath + examplesProjectSubPath
 		git = new GitUtils(wsPath)
-		
+
 		System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s %n")
 		System.setProperty("java.util.logging.FileHandler.limit", "1024000")
 		System.setProperty("java.util.logging.FileHandler.count", "3")
@@ -105,9 +105,11 @@ class NablaExamplesInterpreterTest
 		println("test" + moduleName)
 		val modelFile = String.format("%1$ssrc/%2$s/%3$s.nabla", examplesProjectPath, moduleName.toLowerCase, moduleName)
 		val model = readFileAsString(modelFile)
-		// We use a dedicated genmodel to replaceAllreductions and not to generate code
-		val genmodelFile = String.format("src/%1$s/%2$s.nablagen", moduleName.toLowerCase, moduleName)
+		val genmodelFile = String.format("%1$ssrc/%2$s/%3$s.nablagen", examplesProjectPath, moduleName.toLowerCase, moduleName)
 		val genmodel = readFileAsString(genmodelFile)
+		// We use the default json datafile generated for the java backend
+		val jsonOptionsFile = String.format("%1$ssrc-gen-java/%2$s/%3$sDefaultOptions.json", examplesProjectPath, moduleName.toLowerCase, moduleName)
+		val jsonOptions = readFileAsString(jsonOptionsFile)
 
 		val irModule = compilationHelper.getIrModule(model, genmodel)
 		//val handler = new ConsoleHandler
@@ -119,7 +121,7 @@ class NablaExamplesInterpreterTest
 		handler.setFormatter(formatter)
 		handler.level = Level::FINE
 		val moduleInterpreter = new ModuleInterpreter(irModule, handler)
-		moduleInterpreter.interprete
+		moduleInterpreter.interprete(jsonOptions)
 		handler.close
 
 		testNoGitDiff("/"+moduleName.toLowerCase)

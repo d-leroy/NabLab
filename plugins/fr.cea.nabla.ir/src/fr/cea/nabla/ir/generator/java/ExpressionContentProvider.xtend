@@ -59,7 +59,8 @@ class ExpressionContentProvider
 		switch t
 		{
 			case (t.scalar && t.primitive == PrimitiveType::INT): '''Integer.MIN_VALUE'''
-			case (t.scalar && t.primitive == PrimitiveType::REAL): '''Double.MIN_VALUE'''
+			// Be careful at MIN_VALUE which is a positive value for double.
+			case (t.scalar && t.primitive == PrimitiveType::REAL): '''-Double.MAX_VALUE'''
 			default: throw new Exception('Invalid expression Min for type: ' + t.label)
 		}
 	}
@@ -94,7 +95,7 @@ class ExpressionContentProvider
 	'''«container.uniqueName».length'''
 
 	static def dispatch CharSequence getContent(FunctionCall it) 
-	'''«function.getCodeName('.')»(«FOR a:args SEPARATOR ', '»«a.content»«ENDFOR»)'''
+	'''«function.codeName»(«FOR a:args SEPARATOR ', '»«a.content»«ENDFOR»)'''
 
 	static def dispatch CharSequence getContent(ArgOrVarRef it)
 	'''«target.getCodeName('.')»«FOR r : iterators BEFORE '[' SEPARATOR '][' AFTER ']'»«r.name»«ENDFOR»«FOR d:indices»[«d.content»]«ENDFOR»'''

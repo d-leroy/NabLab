@@ -12,18 +12,19 @@ package fr.cea.nabla.ir.generator.cpp
 import fr.cea.nabla.ir.generator.CodeGenerator
 import fr.cea.nabla.ir.ir.Connectivity
 import fr.cea.nabla.ir.ir.ConnectivityVariable
+import fr.cea.nabla.ir.ir.Function
 import fr.cea.nabla.ir.ir.IrModule
-import fr.cea.nabla.ir.ir.PrimitiveType
-import fr.cea.nabla.ir.ir.SimpleVariable
+import fr.cea.nabla.ir.transformers.TagOutputVariables
 import java.io.File
 import java.net.URI
 import org.eclipse.core.runtime.FileLocator
 import org.eclipse.core.runtime.Platform
 
+import static extension fr.cea.nabla.ir.ArgOrVarExtensions.*
 import static extension fr.cea.nabla.ir.IrModuleExtensions.*
 import static extension fr.cea.nabla.ir.Utils.*
 import static extension fr.cea.nabla.ir.generator.Utils.*
-import fr.cea.nabla.ir.ir.Function
+import static extension fr.cea.nabla.ir.generator.cpp.Ir2CppUtils.*
 
 class Ir2Cpp extends CodeGenerator
 {
@@ -31,6 +32,7 @@ class Ir2Cpp extends CodeGenerator
 
 	val extension ArgOrVarContentProvider argOrVarContentProvider
 	val extension ExpressionContentProvider expressionContentProvider
+	val extension JsonContentProvider jsonContentProvider
 	val extension FunctionContentProvider functionContentProvider
 	val extension JobContainerContentProvider jobContainerContentProvider
 
@@ -41,6 +43,7 @@ class Ir2Cpp extends CodeGenerator
 
 		argOrVarContentProvider = backend.argOrVarContentProvider
 		expressionContentProvider = backend.expressionContentProvider
+		jsonContentProvider = backend.jsonContentProvider
 		jobContainerContentProvider = backend.jobContainerContentProvider
 		functionContentProvider = backend.functionContentProvider
 
@@ -62,97 +65,180 @@ class Ir2Cpp extends CodeGenerator
 
 	override getFileContentsByName(IrModule it)
 	{
-		#{ name + '.cc' -> ccFileContent, 'CMakeLists.txt' -> backend.ir2Cmake.getContentFor(it)}
+		#{ name + '.h' -> headerFileContent, name + '.cc' -> sourceFileContent, 'CMakeLists.txt' -> backend.ir2Cmake.getContentFor(it)}
 	}
 
-	private def getCcFileContent(IrModule it)
+	private def getHeaderFileContent(IrModule it)
 	'''
 	«backend.includesContentProvider.getContentFor(it)»
 
 	using namespace nablalib;
 
-	«FOR f : functions.filter(Function).filter[body !== null]»
+	«IF !functions.empty»
+	/******************** Free functions declarations ********************/
 
-		«f.content»
+	«FOR f : functions.filter(Function).filter[body !== null]»
+		«f.declarationContent»;
 	«ENDFOR»
+	«ENDIF»
+
+
+	/******************** Module declaration ********************/
 
 	class «name»
 	{
 	public:
 		struct Options
 		{
-			// Should be const but usefull to set them from main args
-			«FOR v : options»
-			«IF v.type.primitive == PrimitiveType.INT»size_t«ELSE»«v.cppType»«ENDIF» «v.name» = «v.defaultValue.content.toString.replaceAll('options->', '')»;
+			«IF postProcessingInfo !== null»std::string «TagOutputVariables.OutputPathNameAndValue.key»;«ENDIF»
+			«FOR v : definitions.filter[option]»
+			«v.cppType» «v.name»;
 			«ENDFOR»
+
+			Options(const std::string& fileName);
 		};
+
 		Options* options;
+
+		«name»(Options* aOptions«IF withMesh», CartesianMesh2D* aCartesianMesh2D«ENDIF»);
 
 	private:
 		«backend.attributesContentProvider.getContentFor(it)»
 
-	public:
-		«name»(Options* aOptions, «IF withMesh»CartesianMesh2D* aCartesianMesh2D,«ENDIF» string output)
-		: options(aOptions)
-		«IF withMesh»
-		, mesh(aCartesianMesh2D)
-		, writer("«name»", output)
-		«FOR c : usedConnectivities»
-		, «c.nbElemsVar»(«c.connectivityAccessor»)
-		«ENDFOR»
-		«ENDIF»
-		«FOR v : variables»
-			«IF v instanceof SimpleVariable && (v as SimpleVariable).defaultValue !== null»
-				, «v.name»(«(v as SimpleVariable).defaultValue.content»)
-			«ELSEIF v instanceof ConnectivityVariable»
-				, «v.name»(«v.cstrInit»)
-			«ENDIF»
-		«ENDFOR»
-		{
-			«IF withMesh»
-			// Copy node coordinates
-			const auto& gNodes = mesh->getGeometry()->getNodes();
-			«val iterator = backend.argOrVarContentProvider.formatIterators(initNodeCoordVariable, #["rNodes"])»
-			for (size_t rNodes=0; rNodes<nbNodes; rNodes++)
-				«initNodeCoordVariable.name»«iterator» = gNodes[rNodes];
-			«ENDIF»
-		}
-
-	private:
-		«backend.privateMethodsContentProvider.getContentFor(it)»
+		«backend.privateMethodsContentProvider.getDeclarationContentFor(it)»
 		«IF postProcessingInfo !== null»
 
-		void dumpVariables(int iteration)
-		{
-			if (!writer.isDisabled() && «postProcessingInfo.periodVariable.name» >= «postProcessingInfo.lastDumpVariable.name» + «postProcessingInfo.periodValue»)
-			{
-				cpuTimer.stop();
-				ioTimer.start();
-				std::map<string, double*> cellVariables;
-				std::map<string, double*> nodeVariables;
-				«FOR v : postProcessingInfo.postProcessedVariables.filter(ConnectivityVariable)»
-				«v.type.connectivities.head.returnType.name»Variables.insert(pair<string,double*>("«v.persistenceName»", «v.name».data()));
-				«ENDFOR»
-				auto quads = mesh->getGeometry()->getQuads();
-				writer.writeFile(iteration, «irModule.timeVariable.name», nbNodes, «irModule.nodeCoordVariable.name».data(), nbCells, quads.data(), cellVariables, nodeVariables);
-				«postProcessingInfo.lastDumpVariable.name» = «postProcessingInfo.periodVariable.name»;
-				ioTimer.stop();
-				cpuTimer.start();
-			}
-		}
+		void dumpVariables(int iteration);
 		«ENDIF»
 
 	public:
-		void simulate()
-		{
-			«backend.traceContentProvider.getBeginOfSimuTrace(name, withMesh)»
-
-			«callsHeader»
-			«callsContent»
-			«backend.traceContentProvider.endOfSimuTrace»
-			«IF linearAlgebra && mainTimeLoop !== null»«backend.traceContentProvider.getCGInfoTrace(mainTimeLoop.iterationCounter.name)»«ENDIF»
-		}
+		void simulate();
 	};
+	'''
+	
+	private def getSourceFileContent(IrModule it)
+	'''
+	#include "«name».h"
+
+	using namespace nablalib;
+
+	«IF !functions.empty»
+	/******************** Free functions definitions ********************/
+
+	«FOR f : functions.filter(Function).filter[body !== null]»
+		«f.definitionContent»
+
+	«ENDFOR»
+	«ENDIF»
+
+	/******************** Options definition ********************/
+
+	«name»::Options::Options(const std::string& fileName)
+	{
+		ifstream ifs(fileName);
+		rapidjson::IStreamWrapper isw(ifs);
+		rapidjson::Document d;
+		d.ParseStream(isw);
+		assert(d.IsObject());
+		«IF postProcessingInfo !== null»
+		// outputPath
+		«val opName = TagOutputVariables.OutputPathNameAndValue.key»
+		assert(d.HasMember("«opName»"));
+		const rapidjson::Value& valueof_«opName» = d["«opName»"];
+		assert(valueof_«opName».IsString());
+		«opName» = valueof_«opName».GetString();
+		«ENDIF»
+		«FOR v : definitions.filter[option]»
+		«v.jsonContent»
+		«ENDFOR»
+	}
+
+	/******************** Module definition ********************/
+
+	«name»::«name»(Options* aOptions«IF withMesh», CartesianMesh2D* aCartesianMesh2D«ENDIF»)
+	: options(aOptions)
+	«IF withMesh»
+	, mesh(aCartesianMesh2D)
+	, writer("«name»", options->«TagOutputVariables.OutputPathNameAndValue.key»)
+	«FOR c : usedConnectivities»
+	, «c.nbElemsVar»(«c.connectivityAccessor»)
+	«ENDFOR»
+	«ENDIF»
+	«FOR v : definitions.filter[x | !(x.option || x.constExpr)]»
+	, «v.name»(«v.defaultValue.content»)
+	«ENDFOR»
+	«FOR v : declarations.filter(ConnectivityVariable)»
+	, «v.name»(«v.cstrInit»)
+	«ENDFOR»
+	{
+		«val dynamicArrayVariables = declarations.filter[!type.baseTypeStatic]»
+		«IF !dynamicArrayVariables.empty»
+			// Allocate dynamic arrays (RealArrays with at least a dynamic dimension)
+			«FOR v : dynamicArrayVariables»
+				«v.initCppTypeContent»
+			«ENDFOR»
+		«ENDIF»
+		«IF withMesh»
+
+		// Copy node coordinates
+		const auto& gNodes = mesh->getGeometry()->getNodes();
+		«val iterator = backend.argOrVarContentProvider.formatIterators(initNodeCoordVariable, #["rNodes"])»
+		for (size_t rNodes=0; rNodes<nbNodes; rNodes++)
+		{
+			«initNodeCoordVariable.name»«iterator»[0] = gNodes[rNodes][0];
+			«initNodeCoordVariable.name»«iterator»[1] = gNodes[rNodes][1];
+		}
+		«ENDIF»
+	}
+
+	«backend.privateMethodsContentProvider.getDefinitionContentFor(it)»
+	«IF postProcessingInfo !== null»
+
+	void «name»::dumpVariables(int iteration)
+	{
+		if (!writer.isDisabled() && «postProcessingInfo.periodReference.getCodeName('->')» >= «postProcessingInfo.lastDumpVariable.getCodeName('->')» + «postProcessingInfo.periodValue.getCodeName('->')»)
+		{
+			cpuTimer.stop();
+			ioTimer.start();
+			auto quads = mesh->getGeometry()->getQuads();
+			writer.startVtpFile(iteration, «irModule.timeVariable.name», nbNodes, «irModule.nodeCoordVariable.name».data(), nbCells, quads.data());
+			«val outputVarsByConnectivities = postProcessingInfo.outputVariables.filter(ConnectivityVariable).groupBy(x | x.type.connectivities.head.returnType.name)»
+			writer.openNodeData();
+			«val nodeVariables = outputVarsByConnectivities.get("node")»
+			«IF !nodeVariables.nullOrEmpty»
+				«FOR v : nodeVariables»
+					writer.write«FOR s : v.type.base.sizes BEFORE '<' SEPARATOR ',' AFTER '>'»«s.content»«ENDFOR»("«v.outputName»", «v.name»);
+				«ENDFOR»
+			«ENDIF»
+			writer.closeNodeData();
+			writer.openCellData();
+			«val cellVariables = outputVarsByConnectivities.get("cell")»
+			«IF !cellVariables.nullOrEmpty»
+				«FOR v : cellVariables»
+					writer.write«FOR s : v.type.base.sizes BEFORE '<' SEPARATOR ',' AFTER '>'»«s.content»«ENDFOR»("«v.outputName»", «v.name»);
+				«ENDFOR»
+			«ENDIF»
+			writer.closeCellData();
+			writer.closeVtpFile();
+			«postProcessingInfo.lastDumpVariable.name» = «postProcessingInfo.periodReference.name»;
+			ioTimer.stop();
+			cpuTimer.start();
+		}
+	}
+	«ENDIF»
+
+	void «name»::simulate()
+	{
+		«backend.traceContentProvider.getBeginOfSimuTrace(name, withMesh)»
+
+		«callsHeader»
+		«callsContent»
+		«backend.traceContentProvider.endOfSimuTrace»
+		«IF linearAlgebra && mainTimeLoop !== null»«backend.traceContentProvider.getCGInfoTrace(mainTimeLoop.iterationCounter.name)»«ENDIF»
+	}
+
+
+	/******************** Module definition ********************/
 
 	int main(int argc, char* argv[]) 
 	{

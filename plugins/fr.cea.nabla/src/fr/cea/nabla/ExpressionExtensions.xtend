@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018, 2019 CEA
+ * Copyright (c) 2020 CEA
  * This program and the accompanying materials are made available under the 
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,45 +9,48 @@
  *******************************************************************************/
 package fr.cea.nabla
 
+import com.google.inject.Inject
 import fr.cea.nabla.nabla.ArgOrVarRef
 import fr.cea.nabla.nabla.Cardinality
-import fr.cea.nabla.nabla.Div
 import fr.cea.nabla.nabla.Expression
-import fr.cea.nabla.nabla.IntConstant
-import fr.cea.nabla.nabla.Minus
-import fr.cea.nabla.nabla.Modulo
-import fr.cea.nabla.nabla.Mul
-import fr.cea.nabla.nabla.Parenthesis
-import fr.cea.nabla.nabla.Plus
+import fr.cea.nabla.nabla.FunctionCall
 import fr.cea.nabla.nabla.ReductionCall
 
 class ExpressionExtensions
 {
-	def boolean respectGlobalExprConstraints(Expression e)
+	@Inject extension ArgOrVarExtensions
+
+	def boolean isReductionLess(Expression e) { check(e, [checkReductionLess]) }
+	def boolean isNablaEvaluable(Expression e) { check(e, [checkNablaEvaluable]) }
+	def boolean isConstExpr(Expression e) { check(e, [checkConstExpr]) }
+
+	private def check(Expression e, (Expression) => boolean checker)
 	{
-		e.respectGE && e.eAllContents.filter(Expression).forall[respectGE]
+		checker.apply(e) && e.eAllContents.filter(Expression).forall[x | checker.apply(x)]
 	}
 
-	def boolean respectIntConstExprConstraints(Expression e)
+	private def boolean checkReductionLess(Expression e) 
 	{
-		val result = e.respectICE && e.eAllContents.filter(Expression).forall[respectICE]
-		return result
+		!(e instanceof ReductionCall)
 	}
 
-	private def respectICE(Expression e)
+	private def boolean checkNablaEvaluable(Expression e) 
 	{
 		switch e
 		{
-			Plus, Minus, Mul, Div, Modulo, Parenthesis, IntConstant, Cardinality, ArgOrVarRef: true
-			default: false
+			ReductionCall, Cardinality: false
+			FunctionCall: !e.function.external
+			ArgOrVarRef: e.timeIterators.empty && e.spaceIterators.empty && e.target.nablaEvaluable
+			default: true
 		}
 	}
 
-	private def respectGE(Expression e)
+	private def boolean checkConstExpr(Expression e)
 	{
 		switch e
 		{
-			ReductionCall: false
+			ReductionCall, FunctionCall, Cardinality: false
+			ArgOrVarRef: e.timeIterators.empty && e.spaceIterators.empty && e.target.constExpr
 			default: true
 		}
 	}

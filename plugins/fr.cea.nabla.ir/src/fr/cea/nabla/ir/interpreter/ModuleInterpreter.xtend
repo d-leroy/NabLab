@@ -9,11 +9,14 @@
  *******************************************************************************/
 package fr.cea.nabla.ir.interpreter
 
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import fr.cea.nabla.ir.MandatoryOptions
 import fr.cea.nabla.ir.ir.IrModule
 import fr.cea.nabla.javalib.mesh.PvdFileWriter2D
 import java.util.logging.Logger
 import java.util.logging.StreamHandler
+import org.eclipse.xtend.lib.annotations.Accessors
 
 import static fr.cea.nabla.ir.interpreter.ExpressionInterpreter.*
 import static fr.cea.nabla.ir.interpreter.VariableValueFactory.*
@@ -25,13 +28,18 @@ class ModuleInterpreter
 {
 	public static String ITERATION_VARIABLE_NAME = "InterpreterIteration"
 
+	@Accessors val Context context
 	val IrModule module
-	var Context context
 	val PvdFileWriter2D writer
-	var JobInterpreter jobInterpreter
-	var Logger logger
+	val JobInterpreter jobInterpreter
+	val Logger logger
 
 	new(IrModule module, StreamHandler handler)
+	{
+		this(module, handler, "")
+	}
+
+	new(IrModule module, StreamHandler handler, String outputDirName)
 	{
 		// create a Logger and a Handler
 		logger = Logger.getLogger(ModuleInterpreter.name)
@@ -42,21 +50,43 @@ class ModuleInterpreter
 
 		this.module = module
 		this.context = new Context(module, logger)
-		this.writer = new PvdFileWriter2D(module.name)
-		this.jobInterpreter = null
+		this.writer = new PvdFileWriter2D(module.name, outputDirName)
+		this.jobInterpreter = new JobInterpreter(writer)
 	}
 
-	def interprete()
+	// interprete variable with default values
+	def interpreteDefinitionsDefaultValues() { interpreteDefinitions(null) }
+
+	// interprete variable with option file
+	def interpreteDefinitions(String jsonOptionsContent)
+	{
+		// Variables must be created with their default values to get the right NablaValue type
+		for (v : module.definitions)
+			context.addVariableValue(v, interprete(v.defaultValue, context))
+
+		// Then, the type of each option is used to read the json values
+		if (!jsonOptionsContent.nullOrEmpty)
+		{
+			val gson = new Gson
+			val jsonOptions = gson.fromJson(jsonOptionsContent, JsonObject)
+			for (v : module.definitions.filter[option])
+			{
+				val vValue = context.getVariableValue(v)
+				val jsonElt = jsonOptions.get(v.name)
+				NablaValueJsonSetter::setValue(vValue, jsonElt)
+			}
+		}
+	}
+
+	def interpreteWithOptionDefaultValues() { interprete(null) }
+
+	def interprete(String jsonOptionsContent)
 	{
 		context.logInfo(" Start interpreting " + module.name + " module ")
 
-		jobInterpreter = new JobInterpreter(writer)
+		// Interprete definitions
+		interpreteDefinitions(jsonOptionsContent)
 		module.functions.filter[body === null].forEach[f | context.resolveFunction(f)]
-
-		// Interprete options
-		for (v : module.options)
-			context.addVariableValue(v, interprete(v.defaultValue, context))
-
 		if (module.withMesh)
 		{
 			// Create mesh
@@ -74,8 +104,8 @@ class ModuleInterpreter
 				context.connectivitySizes.put(c, context.meshWrapper.getMaxNbElems(c.name))
 		}
 
-		// Interprete variables
-		for (v : module.variables)
+		// Interprete declarations
+		for (v : module.declarations)
 			context.addVariableValue(v, createValue(v, context))
 
 		// Copy Node Cooords
