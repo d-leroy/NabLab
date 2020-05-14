@@ -36,8 +36,11 @@ import fr.cea.nabla.ir.truffle.values.NablaValue;
 		StandardTags.CallTag.class,
 		StandardTags.StatementTag.class,
 		StandardTags.RootTag.class,
+		StandardTags.RootBodyTag.class,
 		StandardTags.ExpressionTag.class,
-		NablaTags.DumpTag.class})
+		StandardTags.WriteVariableTag.class,
+		NablaTags.DumpTag.class,
+		NablaTags.JobTag.class})
 public final class NablaLanguage extends TruffleLanguage<NablaContext> {
 	
 	public static final String ID = "nabla";

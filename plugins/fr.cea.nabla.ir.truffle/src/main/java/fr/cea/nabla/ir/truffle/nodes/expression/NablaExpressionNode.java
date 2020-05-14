@@ -2,6 +2,8 @@ package fr.cea.nabla.ir.truffle.nodes.expression;
 
 import com.oracle.truffle.api.dsl.TypeSystemReference;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.instrumentation.GenerateWrapper;
+import com.oracle.truffle.api.instrumentation.ProbeNode;
 import com.oracle.truffle.api.instrumentation.StandardTags;
 import com.oracle.truffle.api.instrumentation.Tag;
 import com.oracle.truffle.api.nodes.NodeInfo;
@@ -24,6 +26,7 @@ import fr.cea.nabla.ir.truffle.values.NV3Real;
 import fr.cea.nabla.ir.truffle.values.NV4Int;
 import fr.cea.nabla.ir.truffle.values.NV4Real;
 
+@GenerateWrapper
 @TypeSystemReference(NablaTypes.class)
 @NodeInfo(description = "The abstract base node for all expressions")
 public abstract class NablaExpressionNode extends NablaNode {
@@ -92,6 +95,11 @@ public abstract class NablaExpressionNode extends NablaNode {
 	
 	public NV4Real executeNV4Real(VirtualFrame frame) throws UnexpectedResultException {
 		return NablaTypesGen.expectNV4Real(executeGeneric(frame));
+	}
+	
+	@Override
+	public WrapperNode createWrapper(ProbeNode probe) {
+		return new NablaExpressionNodeWrapper(this, probe);
 	}
 	
 }

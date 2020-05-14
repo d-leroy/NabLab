@@ -79,10 +79,10 @@ public abstract class NablaNode extends Node implements InstrumentableNode {
 	public boolean isInstrumentable() {
 		return hasSource();
 	}
-
-    @Override
-	public WrapperNode createWrapper(ProbeNode probeNode) {
-		return new NablaNodeWrapper(this, probeNode);
+	
+	@Override
+	public WrapperNode createWrapper(ProbeNode probe) {
+		throw new IllegalStateException("No wrapper could be created");
 	}
 	
 	public abstract Object executeGeneric(VirtualFrame frame);

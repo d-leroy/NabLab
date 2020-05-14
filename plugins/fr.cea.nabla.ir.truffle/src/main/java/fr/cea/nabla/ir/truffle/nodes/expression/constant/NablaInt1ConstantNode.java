@@ -1,43 +1,47 @@
 package fr.cea.nabla.ir.truffle.nodes.expression.constant;
 
-import com.oracle.truffle.api.CompilerDirectives;
-import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
+import com.oracle.truffle.api.dsl.Cached;
+import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 
-import fr.cea.nabla.ir.truffle.NablaTypesGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
+import fr.cea.nabla.ir.truffle.values.NV0Int;
 import fr.cea.nabla.ir.truffle.values.NV1Int;
 
+@NodeChild(value = "value", type = NablaExpressionNode.class)
+@NodeChild(value = "size", type = NablaExpressionNode.class)
 public abstract class NablaInt1ConstantNode extends NablaExpressionNode {
 
-	@CompilationFinal
-	protected NV1Int cachedValue;
-
-	@Child
-	private NablaExpressionNode value;
-	@Child
-	private NablaExpressionNode size;
+	@Specialization(guards = {"cachedSize == size.getData()", "isZero(value.getData())"})
+	protected NV1Int doDefaultCached(VirtualFrame frame, NV0Int value, NV0Int size, //
+			@Cached("size.getData()") int cachedSize, //
+			@Cached("getDefaultResult(cachedSize)") NV1Int result) {
+		return result;
+	}
 	
-	public NablaInt1ConstantNode(NablaExpressionNode value, NablaExpressionNode size) {
-		this.value = value;
-		this.size = size;
+	@Specialization(guards = "cachedSize == size.getData()")
+	public NV1Int doCached(VirtualFrame frame, NV0Int value, NV0Int size, //
+			@Cached("value.getData()") int cachedValue, //
+			@Cached("size.getData()") int cachedSize, //
+			@Cached("getResult(cachedValue, cachedSize)") NV1Int result) {
+		return result;
+	}
+	
+	protected boolean isZero(int d) { return d == 0; }
+
+	protected NV1Int getDefaultResult(int size) {
+		final int[] computedValues = new int[size];
+		return new NV1Int(computedValues);
 	}
 
 	@ExplodeLoop
-	@Specialization
-	public NV1Int executeNV1Int(VirtualFrame frame) {
-		if (cachedValue == null) {
-			CompilerDirectives.transferToInterpreterAndInvalidate();
-			final int val = NablaTypesGen.asNV0Int(value.executeGeneric(frame)).getData();
-			final int size = NablaTypesGen.asNV0Int(this.size.executeGeneric(frame)).getData();
-			final int[] computedValues = new int[size];
-			for (int i = 0; i < size; i++) {
-				computedValues[i] = val;
-			}
-			cachedValue = new NV1Int(computedValues);
+	protected NV1Int getResult(int value, final int size) {
+		final int[] computedValues = new int[size];
+		for (int i = 0; i < size; i++) {
+			computedValues[i] = value;
 		}
-		return cachedValue;
+		return new NV1Int(computedValues);
 	}
 }

@@ -11,6 +11,8 @@ import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.instrumentation.GenerateWrapper;
+import com.oracle.truffle.api.instrumentation.ProbeNode;
 import com.oracle.truffle.api.nodes.DirectCallNode;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 
@@ -25,6 +27,7 @@ import fr.cea.nabla.ir.truffle.values.NV2Real;
 import fr.cea.nabla.ir.truffle.values.NablaOutput;
 import fr.cea.nabla.ir.truffle.values.NablaValue;
 
+@GenerateWrapper
 @TypeSystemReference(NablaTypes.class)
 public class NablaModuleNode extends NablaNode {
 
@@ -54,12 +57,16 @@ public class NablaModuleNode extends NablaNode {
 			this.jobs[i] = Truffle.getRuntime().createDirectCallNode(Truffle.getRuntime().createCallTarget(jobs[i]));
 		}
 	}
+	
+	protected NablaModuleNode() {
+		this.coordinatesSlot = null;
+	}
 
 	private static final TruffleLogger LOG = TruffleLogger.getLogger(NablaLanguage.ID, NablaModuleNode.class);
 
 	@ExplodeLoop
 	@Override
-	public final Object executeGeneric(VirtualFrame frame) {
+	public Object executeGeneric(VirtualFrame frame) {
 
 		final MaterializedFrame globalFrame = frame.materialize();
 
@@ -109,6 +116,11 @@ public class NablaModuleNode extends NablaNode {
 		final NablaOutput output = new NablaOutput(outputMap);
 
 		return output;
+	}
+	
+	@Override
+	public WrapperNode createWrapper(ProbeNode probe) {
+		return new NablaModuleNodeWrapper(this, probe);
 	}
 
 }

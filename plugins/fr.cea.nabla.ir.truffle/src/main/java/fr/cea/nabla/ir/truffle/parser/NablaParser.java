@@ -26,7 +26,7 @@ public class NablaParser {
 	public RootCallTarget parseNabla(NablaLanguage nablaLanguage, Source source) {
 		final Env env = NablaLanguage.getCurrentContext().getEnv();
 		final OptionValues options = env.getOptions();
-		String genModel = options.get(NablaOptions.Properties).get("genModel");
+		String genModel = options.get(NablaOptions.MODEL);
 		String model = source.getCharacters().toString();
 		NablaInjectorProvider inj = new NablaInjectorProvider();
 		CompilationChainHelper helper = new CompilationChainHelper();

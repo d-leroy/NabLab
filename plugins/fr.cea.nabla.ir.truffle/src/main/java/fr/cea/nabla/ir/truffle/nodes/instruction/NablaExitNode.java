@@ -18,4 +18,5 @@ public class NablaExitNode extends NablaInstructionNode {
 	public Object executeGeneric(VirtualFrame frame) {
 		throw new RuntimeException(message);
 	}
+	
 }

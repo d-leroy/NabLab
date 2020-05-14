@@ -40,8 +40,9 @@
  */
 package fr.cea.nabla.ir.truffle.nodes.expression;
 
+import com.oracle.truffle.api.dsl.NodeChild;
+import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.UnexpectedResultException;
 
 import fr.cea.nabla.ir.truffle.values.NV0Bool;
 import fr.cea.nabla.ir.truffle.values.NV0Int;
@@ -57,81 +58,71 @@ import fr.cea.nabla.ir.truffle.values.NV3Real;
 import fr.cea.nabla.ir.truffle.values.NV4Int;
 import fr.cea.nabla.ir.truffle.values.NV4Real;
 
-public class NablaParenthesisNode extends NablaExpressionNode {
-
-    @Child private NablaExpressionNode expression;
-
-    public NablaParenthesisNode(NablaExpressionNode expression) {
-        this.expression = expression;
-    }
-
-    @Override
-    public Object executeGeneric(VirtualFrame frame) {
-        return expression.executeGeneric(frame);
-    }
+@NodeChild(value = "expression", type = NablaExpressionNode.class)
+public abstract class NablaParenthesisNode extends NablaExpressionNode {
     
-    @Override
-    public NV0Bool executeNV0Bool(VirtualFrame frame) throws UnexpectedResultException {
-    	return expression.executeNV0Bool(frame);
+    @Specialization
+    public NV0Bool executeNV0Bool(VirtualFrame frame, NV0Bool value) {
+    	return value;
     }
 
-	@Override
-	public NV0Int executeNV0Int(VirtualFrame frame) throws UnexpectedResultException {
-		return expression.executeNV0Int(frame);
+	@Specialization
+	public NV0Int executeNV0Int(VirtualFrame frame, NV0Int value) {
+    	return value;
 	}
 
-	@Override
-	public NV0Real executeNV0Real(VirtualFrame frame) throws UnexpectedResultException {
-		return expression.executeNV0Real(frame);
+	@Specialization
+	public NV0Real executeNV0Real(VirtualFrame frame, NV0Real value) {
+    	return value;
 	}
 
-	@Override
-	public NV1Bool executeNV1Bool(VirtualFrame frame) throws UnexpectedResultException {
-		return expression.executeNV1Bool(frame);
+	@Specialization
+	public NV1Bool executeNV1Bool(VirtualFrame frame, NV1Bool value) {
+    	return value;
 	}
 
-	@Override
-	public NV1Int executeNV1Int(VirtualFrame frame) throws UnexpectedResultException {
-		return expression.executeNV1Int(frame);
+	@Specialization
+	public NV1Int executeNV1Int(VirtualFrame frame, NV1Int value) {
+    	return value;
 	}
 
-	@Override
-	public NV1Real executeNV1Real(VirtualFrame frame) throws UnexpectedResultException {
-		return expression.executeNV1Real(frame);
+	@Specialization
+	public NV1Real executeNV1Real(VirtualFrame frame, NV1Real value) {
+    	return value;
 	}
 
-	@Override
-	public NV2Bool executeNV2Bool(VirtualFrame frame) throws UnexpectedResultException {
-		return expression.executeNV2Bool(frame);
+	@Specialization
+	public NV2Bool executeNV2Bool(VirtualFrame frame, NV2Bool value) {
+    	return value;
 	}
 
-	@Override
-	public NV2Int executeNV2Int(VirtualFrame frame) throws UnexpectedResultException {
-		return expression.executeNV2Int(frame);
+	@Specialization
+	public NV2Int executeNV2Int(VirtualFrame frame, NV2Int value) {
+    	return value;
 	}
 
-	@Override
-	public NV2Real executeNV2Real(VirtualFrame frame) throws UnexpectedResultException {
-		return expression.executeNV2Real(frame);
+	@Specialization
+	public NV2Real executeNV2Real(VirtualFrame frame, NV2Real value) {
+    	return value;
 	}
 
-	@Override
-	public NV3Int executeNV3Int(VirtualFrame frame) throws UnexpectedResultException {
-		return expression.executeNV3Int(frame);
+	@Specialization
+	public NV3Int executeNV3Int(VirtualFrame frame, NV3Int value) {
+    	return value;
 	}
 
-	@Override
-	public NV3Real executeNV3Real(VirtualFrame frame) throws UnexpectedResultException {
-		return expression.executeNV3Real(frame);
+	@Specialization
+	public NV3Real executeNV3Real(VirtualFrame frame, NV3Real value) {
+    	return value;
 	}
 
-	@Override
-	public NV4Int executeNV4Int(VirtualFrame frame) throws UnexpectedResultException {
-		return expression.executeNV4Int(frame);
+	@Specialization
+	public NV4Int executeNV4Int(VirtualFrame frame, NV4Int value) {
+    	return value;
 	}
 
-	@Override
-	public NV4Real executeNV4Real(VirtualFrame frame) throws UnexpectedResultException {
-		return expression.executeNV4Real(frame);
+	@Specialization
+	public NV4Real executeNV4Real(VirtualFrame frame, NV4Real value) {
+    	return value;
 	}
 }

@@ -40,7 +40,6 @@
  */
 package fr.cea.nabla.ir.truffle.runtime;
 
-import com.oracle.truffle.api.Assumption;
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
 import com.oracle.truffle.api.RootCallTarget;
@@ -52,23 +51,6 @@ import com.oracle.truffle.api.library.ExportLibrary;
 import fr.cea.nabla.ir.truffle.NablaLanguage;
 import fr.cea.nabla.ir.truffle.nodes.NablaUndefinedFunctionRootNode;
 
-/**
- * Represents a SL function. On the Truffle level, a callable element is represented by a
- * {@link RootCallTarget call target}. This class encapsulates a call target, and adds version
- * support: functions in SL can be redefined, i.e. changed at run time. When a function is
- * redefined, the call target managed by this function object is changed (and {@link #callTarget} is
- * therefore not a final field).
- * <p>
- * Function redefinition is expected to be rare, therefore optimized call nodes want to speculate
- * that the call target is stable. This is possible with the help of a Truffle {@link Assumption}: a
- * call node can keep the call target returned by {@link #getCallTarget()} cached until the
- * assumption returned by {@link #getCallTargetStable()} is valid.
- * <p>
- * The {@link #callTarget} can be {@code null}. To ensure that only one {@link SLFunction} instance
- * per name exists, the {@link SLFunctionRegistry} creates an instance also when performing name
- * lookup. A function that has been looked up, i.e., used, but not defined, has a call target that
- * encapsulates a {@link NablaUndefinedFunctionRootNode}.
- */
 @ExportLibrary(InteropLibrary.class)
 public final class NablaFunction implements TruffleObject {
 
@@ -76,7 +58,8 @@ public final class NablaFunction implements TruffleObject {
 
     private final String name;
 
-    @CompilationFinal private RootCallTarget callTarget;
+    @CompilationFinal
+    private RootCallTarget callTarget;
     
     protected NablaFunction(NablaLanguage language, String name) {
         this.name = name;

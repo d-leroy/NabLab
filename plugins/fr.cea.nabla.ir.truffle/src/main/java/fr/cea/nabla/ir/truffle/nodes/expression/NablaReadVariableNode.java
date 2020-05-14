@@ -6,17 +6,24 @@ import com.oracle.truffle.api.frame.Frame;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotTypeException;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.instrumentation.GenerateWrapper;
+import com.oracle.truffle.api.instrumentation.ProbeNode;
 
 import fr.cea.nabla.ir.truffle.runtime.NablaInternalError;
 import fr.cea.nabla.ir.truffle.utils.GetFrameNode;
 
+@GenerateWrapper
 @NodeChild(value = "frameToRead", type = GetFrameNode.class)
 public abstract class NablaReadVariableNode extends NablaExpressionNode {
 
 	private final FrameSlot slot;
 
-	public NablaReadVariableNode(FrameSlot slot) {
+	protected NablaReadVariableNode(FrameSlot slot) {
 		this.slot = slot;
+	}
+	
+	protected NablaReadVariableNode() {
+		this.slot = null;
 	}
 
 	@Specialization
@@ -31,5 +38,10 @@ public abstract class NablaReadVariableNode extends NablaExpressionNode {
 	
 	public FrameSlot getSlot() {
 		return slot;
+	}
+	
+	@Override
+	public WrapperNode createWrapper(ProbeNode probe) {
+		return new NablaReadVariableNodeWrapper(this, probe);
 	}
 }

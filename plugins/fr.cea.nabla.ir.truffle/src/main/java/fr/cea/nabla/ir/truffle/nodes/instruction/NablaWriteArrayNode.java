@@ -1,5 +1,7 @@
 package fr.cea.nabla.ir.truffle.nodes.instruction;
 
+import java.util.Map;
+
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
 import com.oracle.truffle.api.dsl.NodeChild;
@@ -8,6 +10,11 @@ import com.oracle.truffle.api.frame.Frame;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameUtil;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.instrumentation.GenerateWrapper;
+import com.oracle.truffle.api.instrumentation.InstrumentableNode;
+import com.oracle.truffle.api.instrumentation.ProbeNode;
+import com.oracle.truffle.api.instrumentation.StandardTags;
+import com.oracle.truffle.api.instrumentation.Tag;
 
 import fr.cea.nabla.ir.truffle.NablaTypesGen;
 import fr.cea.nabla.ir.truffle.nodes.expression.NablaExpressionNode;
@@ -25,9 +32,10 @@ import fr.cea.nabla.ir.truffle.values.NV4Int;
 import fr.cea.nabla.ir.truffle.values.NV4Real;
 import fr.cea.nabla.ir.truffle.values.NablaValue;
 
+@GenerateWrapper
 @NodeChild(value = "value", type = NablaExpressionNode.class)
 @NodeChild(value = "frameToRead", type = GetFrameNode.class)
-public abstract class NablaWriteArrayNode extends NablaInstructionNode {
+public abstract class NablaWriteArrayNode extends NablaInstructionNode implements InstrumentableNode {
 
 	private final FrameSlot slot;
 	@Children
@@ -40,6 +48,11 @@ public abstract class NablaWriteArrayNode extends NablaInstructionNode {
 	public NablaWriteArrayNode(FrameSlot slot, NablaExpressionNode[] indices) {
 		this.slot = slot;
 		this.indices = indices;
+	}
+
+	protected NablaWriteArrayNode() {
+		this.slot = null;
+		this.indices = null;
 	}
 		
 	@Specialization(rewriteOn = NablaInitializationPerformedException.class)
@@ -161,5 +174,27 @@ public abstract class NablaWriteArrayNode extends NablaInstructionNode {
 	
 	protected boolean isNV4Real() {
 		return !initializationRequired && arrayClass == NV4Real.class;
+	}
+	
+	@Override
+	public Map<String, Object> getDebugProperties() {
+		Map<String, Object> debugProperties = super.getDebugProperties();
+		debugProperties.put("variableSlot", slot);
+		return debugProperties;
+	}
+	
+	@Override
+	public boolean isInstrumentable() {
+		return true;
+	}
+	
+	@Override
+	public boolean hasTag(Class<? extends Tag> tag) {
+		return tag.equals(StandardTags.WriteVariableTag.class);
+	}
+
+	@Override
+	public WrapperNode createWrapper(ProbeNode probeNode) {
+		return new NablaWriteArrayNodeWrapper(this, probeNode);
 	}
 }

@@ -23,7 +23,8 @@ public class NablaRootNode extends RootNode {
 
 	private final String name;
 
-    private final SourceSection sourceSection;
+	@CompilationFinal
+    private SourceSection sourceSection;
 
 	/**
 	 * This assumption is only invalidated when invoking functions, as this is the
@@ -32,17 +33,21 @@ public class NablaRootNode extends RootNode {
 	 */
 	protected final CyclicAssumption frameStable;
 
-	public NablaRootNode(TruffleLanguage<?> language, FrameDescriptor frameDescriptor, NablaNode bodyNode, SourceSection sourceSection, String name) {
+	public NablaRootNode(TruffleLanguage<?> language, FrameDescriptor frameDescriptor, NablaNode bodyNode, String name) {
 		super(language, frameDescriptor);
 		this.name = name;
 		this.bodyNode = bodyNode;
-		this.sourceSection = sourceSection;
 		this.frameStable = new CyclicAssumption(name);
 	}
 
     @Override
     public SourceSection getSourceSection() {
         return sourceSection;
+    }
+    
+    public final void setSourceSection(SourceSection sourceSection) {
+        assert this.sourceSection == null : "source must only be set once";
+        this.sourceSection = sourceSection;
     }
 	
 	@Override

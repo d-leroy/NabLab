@@ -22,7 +22,7 @@ public final class NablaTags {
         }
     }
 	
-    @Tag.Identifier("DUMP")
+    @Tag.Identifier("Write")
     public static final class WriteTag extends Tag {
         private WriteTag() {
             /* No instances */
