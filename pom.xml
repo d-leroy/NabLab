@@ -36,6 +36,8 @@
                 <module>plugins/commons-math3</module>
                 <module>plugins/jlatexmath</module>
                 <module>plugins/jgrapht-core</module>
+                <module>plugins/graal-sdk</module>
+                <module>plugins/truffle-api</module>
                 <module>plugins/fr.cea.nabla</module>
                 <module>plugins/fr.cea.nabla.edit</module>
                 <module>plugins/fr.cea.nabla.editor</module>
