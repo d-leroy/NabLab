@@ -1,10 +1,13 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: fr.cea.nabla.interpreter
 Bundle-ManifestVersion: 2
 Bundle-Name: fr.cea.nabla.interpreter
 Bundle-SymbolicName: fr.cea.nabla.interpreter
 Bundle-Version: 0.2.1.qualifier
-Automatic-Module-Name: fr.cea.nabla.interpreter
+Bundle-ClassPath: .
+Export-Package: fr.cea.nabla.interpreter.parser
 Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-Vendor: CEA
 Require-Bundle: fr.cea.nabla;bundle-version="0.2.1",
  fr.cea.nabla.ir;bundle-version="0.2.1",
  fr.cea.nabla.javalib;bundle-version="0.2.1",

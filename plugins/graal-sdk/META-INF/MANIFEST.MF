@@ -2,9 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: fr.cea.library.graal-sdk
 Bundle-SymbolicName: graal-sdk
-Bundle-Version: 20.0.0.qualifier
-Automatic-Module-Name: graal-sdk
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-Version: 20.0.0
+Bundle-ClassPath: graal-sdk-20.0.0.jar
 Export-Package: org.graalvm.collections,
  org.graalvm.home,
  org.graalvm.home.impl,
@@ -25,3 +24,5 @@ Export-Package: org.graalvm.collections,
  org.graalvm.polyglot.proxy,
  org.graalvm.word,
  org.graalvm.word.impl
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Automatic-Module-Name: graal-sdk

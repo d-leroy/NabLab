@@ -2,9 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: fr.cea.library.truffle-api
 Bundle-SymbolicName: truffle-api
-Bundle-Version: 20.0.0.qualifier
-Automatic-Module-Name: truffle-api
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-Version: 20.0.0
+Bundle-ClassPath: truffle-api-20.0.0.jar
 Export-Package: com.oracle.truffle.api,
  com.oracle.truffle.api.debug,
  com.oracle.truffle.api.debug.impl,
@@ -25,3 +24,5 @@ Export-Package: com.oracle.truffle.api,
  com.oracle.truffle.object,
  com.oracle.truffle.object.basic,
  com.oracle.truffle.polyglot
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Automatic-Module-Name: truffle-api
