@@ -26,12 +26,19 @@ public class NablaFunctionCallNode extends NablaExpressionNode {
 	@ExplodeLoop
 	public final NablaValue executeGeneric(VirtualFrame frame) {
 		Object[] argumentValues = new Object[argumentNodes.length+2];
-		argumentValues[0] = frame.getArguments()[0];
-		argumentValues[1] = this.getRootNode();
+		// TODO if the frame does not have args, it's the global frame
+		// so pass it directly
+		if (frame.getArguments().length == 0) {
+			argumentValues[0] = frame;
+			argumentValues[1] = this.getRootNode();
+		} else {
+			argumentValues[0] = frame.getArguments()[0];
+			argumentValues[1] = this.getRootNode();
+		}
 		for (int i = 0; i < argumentNodes.length; i++) {
 			argumentValues[i+2] = argumentNodes[i].executeGeneric(frame);
 		}
-
+		
 		return (NablaValue) callNode.call(argumentValues);
 	}
 

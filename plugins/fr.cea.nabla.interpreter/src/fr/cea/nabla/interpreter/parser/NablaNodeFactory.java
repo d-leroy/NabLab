@@ -9,76 +9,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Streams;
+import com.google.gson.JsonElement;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.source.Source;
 
-import fr.cea.nabla.ir.IrModuleExtensions;
-import fr.cea.nabla.ir.IrTypeExtensions;
-import fr.cea.nabla.ir.generator.Utils;
-import fr.cea.nabla.ir.ir.Affectation;
-import fr.cea.nabla.ir.ir.AfterTimeLoopJob;
-import fr.cea.nabla.ir.ir.Arg;
-import fr.cea.nabla.ir.ir.ArgOrVar;
-import fr.cea.nabla.ir.ir.ArgOrVarRef;
-import fr.cea.nabla.ir.ir.BaseType;
-import fr.cea.nabla.ir.ir.BaseTypeConstant;
-import fr.cea.nabla.ir.ir.BeforeTimeLoopJob;
-import fr.cea.nabla.ir.ir.BinaryExpression;
-import fr.cea.nabla.ir.ir.BoolConstant;
-import fr.cea.nabla.ir.ir.Cardinality;
-import fr.cea.nabla.ir.ir.Connectivity;
-import fr.cea.nabla.ir.ir.ConnectivityCall;
-import fr.cea.nabla.ir.ir.ConnectivityVariable;
-import fr.cea.nabla.ir.ir.Container;
-import fr.cea.nabla.ir.ir.ContractedIf;
-import fr.cea.nabla.ir.ir.Exit;
-import fr.cea.nabla.ir.ir.Expression;
-import fr.cea.nabla.ir.ir.Function;
-import fr.cea.nabla.ir.ir.FunctionCall;
-import fr.cea.nabla.ir.ir.If;
-import fr.cea.nabla.ir.ir.Instruction;
-import fr.cea.nabla.ir.ir.InstructionBlock;
-import fr.cea.nabla.ir.ir.InstructionJob;
-import fr.cea.nabla.ir.ir.IntConstant;
-import fr.cea.nabla.ir.ir.Interval;
-import fr.cea.nabla.ir.ir.IrAnnotable;
-import fr.cea.nabla.ir.ir.IrAnnotation;
-import fr.cea.nabla.ir.ir.IrModule;
-import fr.cea.nabla.ir.ir.IrPackage;
-import fr.cea.nabla.ir.ir.IrType;
-import fr.cea.nabla.ir.ir.ItemIdDefinition;
-import fr.cea.nabla.ir.ir.ItemIdValue;
-import fr.cea.nabla.ir.ir.ItemIdValueCall;
-import fr.cea.nabla.ir.ir.ItemIdValueIterator;
-import fr.cea.nabla.ir.ir.ItemIndex;
-import fr.cea.nabla.ir.ir.ItemIndexDefinition;
-import fr.cea.nabla.ir.ir.IterationBlock;
-import fr.cea.nabla.ir.ir.Iterator;
-import fr.cea.nabla.ir.ir.Job;
-import fr.cea.nabla.ir.ir.Loop;
-import fr.cea.nabla.ir.ir.MaxConstant;
-import fr.cea.nabla.ir.ir.MinConstant;
-import fr.cea.nabla.ir.ir.Parenthesis;
-import fr.cea.nabla.ir.ir.PrimitiveType;
-import fr.cea.nabla.ir.ir.RealConstant;
-import fr.cea.nabla.ir.ir.Return;
-import fr.cea.nabla.ir.ir.SetDefinition;
-import fr.cea.nabla.ir.ir.SetRef;
-import fr.cea.nabla.ir.ir.SimpleVariable;
-import fr.cea.nabla.ir.ir.TimeLoop;
-import fr.cea.nabla.ir.ir.TimeLoopJob;
-import fr.cea.nabla.ir.ir.UnaryExpression;
-import fr.cea.nabla.ir.ir.Variable;
-import fr.cea.nabla.ir.ir.VariableDefinition;
-import fr.cea.nabla.ir.ir.VectorConstant;
 import fr.cea.nabla.interpreter.NablaLanguage;
 import fr.cea.nabla.interpreter.nodes.NablaModuleNode;
 import fr.cea.nabla.interpreter.nodes.NablaNode;
@@ -97,6 +40,8 @@ import fr.cea.nabla.interpreter.nodes.expression.NablaGetMeshMaxNbElementsNode;
 import fr.cea.nabla.interpreter.nodes.expression.NablaGetMeshNbElementsNode;
 import fr.cea.nabla.interpreter.nodes.expression.NablaGetMeshSingletonNode;
 import fr.cea.nabla.interpreter.nodes.expression.NablaIndexOfNodeGen;
+import fr.cea.nabla.interpreter.nodes.expression.NablaInitializeVariableFromJsonNode;
+import fr.cea.nabla.interpreter.nodes.expression.NablaInitializeVariableFromJsonNodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.NablaInt1NodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.NablaInt2NodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.NablaParenthesisNodeGen;
@@ -156,6 +101,66 @@ import fr.cea.nabla.interpreter.nodes.job.NablaInstructionJobNode;
 import fr.cea.nabla.interpreter.nodes.job.NablaTimeLoopJobNodeGen;
 import fr.cea.nabla.interpreter.utils.GetFrameNodeGen;
 import fr.cea.nabla.interpreter.values.FunctionCallHelper;
+import fr.cea.nabla.ir.IrModuleExtensions;
+import fr.cea.nabla.ir.IrTypeExtensions;
+import fr.cea.nabla.ir.MandatoryVariables;
+import fr.cea.nabla.ir.generator.Utils;
+import fr.cea.nabla.ir.ir.Affectation;
+import fr.cea.nabla.ir.ir.AfterTimeLoopJob;
+import fr.cea.nabla.ir.ir.Arg;
+import fr.cea.nabla.ir.ir.ArgOrVar;
+import fr.cea.nabla.ir.ir.ArgOrVarRef;
+import fr.cea.nabla.ir.ir.BaseType;
+import fr.cea.nabla.ir.ir.BaseTypeConstant;
+import fr.cea.nabla.ir.ir.BeforeTimeLoopJob;
+import fr.cea.nabla.ir.ir.BinaryExpression;
+import fr.cea.nabla.ir.ir.BoolConstant;
+import fr.cea.nabla.ir.ir.Cardinality;
+import fr.cea.nabla.ir.ir.Connectivity;
+import fr.cea.nabla.ir.ir.ConnectivityCall;
+import fr.cea.nabla.ir.ir.ConnectivityVariable;
+import fr.cea.nabla.ir.ir.Container;
+import fr.cea.nabla.ir.ir.ContractedIf;
+import fr.cea.nabla.ir.ir.Exit;
+import fr.cea.nabla.ir.ir.Expression;
+import fr.cea.nabla.ir.ir.Function;
+import fr.cea.nabla.ir.ir.FunctionCall;
+import fr.cea.nabla.ir.ir.If;
+import fr.cea.nabla.ir.ir.Instruction;
+import fr.cea.nabla.ir.ir.InstructionBlock;
+import fr.cea.nabla.ir.ir.InstructionJob;
+import fr.cea.nabla.ir.ir.IntConstant;
+import fr.cea.nabla.ir.ir.Interval;
+import fr.cea.nabla.ir.ir.IrAnnotable;
+import fr.cea.nabla.ir.ir.IrAnnotation;
+import fr.cea.nabla.ir.ir.IrModule;
+import fr.cea.nabla.ir.ir.IrPackage;
+import fr.cea.nabla.ir.ir.IrType;
+import fr.cea.nabla.ir.ir.ItemIdDefinition;
+import fr.cea.nabla.ir.ir.ItemIdValue;
+import fr.cea.nabla.ir.ir.ItemIdValueCall;
+import fr.cea.nabla.ir.ir.ItemIdValueIterator;
+import fr.cea.nabla.ir.ir.ItemIndex;
+import fr.cea.nabla.ir.ir.ItemIndexDefinition;
+import fr.cea.nabla.ir.ir.IterationBlock;
+import fr.cea.nabla.ir.ir.Iterator;
+import fr.cea.nabla.ir.ir.Job;
+import fr.cea.nabla.ir.ir.Loop;
+import fr.cea.nabla.ir.ir.MaxConstant;
+import fr.cea.nabla.ir.ir.MinConstant;
+import fr.cea.nabla.ir.ir.Parenthesis;
+import fr.cea.nabla.ir.ir.PrimitiveType;
+import fr.cea.nabla.ir.ir.RealConstant;
+import fr.cea.nabla.ir.ir.Return;
+import fr.cea.nabla.ir.ir.SetDefinition;
+import fr.cea.nabla.ir.ir.SetRef;
+import fr.cea.nabla.ir.ir.SimpleVariable;
+import fr.cea.nabla.ir.ir.TimeLoop;
+import fr.cea.nabla.ir.ir.TimeLoopJob;
+import fr.cea.nabla.ir.ir.UnaryExpression;
+import fr.cea.nabla.ir.ir.Variable;
+import fr.cea.nabla.ir.ir.VariableDefinition;
+import fr.cea.nabla.ir.ir.VectorConstant;
 
 public class NablaNodeFactory {
 
@@ -408,7 +413,7 @@ public class NablaNodeFactory {
 		return getWriteVariableNode(indexSlot, indexOfNode);
 	}
 
-	public NablaRootNode createModule(IrModule module) {
+	public NablaRootNode createModule(IrModule module, Map<String, JsonElement> jsonOptions) {
 		assert lexicalScope == null;
 
 		lexicalScope = new LexicalScope(lexicalScope);
@@ -417,26 +422,28 @@ public class NablaNodeFactory {
 
 		final String moduleName = module.getName();
 
-		final NablaWriteVariableNode[] optionDeclarations = null;
-//				module.getOptions().stream()
-//				.map(v -> createVariableDeclaration(v)).filter(n -> n != null).collect(Collectors.toList())
-//				.toArray(new NablaWriteVariableNode[0]);
+		final NablaWriteVariableNode[] variableDefinitions = module.getDefinitions().stream().map(v -> {
+			if (v.isOption()) {
+				return createVariableDeclaration(v, jsonOptions.get(v.getName()));
+			}
+			return createVariableDeclaration(v);
+		}).filter(n -> n != null).collect(Collectors.toList()).toArray(new NablaWriteVariableNode[0]);
 
-		final NablaReadVariableNode[] mandatoryOptions;
-		final NablaWriteVariableNode[] connectivityVariables;
+		final NablaReadVariableNode[] mandatoryVariableNodes;
+		final NablaWriteVariableNode[] connectivityVariableNodes;
 
 		if (IrModuleExtensions.withMesh(module)) {
-			final List<String> options = new ArrayList<>();
-//			options.add(MandatoryOptions.X_EDGE_ELEMS);
-//			options.add(MandatoryOptions.Y_EDGE_ELEMS);
-//			options.add(MandatoryOptions.X_EDGE_LENGTH);
-//			options.add(MandatoryOptions.Y_EDGE_LENGTH);
-			mandatoryOptions = options.stream().map(s -> {
+			final List<String> mandatoryVariables = new ArrayList<>();
+			mandatoryVariables.add(MandatoryVariables.X_EDGE_ELEMS);
+			mandatoryVariables.add(MandatoryVariables.Y_EDGE_ELEMS);
+			mandatoryVariables.add(MandatoryVariables.X_EDGE_LENGTH);
+			mandatoryVariables.add(MandatoryVariables.Y_EDGE_LENGTH);
+			mandatoryVariableNodes = mandatoryVariables.stream().map(s -> {
 				final FrameSlot slot = moduleFrameDescriptor.findFrameSlot(s);
 				return getReadVariableNode(slot);
 			}).collect(Collectors.toList()).toArray(new NablaReadVariableNode[0]);
 
-			connectivityVariables = Streams.stream(IrModuleExtensions.getUsedConnectivities(module)).map(c -> {
+			connectivityVariableNodes = Streams.stream(IrModuleExtensions.getUsedConnectivities(module)).map(c -> {
 				final String connectivityName = c.getName();
 				final FrameSlot frameSlot = moduleFrameDescriptor.findOrAddFrameSlot(connectivityName, null,
 						FrameSlotKind.Illegal);
@@ -448,16 +455,21 @@ public class NablaNodeFactory {
 				}
 			}).collect(Collectors.toList()).toArray(new NablaWriteVariableNode[0]);
 		} else {
-			mandatoryOptions = new NablaReadVariableNode[0];
-			connectivityVariables = new NablaWriteVariableNode[0];
+			mandatoryVariableNodes = new NablaReadVariableNode[0];
+			connectivityVariableNodes = new NablaWriteVariableNode[0];
 		}
 
-		final NablaWriteVariableNode[] variableDeclarations = null; 
-//				module.getVariables().stream()
-//				.map(v -> createVariableDeclaration(v)).filter(n -> n != null).collect(Collectors.toList())
-//				.toArray(new NablaWriteVariableNode[0]);
+		final NablaWriteVariableNode[] variableDeclarations = module.getDeclarations().stream().map(v -> {
+			if (v instanceof SimpleVariable && ((SimpleVariable) v).isOption()) {
+				return createVariableDeclaration(v, jsonOptions.get(v.getName()));
+			}
+			return createVariableDeclaration(v);
+		}).filter(n -> n != null).collect(Collectors.toList()).toArray(new NablaWriteVariableNode[0]);
 
-		final FrameSlot coordinatesSlot = lexicalScope.locals.get(module.getInitNodeCoordVariable().getName());
+		final String nodeCoordName = module.getInitNodeCoordVariable().getName();
+		final FrameSlot coordinatesSlot = moduleFrameDescriptor.findOrAddFrameSlot(nodeCoordName, null,
+				FrameSlotKind.Illegal);
+		lexicalScope.locals.put(nodeCoordName, coordinatesSlot);
 		assert (coordinatesSlot != null);
 
 		module.getFunctions().stream().filter(f -> f.getBody() != null)
@@ -470,8 +482,8 @@ public class NablaNodeFactory {
 				.sorted((j1, j2) -> Double.compare(j1.getAt(), j2.getAt())).map(j -> createNablaJobNode(j))
 				.collect(Collectors.toList()).toArray(new NablaRootNode[0]);
 
-		final NablaModuleNode moduleNode = new NablaModuleNode(optionDeclarations, mandatoryOptions, coordinatesSlot,
-				connectivityVariables, variableDeclarations, jobNodes);
+		final NablaModuleNode moduleNode = new NablaModuleNode(mandatoryVariableNodes, coordinatesSlot,
+				connectivityVariableNodes, variableDeclarations, variableDefinitions, jobNodes);
 
 		final NablaRootNode moduleRootNode = new NablaRootNode(language, moduleFrameDescriptor, moduleNode, moduleName);
 
@@ -740,7 +752,8 @@ public class NablaNodeFactory {
 
 	private NablaExpressionNode createNablaFunctionCallNode(FunctionCall functionCall) {
 		if (functionCall.getFunction().getBody() != null) {
-			final NablaRootNode rootNode = functions.get(functionCall.getFunction());
+			final NablaRootNode rootNode = functions.computeIfAbsent(functionCall.getFunction(),
+					function -> createNablaFunctionNode(function));
 			final NablaExpressionNode[] argNodes = functionCall.getArgs().stream()
 					.map(e -> createNablaExpressionNode(e)).collect(Collectors.toList())
 					.toArray(new NablaExpressionNode[0]);
@@ -1059,6 +1072,7 @@ public class NablaNodeFactory {
 				.sorted((j1, j2) -> Double.compare(j1.getAt(), j2.getAt())).map(j -> createNablaJobNode(j))
 				.collect(Collectors.toList()).toArray(new NablaRootNode[0]);
 		final boolean shouldDump = job.getJobContainer() instanceof IrModule;
+		assert (indexSlot != null);
 		return NablaTimeLoopJobNodeGen.create(language, lexicalScope.descriptor, job.getName(), indexSlot, copies,
 				conditionNode, innerJobs, getIndentation(job.getTimeLoop()), timeVariable, deltatVariable, shouldDump,
 				GetFrameNodeGen.create(indexSlot));
@@ -1128,8 +1142,9 @@ public class NablaNodeFactory {
 
 	private NablaInstructionNode createNablaWriteArrayNode(String name, NablaExpressionNode[] indices,
 			NablaExpressionNode value, Integer paramaterIndex) {
-		final FrameSlot frameSlot = lexicalScope.locals.get(name);
-		return NablaWriteArrayNodeGen.create(frameSlot, indices, value, GetFrameNodeGen.create(frameSlot));
+		final FrameSlot slot = lexicalScope.locals.get(name);
+		assert (slot != null);
+		return NablaWriteArrayNodeGen.create(slot, indices, value, GetFrameNodeGen.create(slot));
 	}
 
 	private NablaWriteVariableNode createNablaWriteVariableNode(String name, NablaExpressionNode value) {
@@ -1158,6 +1173,10 @@ public class NablaNodeFactory {
 	}
 
 	private NablaWriteVariableNode createVariableDeclaration(Variable variable) {
+		return createVariableDeclaration(variable, null);
+	}
+
+	private NablaWriteVariableNode createVariableDeclaration(Variable variable, JsonElement jsonValue) {
 		switch (variable.eClass().getClassifierID()) {
 		case IrPackage.SIMPLE_VARIABLE: {
 			final SimpleVariable simpleVariable = (SimpleVariable) variable;
@@ -1165,10 +1184,22 @@ public class NablaNodeFactory {
 			final FrameSlot frameSlot = lexicalScope.descriptor.findOrAddFrameSlot(name, null, FrameSlotKind.Illegal);
 			lexicalScope.locals.put(name, frameSlot);
 			if (simpleVariable.getDefaultValue() != null) {
-				final NablaExpressionNode defaultValue = createNablaExpressionNode(simpleVariable.getDefaultValue());
+				final NablaExpressionNode defaultValue;
+				if (jsonValue == null) {
+					defaultValue = createNablaExpressionNode(simpleVariable.getDefaultValue());
+				} else {
+					final NablaExpressionNode baseValue = createNablaExpressionNode(simpleVariable.getDefaultValue());
+					defaultValue = getInitializeVariableFromJsonNode(baseValue, jsonValue);
+				}
 				return getWriteVariableNode(frameSlot, defaultValue);
 			} else {
-				final NablaExpressionNode defaultValue = createNablaDefaultValueNode(simpleVariable.getType());
+				final NablaExpressionNode defaultValue;
+				if (jsonValue == null) {
+					defaultValue = createNablaDefaultValueNode(simpleVariable.getType());
+				} else {
+					final NablaExpressionNode baseValue = createNablaDefaultValueNode(simpleVariable.getType());
+					defaultValue = getInitializeVariableFromJsonNode(baseValue, jsonValue);
+				}
 				return getWriteVariableNode(frameSlot, defaultValue);
 			}
 		}
@@ -1189,12 +1220,25 @@ public class NablaNodeFactory {
 					sizeNodes[i] = createNablaExpressionNode(s);
 					i++;
 				}
-				final NablaExpressionNode defaultValue = createNablaDefaultValueNode(
-						connectivityVariable.getType().getBase().getPrimitive(), sizeNodes);
+				final NablaExpressionNode defaultValue;
+				if (jsonValue == null) {
+					defaultValue = createNablaDefaultValueNode(connectivityVariable.getType() //
+							.getBase().getPrimitive(), sizeNodes);
+				} else {
+					final NablaExpressionNode baseValue = createNablaDefaultValueNode(
+							connectivityVariable.getType().getBase().getPrimitive(), sizeNodes);
+					defaultValue = getInitializeVariableFromJsonNode(baseValue, jsonValue);
+				}
 				return getWriteVariableNode(frameSlot, defaultValue);
 			} else {
-				final NablaExpressionNode defaultValue = createNablaReadArgOrVariableNode(
-						connectivityVariable.getDefaultValue());
+				final NablaExpressionNode defaultValue;
+				if (jsonValue == null) {
+					defaultValue = createNablaReadArgOrVariableNode(connectivityVariable.getDefaultValue());
+				} else {
+					final NablaExpressionNode baseValue = createNablaReadArgOrVariableNode(
+							connectivityVariable.getDefaultValue());
+					defaultValue = getInitializeVariableFromJsonNode(baseValue, jsonValue);
+				}
 				return getWriteVariableNode(frameSlot, defaultValue);
 			}
 		}
@@ -1251,11 +1295,19 @@ public class NablaNodeFactory {
 	}
 
 	private NablaReadVariableNode getReadVariableNode(FrameSlot slot) {
+		assert (slot != null);
 		return NablaReadVariableNodeGen.create(slot, GetFrameNodeGen.create(slot));
 	}
 
 	private NablaWriteVariableNode getWriteVariableNode(FrameSlot slot, NablaExpressionNode value) {
+		assert (slot != null);
 		return NablaWriteVariableNodeGen.create(slot, value, GetFrameNodeGen.create(slot));
+	}
+
+	private NablaInitializeVariableFromJsonNode getInitializeVariableFromJsonNode(NablaExpressionNode value,
+			JsonElement jsonValue) {
+		assert (jsonValue != null);
+		return NablaInitializeVariableFromJsonNodeGen.create(jsonValue, value);
 	}
 
 	private void setRootSourceSection(IrAnnotable element, NablaRootNode node) {

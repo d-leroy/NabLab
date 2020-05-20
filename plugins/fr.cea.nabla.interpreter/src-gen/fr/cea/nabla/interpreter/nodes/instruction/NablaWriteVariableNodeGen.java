@@ -52,148 +52,148 @@ public final class NablaWriteVariableNodeGen extends NablaWriteVariableNode {
         int state = state_;
         Object valueValue_ = this.value_.executeGeneric(frameValue);
         Frame frameToWriteValue_ = this.frameToWrite_.execute(frameValue);
-        if (state != 0 /* is-active doWrite(VirtualFrame, NV0Bool, Frame) || doWrite(VirtualFrame, NV1Bool, Frame) || doWrite(VirtualFrame, NV2Bool, Frame) || doWrite(VirtualFrame, NV3Bool, Frame) || doWrite(VirtualFrame, NV4Bool, Frame) || doWrite(VirtualFrame, NV0Int, Frame) || doWrite(VirtualFrame, NV1Int, Frame) || doWrite(VirtualFrame, NV2Int, Frame) || doWrite(VirtualFrame, NV3Int, Frame) || doWrite(VirtualFrame, NV4Int, Frame) || doWrite(VirtualFrame, NV0Real, Frame) || doWrite(VirtualFrame, NV1Real, Frame) || doWrite(VirtualFrame, NV2Real, Frame) || doWrite(VirtualFrame, NV3Real, Frame) || doWrite(VirtualFrame, NV4Real, Frame) */) {
-            if ((state & 0b1) != 0 /* is-active doWrite(VirtualFrame, NV0Bool, Frame) */ && valueValue_ instanceof NV0Bool) {
+        if (state != 0 /* is-active doWrite(NV0Bool, Frame) || doWrite(NV1Bool, Frame) || doWrite(NV2Bool, Frame) || doWrite(NV3Bool, Frame) || doWrite(NV4Bool, Frame) || doWrite(NV0Int, Frame) || doWrite(NV1Int, Frame) || doWrite(NV2Int, Frame) || doWrite(NV3Int, Frame) || doWrite(NV4Int, Frame) || doWrite(NV0Real, Frame) || doWrite(NV1Real, Frame) || doWrite(NV2Real, Frame) || doWrite(NV3Real, Frame) || doWrite(NV4Real, Frame) */) {
+            if ((state & 0b1) != 0 /* is-active doWrite(NV0Bool, Frame) */ && valueValue_ instanceof NV0Bool) {
                 NV0Bool valueValue__ = (NV0Bool) valueValue_;
-                return doWrite(frameValue, valueValue__, frameToWriteValue_);
+                return doWrite(valueValue__, frameToWriteValue_);
             }
-            if ((state & 0b10) != 0 /* is-active doWrite(VirtualFrame, NV1Bool, Frame) */ && valueValue_ instanceof NV1Bool) {
+            if ((state & 0b10) != 0 /* is-active doWrite(NV1Bool, Frame) */ && valueValue_ instanceof NV1Bool) {
                 NV1Bool valueValue__ = (NV1Bool) valueValue_;
-                return doWrite(frameValue, valueValue__, frameToWriteValue_);
+                return doWrite(valueValue__, frameToWriteValue_);
             }
-            if ((state & 0b100) != 0 /* is-active doWrite(VirtualFrame, NV2Bool, Frame) */ && valueValue_ instanceof NV2Bool) {
+            if ((state & 0b100) != 0 /* is-active doWrite(NV2Bool, Frame) */ && valueValue_ instanceof NV2Bool) {
                 NV2Bool valueValue__ = (NV2Bool) valueValue_;
-                return doWrite(frameValue, valueValue__, frameToWriteValue_);
+                return doWrite(valueValue__, frameToWriteValue_);
             }
-            if ((state & 0b1000) != 0 /* is-active doWrite(VirtualFrame, NV3Bool, Frame) */ && valueValue_ instanceof NV3Bool) {
+            if ((state & 0b1000) != 0 /* is-active doWrite(NV3Bool, Frame) */ && valueValue_ instanceof NV3Bool) {
                 NV3Bool valueValue__ = (NV3Bool) valueValue_;
-                return doWrite(frameValue, valueValue__, frameToWriteValue_);
+                return doWrite(valueValue__, frameToWriteValue_);
             }
-            if ((state & 0b10000) != 0 /* is-active doWrite(VirtualFrame, NV4Bool, Frame) */ && valueValue_ instanceof NV4Bool) {
+            if ((state & 0b10000) != 0 /* is-active doWrite(NV4Bool, Frame) */ && valueValue_ instanceof NV4Bool) {
                 NV4Bool valueValue__ = (NV4Bool) valueValue_;
-                return doWrite(frameValue, valueValue__, frameToWriteValue_);
+                return doWrite(valueValue__, frameToWriteValue_);
             }
-            if ((state & 0b100000) != 0 /* is-active doWrite(VirtualFrame, NV0Int, Frame) */ && valueValue_ instanceof NV0Int) {
+            if ((state & 0b100000) != 0 /* is-active doWrite(NV0Int, Frame) */ && valueValue_ instanceof NV0Int) {
                 NV0Int valueValue__ = (NV0Int) valueValue_;
-                return doWrite(frameValue, valueValue__, frameToWriteValue_);
+                return doWrite(valueValue__, frameToWriteValue_);
             }
-            if ((state & 0b1000000) != 0 /* is-active doWrite(VirtualFrame, NV1Int, Frame) */ && valueValue_ instanceof NV1Int) {
+            if ((state & 0b1000000) != 0 /* is-active doWrite(NV1Int, Frame) */ && valueValue_ instanceof NV1Int) {
                 NV1Int valueValue__ = (NV1Int) valueValue_;
-                return doWrite(frameValue, valueValue__, frameToWriteValue_);
+                return doWrite(valueValue__, frameToWriteValue_);
             }
-            if ((state & 0b10000000) != 0 /* is-active doWrite(VirtualFrame, NV2Int, Frame) */ && valueValue_ instanceof NV2Int) {
+            if ((state & 0b10000000) != 0 /* is-active doWrite(NV2Int, Frame) */ && valueValue_ instanceof NV2Int) {
                 NV2Int valueValue__ = (NV2Int) valueValue_;
-                return doWrite(frameValue, valueValue__, frameToWriteValue_);
+                return doWrite(valueValue__, frameToWriteValue_);
             }
-            if ((state & 0b100000000) != 0 /* is-active doWrite(VirtualFrame, NV3Int, Frame) */ && valueValue_ instanceof NV3Int) {
+            if ((state & 0b100000000) != 0 /* is-active doWrite(NV3Int, Frame) */ && valueValue_ instanceof NV3Int) {
                 NV3Int valueValue__ = (NV3Int) valueValue_;
-                return doWrite(frameValue, valueValue__, frameToWriteValue_);
+                return doWrite(valueValue__, frameToWriteValue_);
             }
-            if ((state & 0b1000000000) != 0 /* is-active doWrite(VirtualFrame, NV4Int, Frame) */ && valueValue_ instanceof NV4Int) {
+            if ((state & 0b1000000000) != 0 /* is-active doWrite(NV4Int, Frame) */ && valueValue_ instanceof NV4Int) {
                 NV4Int valueValue__ = (NV4Int) valueValue_;
-                return doWrite(frameValue, valueValue__, frameToWriteValue_);
+                return doWrite(valueValue__, frameToWriteValue_);
             }
-            if ((state & 0b10000000000) != 0 /* is-active doWrite(VirtualFrame, NV0Real, Frame) */ && valueValue_ instanceof NV0Real) {
+            if ((state & 0b10000000000) != 0 /* is-active doWrite(NV0Real, Frame) */ && valueValue_ instanceof NV0Real) {
                 NV0Real valueValue__ = (NV0Real) valueValue_;
-                return doWrite(frameValue, valueValue__, frameToWriteValue_);
+                return doWrite(valueValue__, frameToWriteValue_);
             }
-            if ((state & 0b100000000000) != 0 /* is-active doWrite(VirtualFrame, NV1Real, Frame) */ && valueValue_ instanceof NV1Real) {
+            if ((state & 0b100000000000) != 0 /* is-active doWrite(NV1Real, Frame) */ && valueValue_ instanceof NV1Real) {
                 NV1Real valueValue__ = (NV1Real) valueValue_;
-                return doWrite(frameValue, valueValue__, frameToWriteValue_);
+                return doWrite(valueValue__, frameToWriteValue_);
             }
-            if ((state & 0b1000000000000) != 0 /* is-active doWrite(VirtualFrame, NV2Real, Frame) */ && valueValue_ instanceof NV2Real) {
+            if ((state & 0b1000000000000) != 0 /* is-active doWrite(NV2Real, Frame) */ && valueValue_ instanceof NV2Real) {
                 NV2Real valueValue__ = (NV2Real) valueValue_;
-                return doWrite(frameValue, valueValue__, frameToWriteValue_);
+                return doWrite(valueValue__, frameToWriteValue_);
             }
-            if ((state & 0b10000000000000) != 0 /* is-active doWrite(VirtualFrame, NV3Real, Frame) */ && valueValue_ instanceof NV3Real) {
+            if ((state & 0b10000000000000) != 0 /* is-active doWrite(NV3Real, Frame) */ && valueValue_ instanceof NV3Real) {
                 NV3Real valueValue__ = (NV3Real) valueValue_;
-                return doWrite(frameValue, valueValue__, frameToWriteValue_);
+                return doWrite(valueValue__, frameToWriteValue_);
             }
-            if ((state & 0b100000000000000) != 0 /* is-active doWrite(VirtualFrame, NV4Real, Frame) */ && valueValue_ instanceof NV4Real) {
+            if ((state & 0b100000000000000) != 0 /* is-active doWrite(NV4Real, Frame) */ && valueValue_ instanceof NV4Real) {
                 NV4Real valueValue__ = (NV4Real) valueValue_;
-                return doWrite(frameValue, valueValue__, frameToWriteValue_);
+                return doWrite(valueValue__, frameToWriteValue_);
             }
         }
         CompilerDirectives.transferToInterpreterAndInvalidate();
-        return executeAndSpecialize(frameValue, valueValue_, frameToWriteValue_);
+        return executeAndSpecialize(valueValue_, frameToWriteValue_);
     }
 
-    private Object executeAndSpecialize(VirtualFrame frameValue, Object valueValue, Frame frameToWriteValue) {
+    private Object executeAndSpecialize(Object valueValue, Frame frameToWriteValue) {
         int state = state_;
         if (valueValue instanceof NV0Bool) {
             NV0Bool valueValue_ = (NV0Bool) valueValue;
-            this.state_ = state = state | 0b1 /* add-active doWrite(VirtualFrame, NV0Bool, Frame) */;
-            return doWrite(frameValue, valueValue_, frameToWriteValue);
+            this.state_ = state = state | 0b1 /* add-active doWrite(NV0Bool, Frame) */;
+            return doWrite(valueValue_, frameToWriteValue);
         }
         if (valueValue instanceof NV1Bool) {
             NV1Bool valueValue_ = (NV1Bool) valueValue;
-            this.state_ = state = state | 0b10 /* add-active doWrite(VirtualFrame, NV1Bool, Frame) */;
-            return doWrite(frameValue, valueValue_, frameToWriteValue);
+            this.state_ = state = state | 0b10 /* add-active doWrite(NV1Bool, Frame) */;
+            return doWrite(valueValue_, frameToWriteValue);
         }
         if (valueValue instanceof NV2Bool) {
             NV2Bool valueValue_ = (NV2Bool) valueValue;
-            this.state_ = state = state | 0b100 /* add-active doWrite(VirtualFrame, NV2Bool, Frame) */;
-            return doWrite(frameValue, valueValue_, frameToWriteValue);
+            this.state_ = state = state | 0b100 /* add-active doWrite(NV2Bool, Frame) */;
+            return doWrite(valueValue_, frameToWriteValue);
         }
         if (valueValue instanceof NV3Bool) {
             NV3Bool valueValue_ = (NV3Bool) valueValue;
-            this.state_ = state = state | 0b1000 /* add-active doWrite(VirtualFrame, NV3Bool, Frame) */;
-            return doWrite(frameValue, valueValue_, frameToWriteValue);
+            this.state_ = state = state | 0b1000 /* add-active doWrite(NV3Bool, Frame) */;
+            return doWrite(valueValue_, frameToWriteValue);
         }
         if (valueValue instanceof NV4Bool) {
             NV4Bool valueValue_ = (NV4Bool) valueValue;
-            this.state_ = state = state | 0b10000 /* add-active doWrite(VirtualFrame, NV4Bool, Frame) */;
-            return doWrite(frameValue, valueValue_, frameToWriteValue);
+            this.state_ = state = state | 0b10000 /* add-active doWrite(NV4Bool, Frame) */;
+            return doWrite(valueValue_, frameToWriteValue);
         }
         if (valueValue instanceof NV0Int) {
             NV0Int valueValue_ = (NV0Int) valueValue;
-            this.state_ = state = state | 0b100000 /* add-active doWrite(VirtualFrame, NV0Int, Frame) */;
-            return doWrite(frameValue, valueValue_, frameToWriteValue);
+            this.state_ = state = state | 0b100000 /* add-active doWrite(NV0Int, Frame) */;
+            return doWrite(valueValue_, frameToWriteValue);
         }
         if (valueValue instanceof NV1Int) {
             NV1Int valueValue_ = (NV1Int) valueValue;
-            this.state_ = state = state | 0b1000000 /* add-active doWrite(VirtualFrame, NV1Int, Frame) */;
-            return doWrite(frameValue, valueValue_, frameToWriteValue);
+            this.state_ = state = state | 0b1000000 /* add-active doWrite(NV1Int, Frame) */;
+            return doWrite(valueValue_, frameToWriteValue);
         }
         if (valueValue instanceof NV2Int) {
             NV2Int valueValue_ = (NV2Int) valueValue;
-            this.state_ = state = state | 0b10000000 /* add-active doWrite(VirtualFrame, NV2Int, Frame) */;
-            return doWrite(frameValue, valueValue_, frameToWriteValue);
+            this.state_ = state = state | 0b10000000 /* add-active doWrite(NV2Int, Frame) */;
+            return doWrite(valueValue_, frameToWriteValue);
         }
         if (valueValue instanceof NV3Int) {
             NV3Int valueValue_ = (NV3Int) valueValue;
-            this.state_ = state = state | 0b100000000 /* add-active doWrite(VirtualFrame, NV3Int, Frame) */;
-            return doWrite(frameValue, valueValue_, frameToWriteValue);
+            this.state_ = state = state | 0b100000000 /* add-active doWrite(NV3Int, Frame) */;
+            return doWrite(valueValue_, frameToWriteValue);
         }
         if (valueValue instanceof NV4Int) {
             NV4Int valueValue_ = (NV4Int) valueValue;
-            this.state_ = state = state | 0b1000000000 /* add-active doWrite(VirtualFrame, NV4Int, Frame) */;
-            return doWrite(frameValue, valueValue_, frameToWriteValue);
+            this.state_ = state = state | 0b1000000000 /* add-active doWrite(NV4Int, Frame) */;
+            return doWrite(valueValue_, frameToWriteValue);
         }
         if (valueValue instanceof NV0Real) {
             NV0Real valueValue_ = (NV0Real) valueValue;
-            this.state_ = state = state | 0b10000000000 /* add-active doWrite(VirtualFrame, NV0Real, Frame) */;
-            return doWrite(frameValue, valueValue_, frameToWriteValue);
+            this.state_ = state = state | 0b10000000000 /* add-active doWrite(NV0Real, Frame) */;
+            return doWrite(valueValue_, frameToWriteValue);
         }
         if (valueValue instanceof NV1Real) {
             NV1Real valueValue_ = (NV1Real) valueValue;
-            this.state_ = state = state | 0b100000000000 /* add-active doWrite(VirtualFrame, NV1Real, Frame) */;
-            return doWrite(frameValue, valueValue_, frameToWriteValue);
+            this.state_ = state = state | 0b100000000000 /* add-active doWrite(NV1Real, Frame) */;
+            return doWrite(valueValue_, frameToWriteValue);
         }
         if (valueValue instanceof NV2Real) {
             NV2Real valueValue_ = (NV2Real) valueValue;
-            this.state_ = state = state | 0b1000000000000 /* add-active doWrite(VirtualFrame, NV2Real, Frame) */;
-            return doWrite(frameValue, valueValue_, frameToWriteValue);
+            this.state_ = state = state | 0b1000000000000 /* add-active doWrite(NV2Real, Frame) */;
+            return doWrite(valueValue_, frameToWriteValue);
         }
         if (valueValue instanceof NV3Real) {
             NV3Real valueValue_ = (NV3Real) valueValue;
-            this.state_ = state = state | 0b10000000000000 /* add-active doWrite(VirtualFrame, NV3Real, Frame) */;
-            return doWrite(frameValue, valueValue_, frameToWriteValue);
+            this.state_ = state = state | 0b10000000000000 /* add-active doWrite(NV3Real, Frame) */;
+            return doWrite(valueValue_, frameToWriteValue);
         }
         if (valueValue instanceof NV4Real) {
             NV4Real valueValue_ = (NV4Real) valueValue;
-            this.state_ = state = state | 0b100000000000000 /* add-active doWrite(VirtualFrame, NV4Real, Frame) */;
-            return doWrite(frameValue, valueValue_, frameToWriteValue);
+            this.state_ = state = state | 0b100000000000000 /* add-active doWrite(NV4Real, Frame) */;
+            return doWrite(valueValue_, frameToWriteValue);
         }
         throw new UnsupportedSpecializationException(this, new Node[] {this.value_, this.frameToWrite_}, valueValue, frameToWriteValue);
     }

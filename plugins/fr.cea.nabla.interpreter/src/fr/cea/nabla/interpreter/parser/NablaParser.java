@@ -1,11 +1,15 @@
 package fr.cea.nabla.interpreter.parser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.graalvm.options.OptionValues;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.oracle.truffle.api.InstrumentInfo;
 import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.Truffle;
@@ -13,14 +17,14 @@ import com.oracle.truffle.api.TruffleLanguage.Env;
 import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.Source;
 
-import fr.cea.nabla.ir.ir.ConnectivityVariable;
-import fr.cea.nabla.ir.ir.IrModule;
-import fr.cea.nabla.ir.ir.PostProcessingInfo;
-import fr.cea.nabla.ir.ir.SimpleVariable;
 import fr.cea.nabla.interpreter.NablaLanguage;
 import fr.cea.nabla.interpreter.NablaOptions;
 import fr.cea.nabla.interpreter.nodes.NablaEvalRootNode;
 import fr.cea.nabla.interpreter.tools.NablaDumpVariablesInstrument;
+import fr.cea.nabla.ir.ir.ConnectivityVariable;
+import fr.cea.nabla.ir.ir.IrModule;
+import fr.cea.nabla.ir.ir.PostProcessingInfo;
+import fr.cea.nabla.ir.ir.SimpleVariable;
 
 public class NablaParser {
 
@@ -28,7 +32,7 @@ public class NablaParser {
 		final Env env = NablaLanguage.getCurrentContext().getEnv();
 		final OptionValues options = env.getOptions();
 		String genModel = options.get(NablaOptions.MODEL);
-		String jsonOptions = options.get(NablaOptions.OPTIONS);
+		String jsonOptionsString = options.get(NablaOptions.OPTIONS);
 		String model = source.getCharacters().toString();
 		NablaInjectorProvider inj = new NablaInjectorProvider();
 		CompilationChainHelper helper = new CompilationChainHelper();
@@ -61,8 +65,13 @@ public class NablaParser {
 						nodeCoordinatesVariable, period);
 			}
 		}
+		final Map<String, JsonElement> jsonOptions = new HashMap<>();
+		if (jsonOptionsString != null && !jsonOptionsString.isEmpty()) {
+			final Gson gson = new Gson();
+			gson.fromJson(jsonOptionsString, JsonObject.class).entrySet().forEach(e -> jsonOptions.put(e.getKey(), e.getValue()));
+		}
 		final RootCallTarget moduleCallTarget = Truffle.getRuntime()
-				.createCallTarget(new NablaNodeFactory(nablaLanguage, source).createModule(irModule));
+				.createCallTarget(new NablaNodeFactory(nablaLanguage, source).createModule(irModule, jsonOptions));
 		final RootNode evalModule = new NablaEvalRootNode(nablaLanguage, moduleCallTarget);
 		return Truffle.getRuntime().createCallTarget(evalModule);
 	}

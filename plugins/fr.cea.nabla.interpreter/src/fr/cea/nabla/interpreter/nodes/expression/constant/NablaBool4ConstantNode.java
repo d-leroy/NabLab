@@ -31,7 +31,8 @@ public abstract class NablaBool4ConstantNode extends NablaExpressionNode {
 		if (cachedValue == null) {
 			CompilerDirectives.transferToInterpreterAndInvalidate();
 			assert(dimensions.length == 3);
-			final int[] computedDimensions = new int[] {NablaTypesGen.asNV0Int(dimensions[0].executeGeneric(frame)).getData(),
+			final int[] computedDimensions = new int[] { //
+					NablaTypesGen.asNV0Int(dimensions[0].executeGeneric(frame)).getData(),
 					NablaTypesGen.asNV0Int(dimensions[1].executeGeneric(frame)).getData(),
 					NablaTypesGen.asNV0Int(dimensions[2].executeGeneric(frame)).getData(),
 					NablaTypesGen.asNV0Int(dimensions[3].executeGeneric(frame)).getData()

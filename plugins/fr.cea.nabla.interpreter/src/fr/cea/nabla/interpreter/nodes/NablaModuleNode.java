@@ -32,32 +32,32 @@ import fr.cea.nabla.interpreter.values.NablaValue;
 public class NablaModuleNode extends NablaNode {
 
 	@Children
-	private NablaWriteVariableNode[] options;
-	@Children
-	private NablaExpressionNode[] mandatoryOptions;
+	private NablaExpressionNode[] mandatoryVariables;
 
 	private final FrameSlot coordinatesSlot;
 	@Children
 	private NablaWriteVariableNode[] connectivityVariables;
 	@Children
-	private NablaWriteVariableNode[] variables;
+	private NablaWriteVariableNode[] variableDefinitions;
+	@Children
+	private NablaWriteVariableNode[] variableDeclarations;
 	@Children
 	private DirectCallNode[] jobs;
 
-	public NablaModuleNode(NablaWriteVariableNode[] options, NablaExpressionNode[] mandatoryOptions,
-			FrameSlot coordinatesSlot, NablaWriteVariableNode[] connectivityVariables,
-			NablaWriteVariableNode[] variables, NablaRootNode[] jobs) {
-		this.options = options;
-		this.mandatoryOptions = mandatoryOptions;
+	public NablaModuleNode(NablaExpressionNode[] mandatoryVariables, FrameSlot coordinatesSlot,
+			NablaWriteVariableNode[] connectivityVariables, NablaWriteVariableNode[] variableDeclarations,
+			NablaWriteVariableNode[] variableDefinitions, NablaRootNode[] jobs) {
+		this.mandatoryVariables = mandatoryVariables;
 		this.coordinatesSlot = coordinatesSlot;
-		this.variables = variables;
+		this.variableDeclarations = variableDeclarations;
+		this.variableDefinitions = variableDefinitions;
 		this.connectivityVariables = connectivityVariables;
 		this.jobs = new DirectCallNode[jobs.length];
 		for (int i = 0; i < jobs.length; i++) {
 			this.jobs[i] = Truffle.getRuntime().createDirectCallNode(Truffle.getRuntime().createCallTarget(jobs[i]));
 		}
 	}
-	
+
 	protected NablaModuleNode() {
 		this.coordinatesSlot = null;
 	}
@@ -72,26 +72,26 @@ public class NablaModuleNode extends NablaNode {
 
 		LOG.log(NablaLogLevel.INFO, " Start interpreting " + getRootNode().getName() + " module ");
 
-		CompilerAsserts.compilationConstant(options.length);
-		for (int i = 0; i < options.length; i++) {
-			options[i].executeGeneric(globalFrame);
+		CompilerAsserts.compilationConstant(variableDefinitions.length);
+		for (int i = 0; i < variableDefinitions.length; i++) {
+			variableDefinitions[i].executeGeneric(globalFrame);
 		}
 
-		if (mandatoryOptions.length == 4) {
+		if (mandatoryVariables.length == 4) {
 			NablaContext.getMeshWrapper().initialize(
-					NablaTypesGen.asNV0Int(mandatoryOptions[0].executeGeneric(globalFrame)).getData(),
-					NablaTypesGen.asNV0Int(mandatoryOptions[1].executeGeneric(globalFrame)).getData(),
-					NablaTypesGen.asNV0Real(mandatoryOptions[2].executeGeneric(globalFrame)).getData(),
-					NablaTypesGen.asNV0Real(mandatoryOptions[3].executeGeneric(globalFrame)).getData());
+					NablaTypesGen.asNV0Int(mandatoryVariables[0].executeGeneric(globalFrame)).getData(),
+					NablaTypesGen.asNV0Int(mandatoryVariables[1].executeGeneric(globalFrame)).getData(),
+					NablaTypesGen.asNV0Real(mandatoryVariables[2].executeGeneric(globalFrame)).getData(),
+					NablaTypesGen.asNV0Real(mandatoryVariables[3].executeGeneric(globalFrame)).getData());
 		}
 
 		for (int i = 0; i < connectivityVariables.length; i++) {
 			connectivityVariables[i].executeGeneric(globalFrame);
 		}
 
-		CompilerAsserts.compilationConstant(variables.length);
-		for (int i = 0; i < variables.length; i++) {
-			variables[i].executeGeneric(globalFrame);
+		CompilerAsserts.compilationConstant(variableDeclarations.length);
+		for (int i = 0; i < variableDeclarations.length; i++) {
+			variableDeclarations[i].executeGeneric(globalFrame);
 		}
 
 		globalFrame.setObject(coordinatesSlot, new NV2Real(NablaContext.getMeshWrapper().getNodes()));
@@ -117,7 +117,7 @@ public class NablaModuleNode extends NablaNode {
 
 		return output;
 	}
-	
+
 	@Override
 	public WrapperNode createWrapper(ProbeNode probe) {
 		return new NablaModuleNodeWrapper(this, probe);
