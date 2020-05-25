@@ -1,20 +1,14 @@
 package fr.cea.nabla.interpreter.parser;
 
-import java.lang.invoke.CallSite;
-import java.lang.invoke.LambdaMetafactory;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.function.BiFunction;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Streams;
 import com.google.gson.JsonElement;
 import com.oracle.truffle.api.frame.FrameDescriptor;
@@ -26,14 +20,12 @@ import fr.cea.nabla.interpreter.NablaLanguage;
 import fr.cea.nabla.interpreter.nodes.NablaModuleNode;
 import fr.cea.nabla.interpreter.nodes.NablaNode;
 import fr.cea.nabla.interpreter.nodes.NablaRootNode;
+import fr.cea.nabla.interpreter.nodes.NablaUndefinedFunctionRootNode;
 import fr.cea.nabla.interpreter.nodes.expression.NablaBool1NodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.NablaBool2NodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.NablaContractedIfNode;
 import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
-import fr.cea.nabla.interpreter.nodes.expression.NablaExternalBiFunctionCallNode;
-import fr.cea.nabla.interpreter.nodes.expression.NablaExternalFunctionCallNode;
 import fr.cea.nabla.interpreter.nodes.expression.NablaExternalMethodCallNode;
-import fr.cea.nabla.interpreter.nodes.expression.NablaExternalSupplierCallNode;
 import fr.cea.nabla.interpreter.nodes.expression.NablaFunctionCallNode;
 import fr.cea.nabla.interpreter.nodes.expression.NablaGetMeshElementsNode;
 import fr.cea.nabla.interpreter.nodes.expression.NablaGetMeshMaxNbElementsNode;
@@ -62,6 +54,8 @@ import fr.cea.nabla.interpreter.nodes.expression.binary.NablaGeqNodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.binary.NablaGtNodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.binary.NablaLeqNodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.binary.NablaLtNodeGen;
+import fr.cea.nabla.interpreter.nodes.expression.binary.NablaMaxNodeGen;
+import fr.cea.nabla.interpreter.nodes.expression.binary.NablaMinNodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.binary.NablaModNodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.binary.NablaMulNodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.binary.NablaNeqNodeGen;
@@ -85,8 +79,10 @@ import fr.cea.nabla.interpreter.nodes.expression.constant.NablaReal3ConstantNode
 import fr.cea.nabla.interpreter.nodes.expression.constant.NablaReal4ConstantNodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.constant.NablaRealConstantNode;
 import fr.cea.nabla.interpreter.nodes.expression.constant.NablaRealConstantNodeGen;
+import fr.cea.nabla.interpreter.nodes.expression.unary.NablaAbsNodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.unary.NablaMinusNodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.unary.NablaNotNodeGen;
+import fr.cea.nabla.interpreter.nodes.expression.unary.NablaSqrtNodeGen;
 import fr.cea.nabla.interpreter.nodes.instruction.NablaExitNode;
 import fr.cea.nabla.interpreter.nodes.instruction.NablaIfNode;
 import fr.cea.nabla.interpreter.nodes.instruction.NablaIfNodeGen;
@@ -194,8 +190,6 @@ public class NablaNodeFactory {
 			}
 		}
 	}
-
-	private final static boolean GRAALVM = true;
 
 	private FrameSlot deltatVariable;
 	private final Map<Function, NablaRootNode> functions = new HashMap<>();
@@ -472,8 +466,10 @@ public class NablaNodeFactory {
 		lexicalScope.locals.put(nodeCoordName, coordinatesSlot);
 		assert (coordinatesSlot != null);
 
+		Iterators.filter(module.eAllContents(), Function.class)
+				.forEachRemaining(f -> functions.put(f, new NablaUndefinedFunctionRootNode(language, f.getName())));
 		module.getFunctions().stream().filter(f -> f.getBody() != null)
-				.forEach(f -> functions.computeIfAbsent(f, function -> createNablaFunctionNode(f)));
+				.forEach(f -> functions.computeIfAbsent(f, function -> createNablaFunctionNode(function)));
 
 		timeVariable = moduleFrameDescriptor.findFrameSlot(module.getTimeVariable().getName());
 		deltatVariable = moduleFrameDescriptor.findFrameSlot(module.getDeltatVariable().getName());
@@ -693,74 +689,63 @@ public class NablaNodeFactory {
 		return expressionNode;
 	}
 
-	private NablaExpressionNode createNablaExternalFunctionCallNode(FunctionCall functionCall) {
+	private NablaExpressionNode createNablaBuiltinOrExternalFunctionCallNode(FunctionCall functionCall) {
 		final Function function = functionCall.getFunction();
-		final IrModule module = (IrModule) function.eContainer();
-		final ClassLoader tccl = Thread.currentThread().getContextClassLoader();
-		final String receiverClassName = module.getName().toLowerCase() + '.' + function.getProvider()
-				+ Utils.FunctionReductionPrefix;
+		final String methodName = function.getName();
+		final String provider = function.getProvider();
+		if (provider.equals("Math")) { // sqrt, min, max, abs
+			switch (methodName) {
+			case "abs":
+				return NablaAbsNodeGen.create(createNablaExpressionNode(functionCall.getArgs().get(0)));
+			case "max":
+				return NablaMaxNodeGen.create(createNablaExpressionNode(functionCall.getArgs().get(0)),
+						createNablaExpressionNode(functionCall.getArgs().get(1)));
+			case "min":
+				return NablaMinNodeGen.create(createNablaExpressionNode(functionCall.getArgs().get(0)),
+						createNablaExpressionNode(functionCall.getArgs().get(1)));
+			case "sqrt":
+				return NablaSqrtNodeGen.create(createNablaExpressionNode(functionCall.getArgs().get(0)));
+			default:
+				final String receiverClassName = "java.lang.Math";
+				return createNablaExternalFunctionCallNode(functionCall, receiverClassName);
+			}			
+		} else {
+			final IrModule module = (IrModule) function.eContainer();
+			final String receiverClassName = module.getName().toLowerCase() + '.' + provider + Utils.FunctionReductionPrefix;
+			return createNablaExternalFunctionCallNode(functionCall, receiverClassName);
+		}
+	}
+
+	private NablaExpressionNode createNablaExternalFunctionCallNode(FunctionCall functionCall, String receiverClassName) {
+		final Function function = functionCall.getFunction();
+		final String methodName = function.getName();
 		final BaseType baseReturnType = function.getReturnType();
 		final Class<?> javaReturnType = FunctionCallHelper.getJavaType(baseReturnType.getPrimitive(),
 				IrTypeExtensions.getDimension(baseReturnType));
-		final String methodName = function.getName();
 		final NablaExpressionNode[] argNodes = functionCall.getArgs().stream().map(e -> createNablaExpressionNode(e))
 				.collect(Collectors.toList()).toArray(new NablaExpressionNode[0]);
-		if (GRAALVM) {
 			return new NablaExternalMethodCallNode(receiverClassName, methodName, javaReturnType, argNodes);
-		} else {
-			try {
-				final Class<?> receiverClass = Class.forName(receiverClassName, true, tccl);
-				final List<Class<?>> javaParameterTypes = function.getInArgs().stream().map(a -> {
-					final PrimitiveType primitiveType = a.getType().getPrimitive();
-					final int dimension = IrTypeExtensions.getDimension(a.getType());
-					return FunctionCallHelper.getJavaType(primitiveType, dimension);
-				}).collect(Collectors.toList());
-				final MethodHandles.Lookup lookup = MethodHandles.lookup();
-				if (javaParameterTypes.isEmpty()) {
-					final MethodType methodType = MethodType.methodType(javaReturnType);
-					CallSite site = LambdaMetafactory.metafactory(lookup, "get", MethodType.methodType(Supplier.class),
-							methodType.generic(), lookup.findStatic(receiverClass, function.getName(), methodType),
-							methodType);
-					final java.util.function.Supplier<Object> externalSupplier = (java.util.function.Supplier<Object>) site
-							.getTarget().invokeExact();
-					return new NablaExternalSupplierCallNode(externalSupplier);
-				} else if (javaParameterTypes.size() == 1) {
-					final MethodType methodType = MethodType.methodType(javaReturnType, javaParameterTypes.get(0));
-					CallSite site = LambdaMetafactory.metafactory(lookup, "apply",
-							MethodType.methodType(java.util.function.Function.class), methodType.generic(),
-							lookup.findStatic(receiverClass, function.getName(), methodType), methodType);
-					final java.util.function.Function<Object, Object> externalFunction = (java.util.function.Function<Object, Object>) site
-							.getTarget().invokeExact();
-					final NablaExpressionNode argNode = argNodes[0];
-					return new NablaExternalFunctionCallNode(externalFunction, argNode);
-				} else {
-					final MethodType methodType = MethodType.methodType(javaReturnType, javaParameterTypes.get(0),
-							javaParameterTypes.get(1));
-					CallSite site = LambdaMetafactory.metafactory(lookup, "apply",
-							MethodType.methodType(BiFunction.class), methodType.generic(),
-							lookup.findStatic(receiverClass, function.getName(), methodType), methodType);
-					final BiFunction<Object, Object, Object> externalFunction = (BiFunction<Object, Object, Object>) site
-							.getTarget().invokeExact();
-					return new NablaExternalBiFunctionCallNode(externalFunction, argNodes);
-				}
-			} catch (Throwable e) {
-				e.printStackTrace();
-				throw new UnsupportedOperationException();
-			}
-		}
 	}
 
 	private NablaExpressionNode createNablaFunctionCallNode(FunctionCall functionCall) {
 		if (functionCall.getFunction().getBody() != null) {
-			final NablaRootNode rootNode = functions.computeIfAbsent(functionCall.getFunction(),
-					function -> createNablaFunctionNode(function));
+			final NablaRootNode rootNode = functions.compute(functionCall.getFunction(), (f, v) -> {
+				if (v != null) {
+					if (v instanceof NablaUndefinedFunctionRootNode) {
+						return createNablaFunctionNode(f);
+					} else {
+						return v;
+					}
+				}
+				throw new IllegalStateException();
+			});
 			final NablaExpressionNode[] argNodes = functionCall.getArgs().stream()
 					.map(e -> createNablaExpressionNode(e)).collect(Collectors.toList())
 					.toArray(new NablaExpressionNode[0]);
 			final NablaFunctionCallNode functionNode = new NablaFunctionCallNode(rootNode, argNodes);
 			return functionNode;
 		} else {
-			return createNablaExternalFunctionCallNode(functionCall);
+			return createNablaBuiltinOrExternalFunctionCallNode(functionCall);
 		}
 	}
 

@@ -29,6 +29,8 @@ import fr.cea.nabla.ir.ir.SimpleVariable;
 public class NablaParser {
 
 	public RootCallTarget parseNabla(NablaLanguage nablaLanguage, Source source) {
+		System.out.println("Begin parsing");
+		final long t = System.nanoTime();
 		final Env env = NablaLanguage.getCurrentContext().getEnv();
 		final OptionValues options = env.getOptions();
 		String genModel = options.get(NablaOptions.MODEL);
@@ -73,7 +75,9 @@ public class NablaParser {
 		final RootCallTarget moduleCallTarget = Truffle.getRuntime()
 				.createCallTarget(new NablaNodeFactory(nablaLanguage, source).createModule(irModule, jsonOptions));
 		final RootNode evalModule = new NablaEvalRootNode(nablaLanguage, moduleCallTarget);
-		return Truffle.getRuntime().createCallTarget(evalModule);
+		final RootCallTarget result = Truffle.getRuntime().createCallTarget(evalModule);
+		System.out.println("Done parsing, duration: " + ((System.nanoTime() - t) / 1000000));
+		return result;
 	}
 
 	private NablaDumpVariablesInstrument getDumpInstrument(Env env) {

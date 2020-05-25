@@ -14,21 +14,21 @@ import fr.cea.nabla.interpreter.values.NV2Int;
 import fr.cea.nabla.interpreter.values.NV2Real;
 
 @NodeChild("valueNode")
-@NodeInfo(shortName = "-")
-public abstract class NablaMinusNode extends NablaExpressionNode {
+@NodeInfo(shortName = "sqrt")
+public abstract class NablaSqrtNode extends NablaExpressionNode {
 
 	@Specialization
-	protected NV0Int minus(NV0Int right) {
-		return new NV0Int(Math.multiplyExact(-1, right.getData()));
+	protected NV0Int abs(NV0Int value) {
+		return new NV0Int((int) Math.sqrt(value.getData()));
 	}
 
 	@Specialization
-	protected NV0Real minus(NV0Real value) {
-		return new NV0Real(-1 * value.getData());
+	protected NV0Real abs(NV0Real value) {
+		return new NV0Real(Math.sqrt(value.getData()));
 	}
 
 	@Specialization
-	protected NV1Int minus(NV1Int value) {
+	protected NV1Int abs(NV1Int value) {
 		final int[] valueData = value.getData();
 
 		CompilerAsserts.compilationConstant(valueData.length);
@@ -36,14 +36,14 @@ public abstract class NablaMinusNode extends NablaExpressionNode {
 		final int[] result = new int[valueData.length];
 
 		for (int i = 0; i < valueData.length; i++) {
-			result[i] = Math.multiplyExact(-1, valueData[i]);
+			result[i] = (int) Math.sqrt(valueData[i]);
 		}
 
 		return new NV1Int(result);
 	}
 
 	@Specialization
-	protected NV1Real minus(NV1Real value) {
+	protected NV1Real abs(NV1Real value) {
 		final double[] valueData = value.getData();
 
 		CompilerAsserts.compilationConstant(valueData.length);
@@ -51,14 +51,14 @@ public abstract class NablaMinusNode extends NablaExpressionNode {
 		final double[] result = new double[valueData.length];
 
 		for (int i = 0; i < valueData.length; i++) {
-			result[i] = -1 * valueData[i];
+			result[i] = Math.sqrt(valueData[i]);
 		}
 
 		return new NV1Real(result);
 	}
 
 	@Specialization
-	protected NV2Int minus(NV2Int value) {
+	protected NV2Int abs(NV2Int value) {
 		final int[][] valueData = value.getData();
 
 		CompilerAsserts.compilationConstant(valueData.length);
@@ -68,7 +68,7 @@ public abstract class NablaMinusNode extends NablaExpressionNode {
 
 		for (int i = 0; i < valueData.length; i++) {
 			for (int j = 0; j < valueData[0].length; j++) {
-				result[i][j] = Math.multiplyExact(-1, valueData[i][j]);
+				result[i][j] = (int) Math.sqrt(valueData[i][j]);
 			}
 		}
 
@@ -76,7 +76,7 @@ public abstract class NablaMinusNode extends NablaExpressionNode {
 	}
 
 	@Specialization
-	protected NV2Real minus(NV2Real value) {
+	protected NV2Real abs(NV2Real value) {
 		final double[][] valueData = value.getData();
 
 		CompilerAsserts.compilationConstant(valueData.length);
@@ -86,7 +86,7 @@ public abstract class NablaMinusNode extends NablaExpressionNode {
 
 		for (int i = 0; i < valueData.length; i++) {
 			for (int j = 0; j < valueData[0].length; j++) {
-				result[i][j] = -1 * valueData[i][j];
+				result[i][j] = Math.sqrt(valueData[i][j]);
 			}
 		}
 
