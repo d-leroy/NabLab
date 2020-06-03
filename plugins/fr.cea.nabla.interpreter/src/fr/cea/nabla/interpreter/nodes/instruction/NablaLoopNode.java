@@ -41,7 +41,7 @@ public abstract class NablaLoopNode extends NablaInstructionNode {
 			frame.getFrameDescriptor().setFrameSlotKind(counterSlot, FrameSlotKind.Object);
 		}
 		body.executeGeneric(frame);
-		//================================
+		//============= Loop Tiling =============
 //		final int offset = 1;
 //		final int iMax = 20;
 //		final int iiMax = (cachedCount - 1 - offset) / iMax;
@@ -56,7 +56,7 @@ public abstract class NablaLoopNode extends NablaInstructionNode {
 //			frame.setObject(indexSlot, new NV0Int(i));
 //			body.executeGeneric(frame);
 //		}
-		//================================
+		//=======================================
 		for (int i = 1; i < cachedCount - 1; i++) {
 			frame.setObject(indexSlot, new NV0Int(i));
 			if (counterSlot != null) {

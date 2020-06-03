@@ -83,7 +83,7 @@ import fr.cea.nabla.interpreter.nodes.expression.unary.NablaAbsNodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.unary.NablaMinusNodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.unary.NablaNotNodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.unary.NablaSqrtNodeGen;
-import fr.cea.nabla.interpreter.nodes.instruction.NablaExitNode;
+import fr.cea.nabla.interpreter.nodes.instruction.NablaExitNodeGen;
 import fr.cea.nabla.interpreter.nodes.instruction.NablaIfNode;
 import fr.cea.nabla.interpreter.nodes.instruction.NablaIfNodeGen;
 import fr.cea.nabla.interpreter.nodes.instruction.NablaInstructionBlockNode;
@@ -865,7 +865,7 @@ public class NablaNodeFactory {
 			instructionNode = createItemIndexDefinitionNode((ItemIndexDefinition) instruction);
 			break;
 		case IrPackage.EXIT:
-			instructionNode = new NablaExitNode(((Exit) instruction).getMessage());
+			instructionNode = NablaExitNodeGen.create(((Exit) instruction).getMessage());
 			break;
 		default:
 			throw new UnsupportedOperationException();

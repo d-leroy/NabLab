@@ -1,31 +1,26 @@
 package fr.cea.nabla.interpreter.nodes.expression;
 
-import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.instrumentation.StandardTags;
 import com.oracle.truffle.api.instrumentation.Tag;
-import com.oracle.truffle.api.interop.InteropException;
-import com.oracle.truffle.api.interop.InteropLibrary;
-import com.oracle.truffle.api.library.CachedLibrary;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
-import com.oracle.truffle.api.nodes.Node;
 
-import fr.cea.nabla.interpreter.nodes.expression.NablaExternalMethodCallNodeFactory.InvokeMethodNodeGen;
 import fr.cea.nabla.interpreter.runtime.NablaContext;
+import fr.cea.nabla.interpreter.runtime.NablaInvokeNode;
+import fr.cea.nabla.interpreter.runtime.NablaInvokeNodeGen;
 import fr.cea.nabla.interpreter.values.BoxValueNode;
 import fr.cea.nabla.interpreter.values.BoxValueNodeGen;
 import fr.cea.nabla.interpreter.values.CreateNablaValueNode;
 import fr.cea.nabla.interpreter.values.CreateNablaValueNodeGen;
-import fr.cea.nabla.interpreter.values.NablaValue;
 import fr.cea.nabla.interpreter.values.UnboxValueNode;
-import fr.cea.nabla.interpreter.values.UnboxValueNodeGen;
+import fr.cea.nabla.interpreter.values.UnboxValueNodeGen;;
 
 public class NablaExternalMethodCallNode extends NablaExpressionNode {
 
 	@Children
 	private UnboxValueNode[] unboxArgNodes;
 	@Child
-	private InvokeMethod invokeNode;
+	private NablaInvokeNode invokeNode;
 	@Child
 	private BoxValueNode unboxNode;
 	@Child
@@ -41,7 +36,7 @@ public class NablaExternalMethodCallNode extends NablaExpressionNode {
 		}
 		this.methodName = methodName;
 		this.receiverObject = NablaContext.getCurrent().getEnv().lookupHostSymbol(receiverClass);
-		this.invokeNode = InvokeMethodNodeGen.create();
+		this.invokeNode = NablaInvokeNodeGen.create();
 		this.unboxNode = BoxValueNodeGen.create(returnType);
 		this.createNablaValueNode = CreateNablaValueNodeGen.create();
 	}
@@ -55,8 +50,7 @@ public class NablaExternalMethodCallNode extends NablaExpressionNode {
 		}
 
 		final Object invokeResult = invokeNode.execute(receiverObject, methodName, argumentValues);
-		final NablaValue nablaResult = createNablaValueNode.execute(unboxNode.execute(invokeResult));
-		return nablaResult;
+		return createNablaValueNode.execute(unboxNode.execute(invokeResult));
 	}
 
 	@Override
@@ -65,20 +59,5 @@ public class NablaExternalMethodCallNode extends NablaExpressionNode {
 			return true;
 		}
 		return super.hasTag(tag);
-	}
-
-	abstract static class InvokeMethod extends Node {
-		abstract Object execute(Object obj, String methodName, Object[] arguments);
-
-		@Specialization(guards = "objLibrary.hasMembers(obj)", limit = "4")
-		Object doDefault(Object obj, String methodName, Object[] arguments,
-				@CachedLibrary("obj") InteropLibrary objLibrary) {
-			try {
-				return objLibrary.invokeMember(obj, methodName, arguments);
-			} catch (InteropException e) {
-				// TODO translate errors to your language errors
-			}
-			return null;
-		}
 	}
 }

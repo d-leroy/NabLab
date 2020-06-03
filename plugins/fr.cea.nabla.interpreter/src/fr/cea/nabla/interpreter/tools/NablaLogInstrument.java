@@ -26,20 +26,18 @@ import com.oracle.truffle.api.instrumentation.StandardTags.WriteVariableTag;
 import com.oracle.truffle.api.instrumentation.TruffleInstrument;
 import com.oracle.truffle.api.instrumentation.TruffleInstrument.Registration;
 
-import fr.cea.nabla.interpreter.tools.NablaTags.DumpTag;
 import fr.cea.nabla.interpreter.tools.NablaTags.JobTag;
-import fr.cea.nabla.ir.ir.SimpleVariable;
-import fr.cea.nabla.javalib.mesh.PvdFileWriter2D;
-import fr.cea.nabla.javalib.mesh.Quad;
 
-@Registration(id = NablaDumpVariablesInstrument.ID, name = "Nabla Variables Dump", version = "0.1.3", services = NablaDumpVariablesInstrument.class)
-public class NablaDumpVariablesInstrument extends TruffleInstrument {
+@Registration(id = NablaLogInstrument.ID, name = "Nabla Logger", version = "0.1.3", services = NablaLogInstrument.class)
+public class NablaLogInstrument extends TruffleInstrument {
 
 	static final OptionType<List<String>> STRING_LIST_TYPE = new OptionType<>("String List",
 			o -> Arrays.stream(o.split(",")).map(s -> s.trim()).collect(Collectors.toList()));
 
-	@Option(name = "", help = "Enable Nabla Variables Dump (default: false).", category = OptionCategory.USER, stability = OptionStability.STABLE)
+	@Option(name = "", help = "Enable Nabla Logger (default: false).", category = OptionCategory.USER, stability = OptionStability.STABLE)
 	public static final OptionKey<Boolean> ENABLED = new OptionKey<>(false);
+	@Option(name = "format", help = "Enable Real Numbers Formatting (default: false).", category = OptionCategory.USER, stability = OptionStability.STABLE)
+	public static final OptionKey<Boolean> FORMAT = new OptionKey<>(false);
 	@Option(name = "variables", help = "Observe Listed Nabla Variables (default: \\\"\\\").", category = OptionCategory.USER, stability = OptionStability.STABLE)
 	public static final OptionKey<List<String>> VARIABLES = new OptionKey<>(new ArrayList<>(), STRING_LIST_TYPE);
 	@Option(name = "jobs", help = "Observe Listed Nabla Jobs (default: \\\"\\\").", category = OptionCategory.USER, stability = OptionStability.STABLE)
@@ -51,32 +49,16 @@ public class NablaDumpVariablesInstrument extends TruffleInstrument {
 	@Option(name = "debug-source", help = "Print Source Sections (default: false).", category = OptionCategory.USER, stability = OptionStability.STABLE)
 	public static final OptionKey<Boolean> DEBUG_SOURCE = new OptionKey<>(false);
 
-	public static final String ID = "nabla-dump-variables";
-	public static final String VARIABLES_OPTION = "nabla-dump-variables.variables";
-	public static final String JOBS_OPTION = "nabla-dump-variables.jobs";
-	public static final String VARIABLES_ALL_OPTION = "nabla-dump-variables.variables-all";
-	public static final String JOBS_ALL_OPTION = "nabla-dump-variables.jobs-all";
-	public static final String DEBUG_SOURCE_OPTION = "nabla-dump-variables.debug-source";
+	public static final String ID = "nabla-logger";
+	public static final String FORMAT_OPTION = "nabla-logger.format";
+	public static final String VARIABLES_OPTION = "nabla-logger.variables";
+	public static final String JOBS_OPTION = "nabla-logger.jobs";
+	public static final String VARIABLES_ALL_OPTION = "nabla-logger.variables-all";
+	public static final String JOBS_ALL_OPTION = "nabla-logger.jobs-all";
+	public static final String DEBUG_SOURCE_OPTION = "nabla-logger.debug-source";
 
 	@CompilationFinal
 	private int offset;
-
-	@CompilationFinal
-	private PvdFileWriter2D writer;
-	@CompilationFinal
-	private String iterationVariable;
-	@CompilationFinal
-	private String timeVariable;
-	@CompilationFinal
-	private String periodVariable;
-	@CompilationFinal(dimensions = 1)
-	private String[] cellVariables;
-	@CompilationFinal(dimensions = 1)
-	private String[] nodeVariables;
-	private String nodeCoordinatesVariable;
-
-	@CompilationFinal
-	private SimpleVariable period;
 
 	private boolean variablesAll = false;
 	private boolean jobsAll = false;
@@ -100,20 +82,28 @@ public class NablaDumpVariablesInstrument extends TruffleInstrument {
 
 	private void enable(final Env env) {
 		final Instrumenter instrumenter = env.getInstrumenter();
-		
-		final SourceSectionFilter filterDump = SourceSectionFilter.newBuilder().tagIs(DumpTag.class).build();
-		instrumenter.attachExecutionEventFactory(filterDump, new DumpVariablesNodeFactory(this));
-		
-	}
 
-	@TruffleBoundary
-	public void dump(int iteration, double time, double[][] nodes, Quad[] cells, Map<String, double[]> cellVariables,
-			Map<String, double[]> nodeVariables) {
-
-		// Store value of variable observed and time variable, only dump when time
-		// variable present, clear on dump
-
-//TODO		writer.writeFile(iteration, time, nodes, cells, cellVariables, nodeVariables);
+		final OptionValues options = env.getOptions();
+		final List<String> variables = VARIABLES.getValue(options);
+		variablesAll = VARIABLES_ALL.getValue(options);
+		final List<String> jobs = JOBS.getValue(options);
+		jobsAll = JOBS_ALL.getValue(options);
+		if (!variables.isEmpty() || variablesAll) {
+			observedVariables.addAll(variables);
+			final SourceSectionFilter filterVariables = SourceSectionFilter.newBuilder().tagIs(WriteVariableTag.class)
+					.build();
+			instrumenter.attachExecutionEventFactory(filterVariables, new WriteVariablesEventNodeFactory(this, FORMAT.getValue(options)));
+		}
+		if (!jobs.isEmpty() || jobsAll) {
+			observedJobs.addAll(jobs);
+			final SourceSectionFilter filterJobs = SourceSectionFilter.newBuilder().tagIs(JobTag.class).build();
+			instrumenter.attachExecutionEventFactory(filterJobs, new JobEventNodeFactory(this));
+		}
+		debugSource = DEBUG_SOURCE.getValue(options);
+		if (debugSource) {
+			final SourceSectionFilter filterNothing = SourceSectionFilter.newBuilder().tagIsNot(StandardTags.TryBlockTag.class).build();
+			instrumenter.attachExecutionEventFactory(filterNothing, new AnyEventNodeFactory());
+		}
 	}
 
 	@TruffleBoundary
@@ -123,7 +113,7 @@ public class NablaDumpVariablesInstrument extends TruffleInstrument {
 
 	@Override
 	protected OptionDescriptors getOptionDescriptors() {
-		return new NablaDumpVariablesInstrumentOptionDescriptors();
+		return new NablaLogInstrumentOptionDescriptors();
 	}
 
 	public boolean isVariableObserved(FrameSlot variableSlot) {
@@ -134,50 +124,6 @@ public class NablaDumpVariablesInstrument extends TruffleInstrument {
 	public boolean isJobObserved(String jobName) {
 		assert (jobName != null);
 		return jobsAll || observedJobs.contains(jobName);
-	}
-
-	public void configure(String moduleName, String iterationVariable, String timeVariable,
-			String periodVariable, String[] cellVariables, String[] nodeVariables, String nodeCoordinatesVariable,
-			SimpleVariable period) {
-
-//TODO		this.writer = new PvdFileWriter2D(moduleName);
-
-		this.iterationVariable = iterationVariable;
-		this.timeVariable = timeVariable;
-		this.periodVariable = periodVariable;
-		this.cellVariables = cellVariables;
-		this.nodeVariables = nodeVariables;
-		this.nodeCoordinatesVariable = nodeCoordinatesVariable;
-
-		this.period = period;
-	}
-
-	public String getIterationVariable() {
-		return iterationVariable;
-	}
-
-	public String getTimeVariable() {
-		return timeVariable;
-	}
-
-	public String getPeriodVariable() {
-		return periodVariable;
-	}
-
-	public String[] getCellVariables() {
-		return cellVariables;
-	}
-
-	public String[] getNodeVariables() {
-		return nodeVariables;
-	}
-
-	public double getPeriod() {
-		return 1.0; //TODO period;
-	}
-
-	public String getNodeCoordinatesVariable() {
-		return nodeCoordinatesVariable;
 	}
 
 	@TruffleBoundary

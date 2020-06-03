@@ -122,6 +122,12 @@ public class NV0Real implements NablaValue {
 		}
 		return true;
 	}
+	
+	@Override
+	@TruffleBoundary
+	public String toString() {
+		return "" + this.data;
+	}
 
 	public double getData() {
 		return this.data;

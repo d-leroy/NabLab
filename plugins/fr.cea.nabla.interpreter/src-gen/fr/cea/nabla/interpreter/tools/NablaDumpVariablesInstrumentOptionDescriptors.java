@@ -18,6 +18,8 @@ final class NablaDumpVariablesInstrumentOptionDescriptors implements OptionDescr
         switch (optionName) {
             case "nabla-dump-variables" :
                 return OptionDescriptor.newBuilder(NablaDumpVariablesInstrument.ENABLED, "nabla-dump-variables").deprecated(false).help("Enable Nabla Variables Dump (default: false).").category(OptionCategory.USER).stability(OptionStability.STABLE).build();
+            case "nabla-dump-variables.debug-source" :
+                return OptionDescriptor.newBuilder(NablaDumpVariablesInstrument.DEBUG_SOURCE, "nabla-dump-variables.debug-source").deprecated(false).help("Print Source Sections (default: false).").category(OptionCategory.USER).stability(OptionStability.STABLE).build();
             case "nabla-dump-variables.jobs" :
                 return OptionDescriptor.newBuilder(NablaDumpVariablesInstrument.JOBS, "nabla-dump-variables.jobs").deprecated(false).help("Observe Listed Nabla Jobs (default: \"\").").category(OptionCategory.USER).stability(OptionStability.STABLE).build();
             case "nabla-dump-variables.jobs-all" :
@@ -34,6 +36,7 @@ final class NablaDumpVariablesInstrumentOptionDescriptors implements OptionDescr
     public Iterator<OptionDescriptor> iterator() {
         return Arrays.asList(
             OptionDescriptor.newBuilder(NablaDumpVariablesInstrument.ENABLED, "nabla-dump-variables").deprecated(false).help("Enable Nabla Variables Dump (default: false).").category(OptionCategory.USER).stability(OptionStability.STABLE).build(),
+            OptionDescriptor.newBuilder(NablaDumpVariablesInstrument.DEBUG_SOURCE, "nabla-dump-variables.debug-source").deprecated(false).help("Print Source Sections (default: false).").category(OptionCategory.USER).stability(OptionStability.STABLE).build(),
             OptionDescriptor.newBuilder(NablaDumpVariablesInstrument.JOBS, "nabla-dump-variables.jobs").deprecated(false).help("Observe Listed Nabla Jobs (default: \"\").").category(OptionCategory.USER).stability(OptionStability.STABLE).build(),
             OptionDescriptor.newBuilder(NablaDumpVariablesInstrument.JOBS_ALL, "nabla-dump-variables.jobs-all").deprecated(false).help("Observe All Nabla Jobs (default: false).").category(OptionCategory.USER).stability(OptionStability.STABLE).build(),
             OptionDescriptor.newBuilder(NablaDumpVariablesInstrument.VARIABLES, "nabla-dump-variables.variables").deprecated(false).help("Observe Listed Nabla Variables (default: \"\").").category(OptionCategory.USER).stability(OptionStability.STABLE).build(),

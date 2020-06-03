@@ -9,14 +9,17 @@ import com.oracle.truffle.api.instrumentation.ExecutionEventNode;
 @NodeChild(value = "print", type = PrettyPrintValueNode.class)
 public abstract class WriteVariableEventNode extends ExecutionEventNode {
 
-	private final NablaDumpVariablesInstrument nablaDumpVariablesInstrument;
+	private final NablaLogInstrument nablaLogInstrument;
 
 	private final FrameSlot variableSlot;
 
-	public WriteVariableEventNode(NablaDumpVariablesInstrument nablaDumpVariablesInstrument, FrameSlot variableSlot) {
+	private final String source;
+	
+	public WriteVariableEventNode(NablaLogInstrument nablaLogInstrument, FrameSlot variableSlot, String source) {
 		assert (variableSlot != null);
-		this.nablaDumpVariablesInstrument = nablaDumpVariablesInstrument;
+		this.nablaLogInstrument = nablaLogInstrument;
 		this.variableSlot = variableSlot;
+		this.source = source;
 	}
 	
 	@Override
@@ -28,7 +31,7 @@ public abstract class WriteVariableEventNode extends ExecutionEventNode {
 	
 	@Specialization
 	protected void print(VirtualFrame frame, String string) {
-		nablaDumpVariablesInstrument.inc(variableSlot, string);
+		nablaLogInstrument.inc(variableSlot, source + ": " + string);
 	}
 	
 }

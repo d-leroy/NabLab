@@ -35,12 +35,8 @@ public final class PrettyPrintValueNodeGen extends PrettyPrintValueNode {
     @CompilationFinal private int state_;
     @CompilationFinal private OnReturn11Data onReturn11_cache;
 
-    private PrettyPrintValueNodeGen(NablaReadVariableNode read) {
-        this.read_ = read;
-    }
-
-    private PrettyPrintValueNodeGen(String format, NablaReadVariableNode read) {
-        super(format);
+    private PrettyPrintValueNodeGen(int range, boolean doFormat, NablaReadVariableNode read) {
+        super(range, doFormat);
         this.read_ = read;
     }
 
@@ -49,87 +45,87 @@ public final class PrettyPrintValueNodeGen extends PrettyPrintValueNode {
     protected String execute(VirtualFrame frameValue) {
         int state = state_;
         Object readValue_ = this.read_.executeGeneric(frameValue);
-        if ((state & 0b1) != 0 /* is-active onReturn(VirtualFrame, NV0Bool) */ && readValue_ instanceof NV0Bool) {
+        if ((state & 0b1) != 0 /* is-active onReturn(NV0Bool) */ && readValue_ instanceof NV0Bool) {
             NV0Bool readValue__ = (NV0Bool) readValue_;
-            return onReturn(frameValue, readValue__);
+            return onReturn(readValue__);
         }
-        if ((state & 0b10) != 0 /* is-active onReturn(VirtualFrame, NV1Bool) */ && readValue_ instanceof NV1Bool) {
+        if ((state & 0b10) != 0 /* is-active onReturn(NV1Bool) */ && readValue_ instanceof NV1Bool) {
             NV1Bool readValue__ = (NV1Bool) readValue_;
-            return onReturn(frameValue, readValue__);
+            return onReturn(readValue__);
         }
-        if ((state & 0b100) != 0 /* is-active onReturn(VirtualFrame, NV2Bool) */ && readValue_ instanceof NV2Bool) {
+        if ((state & 0b100) != 0 /* is-active onReturn(NV2Bool) */ && readValue_ instanceof NV2Bool) {
             NV2Bool readValue__ = (NV2Bool) readValue_;
-            return onReturn(frameValue, readValue__);
+            return onReturn(readValue__);
         }
-        if ((state & 0b1000) != 0 /* is-active onReturn(VirtualFrame, NV3Bool) */ && readValue_ instanceof NV3Bool) {
+        if ((state & 0b1000) != 0 /* is-active onReturn(NV3Bool) */ && readValue_ instanceof NV3Bool) {
             NV3Bool readValue__ = (NV3Bool) readValue_;
-            return onReturn(frameValue, readValue__);
+            return onReturn(readValue__);
         }
-        if ((state & 0b10000) != 0 /* is-active onReturn(VirtualFrame, NV4Bool) */ && readValue_ instanceof NV4Bool) {
+        if ((state & 0b10000) != 0 /* is-active onReturn(NV4Bool) */ && readValue_ instanceof NV4Bool) {
             NV4Bool readValue__ = (NV4Bool) readValue_;
-            return onReturn(frameValue, readValue__);
+            return onReturn(readValue__);
         }
-        if ((state & 0b100000) != 0 /* is-active onReturn(VirtualFrame, NV0Int) */ && readValue_ instanceof NV0Int) {
+        if ((state & 0b100000) != 0 /* is-active onReturn(NV0Int) */ && readValue_ instanceof NV0Int) {
             NV0Int readValue__ = (NV0Int) readValue_;
-            return onReturn(frameValue, readValue__);
+            return onReturn(readValue__);
         }
-        if ((state & 0b1000000) != 0 /* is-active onReturn(VirtualFrame, NV1Int) */ && readValue_ instanceof NV1Int) {
+        if ((state & 0b1000000) != 0 /* is-active onReturn(NV1Int) */ && readValue_ instanceof NV1Int) {
             NV1Int readValue__ = (NV1Int) readValue_;
-            return onReturn(frameValue, readValue__);
+            return onReturn(readValue__);
         }
-        if ((state & 0b10000000) != 0 /* is-active onReturn(VirtualFrame, NV2Int) */ && readValue_ instanceof NV2Int) {
+        if ((state & 0b10000000) != 0 /* is-active onReturn(NV2Int) */ && readValue_ instanceof NV2Int) {
             NV2Int readValue__ = (NV2Int) readValue_;
-            return onReturn(frameValue, readValue__);
+            return onReturn(readValue__);
         }
-        if ((state & 0b100000000) != 0 /* is-active onReturn(VirtualFrame, NV3Int) */ && readValue_ instanceof NV3Int) {
+        if ((state & 0b100000000) != 0 /* is-active onReturn(NV3Int) */ && readValue_ instanceof NV3Int) {
             NV3Int readValue__ = (NV3Int) readValue_;
-            return onReturn(frameValue, readValue__);
+            return onReturn(readValue__);
         }
-        if ((state & 0b1000000000) != 0 /* is-active onReturn(VirtualFrame, NV4Int) */ && readValue_ instanceof NV4Int) {
+        if ((state & 0b1000000000) != 0 /* is-active onReturn(NV4Int) */ && readValue_ instanceof NV4Int) {
             NV4Int readValue__ = (NV4Int) readValue_;
-            return onReturn(frameValue, readValue__);
+            return onReturn(readValue__);
         }
-        if ((state & 0b10000000000) != 0 /* is-active onReturn(VirtualFrame, NV0Real) */ && readValue_ instanceof NV0Real) {
+        if ((state & 0b10000000000) != 0 /* is-active onReturn(NV0Real) */ && readValue_ instanceof NV0Real) {
             NV0Real readValue__ = (NV0Real) readValue_;
-            return onReturn(frameValue, readValue__);
+            return onReturn(readValue__);
         }
-        if ((state & 0b11100000000000) != 0 /* is-active onReturn(VirtualFrame, NV1Real, int, int) || onReturnRange(VirtualFrame, NV1Real) || onReturn(VirtualFrame, NV1Real) */ && readValue_ instanceof NV1Real) {
+        if ((state & 0b11100000000000) != 0 /* is-active onReturn(NV1Real, int, int) || onReturnRange(NV1Real) || onReturn(NV1Real) */ && readValue_ instanceof NV1Real) {
             NV1Real readValue__ = (NV1Real) readValue_;
-            if ((state & 0b100000000000) != 0 /* is-active onReturn(VirtualFrame, NV1Real, int, int) */ && (readValue__.getData().length > 11)) {
+            if ((state & 0b100000000000) != 0 /* is-active onReturn(NV1Real, int, int) */ && (readValue__.getData().length > computeWidth())) {
                 OnReturn11Data s12_ = this.onReturn11_cache;
                 while (s12_ != null) {
                     if ((readValue__.getData().length == s12_.cachedLength_)) {
-                        return onReturn(frameValue, readValue__, s12_.cachedLength_, s12_.cachedMid_);
+                        return onReturn(readValue__, s12_.cachedLength_, s12_.cachedMid_);
                     }
                     s12_ = s12_.next_;
                 }
             }
-            if ((state & 0b1000000000000) != 0 /* is-active onReturnRange(VirtualFrame, NV1Real) */) {
-                if ((readValue__.getData().length > 11)) {
-                    return onReturnRange(frameValue, readValue__);
+            if ((state & 0b1000000000000) != 0 /* is-active onReturnRange(NV1Real) */) {
+                if ((readValue__.getData().length > computeWidth())) {
+                    return onReturnRange(readValue__);
                 }
             }
-            if ((state & 0b10000000000000) != 0 /* is-active onReturn(VirtualFrame, NV1Real) */) {
-                return onReturn(frameValue, readValue__);
+            if ((state & 0b10000000000000) != 0 /* is-active onReturn(NV1Real) */) {
+                return onReturn(readValue__);
             }
         }
-        if ((state & 0b100000000000000) != 0 /* is-active onReturn(VirtualFrame, NV2Real) */ && readValue_ instanceof NV2Real) {
+        if ((state & 0b100000000000000) != 0 /* is-active onReturn(NV2Real) */ && readValue_ instanceof NV2Real) {
             NV2Real readValue__ = (NV2Real) readValue_;
-            return onReturn(frameValue, readValue__);
+            return onReturn(readValue__);
         }
-        if ((state & 0b1000000000000000) != 0 /* is-active onReturn(VirtualFrame, NV3Real) */ && readValue_ instanceof NV3Real) {
+        if ((state & 0b1000000000000000) != 0 /* is-active onReturn(NV3Real) */ && readValue_ instanceof NV3Real) {
             NV3Real readValue__ = (NV3Real) readValue_;
-            return onReturn(frameValue, readValue__);
+            return onReturn(readValue__);
         }
-        if ((state & 0x10000) != 0 /* is-active onReturn(VirtualFrame, NV4Real) */ && readValue_ instanceof NV4Real) {
+        if ((state & 0x10000) != 0 /* is-active onReturn(NV4Real) */ && readValue_ instanceof NV4Real) {
             NV4Real readValue__ = (NV4Real) readValue_;
-            return onReturn(frameValue, readValue__);
+            return onReturn(readValue__);
         }
         CompilerDirectives.transferToInterpreterAndInvalidate();
-        return executeAndSpecialize(frameValue, readValue_);
+        return executeAndSpecialize(readValue_);
     }
 
-    private String executeAndSpecialize(VirtualFrame frameValue, Object readValue) {
+    private String executeAndSpecialize(Object readValue) {
         Lock lock = getLock();
         boolean hasLock = true;
         lock.lock();
@@ -137,87 +133,87 @@ public final class PrettyPrintValueNodeGen extends PrettyPrintValueNode {
         try {
             if (readValue instanceof NV0Bool) {
                 NV0Bool readValue_ = (NV0Bool) readValue;
-                this.state_ = state = state | 0b1 /* add-active onReturn(VirtualFrame, NV0Bool) */;
+                this.state_ = state = state | 0b1 /* add-active onReturn(NV0Bool) */;
                 lock.unlock();
                 hasLock = false;
-                return onReturn(frameValue, readValue_);
+                return onReturn(readValue_);
             }
             if (readValue instanceof NV1Bool) {
                 NV1Bool readValue_ = (NV1Bool) readValue;
-                this.state_ = state = state | 0b10 /* add-active onReturn(VirtualFrame, NV1Bool) */;
+                this.state_ = state = state | 0b10 /* add-active onReturn(NV1Bool) */;
                 lock.unlock();
                 hasLock = false;
-                return onReturn(frameValue, readValue_);
+                return onReturn(readValue_);
             }
             if (readValue instanceof NV2Bool) {
                 NV2Bool readValue_ = (NV2Bool) readValue;
-                this.state_ = state = state | 0b100 /* add-active onReturn(VirtualFrame, NV2Bool) */;
+                this.state_ = state = state | 0b100 /* add-active onReturn(NV2Bool) */;
                 lock.unlock();
                 hasLock = false;
-                return onReturn(frameValue, readValue_);
+                return onReturn(readValue_);
             }
             if (readValue instanceof NV3Bool) {
                 NV3Bool readValue_ = (NV3Bool) readValue;
-                this.state_ = state = state | 0b1000 /* add-active onReturn(VirtualFrame, NV3Bool) */;
+                this.state_ = state = state | 0b1000 /* add-active onReturn(NV3Bool) */;
                 lock.unlock();
                 hasLock = false;
-                return onReturn(frameValue, readValue_);
+                return onReturn(readValue_);
             }
             if (readValue instanceof NV4Bool) {
                 NV4Bool readValue_ = (NV4Bool) readValue;
-                this.state_ = state = state | 0b10000 /* add-active onReturn(VirtualFrame, NV4Bool) */;
+                this.state_ = state = state | 0b10000 /* add-active onReturn(NV4Bool) */;
                 lock.unlock();
                 hasLock = false;
-                return onReturn(frameValue, readValue_);
+                return onReturn(readValue_);
             }
             if (readValue instanceof NV0Int) {
                 NV0Int readValue_ = (NV0Int) readValue;
-                this.state_ = state = state | 0b100000 /* add-active onReturn(VirtualFrame, NV0Int) */;
+                this.state_ = state = state | 0b100000 /* add-active onReturn(NV0Int) */;
                 lock.unlock();
                 hasLock = false;
-                return onReturn(frameValue, readValue_);
+                return onReturn(readValue_);
             }
             if (readValue instanceof NV1Int) {
                 NV1Int readValue_ = (NV1Int) readValue;
-                this.state_ = state = state | 0b1000000 /* add-active onReturn(VirtualFrame, NV1Int) */;
+                this.state_ = state = state | 0b1000000 /* add-active onReturn(NV1Int) */;
                 lock.unlock();
                 hasLock = false;
-                return onReturn(frameValue, readValue_);
+                return onReturn(readValue_);
             }
             if (readValue instanceof NV2Int) {
                 NV2Int readValue_ = (NV2Int) readValue;
-                this.state_ = state = state | 0b10000000 /* add-active onReturn(VirtualFrame, NV2Int) */;
+                this.state_ = state = state | 0b10000000 /* add-active onReturn(NV2Int) */;
                 lock.unlock();
                 hasLock = false;
-                return onReturn(frameValue, readValue_);
+                return onReturn(readValue_);
             }
             if (readValue instanceof NV3Int) {
                 NV3Int readValue_ = (NV3Int) readValue;
-                this.state_ = state = state | 0b100000000 /* add-active onReturn(VirtualFrame, NV3Int) */;
+                this.state_ = state = state | 0b100000000 /* add-active onReturn(NV3Int) */;
                 lock.unlock();
                 hasLock = false;
-                return onReturn(frameValue, readValue_);
+                return onReturn(readValue_);
             }
             if (readValue instanceof NV4Int) {
                 NV4Int readValue_ = (NV4Int) readValue;
-                this.state_ = state = state | 0b1000000000 /* add-active onReturn(VirtualFrame, NV4Int) */;
+                this.state_ = state = state | 0b1000000000 /* add-active onReturn(NV4Int) */;
                 lock.unlock();
                 hasLock = false;
-                return onReturn(frameValue, readValue_);
+                return onReturn(readValue_);
             }
             if (readValue instanceof NV0Real) {
                 NV0Real readValue_ = (NV0Real) readValue;
-                this.state_ = state = state | 0b10000000000 /* add-active onReturn(VirtualFrame, NV0Real) */;
+                this.state_ = state = state | 0b10000000000 /* add-active onReturn(NV0Real) */;
                 lock.unlock();
                 hasLock = false;
-                return onReturn(frameValue, readValue_);
+                return onReturn(readValue_);
             }
             if (readValue instanceof NV1Real) {
                 NV1Real readValue_ = (NV1Real) readValue;
-                if ((readValue_.getData().length > 11)) {
+                if ((readValue_.getData().length > computeWidth())) {
                     int count12_ = 0;
                     OnReturn11Data s12_ = this.onReturn11_cache;
-                    if ((state & 0b100000000000) != 0 /* is-active onReturn(VirtualFrame, NV1Real, int, int) */) {
+                    if ((state & 0b100000000000) != 0 /* is-active onReturn(NV1Real, int, int) */) {
                         while (s12_ != null) {
                             if ((readValue_.getData().length == s12_.cachedLength_)) {
                                 break;
@@ -233,46 +229,46 @@ public final class PrettyPrintValueNodeGen extends PrettyPrintValueNode {
                             s12_.cachedLength_ = (readValue_.getData().length);
                             s12_.cachedMid_ = (computeMid(s12_.cachedLength_));
                             this.onReturn11_cache = s12_;
-                            this.state_ = state = state | 0b100000000000 /* add-active onReturn(VirtualFrame, NV1Real, int, int) */;
+                            this.state_ = state = state | 0b100000000000 /* add-active onReturn(NV1Real, int, int) */;
                         }
                     }
                     if (s12_ != null) {
                         lock.unlock();
                         hasLock = false;
-                        return onReturn(frameValue, readValue_, s12_.cachedLength_, s12_.cachedMid_);
+                        return onReturn(readValue_, s12_.cachedLength_, s12_.cachedMid_);
                     }
                 }
-                if ((readValue_.getData().length > 11)) {
-                    this.state_ = state = state | 0b1000000000000 /* add-active onReturnRange(VirtualFrame, NV1Real) */;
+                if ((readValue_.getData().length > computeWidth())) {
+                    this.state_ = state = state | 0b1000000000000 /* add-active onReturnRange(NV1Real) */;
                     lock.unlock();
                     hasLock = false;
-                    return onReturnRange(frameValue, readValue_);
+                    return onReturnRange(readValue_);
                 }
-                this.state_ = state = state | 0b10000000000000 /* add-active onReturn(VirtualFrame, NV1Real) */;
+                this.state_ = state = state | 0b10000000000000 /* add-active onReturn(NV1Real) */;
                 lock.unlock();
                 hasLock = false;
-                return onReturn(frameValue, readValue_);
+                return onReturn(readValue_);
             }
             if (readValue instanceof NV2Real) {
                 NV2Real readValue_ = (NV2Real) readValue;
-                this.state_ = state = state | 0b100000000000000 /* add-active onReturn(VirtualFrame, NV2Real) */;
+                this.state_ = state = state | 0b100000000000000 /* add-active onReturn(NV2Real) */;
                 lock.unlock();
                 hasLock = false;
-                return onReturn(frameValue, readValue_);
+                return onReturn(readValue_);
             }
             if (readValue instanceof NV3Real) {
                 NV3Real readValue_ = (NV3Real) readValue;
-                this.state_ = state = state | 0b1000000000000000 /* add-active onReturn(VirtualFrame, NV3Real) */;
+                this.state_ = state = state | 0b1000000000000000 /* add-active onReturn(NV3Real) */;
                 lock.unlock();
                 hasLock = false;
-                return onReturn(frameValue, readValue_);
+                return onReturn(readValue_);
             }
             if (readValue instanceof NV4Real) {
                 NV4Real readValue_ = (NV4Real) readValue;
-                this.state_ = state = state | 0x10000 /* add-active onReturn(VirtualFrame, NV4Real) */;
+                this.state_ = state = state | 0x10000 /* add-active onReturn(NV4Real) */;
                 lock.unlock();
                 hasLock = false;
-                return onReturn(frameValue, readValue_);
+                return onReturn(readValue_);
             }
             throw new UnsupportedSpecializationException(this, new Node[] {this.read_}, readValue);
         } finally {
@@ -296,12 +292,8 @@ public final class PrettyPrintValueNodeGen extends PrettyPrintValueNode {
         return NodeCost.POLYMORPHIC;
     }
 
-    public static PrettyPrintValueNode create(NablaReadVariableNode read) {
-        return new PrettyPrintValueNodeGen(read);
-    }
-
-    public static PrettyPrintValueNode create(String format, NablaReadVariableNode read) {
-        return new PrettyPrintValueNodeGen(format, read);
+    public static PrettyPrintValueNode create(int range, boolean doFormat, NablaReadVariableNode read) {
+        return new PrettyPrintValueNodeGen(range, doFormat, read);
     }
 
     @GeneratedBy(PrettyPrintValueNode.class)

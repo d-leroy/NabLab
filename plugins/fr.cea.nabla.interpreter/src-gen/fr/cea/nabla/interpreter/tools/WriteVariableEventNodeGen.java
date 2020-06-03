@@ -5,7 +5,7 @@ import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeCost;
-import fr.cea.nabla.interpreter.tools.NablaDumpVariablesInstrument;
+import fr.cea.nabla.interpreter.tools.NablaLogInstrument;
 import fr.cea.nabla.interpreter.tools.PrettyPrintValueNode;
 import fr.cea.nabla.interpreter.tools.WriteVariableEventNode;
 
@@ -14,8 +14,8 @@ public final class WriteVariableEventNodeGen extends WriteVariableEventNode {
 
     @Child private PrettyPrintValueNode print_;
 
-    private WriteVariableEventNodeGen(NablaDumpVariablesInstrument nablaDumpVariablesInstrument, FrameSlot variableSlot, PrettyPrintValueNode print) {
-        super(nablaDumpVariablesInstrument, variableSlot);
+    private WriteVariableEventNodeGen(NablaLogInstrument nablaLogInstrument, FrameSlot variableSlot, String source, PrettyPrintValueNode print) {
+        super(nablaLogInstrument, variableSlot, source);
         this.print_ = print;
     }
 
@@ -31,8 +31,8 @@ public final class WriteVariableEventNodeGen extends WriteVariableEventNode {
         return NodeCost.MONOMORPHIC;
     }
 
-    public static WriteVariableEventNode create(NablaDumpVariablesInstrument nablaDumpVariablesInstrument, FrameSlot variableSlot, PrettyPrintValueNode print) {
-        return new WriteVariableEventNodeGen(nablaDumpVariablesInstrument, variableSlot, print);
+    public static WriteVariableEventNode create(NablaLogInstrument nablaLogInstrument, FrameSlot variableSlot, String source, PrettyPrintValueNode print) {
+        return new WriteVariableEventNodeGen(nablaLogInstrument, variableSlot, source, print);
     }
 
 }

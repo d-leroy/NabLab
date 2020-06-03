@@ -11,8 +11,10 @@ import com.oracle.truffle.api.instrumentation.InstrumentableNode;
 import com.oracle.truffle.api.instrumentation.ProbeNode;
 import com.oracle.truffle.api.instrumentation.StandardTags;
 import com.oracle.truffle.api.instrumentation.Tag;
+import com.oracle.truffle.api.interop.TruffleObject;
 
 import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
+import fr.cea.nabla.interpreter.nodes.interop.NodeObjectDescriptor;
 import fr.cea.nabla.interpreter.utils.GetFrameNode;
 import fr.cea.nabla.interpreter.values.NV0Bool;
 import fr.cea.nabla.interpreter.values.NV0Int;
@@ -33,10 +35,10 @@ import fr.cea.nabla.interpreter.values.NV4Real;
 @GenerateWrapper
 @NodeChild(value = "value", type = NablaExpressionNode.class)
 @NodeChild(value = "frameToWrite", type = GetFrameNode.class)
-public abstract class NablaWriteVariableNode extends NablaInstructionNode implements InstrumentableNode {
+public abstract class NablaWriteVariableNode extends NablaInstructionNode implements InstrumentableNode, TruffleObject {
 
 	private final FrameSlot slot;
-
+	
 	public NablaWriteVariableNode(FrameSlot slot) {
 		this.slot = slot;
 	}
@@ -160,5 +162,10 @@ public abstract class NablaWriteVariableNode extends NablaInstructionNode implem
 	public WrapperNode createWrapper(ProbeNode probeNode) {
 		return new NablaWriteVariableNodeWrapper(this, probeNode);
 	}
+	
+	@Override
+    public Object getNodeObject() {
+        return NodeObjectDescriptor.writeVariable(getSlot().getIdentifier().toString());
+    }
 
 }

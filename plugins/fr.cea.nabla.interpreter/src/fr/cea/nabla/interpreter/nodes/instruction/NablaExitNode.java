@@ -1,12 +1,11 @@
 package fr.cea.nabla.interpreter.nodes.instruction;
 
-import com.oracle.truffle.api.dsl.NodeChild;
+import com.oracle.truffle.api.dsl.Cached;
+import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.profiles.BranchProfile;
 
-import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
-
-@NodeChild(value = "value", type = NablaExpressionNode.class)
-public class NablaExitNode extends NablaInstructionNode {
+public abstract class NablaExitNode extends NablaInstructionNode {
 
 	private final String message;
 	
@@ -14,8 +13,9 @@ public class NablaExitNode extends NablaInstructionNode {
 		this.message = message;
 	}
 	
-	@Override
-	public Object executeGeneric(VirtualFrame frame) {
+	@Specialization
+	public Object doDefault(VirtualFrame frame, @Cached BranchProfile exception) {
+		exception.enter();
 		throw new RuntimeException(message);
 	}
 	

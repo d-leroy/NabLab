@@ -91,7 +91,7 @@ public class DumpVariablesNode extends ExecutionEventNode {
 				lastDump = periodValue;
 				final int iteration = NablaTypesGen.asNV0Int(rootFrame.getObject(iterationSlot)).getData();
 				final double time = NablaTypesGen.asNV0Real(rootFrame.getObject(timeSlot)).getData();
-				final double[][] nodes = NablaTypesGen.asNV2Real(rootFrame.getObject(nodeCoordinatesSlot)).getData();;
+				final double[][] nodes = NablaTypesGen.asNV2Real(rootFrame.getObject(nodeCoordinatesSlot)).getData();
 				final Quad[] cells = NablaContext.getMeshWrapper().getQuads();
 				final Map<String, double[]> cellVariables = new HashMap<>();
 				final Map<String, double[]> nodeVariables = new HashMap<>();
