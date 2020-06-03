@@ -37,6 +37,7 @@ class NablagenRunner
 
 		new Thread
 		([
+			consoleFactory.clearAndActivateConsole
 			consoleFactory.printConsole(MessageType.Start, "Starting generation: " + eclipseResource.name)
 			consoleFactory.printConsole(MessageType.Exec, "Loading nablagen and nabla resources")
 			val plaftormUri = URI::createPlatformResourceURI(eclipseResource.project.name + '/' + eclipseResource.projectRelativePath, true)

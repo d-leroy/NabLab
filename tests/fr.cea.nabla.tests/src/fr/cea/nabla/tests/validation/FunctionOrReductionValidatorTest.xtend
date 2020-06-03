@@ -41,7 +41,7 @@ class FunctionOrReductionValidatorTest
 			'''
 			ℕ U{cells};
 			ComputeU: ∀ j∈cells(), {
-					let e = 1;
+					let ℕ e = 1;
 					U{j} = e * 4;
 					return e;
 			}
@@ -57,7 +57,7 @@ class FunctionOrReductionValidatorTest
 			'''
 			ℕ U{cells};
 			ComputeU: ∀ j∈cells(), {
-					let e = 1;
+					let ℕ e = 1;
 					U{j} = e * 4;
 			}
 			'''
@@ -99,7 +99,7 @@ class FunctionOrReductionValidatorTest
 		def f: ℝ → ℝ, (a) → 
 		{
 			return 1.0;
-			let x = 1;
+			let ℕ x = 1;
 		}
 		''')
 		Assert.assertNotNull(moduleKo)
@@ -208,8 +208,7 @@ class FunctionOrReductionValidatorTest
 	@Test
 	def void testFunctionReturnType()
 	{
-		val module = parseHelper.parse(
-		'''
+		val model = '''
 		module Test;
 
 		itemtypes { node }
@@ -218,34 +217,35 @@ class FunctionOrReductionValidatorTest
 		def f: ℝ → ℝ, (a) → { return 1; }
 		def g: ℝ → ℝ, (a) → { return 1.0; }
 		'''
-		+ mandatoryOptions)
-
+		+ mandatoryOptions
+		val module = parseHelper.parse(model)
 		Assert.assertNotNull(module)
 		Assert.assertEquals(1, module.validate.filter(i | i.severity == Severity.ERROR).size)
-		module.assertError(NablaPackage.eINSTANCE.function, FunctionOrReductionValidator::FUNCTION_RETURN_TYPE, FunctionOrReductionValidator::getFunctionReturnTypeMsg("ℕ", "ℝ"))
+		module.assertError(NablaPackage.eINSTANCE.functionTypeDeclaration, FunctionOrReductionValidator::FUNCTION_RETURN_TYPE, FunctionOrReductionValidator::getFunctionReturnTypeMsg("ℕ", "ℝ"))
 	}
 
 	@Test
 	def void testCheckFunctionReturnTypeVar() 
 	{
-		var functions = '''def f: x | ℝ → ℝ[x];'''
-
+		var functions =
+			'''
+			def f: x | ℝ → ℝ[x];
+			'''
 		val modulekO = parseHelper.parse(getTestModule('', functions))
 		Assert.assertNotNull(modulekO)
-
-		modulekO.assertError(NablaPackage.eINSTANCE.function, 
+		modulekO.assertError(NablaPackage.eINSTANCE.functionTypeDeclaration, 
 			FunctionOrReductionValidator::FUNCTION_RETURN_TYPE_VAR, 
 			FunctionOrReductionValidator::getFunctionReturnTypeVarMsg("x"))
+
 
 		functions =
 			'''
 			def f: x | ℝ[x] → ℝ[x];
 			def g: y | ℝ[y] → ℝ[x, y];
 			'''
-
 		val moduleOk = parseHelper.parse(getTestModule('', functions))
 		Assert.assertNotNull(moduleOk)
-		moduleOk.assertNoErrors(NablaPackage.eINSTANCE.function, FunctionOrReductionValidator::FUNCTION_RETURN_TYPE_VAR)
+		moduleOk.assertNoErrors(NablaPackage.eINSTANCE.functionTypeDeclaration, FunctionOrReductionValidator::FUNCTION_RETURN_TYPE_VAR)
 	}
 
 	@Test
@@ -258,7 +258,6 @@ class FunctionOrReductionValidatorTest
 			'''
 		val modulekO = parseHelper.parse(getTestModule('', reductions))
 		Assert.assertNotNull(modulekO)
-
 		modulekO.assertError(NablaPackage.eINSTANCE.reduction,
 			FunctionOrReductionValidator::REDUCTION_INCOMPATIBLE_TYPES,
 			FunctionOrReductionValidator::getReductionIncompatibleTypesMsg())

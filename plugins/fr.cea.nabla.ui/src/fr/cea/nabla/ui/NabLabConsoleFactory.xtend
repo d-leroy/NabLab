@@ -26,11 +26,20 @@ class NabLabConsoleFactory implements IConsoleFactory
 		console = consoleMng.consoles.filter(MessageConsole).findFirst[x | x.name == ConsoleName]
 		if (console === null)
 		{
-			val imageDescriptor = UiUtils::getImageDescriptor("icons/Nabla.gif")
+			val imageDescriptor = UiUtils::getImageDescriptor("icons/NabLab.gif")
 			val image = if (imageDescriptor.present) imageDescriptor.get else null
 			console = new MessageConsole(ConsoleName, image)
 			consoleMng.addConsoles(#[console])
 			dispatcher.traceListeners += [type, msg | printConsole(type, msg)]
+		}
+	}
+
+	def void clearAndActivateConsole()
+	{
+		if (console !== null)
+		{
+			console.clearConsole
+			console.activate
 		}
 	}
 
@@ -42,16 +51,10 @@ class NabLabConsoleFactory implements IConsoleFactory
 			display.syncExec
 			([
 				val stream = console.newMessageStream
-				switch type
+				stream.color = switch type
 				{
-					case MessageType.Start:
-					{
-						console.activate
-						console.clearConsole
-						stream.color = BLACK
-					}
-					case MessageType.Exec: stream.color = BLUE
-					case MessageType.End: stream.color = BLACK
+					case MessageType.Exec: BLUE
+					default: BLACK
 				}
 				stream.println(msg)
 			])

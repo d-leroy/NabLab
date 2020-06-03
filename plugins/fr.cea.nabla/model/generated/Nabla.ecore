@@ -48,6 +48,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="Instruction"/>
   <eClassifiers xsi:type="ecore:EClass" name="SimpleVarDefinition" eSuperTypes="#//Instruction">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="option" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//BaseType"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="variable" eType="#//SimpleVar"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Expression"
@@ -171,23 +173,31 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FunctionOrReduction">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="vars" upperBound="-1" eType="#//SimpleVar"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="variables" upperBound="-1"
+        eType="#//SimpleVar" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="inArgs" upperBound="-1"
         eType="#//Arg" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//Instruction"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Function" eSuperTypes="#//FunctionOrReduction">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="inTypes" upperBound="-1"
-        eType="#//BaseType" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="returnType" eType="#//BaseType"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="typeDeclaration" eType="#//FunctionTypeDeclaration"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="external" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Reduction" eSuperTypes="#//FunctionOrReduction">
     <eStructuralFeatures xsi:type="ecore:EReference" name="seed" eType="#//Expression"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="typeDeclaration" eType="#//ReductionTypeDeclaration"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FunctionTypeDeclaration">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inTypes" upperBound="-1"
+        eType="#//BaseType" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="returnType" eType="#//BaseType"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReductionTypeDeclaration">
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//BaseType"
         containment="true"/>
   </eClassifiers>

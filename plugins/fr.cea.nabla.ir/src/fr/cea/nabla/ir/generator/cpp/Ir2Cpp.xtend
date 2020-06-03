@@ -92,7 +92,7 @@ class Ir2Cpp extends CodeGenerator
 		struct Options
 		{
 			«IF postProcessingInfo !== null»std::string «TagOutputVariables.OutputPathNameAndValue.key»;«ENDIF»
-			«FOR v : definitions.filter[option]»
+			«FOR v : allOptions»
 			«v.cppType» «v.name»;
 			«ENDFOR»
 
@@ -150,7 +150,7 @@ class Ir2Cpp extends CodeGenerator
 		assert(valueof_«opName».IsString());
 		«opName» = valueof_«opName».GetString();
 		«ENDIF»
-		«FOR v : definitions.filter[option]»
+		«FOR v : allOptions»
 		«v.jsonContent»
 		«ENDFOR»
 	}
@@ -159,7 +159,7 @@ class Ir2Cpp extends CodeGenerator
 
 	«name»::«name»(const Options& aOptions)
 	: options(aOptions)
-	«FOR v : definitions.filter[x | !(x.option || x.constExpr)]»
+	«FOR v : allDefinitions.filter[x | !x.constExpr]»
 	, «v.name»(«v.defaultValue.content»)
 	«ENDFOR»
 	«IF withMesh»
@@ -168,8 +168,8 @@ class Ir2Cpp extends CodeGenerator
 		«val xel = getVariableByName(MandatoryVariables.X_EDGE_LENGTH).codeName»
 		«val yel = getVariableByName(MandatoryVariables.Y_EDGE_LENGTH).codeName»
 		, mesh(CartesianMesh2DGenerator::generate(«xee», «yee», «xel», «yel»))
-		, writer("«name»", options.«TagOutputVariables.OutputPathNameAndValue.key»)
-		«FOR c : usedConnectivities»
+		«IF postProcessingInfo !== null», writer("«name»", options.«TagOutputVariables.OutputPathNameAndValue.key»)«ENDIF»
+		«FOR c : connectivities.filter[multiple]»
 		, «c.nbElemsVar»(«c.connectivityAccessor»)
 		«ENDFOR»
 	«ENDIF»

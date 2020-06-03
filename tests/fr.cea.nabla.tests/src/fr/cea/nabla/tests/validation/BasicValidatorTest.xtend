@@ -48,7 +48,6 @@ class BasicValidatorTest
 				return 4.0;
 			}
 			'''))
-
 		moduleKo.assertError(NablaPackage.eINSTANCE.interval,
 			BasicValidator::ZERO_FROM,
 			BasicValidator::getZeroFromMsg())
@@ -69,7 +68,7 @@ class BasicValidatorTest
 	@Test
 	def void testCheckNbElems()
 	{
-		val moduleKo1 = parseHelper.parse(getTestModule( '',
+		val moduleKo1 = parseHelper.parse(getTestModule('',
 			'''
 			def g: → ℝ, () →
 			{
@@ -78,16 +77,15 @@ class BasicValidatorTest
 				return 4.0;
 			}
 			'''))
-
 		moduleKo1.assertError(NablaPackage.eINSTANCE.interval,
 			BasicValidator::TYPE_EXPRESSION_TYPE,
 			BasicValidator::getTypeExpressionMsg("ℝ"))
 
-		val moduleKo2 = parseHelper.parse(getTestModule( '',
+		val moduleKo2 = parseHelper.parse(getTestModule('',
 			'''
 			def g: → ℝ, () →
 			{
-				let x = 6.7
+				let ℝ x = 6.7;
 				ℝ[4] n;
 				∀ i∈[0;x[, n[i] = 0.0;
 				return 4.0;
@@ -266,7 +264,7 @@ class BasicValidatorTest
 	{
 		val moduleKo = parseHelper.parse(testModule +
 			'''
-			let x = 2.2;
+			let ℝ x = 2.2;
 			ℝ[1.1] a;
 			ℕ[x] b;
 			'''
@@ -283,7 +281,7 @@ class BasicValidatorTest
 
 		val moduleOk = parseHelper.parse(testModule +
 			'''
-			let x = 2;
+			let ℕ x = 2;
 			ℝ[2] a;
 			ℕ[x] b;
 			'''
@@ -320,7 +318,7 @@ class BasicValidatorTest
 
 		val moduleOk =  parseHelper.parse(getTestModule(defaultConnectivities, '') +
 			'''
-			let orig = [0.0 , 0.0] ;
+			let ℝ[2] orig = [0.0 , 0.0] ;
 			ℝ[2] X{nodes};
 			IniX1: ∀j∈cells(), ∀r∈nodes(), X{r} = orig; 
 			IniX2: ∀j∈cells(), ∀r∈nodesOfCell(j), X{r} = orig; 
