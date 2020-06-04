@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Iterators;
-import com.google.common.collect.Streams;
 import com.google.gson.JsonElement;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlot;
@@ -437,7 +436,8 @@ public class NablaNodeFactory {
 				return getReadVariableNode(slot);
 			}).collect(Collectors.toList()).toArray(new NablaReadVariableNode[0]);
 
-			connectivityVariableNodes = Streams.stream(IrModuleExtensions.getUsedConnectivities(module)).map(c -> {
+			
+			connectivityVariableNodes = module.getConnectivities().stream().filter(c -> c.isMultiple()).map(c -> {
 				final String connectivityName = c.getName();
 				final FrameSlot frameSlot = moduleFrameDescriptor.findOrAddFrameSlot(connectivityName, null,
 						FrameSlotKind.Illegal);
