@@ -1,10 +1,13 @@
 package fr.cea.nabla.interpreter.nodes;
 
+import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.instrumentation.GenerateWrapper;
 import com.oracle.truffle.api.instrumentation.InstrumentableNode;
 import com.oracle.truffle.api.instrumentation.ProbeNode;
+import com.oracle.truffle.api.instrumentation.StandardTags;
+import com.oracle.truffle.api.instrumentation.Tag;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.Source;
@@ -21,7 +24,7 @@ public abstract class NablaNode extends Node implements InstrumentableNode {
 	
 	@Override
     @TruffleBoundary
-    public final SourceSection getSourceSection() {
+    public SourceSection getSourceSection() {
         if (sourceCharIndex == NO_SOURCE) {
             // AST node without source
             return null;
@@ -79,6 +82,18 @@ public abstract class NablaNode extends Node implements InstrumentableNode {
 	public boolean isInstrumentable() {
 		return hasSource();
 	}
+	
+	@CompilationFinal
+	private boolean hasRootBodyTag = false;
+	
+	@Override
+	public boolean hasTag(Class<? extends Tag> tag) {
+		return tag.equals(StandardTags.RootBodyTag.class) && hasRootBodyTag;
+	}
+	
+	public final void addRootBodyTag() {
+        hasRootBodyTag = true;
+    }
 	
 	@Override
 	public WrapperNode createWrapper(ProbeNode probe) {

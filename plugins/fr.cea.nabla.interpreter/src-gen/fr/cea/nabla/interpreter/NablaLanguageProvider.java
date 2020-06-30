@@ -16,8 +16,6 @@ import com.oracle.truffle.api.instrumentation.StandardTags.StatementTag;
 import com.oracle.truffle.api.instrumentation.StandardTags.WriteVariableTag;
 import fr.cea.nabla.interpreter.NablaFileDetector;
 import fr.cea.nabla.interpreter.NablaLanguage;
-import fr.cea.nabla.interpreter.tools.NablaTags.DumpTag;
-import fr.cea.nabla.interpreter.tools.NablaTags.JobTag;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,7 +23,7 @@ import java.util.List;
 
 @GeneratedBy(NablaLanguage.class)
 @Registration(characterMimeTypes = {"application/x-nabla"}, contextPolicy = ContextPolicy.SHARED, defaultMimeType = "application/x-nabla", id = "nabla", name = "Nabla")
-@ProvidedTags({CallTag.class, StatementTag.class, RootTag.class, RootBodyTag.class, ExpressionTag.class, WriteVariableTag.class, DumpTag.class, JobTag.class})
+@ProvidedTags({CallTag.class, StatementTag.class, RootTag.class, RootBodyTag.class, ExpressionTag.class, WriteVariableTag.class})
 public class NablaLanguageProvider implements Provider {
 
     @Override

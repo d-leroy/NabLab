@@ -1,5 +1,7 @@
 package fr.cea.nabla.interpreter.tools;
 
+import java.util.function.Supplier;
+
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.dsl.Cached;
 import com.oracle.truffle.api.dsl.NodeChild;
@@ -39,95 +41,99 @@ public abstract class PrettyPrintValueNode extends Node {
 		this.doFormat = doFormat;
 	}
 
-	protected abstract String execute(VirtualFrame frame);
+	protected abstract Supplier<String> execute(VirtualFrame frame);
 
 	@Specialization
-	protected String onReturn(NV0Bool read) {
-		return read.toString();
+	protected Supplier<String> onReturn(NV0Bool read) {
+		return () -> read.toString();
 	}
 
 	@Specialization
-	protected String onReturn(NV1Bool read) {
-		return read.toString();
+	protected Supplier<String> onReturn(NV1Bool read) {
+		return () -> read.toString();
 	}
 
 	@Specialization
-	protected String onReturn(NV2Bool read) {
-		return read.toString();
+	protected Supplier<String> onReturn(NV2Bool read) {
+		return () -> read.toString();
 	}
 
 	@Specialization
-	protected String onReturn(NV3Bool read) {
-		return read.toString();
+	protected Supplier<String> onReturn(NV3Bool read) {
+		return () -> read.toString();
 	}
 
 	@Specialization
-	protected String onReturn(NV4Bool read) {
-		return read.toString();
+	protected Supplier<String> onReturn(NV4Bool read) {
+		return () -> read.toString();
 	}
 
 	@Specialization
-	protected String onReturn(NV0Int read) {
-		return read.toString();
+	protected Supplier<String> onReturn(NV0Int read) {
+		return () -> print(read.getData());
 	}
 
 	@Specialization
-	protected String onReturn(NV1Int read) {
-		return read.toString();
+	protected Supplier<String> onReturn(NV1Int read) {
+		return () -> read.toString();
 	}
 
 	@Specialization
-	protected String onReturn(NV2Int read) {
-		return read.toString();
+	protected Supplier<String> onReturn(NV2Int read) {
+		return () -> read.toString();
 	}
 
 	@Specialization
-	protected String onReturn(NV3Int read) {
-		return read.toString();
+	protected Supplier<String> onReturn(NV3Int read) {
+		return () -> read.toString();
 	}
 
 	@Specialization
-	protected String onReturn(NV4Int read) {
-		return read.toString();
+	protected Supplier<String> onReturn(NV4Int read) {
+		return () -> read.toString();
 	}
 
 	@Specialization
-	protected String onReturn(NV0Real read) {
-		return read.toString();
+	protected Supplier<String> onReturn(NV0Real read) {
+		return () -> formatValue(read.getData());
 	}
 
 	@ExplodeLoop
 	@Specialization(guards = { "read.getData().length > computeWidth()", "read.getData().length == cachedLength" })
-	protected String onReturn(NV1Real read, @Cached("read.getData().length") int cachedLength,
+	protected Supplier<String> onReturn(NV1Real read, @Cached("read.getData().length") int cachedLength,
 			@Cached("computeMid(cachedLength)") int cachedMid) {
-		final double[] data = read.getData();
-		final StringBuilder s = new StringBuilder();
-		appendValue(s, data[0]);
-		appendValue(s, " ... ");
-		for (int i = cachedMid - range; i < cachedMid + range; i++) {
-			appendValue(s, data[i]);
-			appendValue(s, " ");
-		}
-		appendValue(s, "... ");
-		appendValue(s, data[cachedLength - 1]);
-		return s.toString();
+		return () -> { 
+			final double[] data = read.getData();
+			final StringBuilder s = new StringBuilder();
+			appendValue(s, data[0]);
+			appendValue(s, " ... ");
+			for (int i = cachedMid - range; i < cachedMid + range; i++) {
+				appendValue(s, data[i]);
+				appendValue(s, " ");
+			}
+			appendValue(s, "... ");
+			appendValue(s, data[cachedLength - 1]);
+			return s.toString();
+		};
 	}
 
 	@ExplodeLoop
 	@Specialization(guards = "read.getData().length > computeWidth()")
-	protected String onReturnRange(NV1Real read) {
-		final double[] data = read.getData();
-		final int mid = computeMid(data.length);
-		final StringBuilder s = new StringBuilder();
-		appendValue(s, data[0]);
-		appendValue(s, "... ");
-		for (int i = mid - range; i < mid + range; i++) {
-			appendValue(s, data[i]);
-			appendValue(s, " ");
-		}
-		appendValue(s, "...");
-		appendValue(s, data[data.length - 1]);
-		return s.toString();
+	protected Supplier<String> onReturnRange(NV1Real read) {
+		return () -> {
+			final double[] data = read.getData();
+			final int mid = computeMid(data.length);
+			final StringBuilder s = new StringBuilder();
+			appendValue(s, data[0]);
+			appendValue(s, "... ");
+			for (int i = mid - range; i < mid + range; i++) {
+				appendValue(s, data[i]);
+				appendValue(s, " ");
+			}
+			appendValue(s, "...");
+			appendValue(s, data[data.length - 1]);
+			return s.toString();
+		};
 	}
 	
 	protected int computeMid(int i) {
@@ -138,10 +144,14 @@ public abstract class PrettyPrintValueNode extends Node {
 		return 1 + 2 * range;
 	}
 
-	@ExplodeLoop
 	@Specialization
-	protected String onReturn(NV1Real read) {
-		return read.toString();
+	protected Supplier<String> onReturn(NV1Real read) {
+		return () -> read.toString();
+	}
+	
+	@TruffleBoundary
+	private String print(int i) {
+		return "" + i;
 	}
 
 	@TruffleBoundary
@@ -151,26 +161,31 @@ public abstract class PrettyPrintValueNode extends Node {
 
 	@TruffleBoundary
 	private void appendValue(StringBuilder s, double value) {
+		s.append(formatValue(value));
+	}
+	
+	@TruffleBoundary
+	private String formatValue(double value) {
 		if (doFormat) {
-			s.append(String.format(format, value));
+			return String.format(format, value);
 		} else {
-			s.append(value);
+			return "" + value;
 		}
 	}
 
 	@Specialization
-	protected String onReturn(NV2Real read) {
-		return read.toString();
+	protected Supplier<String> onReturn(NV2Real read) {
+		return () -> read.toString();
 	}
 
 	@Specialization
-	protected String onReturn(NV3Real read) {
-		return read.toString();
+	protected Supplier<String> onReturn(NV3Real read) {
+		return () -> read.toString();
 	}
 
 	@Specialization
-	protected String onReturn(NV4Real read) {
-		return read.toString();
+	protected Supplier<String> onReturn(NV4Real read) {
+		return () -> read.toString();
 	}
 
 }

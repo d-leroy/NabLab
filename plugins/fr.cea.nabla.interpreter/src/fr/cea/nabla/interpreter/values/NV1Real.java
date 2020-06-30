@@ -27,25 +27,21 @@ public class NV1Real implements NablaValue {
 	}
 
 	@ExportMessage
-	@TruffleBoundary
 	boolean hasArrayElements() {
 		return data.length > 0;
 	}
 
 	@ExportMessage
-	@TruffleBoundary
 	long getArraySize() throws UnsupportedMessageException {
 		return data.length;
 	}
 
 	@ExportMessage
-	@TruffleBoundary
 	boolean isArrayElementReadable(long index) {
 		return index < data.length;
 	}
 
 	@ExportMessage
-	@TruffleBoundary
 	Object readArrayElement(long index) {
 		if (index < data.length) {
 			return data[(int) index];

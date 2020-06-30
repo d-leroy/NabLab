@@ -38,7 +38,7 @@ public abstract class NablaExpressionNode extends NablaNode {
         if (tag == StandardTags.ExpressionTag.class) {
             return hasExpressionTag;
         }
-        return false;
+        return super.hasTag(tag);
     }
 	
 	public final void addExpressionTag() {

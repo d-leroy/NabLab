@@ -7,10 +7,10 @@ import com.oracle.truffle.api.library.CachedLibrary;
 import com.oracle.truffle.api.nodes.Node;
 
 public abstract class NablaInvokeNode extends Node {
-	
+
 	public abstract Object execute(Object receiver, String methodName, Object[] arguments);
 
-	@Specialization(guards = "objLibrary.hasMembers(receiver)", limit = "4")
+	@Specialization(guards = "objLibrary.hasMembers(receiver)", limit = "3")
 	public Object doDefault(Object receiver, String methodName, Object[] arguments,
 			@CachedLibrary("receiver") InteropLibrary objLibrary) {
 		try {
@@ -20,5 +20,4 @@ public abstract class NablaInvokeNode extends Node {
 		}
 		return null;
 	}
-
 }

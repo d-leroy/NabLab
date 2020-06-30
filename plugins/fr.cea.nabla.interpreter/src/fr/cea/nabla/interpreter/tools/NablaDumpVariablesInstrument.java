@@ -21,13 +21,10 @@ import com.oracle.truffle.api.Option;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.instrumentation.Instrumenter;
 import com.oracle.truffle.api.instrumentation.SourceSectionFilter;
-import com.oracle.truffle.api.instrumentation.StandardTags;
-import com.oracle.truffle.api.instrumentation.StandardTags.WriteVariableTag;
 import com.oracle.truffle.api.instrumentation.TruffleInstrument;
 import com.oracle.truffle.api.instrumentation.TruffleInstrument.Registration;
 
 import fr.cea.nabla.interpreter.tools.NablaTags.DumpTag;
-import fr.cea.nabla.interpreter.tools.NablaTags.JobTag;
 import fr.cea.nabla.ir.ir.SimpleVariable;
 import fr.cea.nabla.javalib.mesh.PvdFileWriter2D;
 import fr.cea.nabla.javalib.mesh.Quad;

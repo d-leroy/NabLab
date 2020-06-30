@@ -1,8 +1,9 @@
 package fr.cea.nabla.interpreter.tools;
 
+import java.util.function.Supplier;
+
 import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
-import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.instrumentation.ExecutionEventNode;
 
@@ -11,15 +12,11 @@ public abstract class WriteVariableEventNode extends ExecutionEventNode {
 
 	private final NablaLogInstrument nablaLogInstrument;
 
-	private final FrameSlot variableSlot;
+	private final String name;
 
-	private final String source;
-	
-	public WriteVariableEventNode(NablaLogInstrument nablaLogInstrument, FrameSlot variableSlot, String source) {
-		assert (variableSlot != null);
+	public WriteVariableEventNode(NablaLogInstrument nablaLogInstrument, String name) {
 		this.nablaLogInstrument = nablaLogInstrument;
-		this.variableSlot = variableSlot;
-		this.source = source;
+		this.name = name;
 	}
 	
 	@Override
@@ -30,8 +27,8 @@ public abstract class WriteVariableEventNode extends ExecutionEventNode {
 	protected abstract void execute(VirtualFrame frame);
 	
 	@Specialization
-	protected void print(VirtualFrame frame, String string) {
-		nablaLogInstrument.inc(variableSlot, source + ": " + string);
+	protected void print(VirtualFrame frame, Supplier<String> stringPrinter) {
+		nablaLogInstrument.inc(name, stringPrinter);
 	}
 	
 }

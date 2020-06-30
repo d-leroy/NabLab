@@ -17,14 +17,14 @@ public class NablaRootNode extends RootNode {
 
 	@Child
 	private NablaNode bodyNode;
-	
+
 	@CompilationFinal
-	private boolean isCloningAllowed;
+	private boolean isCloningAllowed = true;
 
 	private final String name;
 
 	@CompilationFinal
-    private SourceSection sourceSection;
+	private SourceSection sourceSection;
 
 	/**
 	 * This assumption is only invalidated when invoking functions, as this is the
@@ -33,29 +33,30 @@ public class NablaRootNode extends RootNode {
 	 */
 	protected final CyclicAssumption frameStable;
 
-	public NablaRootNode(TruffleLanguage<?> language, FrameDescriptor frameDescriptor, NablaNode bodyNode, String name) {
+	public NablaRootNode(TruffleLanguage<?> language, FrameDescriptor frameDescriptor, NablaNode bodyNode,
+			String name) {
 		super(language, frameDescriptor);
 		this.name = name;
 		this.bodyNode = bodyNode;
 		this.frameStable = new CyclicAssumption(name);
 	}
-
-    @Override
-    public SourceSection getSourceSection() {
-        return sourceSection;
-    }
-    
-    public final void setSourceSection(SourceSection sourceSection) {
-        assert this.sourceSection == null : "source must only be set once";
-        this.sourceSection = sourceSection;
-    }
 	
 	@Override
-    public Object execute(VirtualFrame frame) {
-        assert lookupContextReference(NablaLanguage.class).get() != null;
-		frameStable.invalidate();
-        return bodyNode.executeGeneric(frame);
-    }
+	public SourceSection getSourceSection() {
+		return sourceSection;
+	}
+
+	public final void setSourceSection(SourceSection sourceSection) {
+		assert this.sourceSection == null : "source must only be set once";
+		this.sourceSection = sourceSection;
+	}
+	
+	@Override
+	public Object execute(VirtualFrame frame) {
+		assert lookupContextReference(NablaLanguage.class).get() != null;
+//		frameStable.invalidate();
+		return bodyNode.executeGeneric(frame);
+	}
 
 	@Override
 	public String getName() {
@@ -73,4 +74,5 @@ public class NablaRootNode extends RootNode {
 	public Assumption getFrameStableAssumption() {
 		return frameStable.getAssumption();
 	}
+
 }

@@ -29,4 +29,5 @@ Require-Bundle: fr.cea.nabla;bundle-version="0.2.1",
  org.eclipse.xtext.testing;bundle-version="2.21.0",
  truffle-api;bundle-version="20.0.0",
  graal-sdk;bundle-version="20.0.0",
- com.google.gson
+ com.google.gson,
+ esper-api;bundle-version="1.0.0"

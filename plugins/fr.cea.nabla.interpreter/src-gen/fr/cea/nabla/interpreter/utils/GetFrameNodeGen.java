@@ -7,7 +7,6 @@ import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
 import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.frame.Frame;
-import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
@@ -24,8 +23,8 @@ public final class GetFrameNodeGen extends GetFrameNode {
     @CompilationFinal private Assumption cached_resultStable_;
     @CompilationFinal private Assumption cached_assumption0_;
 
-    private GetFrameNodeGen(FrameSlot slot) {
-        super(slot);
+    private GetFrameNodeGen(String name) {
+        super(name);
     }
 
     @Override
@@ -142,8 +141,8 @@ public final class GetFrameNodeGen extends GetFrameNode {
         }
     }
 
-    public static GetFrameNode create(FrameSlot slot) {
-        return new GetFrameNodeGen(slot);
+    public static GetFrameNode create(String name) {
+        return new GetFrameNodeGen(name);
     }
 
 }

@@ -17,6 +17,8 @@ public class NablaOptions {
     public static final OptionKey<Boolean> PrintErrorStacktracesToFile = new OptionKey<>(false);
     @Option(name = "model", help = "Model to run", category = OptionCategory.USER, stability = OptionStability.STABLE)
 	public static final OptionKey<String> MODEL = new OptionKey<>("");
+    @Option(name = "genmodel", help = "Genmodel to run", category = OptionCategory.USER, stability = OptionStability.STABLE)
+	public static final OptionKey<String> GENMODEL = new OptionKey<>("");
     @Option(name = "options", help = "Model to run", category = OptionCategory.USER, stability = OptionStability.STABLE)
 	public static final OptionKey<String> OPTIONS = new OptionKey<>("");
 

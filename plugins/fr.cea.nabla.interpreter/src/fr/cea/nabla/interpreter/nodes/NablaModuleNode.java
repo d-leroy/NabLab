@@ -3,25 +3,23 @@ package fr.cea.nabla.interpreter.nodes;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.oracle.truffle.api.CompilerAsserts;
-import com.oracle.truffle.api.Truffle;
-import com.oracle.truffle.api.TruffleLogger;
 import com.oracle.truffle.api.dsl.TypeSystemReference;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.instrumentation.GenerateWrapper;
+import com.oracle.truffle.api.instrumentation.InstrumentableNode;
 import com.oracle.truffle.api.instrumentation.ProbeNode;
-import com.oracle.truffle.api.nodes.DirectCallNode;
+import com.oracle.truffle.api.instrumentation.StandardTags;
+import com.oracle.truffle.api.instrumentation.Tag;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 
-import fr.cea.nabla.interpreter.NablaLanguage;
-import fr.cea.nabla.interpreter.NablaLogLevel;
 import fr.cea.nabla.interpreter.NablaTypes;
 import fr.cea.nabla.interpreter.NablaTypesGen;
 import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.interpreter.nodes.instruction.NablaWriteVariableNode;
+import fr.cea.nabla.interpreter.nodes.job.NablaJobBlockNode;
 import fr.cea.nabla.interpreter.runtime.NablaContext;
 import fr.cea.nabla.interpreter.values.NV2Real;
 import fr.cea.nabla.interpreter.values.NablaOutput;
@@ -29,7 +27,7 @@ import fr.cea.nabla.interpreter.values.NablaValue;
 
 @GenerateWrapper
 @TypeSystemReference(NablaTypes.class)
-public class NablaModuleNode extends NablaNode {
+public class NablaModuleNode extends NablaNode implements InstrumentableNode {
 
 	@Children
 	private NablaExpressionNode[] mandatoryVariables;
@@ -41,8 +39,8 @@ public class NablaModuleNode extends NablaNode {
 	private NablaWriteVariableNode[] variableDefinitions;
 	@Children
 	private NablaWriteVariableNode[] variableDeclarations;
-	@Children
-	private DirectCallNode[] jobs;
+	@Child
+	private NablaJobBlockNode jobBlock;
 
 	public NablaModuleNode(NablaExpressionNode[] mandatoryVariables, FrameSlot coordinatesSlot,
 			NablaWriteVariableNode[] connectivityVariables, NablaWriteVariableNode[] variableDeclarations,
@@ -52,17 +50,12 @@ public class NablaModuleNode extends NablaNode {
 		this.variableDeclarations = variableDeclarations;
 		this.variableDefinitions = variableDefinitions;
 		this.connectivityVariables = connectivityVariables;
-		this.jobs = new DirectCallNode[jobs.length];
-		for (int i = 0; i < jobs.length; i++) {
-			this.jobs[i] = Truffle.getRuntime().createDirectCallNode(Truffle.getRuntime().createCallTarget(jobs[i]));
-		}
+		this.jobBlock = new NablaJobBlockNode(jobs);
 	}
 
 	protected NablaModuleNode() {
 		this.coordinatesSlot = null;
 	}
-
-	private static final TruffleLogger LOG = TruffleLogger.getLogger(NablaLanguage.ID, NablaModuleNode.class);
 
 	@ExplodeLoop
 	@Override
@@ -70,9 +63,6 @@ public class NablaModuleNode extends NablaNode {
 
 		final MaterializedFrame globalFrame = frame.materialize();
 
-		LOG.log(NablaLogLevel.INFO, " Start interpreting " + getRootNode().getName() + " module ");
-
-		CompilerAsserts.compilationConstant(variableDefinitions.length);
 		for (int i = 0; i < variableDefinitions.length; i++) {
 			variableDefinitions[i].executeGeneric(globalFrame);
 		}
@@ -89,7 +79,6 @@ public class NablaModuleNode extends NablaNode {
 			connectivityVariables[i].executeGeneric(globalFrame);
 		}
 
-		CompilerAsserts.compilationConstant(variableDeclarations.length);
 		for (int i = 0; i < variableDeclarations.length; i++) {
 			variableDeclarations[i].executeGeneric(globalFrame);
 		}
@@ -97,12 +86,7 @@ public class NablaModuleNode extends NablaNode {
 		globalFrame.setObject(coordinatesSlot, new NV2Real(NablaContext.getMeshWrapper().getNodes()));
 		globalFrame.getFrameDescriptor().setFrameSlotKind(coordinatesSlot, FrameSlotKind.Object);
 
-		CompilerAsserts.compilationConstant(jobs.length);
-		for (int i = 0; i < jobs.length; i++) {
-			jobs[i].call(globalFrame, this.getRootNode());
-		}
-
-		LOG.log(NablaLogLevel.INFO, " End interpreting");
+		jobBlock.executeGeneric(globalFrame);
 
 		final Map<String, NablaValue> outputMap = new HashMap<>();
 		globalFrame.getFrameDescriptor().getSlots().forEach(s -> {
@@ -121,6 +105,11 @@ public class NablaModuleNode extends NablaNode {
 	@Override
 	public WrapperNode createWrapper(ProbeNode probe) {
 		return new NablaModuleNodeWrapper(this, probe);
+	}
+	
+	@Override
+	public boolean hasTag(Class<? extends Tag> tag) {
+		return tag.equals(StandardTags.RootTag.class) || super.hasTag(tag);
 	}
 
 }

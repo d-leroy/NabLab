@@ -1,7 +1,5 @@
 package fr.cea.nabla.interpreter.nodes.instruction;
 
-import java.util.Map;
-
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
 import com.oracle.truffle.api.dsl.NodeChild;
@@ -18,6 +16,7 @@ import com.oracle.truffle.api.instrumentation.Tag;
 
 import fr.cea.nabla.interpreter.NablaTypesGen;
 import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
+import fr.cea.nabla.interpreter.nodes.interop.NodeObjectDescriptor;
 import fr.cea.nabla.interpreter.runtime.NablaInitializationPerformedException;
 import fr.cea.nabla.interpreter.utils.GetFrameNode;
 import fr.cea.nabla.interpreter.values.NV0Int;
@@ -177,24 +176,22 @@ public abstract class NablaWriteArrayNode extends NablaInstructionNode implement
 	}
 
 	@Override
-	public Map<String, Object> getDebugProperties() {
-		Map<String, Object> debugProperties = super.getDebugProperties();
-		debugProperties.put("variableSlot", slot);
-		return debugProperties;
-	}
-
-	@Override
 	public boolean isInstrumentable() {
 		return true;
 	}
 
 	@Override
 	public boolean hasTag(Class<? extends Tag> tag) {
-		return tag.equals(StandardTags.WriteVariableTag.class);
+		return tag.equals(StandardTags.WriteVariableTag.class) || super.hasTag(tag);
 	}
 
 	@Override
 	public WrapperNode createWrapper(ProbeNode probeNode) {
 		return new NablaWriteArrayNodeWrapper(this, probeNode);
 	}
+
+	@Override
+    public Object getNodeObject() {
+        return NodeObjectDescriptor.writeVariable(slot.getIdentifier().toString());
+    }
 }

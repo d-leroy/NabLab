@@ -90,32 +90,18 @@ public final class NablaContext {
         this.meshWrapper = new MeshWrapper();
     }
 
-    /**
-     * Return the current Truffle environment.
-     */
     public Env getEnv() {
         return env;
     }
 
-    /**
-     * Returns the default input, i.e., the source for the {@link SLReadlnBuiltin}. To allow unit
-     * testing, we do not use {@link System#in} directly.
-     */
     public BufferedReader getInput() {
         return input;
     }
 
-    /**
-     * The default default, i.e., the output for the {@link SLPrintlnBuiltin}. To allow unit
-     * testing, we do not use {@link System#out} directly.
-     */
     public PrintWriter getOutput() {
         return output;
     }
 
-    /**
-     * Returns the registry of all functions that are currently defined.
-     */
     public NablaFunctionRegistry getFunctionRegistry() {
         return functionRegistry;
     }

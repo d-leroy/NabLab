@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests
+Bundle-SymbolicName: fr.cea.nabla.truffle.tests
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: fr.cea.nabla.truffle.tests
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.junit;bundle-version="4.13.0",
+ com.google.guava,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.xtend.lib,
+ org.eclipse.xtend.lib.macro,
+ org.eclipse.xtext.testing;bundle-version="2.21.0",
+ fr.cea.nabla.tests;bundle-version="0.2.0",
+ fr.cea.nabla.ir;bundle-version="0.2.0",
+ fr.cea.nabla;bundle-version="0.2.1",
+ truffle-api;bundle-version="20.0.0"

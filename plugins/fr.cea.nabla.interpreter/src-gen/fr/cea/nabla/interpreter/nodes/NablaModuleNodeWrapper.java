@@ -59,4 +59,9 @@ final class NablaModuleNodeWrapper extends NablaModuleNode implements WrapperNod
         return returnValue;
     }
 
+    @Override
+    public boolean isInstrumentable() {
+        return this.delegateNode.isInstrumentable();
+    }
+
 }

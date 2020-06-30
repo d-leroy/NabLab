@@ -12,5 +12,4 @@ public abstract class NablaInstructionNode extends NablaNode {
 	public WrapperNode createWrapper(ProbeNode probe) {
 		return new NablaInstructionNodeWrapper(this, probe);
 	}
-	
 }

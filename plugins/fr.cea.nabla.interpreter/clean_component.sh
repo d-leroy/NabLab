@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-[[ -f sl-component.jar ]] && rm sl-component.jar || echo "sl-component.jar not found"
+[[ -f nabla-component.jar ]] && rm nabla-component.jar || echo "nabla-component.jar not found"

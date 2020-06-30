@@ -115,7 +115,10 @@ public abstract class NablaWriteVariableNode extends NablaInstructionNode implem
 
 	@Specialization
 	protected Object doWrite(NV1Real value, Frame toWrite) {
-		toWrite.setObject(slot, new NV1Real(value.getData().clone()));
+		final double[] src = value.getData();
+		final double[] dest = new double[src.length];
+		System.arraycopy(src, 0, dest, 0, src.length);
+		toWrite.setObject(slot, new NV1Real(dest));
 		return value;
 	}
 
@@ -155,7 +158,7 @@ public abstract class NablaWriteVariableNode extends NablaInstructionNode implem
 	
 	@Override
 	public boolean hasTag(Class<? extends Tag> tag) {
-		return tag.equals(StandardTags.WriteVariableTag.class);
+		return tag.equals(StandardTags.WriteVariableTag.class) || super.hasTag(tag);
 	}
 
 	@Override

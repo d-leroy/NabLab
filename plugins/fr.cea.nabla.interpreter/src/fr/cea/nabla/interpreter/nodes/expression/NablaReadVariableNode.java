@@ -1,5 +1,7 @@
 package fr.cea.nabla.interpreter.nodes.expression;
 
+import com.oracle.truffle.api.CompilerDirectives;
+import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
 import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.Frame;
@@ -9,6 +11,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.instrumentation.GenerateWrapper;
 import com.oracle.truffle.api.instrumentation.ProbeNode;
 
+import fr.cea.nabla.interpreter.runtime.NablaInitializationPerformedException;
 import fr.cea.nabla.interpreter.runtime.NablaInternalError;
 import fr.cea.nabla.interpreter.utils.GetFrameNode;
 
@@ -16,14 +19,24 @@ import fr.cea.nabla.interpreter.utils.GetFrameNode;
 @NodeChild(value = "frameToRead", type = GetFrameNode.class)
 public abstract class NablaReadVariableNode extends NablaExpressionNode {
 
-	private final FrameSlot slot;
+	@CompilationFinal
+	protected FrameSlot slot;
+	private final String slotName;
 
-	protected NablaReadVariableNode(FrameSlot slot) {
-		this.slot = slot;
+	protected NablaReadVariableNode(String name) {
+		this.slotName = name;
 	}
 	
 	protected NablaReadVariableNode() {
-		this.slot = null;
+		this.slotName = "";
+	}
+	
+	@Specialization(guards = "slot == null", //
+			rewriteOn = NablaInitializationPerformedException.class)
+	protected Frame initialize(VirtualFrame frame, Frame toRead) throws NablaInitializationPerformedException {
+		CompilerDirectives.transferToInterpreterAndInvalidate();
+		slot = toRead.getFrameDescriptor().findFrameSlot(slotName);
+		throw new NablaInitializationPerformedException();
 	}
 
 	@Specialization

@@ -78,7 +78,7 @@ public final class NablaInvokeNodeGen extends NablaInvokeNode {
                     {
                         InteropLibrary objLibrary__ = super.insert((INTEROP_LIBRARY_.create(arg0Value)));
                         // assert (s1_.objLibrary_.accepts(arg0Value));
-                        if ((objLibrary__.hasMembers(arg0Value)) && count1_ < (4)) {
+                        if ((objLibrary__.hasMembers(arg0Value)) && count1_ < (3)) {
                             s1_ = super.insert(new Default0Data(default0_cache));
                             s1_.objLibrary_ = s1_.insertAccessor(objLibrary__);
                             this.default0_cache = s1_;

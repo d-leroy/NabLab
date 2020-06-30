@@ -4,34 +4,34 @@ import java.util.Map;
 
 import com.oracle.truffle.api.instrumentation.GenerateWrapper;
 import com.oracle.truffle.api.instrumentation.ProbeNode;
+import com.oracle.truffle.api.instrumentation.StandardTags;
 import com.oracle.truffle.api.instrumentation.Tag;
 
 import fr.cea.nabla.interpreter.nodes.NablaNode;
-import fr.cea.nabla.interpreter.tools.NablaTags;
 
 @GenerateWrapper
 public abstract class NablaJobNode extends NablaNode {
 
 	protected final String name;
-	
+
 	protected NablaJobNode(String name) {
 		this.name = name;
 	}
-	
+
 	protected NablaJobNode() {
 		this.name = "";
 	}
-	
-    @Override
+
+	@Override
 	public WrapperNode createWrapper(ProbeNode probeNode) {
 		return new NablaJobNodeWrapper(this, probeNode);
 	}
 
 	@Override
 	public boolean hasTag(Class<? extends Tag> tag) {
-		return tag.equals(NablaTags.JobTag.class);
+		return tag.equals(StandardTags.RootTag.class) || tag.equals(StandardTags.StatementTag.class) || super.hasTag(tag);
 	}
-	
+
 	@Override
 	public Map<String, Object> getDebugProperties() {
 		Map<String, Object> debugProperties = super.getDebugProperties();
@@ -40,5 +40,5 @@ public abstract class NablaJobNode extends NablaNode {
 		}
 		return debugProperties;
 	}
-	
+
 }

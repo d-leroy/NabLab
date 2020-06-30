@@ -214,9 +214,8 @@ public final class NablaLexicalScope {
 	private Map<String, FrameSlot> collectVars(Node varsBlock, Node currentNode) {
 		// Variables are slot-based.
 		// To collect declared variables, traverse the block's AST and find slots
-		// associated
-		// with SLWriteLocalVariableNode. The traversal stops when we hit the current
-		// node.
+		// associated with NablaWriteVariableNode.
+		// The traversal stops when we hit the current node.
 		Map<String, FrameSlot> slots = new LinkedHashMap<>(4);
 		NodeUtil.forEachChild(varsBlock, new NodeVisitor() {
 			@Override

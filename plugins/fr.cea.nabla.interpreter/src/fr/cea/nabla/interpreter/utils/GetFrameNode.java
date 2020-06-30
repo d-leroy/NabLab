@@ -9,8 +9,6 @@ import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.Frame;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameInstance.FrameAccess;
-import com.oracle.truffle.api.frame.FrameSlot;
-import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
@@ -27,11 +25,12 @@ public abstract class GetFrameNode extends Node {
 	protected int depth = 0;
 	@CompilationFinal
 	private MaterializedFrame globalFrame;
-	// FIXME rely on FrameDescriptor instead of FrameSlot
-	private final FrameSlot slot;
+	@CompilationFinal
+	private FrameDescriptor descriptor;
+	private final String slotName;
 
-	public GetFrameNode(FrameSlot slot) {
-		this.slot = slot;
+	public GetFrameNode(String name) {
+		this.slotName = name;
 	}
 
 	public abstract Frame execute(VirtualFrame frame);
@@ -40,16 +39,16 @@ public abstract class GetFrameNode extends Node {
 			rewriteOn = NablaInitializationPerformedException.class)
 	protected Frame initialize(VirtualFrame frame) throws NablaInitializationPerformedException {
 		CompilerDirectives.transferToInterpreterAndInvalidate();
-		Frame closestFrame = Truffle.getRuntime().iterateFrames(f -> {
+		/*Frame closestFrame = */Truffle.getRuntime().iterateFrames(f -> {
 			final Frame result = f.getFrame(FrameAccess.READ_ONLY);
 			final FrameDescriptor descriptor = result.getFrameDescriptor();
-			if (descriptor.getSlots().contains(slot)) {
+			if (descriptor.findFrameSlot(slotName) != null) {
 				return result;
 			}
 			depth++;
 			return null;
 		});
-		closestFrame.getFrameDescriptor().setFrameSlotKind(slot, FrameSlotKind.Object);
+//		closestFrame.getFrameDescriptor().setFrameSlotKind(slot, FrameSlotKind.Object);
 		initializationRequired = false;
 		throw new NablaInitializationPerformedException();
 	}

@@ -1,10 +1,5 @@
 package fr.cea.nabla.interpreter.runtime;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.graalvm.polyglot.Context;
-import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 
 import com.oracle.truffle.api.CompilerDirectives;

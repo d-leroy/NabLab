@@ -1,40 +1,25 @@
 package fr.cea.nabla.interpreter.tools;
 
-import com.oracle.truffle.api.frame.VirtualFrame;
+import java.util.function.Supplier;
+
 import com.oracle.truffle.api.instrumentation.EventContext;
 import com.oracle.truffle.api.instrumentation.ExecutionEventNode;
 import com.oracle.truffle.api.instrumentation.ExecutionEventNodeFactory;
-import com.oracle.truffle.api.nodes.Node;
 
 public class JobEventNodeFactory implements ExecutionEventNodeFactory {
 
-	private NablaLogInstrument nablaDumpVariablesInstrument;
+	private final Supplier<ConditionNode> conditionNodeFactory;
+	private final Supplier<ActionNode> actionNodeFactory;
 
-	JobEventNodeFactory(NablaLogInstrument nablaDumpVariablesInstrument) {
-		this.nablaDumpVariablesInstrument = nablaDumpVariablesInstrument;
+	JobEventNodeFactory(Supplier<ConditionNode> conditionNodefactory,
+			Supplier<ActionNode> actionNodefactory) {
+		this.conditionNodeFactory = conditionNodefactory;
+		this.actionNodeFactory = actionNodefactory;
 	}
 
 	@Override
 	public ExecutionEventNode create(final EventContext ec) {
-		final Node n = ec.getInstrumentedNode();
-		final Object o = n.getDebugProperties().get("jobName");
-		if (o instanceof String) {
-			final String jobName = (String) o;
-			if (nablaDumpVariablesInstrument.isJobObserved(jobName)) {
-				return new ExecutionEventNode() {
-					@Override
-					protected void onEnter(VirtualFrame frame) {
-						nablaDumpVariablesInstrument.jobAboutToExecute(jobName);
-					}
-
-					@Override
-					protected void onReturnValue(VirtualFrame frame, Object result) {
-						nablaDumpVariablesInstrument.jobExecuted(jobName);
-					}
-				};
-			}
-		}
-		return null;
+		return JobEventNodeGen.create(true, true, actionNodeFactory.get(), conditionNodeFactory.get());
 	}
 
 }

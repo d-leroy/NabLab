@@ -16,6 +16,16 @@ import fr.cea.nabla.interpreter.values.NV2Real;
 
 @NodeChild(value = "value", type = NablaExpressionNode.class)
 public abstract class NablaReturnNode extends NablaInstructionNode {
+
+	@Specialization
+	protected NV0Real doReal(NV0Real value) {
+		return value;
+	}
+	
+	@Specialization
+	protected NV1Real doReal1(NV1Real value) {
+		return value;
+	}
 	
 	@Specialization
 	protected NV0Bool doBool(NV0Bool value) {
@@ -44,16 +54,6 @@ public abstract class NablaReturnNode extends NablaInstructionNode {
 	
 	@Specialization
 	protected NV2Int doInt2(NV2Int value) {
-		return value;
-	}
-	
-	@Specialization
-	protected NV0Real doReal(NV0Real value) {
-		return value;
-	}
-	
-	@Specialization
-	protected NV1Real doReal1(NV1Real value) {
 		return value;
 	}
 	

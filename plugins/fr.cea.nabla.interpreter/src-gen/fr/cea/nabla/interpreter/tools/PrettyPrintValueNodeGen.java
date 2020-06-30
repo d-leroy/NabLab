@@ -27,6 +27,7 @@ import fr.cea.nabla.interpreter.values.NV4Bool;
 import fr.cea.nabla.interpreter.values.NV4Int;
 import fr.cea.nabla.interpreter.values.NV4Real;
 import java.util.concurrent.locks.Lock;
+import java.util.function.Supplier;
 
 @GeneratedBy(PrettyPrintValueNode.class)
 public final class PrettyPrintValueNodeGen extends PrettyPrintValueNode {
@@ -42,7 +43,7 @@ public final class PrettyPrintValueNodeGen extends PrettyPrintValueNode {
 
     @ExplodeLoop
     @Override
-    protected String execute(VirtualFrame frameValue) {
+    protected Supplier<String> execute(VirtualFrame frameValue) {
         int state = state_;
         Object readValue_ = this.read_.executeGeneric(frameValue);
         if ((state & 0b1) != 0 /* is-active onReturn(NV0Bool) */ && readValue_ instanceof NV0Bool) {
@@ -125,7 +126,7 @@ public final class PrettyPrintValueNodeGen extends PrettyPrintValueNode {
         return executeAndSpecialize(readValue_);
     }
 
-    private String executeAndSpecialize(Object readValue) {
+    private Supplier<String> executeAndSpecialize(Object readValue) {
         Lock lock = getLock();
         boolean hasLock = true;
         lock.lock();
