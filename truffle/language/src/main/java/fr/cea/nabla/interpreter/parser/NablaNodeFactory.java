@@ -12,6 +12,7 @@ import org.eclipse.xtext.util.Strings;
 
 import com.google.common.collect.Iterators;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlot;
@@ -106,9 +107,7 @@ import fr.cea.nabla.interpreter.utils.GetFrameNode;
 import fr.cea.nabla.interpreter.utils.GetFrameNodeGen;
 import fr.cea.nabla.interpreter.values.FunctionCallHelper;
 import fr.cea.nabla.ir.ContainerExtensions;
-import fr.cea.nabla.ir.IrModuleExtensions;
 import fr.cea.nabla.ir.IrTypeExtensions;
-import fr.cea.nabla.ir.MandatoryVariables;
 import fr.cea.nabla.ir.Utils;
 import fr.cea.nabla.ir.ir.Affectation;
 import fr.cea.nabla.ir.ir.AfterTimeLoopJob;
@@ -441,42 +440,25 @@ public class NablaNodeFactory {
 			return createVariableDeclaration(v);
 		}).filter(n -> n != null).collect(Collectors.toList()).toArray(new NablaWriteVariableNode[0]);
 
-		final NablaReadVariableNode[] mandatoryVariableNodes;
 		final NablaWriteVariableNode[] connectivityVariableNodes;
-
-		if (IrModuleExtensions.withMesh(module)) {
-			final List<String> mandatoryVariables = new ArrayList<>();
-			mandatoryVariables.add(MandatoryVariables.X_EDGE_ELEMS);
-			mandatoryVariables.add(MandatoryVariables.Y_EDGE_ELEMS);
-			mandatoryVariables.add(MandatoryVariables.X_EDGE_LENGTH);
-			mandatoryVariables.add(MandatoryVariables.Y_EDGE_LENGTH);
-			mandatoryVariableNodes = mandatoryVariables.stream().map(s -> {
-				final FrameSlot slot = moduleFrameDescriptor.findFrameSlot(s);
-				return getReadVariableNode(slot);
-			}).collect(Collectors.toList()).toArray(new NablaReadVariableNode[0]);
-
-			connectivityVariableNodes = module.getConnectivities().stream().filter(c -> c.isMultiple()).map(c -> {
-				final String connectivityName = c.getName();
-				final FrameSlot frameSlot = moduleFrameDescriptor.findOrAddFrameSlot(connectivityName, null,
-						FrameSlotKind.Illegal);
-				lexicalScope.locals.put(connectivityName, frameSlot);
-				final NablaWriteVariableNode result;
-				final NablaExpressionNode nbNodes;
-				if (c.getInTypes().isEmpty()) {
-					nbNodes = NablaMeshCallNodeGen.create("getNb" + Strings.toFirstUpper(connectivityName),
-							new NablaExpressionNode[0]);
-				} else {
-					nbNodes = NablaMeshCallNodeGen.create("getMaxNb" + Strings.toFirstUpper(connectivityName),
-							new NablaExpressionNode[0]);
-				}
-				result = getWriteVariableNode(frameSlot, nbNodes);
-				setSourceSection(c, result);
-				return result;
-			}).collect(Collectors.toList()).toArray(new NablaWriteVariableNode[0]);
-		} else {
-			mandatoryVariableNodes = new NablaReadVariableNode[0];
-			connectivityVariableNodes = new NablaWriteVariableNode[0];
-		}
+		connectivityVariableNodes = module.getConnectivities().stream().filter(c -> c.isMultiple()).map(c -> {
+			final String connectivityName = c.getName();
+			final FrameSlot frameSlot = moduleFrameDescriptor.findOrAddFrameSlot(connectivityName, null,
+					FrameSlotKind.Illegal);
+			lexicalScope.locals.put(connectivityName, frameSlot);
+			final NablaWriteVariableNode result;
+			final NablaExpressionNode nbNodes;
+			if (c.getInTypes().isEmpty()) {
+				nbNodes = NablaMeshCallNodeGen.create("getNb" + Strings.toFirstUpper(connectivityName),
+						new NablaExpressionNode[0]);
+			} else {
+				nbNodes = NablaMeshCallNodeGen.create("getMaxNb" + Strings.toFirstUpper(connectivityName),
+						new NablaExpressionNode[0]);
+			}
+			result = getWriteVariableNode(frameSlot, nbNodes);
+			setSourceSection(c, result);
+			return result;
+		}).collect(Collectors.toList()).toArray(new NablaWriteVariableNode[0]);
 
 		final NablaWriteVariableNode[] variableDeclarations = module.getDeclarations().stream().map(v -> {
 			if (v instanceof SimpleVariable && ((SimpleVariable) v).isOption()) {
@@ -500,8 +482,9 @@ public class NablaNodeFactory {
 				.sorted((j1, j2) -> Double.compare(j1.getAt(), j2.getAt())).map(j -> createNablaJobNode(j))
 				.collect(Collectors.toList()).toArray(new NablaRootNode[0]);
 
-		final NablaModuleNode moduleNode = new NablaModuleNode(mandatoryVariableNodes, coordinatesSlot,
-				connectivityVariableNodes, variableDeclarations, variableDefinitions, jobNodes, pathToMeshLibrary);
+		final JsonObject jsonMesh = (JsonObject)jsonOptions.get("mesh");
+		final NablaModuleNode moduleNode = new NablaModuleNode(jsonMesh, coordinatesSlot,
+				connectivityVariableNodes, variableDeclarations, variableDefinitions, jobNodes);
 
 		final NablaRootNode moduleRootNode = new NablaRootNode(language, moduleFrameDescriptor, null,
 				new NablaInstructionBlockNode(new NablaInstructionNode[] { moduleNode }), moduleName);

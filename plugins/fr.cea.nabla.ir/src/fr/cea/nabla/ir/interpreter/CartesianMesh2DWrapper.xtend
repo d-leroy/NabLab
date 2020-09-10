@@ -19,7 +19,7 @@ import java.lang.reflect.Method
 import java.util.HashMap
 import org.eclipse.xtend.lib.annotations.Accessors
 
-class CartesianMesh2DMeshWrapper
+class CartesianMesh2DWrapper
 {
 	val CartesianMesh2D mesh
 	val Class<?> providerClass

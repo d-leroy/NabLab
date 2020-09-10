@@ -1,5 +1,6 @@
 package fr.cea.nabla.interpreter.nodes;
 
+import com.google.gson.JsonObject;
 import com.oracle.truffle.api.dsl.TypeSystemReference;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotKind;
@@ -13,7 +14,6 @@ import com.oracle.truffle.api.instrumentation.Tag;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 
 import fr.cea.nabla.interpreter.NablaTypes;
-import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.interpreter.nodes.instruction.NablaInstructionNode;
 import fr.cea.nabla.interpreter.nodes.instruction.NablaWriteVariableNode;
 import fr.cea.nabla.interpreter.nodes.job.NablaJobBlockNode;
@@ -33,10 +33,10 @@ public class NablaModuleNode extends NablaInstructionNode implements Instrumenta
 	@Child
 	private NablaJobBlockNode jobBlock;
 
-	public NablaModuleNode(NablaExpressionNode[] mandatoryVariables, FrameSlot coordinatesSlot,
+	public NablaModuleNode(JsonObject jsonMesh, FrameSlot coordinatesSlot,
 			NablaWriteVariableNode[] connectivityVariables, NablaWriteVariableNode[] variableDeclarations,
-			NablaWriteVariableNode[] variableDefinitions, NablaRootNode[] jobs, String pathToMeshLibrary) {
-		this.prologNode = new NablaModulePrologNode(mandatoryVariables, connectivityVariables, variableDeclarations, variableDefinitions, pathToMeshLibrary);
+			NablaWriteVariableNode[] variableDefinitions, NablaRootNode[] jobs) {
+		this.prologNode = new NablaModulePrologNode(jsonMesh, connectivityVariables, variableDeclarations, variableDefinitions);
 //		this.mandatoryVariables = mandatoryVariables;
 		this.coordinatesSlot = coordinatesSlot;
 //		this.variableDeclarations = variableDeclarations;

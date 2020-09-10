@@ -41,7 +41,7 @@ class Context
 	val indexValues = new HashMap<ItemIndex, Integer>
 	val idValues = new HashMap<ItemId, Integer>
 	@Accessors(PRIVATE_GETTER, PRIVATE_SETTER) val HashMap<Function, Method> functionToMethod
-	@Accessors(PUBLIC_GETTER, PRIVATE_SETTER) CartesianMesh2DMeshWrapper meshWrapper
+	@Accessors(PUBLIC_GETTER, PRIVATE_SETTER) CartesianMesh2DWrapper meshWrapper
 
 	new(IrModule module, Logger logger)
 	{
@@ -68,7 +68,7 @@ class Context
 
 	def initMesh(Gson gson, JsonObject jsonMesh, Connectivity[] connectivities)
 	{
-		meshWrapper = new CartesianMesh2DMeshWrapper(gson, jsonMesh)
+		meshWrapper = new CartesianMesh2DWrapper(gson, jsonMesh)
 		meshWrapper.init(connectivities)
 	}
 

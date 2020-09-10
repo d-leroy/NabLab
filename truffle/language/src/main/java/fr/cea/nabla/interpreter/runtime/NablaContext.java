@@ -8,6 +8,7 @@ import java.util.Collections;
 import org.graalvm.options.OptionKey;
 import org.graalvm.polyglot.Value;
 
+import com.google.gson.JsonObject;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
 import com.oracle.truffle.api.Scope;
 import com.oracle.truffle.api.TruffleLanguage;
@@ -31,7 +32,7 @@ public final class NablaContext {
     private final PrintWriter output;
     private final NablaFunctionRegistry functionRegistry;
     private final AllocationReporter allocationReporter;
-    private final MeshWrapper meshWrapper;
+    private final CartesianMesh2DWrapper meshWrapper;
 
     @CompilationFinal
     private MaterializedFrame globalFrame;
@@ -44,7 +45,7 @@ public final class NablaContext {
         this.output = new PrintWriter(env.out(), true);
         this.allocationReporter = env.lookup(AllocationReporter.class);
         this.functionRegistry = new NablaFunctionRegistry(language);
-        this.meshWrapper = new MeshWrapper();
+        this.meshWrapper = new CartesianMesh2DWrapper();
     }
 
     public Env getEnv() {
@@ -84,15 +85,15 @@ public final class NablaContext {
         return NablaLanguage.getCurrentContext();
     }
     
-    public static void initializeMesh(final int nbXQuads, final int nbYQuads, final double xSize, final double ySize, final String pathToMeshLibrary) {
-    	getCurrent().meshWrapper.initialize(nbXQuads, nbYQuads, xSize, ySize, pathToMeshLibrary);
+    public static void initializeMesh(JsonObject jsonMesh) {
+    	getCurrent().meshWrapper.initialize(jsonMesh);
     }
     
     public static Value getNodes() {
     	return getCurrent().meshWrapper.getNodes();
     }
     
-    public static MeshWrapper getMeshWrapper() {
+    public static CartesianMesh2DWrapper getMeshWrapper() {
     	return getCurrent().meshWrapper;
     }
     
