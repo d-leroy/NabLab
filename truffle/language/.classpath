@@ -40,5 +40,14 @@
 			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" output="target/test-classes" path=".apt_generated_tests">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="/fr.cea.nabla.javalib"/>
+	<classpathentry kind="src" path="/fr.cea.nabla.ir"/>
+	<classpathentry kind="src" path="/fr.cea.nabla"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

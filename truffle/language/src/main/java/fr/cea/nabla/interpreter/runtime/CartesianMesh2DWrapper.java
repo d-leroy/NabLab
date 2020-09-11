@@ -4,6 +4,8 @@ import org.eclipse.xtext.util.Strings;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
@@ -12,9 +14,9 @@ import fr.cea.nabla.ir.ir.Iterator;
 //import fr.cea.nabla.javalib.mesh.CartesianMesh2D;
 //import fr.cea.nabla.javalib.mesh.Quad;
 import fr.cea.nabla.javalib.mesh.CartesianMesh2D;
-import fr.cea.nabla.javalib.mesh.CartesianMesh2DGenerator;
+import fr.cea.nabla.javalib.mesh.CartesianMesh2DFactory;
 
-public class MeshWrapper {
+public class CartesianMesh2DWrapper {
 
 	@CompilationFinal
 	private Value meshWrapper;
@@ -24,14 +26,16 @@ public class MeshWrapper {
 	private CartesianMesh2D mesh;
 
 	@TruffleBoundary
-	public MeshWrapper() {
+	public CartesianMesh2DWrapper() {
 	}
 
 	@TruffleBoundary
-	public void initialize(final int nbXQuads, final int nbYQuads, final double xSize, final double ySize, String pathToMeshLibrary) {
+	public void initialize(JsonObject jsonMesh) {
 		assert (this.meshInstance == null);
 		CompilerDirectives.transferToInterpreterAndInvalidate();
-		this.mesh = CartesianMesh2DGenerator.generate(nbXQuads, nbYQuads, xSize, ySize);
+		Gson gson = new Gson();
+		CartesianMesh2DFactory f = gson.fromJson(jsonMesh, CartesianMesh2DFactory.class);
+		this.mesh = f.create();
 		this.meshWrapper = Context.getCurrent().asValue(mesh);
 //		final Context polyglot = Context.getCurrent();
 //		final File file = new File(pathToMeshLibrary);
