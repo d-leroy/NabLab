@@ -18,10 +18,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class CartesianMesh2D 
+public class CartesianMesh2D
 {
 	public static int MaxNbNodesOfCell = 4;
-	public static int MaxNbNodesOfFace = 2; 
+	public static int MaxNbNodesOfFace = 2;
 	public static int MaxNbCellsOfNode = 4;
 	public static int MaxNbCellsOfFace = 2;
 	public static int MaxNbFacesOfCell = 4;
@@ -90,19 +90,20 @@ public class CartesianMesh2D
 		ArrayList<Integer> bFaces = new ArrayList<Integer>();
 		ArrayList<Integer> lFaces = new ArrayList<Integer>();
 		ArrayList<Integer> rFaces = new ArrayList<Integer>();
-		
+
 		for (int edgeId = 0; edgeId <edges.length; edgeId ++)
 		{
 			// Top boundary faces
-		    if (edgeId >= 2 * xQuads * yQuads + yQuads) tFaces.add(edgeId);
-		    // Bottom boundary faces
-		    if ((edgeId < 2 * xQuads) && (edgeId % 2 == 0)) bFaces.add(edgeId);
-		    // Left boundary faces
-		    if ((edgeId % (2 * xQuads + 1) == 1) && edgeId < 2 * xQuads * yQuads + yQuads) lFaces.add(edgeId);
-		    // Right boundary faces
-		    if (edgeId % (2 * xQuads + 1) == 2 * xQuads) rFaces.add(edgeId);
+			if (edgeId >= 2 * xQuads * yQuads + yQuads) tFaces.add(edgeId);
+			// Bottom boundary faces
+			if ((edgeId < 2 * xQuads) && (edgeId % 2 == 0)) bFaces.add(edgeId);
+			// Left boundary faces
+			if ((edgeId % (2 * xQuads + 1) == 1) && (edgeId < (2 * xQuads + 1) * yQuads)) lFaces.add(edgeId);
+			// Right boundary faces
+			if (edgeId % (2 * xQuads + 1) == 2 * xQuads) rFaces.add(edgeId);
 
-		    Edge edge = edges[edgeId];
+			Edge edge = edges[edgeId];
+
 			if (!isInnerEdge(edge))
 				outFaces.add(edgeId);
 			else
@@ -409,7 +410,7 @@ public class CartesianMesh2D
 
 	public int getBottomFaceNeighbour(int faceId)
 	{
-		  return (faceId - 2 * xQuads - 1);
+		  return (faceId - (2 * xQuads + 1));
 	}
 
 	public int getBottomLeftFaceNeighbour(int faceId)
@@ -418,7 +419,7 @@ public class CartesianMesh2D
 		if(isVerticalEdge(edges[faceId]))
 			return (faceId - 3);
 		else
-			return (faceId - 2 * xQuads);
+			return ((faceId + 1) - (2 * xQuads + 1));
 	}
 
 	public int getBottomRightFaceNeighbour(int faceId)
@@ -427,19 +428,19 @@ public class CartesianMesh2D
 		if (isVerticalEdge(edges[faceId]))
 		    return (faceId - 1);
 		else  // horizontal
-		    return ((faceId + 1) - 2 * xQuads + 1);
+		    return ((faceId + 3) - (2 * xQuads + 1));
 	}
 
 	public int getTopFaceNeighbour(int faceId)
 	{
-		return (faceId + 2 * xQuads + 1);
+		return (faceId + (2 * xQuads + 1));
 	}
 
 	public int getTopLeftFaceNeighbour(int faceId)
 	{
 		Edge[] edges = geometry.getEdges();
 		if (isVerticalEdge(edges[faceId]))
-			return ((faceId - 3) + 2 * xQuads + 1);
+			return ((faceId - 3) + (2 * xQuads + 1));
 		else  // horizontal
 		    return (faceId + 1);
 	}
@@ -448,7 +449,7 @@ public class CartesianMesh2D
 	{
 		Edge[] edges = geometry.getEdges();
 		if (isVerticalEdge(edges[faceId]))
-		    return ((faceId - 1) + 2 * xQuads + 1);
+		    return ((faceId - 1) + (2 * xQuads + 1));
 		  else  // horizontal
 		    return (faceId + 3);
 	}

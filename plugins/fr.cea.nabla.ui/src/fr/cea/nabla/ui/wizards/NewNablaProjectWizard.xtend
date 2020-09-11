@@ -13,7 +13,7 @@ import fr.cea.nabla.nablagen.CppKokkos
 import fr.cea.nabla.nablagen.CppKokkosTeamThread
 import fr.cea.nabla.nablagen.CppStlThread
 import fr.cea.nabla.nablagen.Java
-import fr.cea.nabla.ui.UiUtils
+import fr.cea.nabla.ui.NablaUiUtils
 import fr.cea.nabla.ui.internal.NablaActivator
 import java.io.ByteArrayInputStream
 import java.lang.reflect.InvocationTargetException
@@ -78,7 +78,7 @@ class NewNablaProjectWizard extends Wizard implements INewWizard
 		newProjectPage.initialModuleName = DEFAULT_MODULE_NAME
 		newProjectPage.title = NEW_PROJECT_PAGE_TITLE
 		newProjectPage.description = NEW_PROJECT_PAGE_DESCRIPTION
-		val imageDescriptor = UiUtils.getImageDescriptor("icons/NabLab.gif")
+		val imageDescriptor = NablaUiUtils.getImageDescriptor("icons/NabLab.gif")
 		if (imageDescriptor.present)
 		{
 			newProjectPage.imageDescriptor = imageDescriptor.get
@@ -289,11 +289,6 @@ class NewNablaProjectWizard extends Wizard implements INewWizard
 
 		connectivity nodes: → { node };
 
-		option ℝ X_EDGE_LENGTH = 0.1;
-		option ℝ Y_EDGE_LENGTH = X_EDGE_LENGTH;
-		option ℕ X_EDGE_ELEMS = 20;
-		option ℕ Y_EDGE_ELEMS = 20;
-
 		option ℕ maxIter = 200;
 		option ℝ maxTime = 1.0;
 
@@ -312,6 +307,7 @@ class NewNablaProjectWizard extends Wizard implements INewWizard
 
 		SimulationVariables
 		{
+			meshClassName = "CartesianMesh2D";
 			nodeCoord = X;
 			time = t;
 			timeStep = δt;

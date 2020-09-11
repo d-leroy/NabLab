@@ -50,7 +50,7 @@ CartesianMesh2D::CartesianMesh2D(
     // Bottom boundary faces
     if ((edgeId < 2 * m_nb_x_quads) && (edgeId % 2 == 0)) m_bottom_faces.emplace_back(edgeId);
     // Left boundary faces
-    if ((edgeId % (2 * m_nb_x_quads + 1) == 1) &&  edgeId < 2 * m_nb_x_quads * m_nb_y_quads + m_nb_y_quads) m_left_faces.emplace_back(edgeId);
+    if ((edgeId % (2 * m_nb_x_quads + 1) == 1) &&  (edgeId < (2 * m_nb_x_quads + 1) * m_nb_y_quads)) m_left_faces.emplace_back(edgeId);
     // Right boundary faces
     if (edgeId % (2 * m_nb_x_quads + 1) == 2 * m_nb_x_quads) m_right_faces.emplace_back(edgeId);
     // Outer Faces
@@ -271,18 +271,17 @@ CartesianMesh2D::isHorizontalEdge(const Edge& e) const noexcept
           e.getNodeIds()[1] == e.getNodeIds()[0] + 1);
 }
 
-//bool
-//CartesianMesh2D::isInnerVerticalEdge(const Edge& e) const noexcept
-//{
-//  return isInnerEdge(e) && isVerticalEdge(e);
-//}
+bool
+CartesianMesh2D::isInnerVerticalEdge(const Edge& e) const noexcept
+{
+  return isInnerEdge(e) && isVerticalEdge(e);
+}
 
-
-//bool
-//CartesianMesh2D::isInnerHorizontalEdge(const Edge& e) const noexcept
-//{
-//  return isInnerEdge(e) && isHorizontalEdge(e);
-//}
+bool
+CartesianMesh2D::isInnerHorizontalEdge(const Edge& e) const noexcept
+{
+  return isInnerEdge(e) && isHorizontalEdge(e);
+}
 
 Id
 CartesianMesh2D::getBottomFaceOfCell(const Id& cellId) const noexcept
@@ -391,44 +390,44 @@ CartesianMesh2D::getRightCell(const Id& cellId) const noexcept
 
 Id CartesianMesh2D::getBottomFaceNeighbour(const Id& faceId) const
 {
-  // const Edge& face(m_geometry->getEdges()[faceId]);
-  // assert(isInnerEdge(face));
-  return (faceId - 2 * m_nb_x_quads - 1);
+  const Edge& face(m_geometry->getEdges()[faceId]);
+  assert(isInnerEdge(face));
+  return (faceId - (2 * m_nb_x_quads + 1));
 }
 
 Id CartesianMesh2D::getBottomLeftFaceNeighbour(const Id& faceId) const
 {
   const Edge& face(m_geometry->getEdges()[faceId]);
-  // assert(isInnerEdge(face));
+  assert(isInnerEdge(face));
   if (isVerticalEdge(face))
     return (faceId - 3);
   else  // horizontal
-    return (faceId - 2 * m_nb_x_quads);
+    return ((faceId + 1) - (2 * m_nb_x_quads + 1));
 }
 
 Id CartesianMesh2D::getBottomRightFaceNeighbour(const Id& faceId) const
 {
   const Edge& face(m_geometry->getEdges()[faceId]);
-  // assert(isInnerEdge(face));
+  assert(isInnerEdge(face));
   if (isVerticalEdge(face))
     return (faceId - 1);
   else  // horizontal
-    return ((faceId + 3) - 2 * m_nb_x_quads + 1);
+    return ((faceId + 3) - (2 * m_nb_x_quads + 1));
 }
 
 Id CartesianMesh2D::getTopFaceNeighbour(const Id& faceId) const
 {
-  // const Edge& face(m_geometry->getEdges()[faceId]);
-  // assert(isInnerEdge(face));
-  return (faceId + 2 * m_nb_x_quads + 1);
+  const Edge& face(m_geometry->getEdges()[faceId]);
+  assert(isInnerEdge(face));
+  return (faceId + (2 * m_nb_x_quads + 1));
 }
 
 Id CartesianMesh2D::getTopLeftFaceNeighbour(const Id& faceId) const
 {
   const Edge& face(m_geometry->getEdges()[faceId]);
-  // assert(isInnerEdge(face));
+  assert(isInnerEdge(face));
   if (isVerticalEdge(face))
-    return ((faceId - 3) + 2 * m_nb_x_quads + 1);
+    return ((faceId - 3) + (2 * m_nb_x_quads + 1));
   else  // horizontal
     return (faceId + 1);
 }
@@ -436,24 +435,24 @@ Id CartesianMesh2D::getTopLeftFaceNeighbour(const Id& faceId) const
 Id CartesianMesh2D::getTopRightFaceNeighbour(const Id& faceId) const
 {
   const Edge& face(m_geometry->getEdges()[faceId]);
-  // assert(isInnerEdge(face));
+  assert(isInnerEdge(face));
   if (isVerticalEdge(face))
-    return ((faceId - 1) + 2 * m_nb_x_quads + 1);
+    return ((faceId - 1) + (2 * m_nb_x_quads + 1));
   else  // horizontal
     return (faceId + 3);
 }
 
 Id CartesianMesh2D::getRightFaceNeighbour(const Id& faceId) const
 {
-  // const Edge& face(m_geometry->getEdges()[faceId]);
-  // assert(isInnerEdge(face));
+  const Edge& face(m_geometry->getEdges()[faceId]);
+  assert(isInnerEdge(face));
   return (faceId + 2);
 }
 
 Id CartesianMesh2D::getLeftFaceNeighbour(const Id& faceId) const
 {
-  // const Edge& face(m_geometry->getEdges()[faceId]);
-  // assert(isInnerEdge(face));
+  const Edge& face(m_geometry->getEdges()[faceId]);
+  assert(isInnerEdge(face));
   return (faceId - 2);
 }
 
