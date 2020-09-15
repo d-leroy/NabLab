@@ -25,6 +25,7 @@ public final class NablaMain {
 		final Map<String, String> options = new HashMap<>();
 		String nablaFile = null;
 		String nablagenFile = null;
+		String optionsFile = null;
 		for (String arg : args) {
 			if (parseOption(options, arg)) {
 				continue;
@@ -33,6 +34,8 @@ public final class NablaMain {
 					nablaFile = arg;
 				} else if (nablagenFile == null) {
 					nablagenFile = arg;
+				} else if (optionsFile == null) {
+					optionsFile = arg;
 				}
 			}
 		}
@@ -43,18 +46,24 @@ public final class NablaMain {
 		if (nablagenFile == null) {
 			throw new IllegalArgumentException("Missing .nablagen file");
 		}
+		if (optionsFile == null) {
+			throw new IllegalArgumentException("Missing .json options file");
+		}
 		
 		source = Source.newBuilder(NABLA, new File(nablaFile)).build();
-		System.exit(executeSource(source, nablagenFile, System.in, System.out, options));
+		System.exit(executeSource(source, nablagenFile, optionsFile, System.in, System.out, options));
 	}
 
-	private static int executeSource(Source source, String nablagenFile, InputStream in, PrintStream out, Map<String, String> options)
+	private static int executeSource(Source source, String nablagenFile, String optionsFile, InputStream in, PrintStream out, Map<String, String> options)
 			throws IOException {
 		final Context context;
 		final PrintStream err = System.err;
 
 		final String genmodel = readFileAsString(nablagenFile);
 		options.put("nabla.genmodel", genmodel);
+
+		final String optionsContent = readFileAsString(optionsFile);
+		options.put("nabla.options", optionsContent);
 		
 		try {
 			context = Context.newBuilder().in(in).out(out) //

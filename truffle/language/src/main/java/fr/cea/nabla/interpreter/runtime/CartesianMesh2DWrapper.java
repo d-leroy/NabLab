@@ -32,6 +32,7 @@ public class CartesianMesh2DWrapper {
 	@TruffleBoundary
 	public void initialize(JsonObject jsonMesh) {
 		assert (this.meshInstance == null);
+		assert (jsonMesh != null);
 		CompilerDirectives.transferToInterpreterAndInvalidate();
 		Gson gson = new Gson();
 		CartesianMesh2DFactory f = gson.fromJson(jsonMesh, CartesianMesh2DFactory.class);
