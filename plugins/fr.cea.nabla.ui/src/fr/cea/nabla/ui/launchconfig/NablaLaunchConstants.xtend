@@ -14,6 +14,7 @@ class NablaLaunchConstants {
 	package static val GRAAL_HOME_LOCATION = 'GraalVM Home Location'
 	package static val SOURCE_FILE_LOCATION = 'Source File Location'
 	package static val GEN_FILE_LOCATION = 'Gen File Location'
+	package static val OPTIONS_FILE_LOCATION = 'Options File Location'
 	package static val MONILOGGER_FILES_LOCATIONS = 'Monilogger Files Locations'
 
 }

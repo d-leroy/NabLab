@@ -16,15 +16,41 @@
 		<graalvm.version>20.1.0</graalvm.version>
 	</properties>
 
-	<groupId>fr.cea.nabla</groupId>
 	<artifactId>nabla-parent</artifactId>
-	<version>0.3.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>language</module>
 		<module>launcher</module>
 		<module>component</module>
 	</modules>
+	
+	<build>
+		<plugins>
+			<plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-dependency-plugin</artifactId>
+		        <version>3.1.2</version>
+		        <executions>
+		          <execution>
+		            <id>purge-local-dependencies</id>
+		            <phase>process-sources</phase>
+		            <goals>
+		              <goal>purge-local-repository</goal>
+		            </goals>
+		            <configuration>
+		            	<includes>
+		            		<include>fr.cea.nabla:fr.cea.nabla</include>
+		            		<include>fr.cea.nabla:fr.cea.nabla.ir</include>
+		            		<include>fr.cea.nabla:fr.cea.nabla.javalib</include>
+		            		<include>org.jgrapht:jgrapht-core</include>
+		            		<include>org.apache.commons:commons-math3</include>
+		            	</includes>
+		            </configuration>
+		          </execution>
+		        </executions>
+		      </plugin>
+		</plugins>
+	</build>
 	
 	
 </project>

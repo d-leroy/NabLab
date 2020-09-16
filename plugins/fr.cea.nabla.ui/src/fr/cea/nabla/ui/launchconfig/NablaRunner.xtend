@@ -32,6 +32,8 @@ class NablaRunner {
 				.rawLocation.makeAbsolute.toString
 		val gen = ResourcesPlugin.workspace.root.getFile(new Path(configuration.getAttribute(NablaLaunchConstants::GEN_FILE_LOCATION, '')))
 				.rawLocation.makeAbsolute.toString
+		val options = ResourcesPlugin.workspace.root.getFile(new Path(configuration.getAttribute(NablaLaunchConstants::OPTIONS_FILE_LOCATION, '')))
+				.rawLocation.makeAbsolute.toString
 		val moniloggers = configuration.getAttribute(NablaLaunchConstants::MONILOGGER_FILES_LOCATIONS, newArrayList).map[m|
 							ResourcesPlugin.workspace.root.getFile(new Path(m)).rawLocation.makeAbsolute.toString]
 
@@ -43,12 +45,13 @@ class NablaRunner {
 			consoleFactory.printConsole(MessageType.Start, 'Starting execution: ' + name)
 			
 			val args = if (moniloggers.empty) {
-					#[graalVMHome + '/bin/nabla', source, gen]
+					#[graalVMHome + '/bin/nabla', source, gen, options]
 				} else {
 					#[
 						graalVMHome + '/bin/nabla',
 						source,
 						gen,
+						options,
 						'--monilogger.files=' + moniloggers.reduce [ s1, s2 |
 							s1 + ',' + s2
 						]

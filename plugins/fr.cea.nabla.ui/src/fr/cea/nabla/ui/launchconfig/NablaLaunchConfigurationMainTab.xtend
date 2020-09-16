@@ -32,11 +32,13 @@ class NablaLaunchConfigurationMainTab extends AbstractLaunchConfigurationTab
 {
 	public static val SourceFileExtension = 'nabla'
 	public static val GenFileExtension = 'nablagen'
+	public static val OptionsFileExtension = 'json'
 	public static val MoniloggerFileExtension = 'mnlg'
 	boolean fDisableUpdate = false
 
 	Text fTxtSourceFile
 	Text fTxtGenFile
+	Text fTxtOptionsFile
 	Text fTxtMoniloggerFile
 
 	override createControl(Composite parent) 
@@ -70,6 +72,19 @@ class NablaLaunchConfigurationMainTab extends AbstractLaunchConfigurationTab
 		btnBrowseGen.addSelectionListener(new NablaGenFileSelectionAdapter(parent, fTxtGenFile))
 		btnBrowseGen.setText("Browse...")
 
+		val grpOptions = new Group(topControl, SWT.NONE)
+		grpOptions.setLayout(new GridLayout(2, false))
+		grpOptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1))
+		grpOptions.setText("Options File")
+
+		fTxtOptionsFile = new Text(grpOptions, SWT.BORDER)
+		fTxtOptionsFile.addModifyListener([e | if (!fDisableUpdate) updateLaunchConfigurationDialog])
+		fTxtOptionsFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1))
+
+		val btnBrowseOptions = new Button(grpOptions, SWT::NONE)
+		btnBrowseOptions.addSelectionListener(new NablaOptionsFileSelectionAdapter(parent, fTxtOptionsFile))
+		btnBrowseOptions.setText("Browse...")
+
 		val grpMonilogger = new Group(topControl, SWT.NONE)
 		grpMonilogger.setLayout(new GridLayout(2, false))
 		grpMonilogger.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1))
@@ -97,12 +112,14 @@ class NablaLaunchConfigurationMainTab extends AbstractLaunchConfigurationTab
 
 		fTxtSourceFile.text = ''
 		fTxtGenFile.text = ''
+		fTxtOptionsFile.text = ''
 		fTxtMoniloggerFile.text = ''
 
 		try
 		{
 			fTxtSourceFile.text = configuration.getAttribute(NablaLaunchConstants::SOURCE_FILE_LOCATION, '')
 			fTxtGenFile.text = configuration.getAttribute(NablaLaunchConstants::GEN_FILE_LOCATION, '')
+			fTxtOptionsFile.text = configuration.getAttribute(NablaLaunchConstants::OPTIONS_FILE_LOCATION, '')
 			val moniloggers = configuration.getAttribute(NablaLaunchConstants::MONILOGGER_FILES_LOCATIONS, newArrayList)
 			fTxtMoniloggerFile.text = if (moniloggers.empty) '' else moniloggers.head
 		}
@@ -116,6 +133,7 @@ class NablaLaunchConfigurationMainTab extends AbstractLaunchConfigurationTab
 	{
 		configuration.setAttribute(NablaLaunchConstants::SOURCE_FILE_LOCATION, fTxtSourceFile.text)
 		configuration.setAttribute(NablaLaunchConstants::GEN_FILE_LOCATION, fTxtGenFile.text)
+		configuration.setAttribute(NablaLaunchConstants::OPTIONS_FILE_LOCATION, fTxtOptionsFile.text)
 		configuration.setAttribute(NablaLaunchConstants::MONILOGGER_FILES_LOCATIONS, newArrayList(fTxtMoniloggerFile.text))
 	}
 
@@ -123,6 +141,7 @@ class NablaLaunchConfigurationMainTab extends AbstractLaunchConfigurationTab
 	{
 		configuration.setAttribute(NablaLaunchConstants::SOURCE_FILE_LOCATION, '')
 		configuration.setAttribute(NablaLaunchConstants::GEN_FILE_LOCATION, '')
+		configuration.setAttribute(NablaLaunchConstants::OPTIONS_FILE_LOCATION, '')
 		configuration.setAttribute(NablaLaunchConstants::MONILOGGER_FILES_LOCATIONS, newArrayList)
 	}
 }
@@ -165,6 +184,28 @@ class NablaGenFileSelectionAdapter extends SelectionAdapter
 		val dialog = new ElementTreeSelectionDialog(parent.shell, new WorkbenchLabelProvider, new SourceFileContentProvider(NablaLaunchConfigurationMainTab::GenFileExtension))
 		dialog.setTitle("Select Nablagen File")
 		dialog.setMessage("Select the nablagen file to use for the execution:")
+		dialog.setInput(ResourcesPlugin.workspace.root)
+		if (dialog.open == Window.OK)
+			fTxtFile.setText((dialog.firstResult as IFile).fullPath.makeRelative.toPortableString)
+	}
+}
+
+class NablaOptionsFileSelectionAdapter extends SelectionAdapter
+{
+	val Composite parent
+	val Text fTxtFile
+
+	new(Composite parent, Text fTxtFile)
+	{
+		this.parent = parent
+		this.fTxtFile = fTxtFile
+	}
+
+	override void widgetSelected(SelectionEvent e)
+	{
+		val dialog = new ElementTreeSelectionDialog(parent.shell, new WorkbenchLabelProvider, new SourceFileContentProvider(NablaLaunchConfigurationMainTab::OptionsFileExtension))
+		dialog.setTitle("Select Options File")
+		dialog.setMessage("Select the options file to use for the execution:")
 		dialog.setInput(ResourcesPlugin.workspace.root)
 		if (dialog.open == Window.OK)
 			fTxtFile.setText((dialog.firstResult as IFile).fullPath.makeRelative.toPortableString)

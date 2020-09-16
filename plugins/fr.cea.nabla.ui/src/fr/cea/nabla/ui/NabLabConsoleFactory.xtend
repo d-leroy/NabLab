@@ -13,6 +13,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import fr.cea.nabla.generator.NablaGeneratorMessageDispatcher
 import fr.cea.nabla.generator.NablaGeneratorMessageDispatcher.MessageType
+import java.util.Map
 import org.eclipse.swt.graphics.Color
 import org.eclipse.swt.widgets.Display
 import org.eclipse.ui.console.ConsolePlugin
@@ -31,7 +32,7 @@ class NabLabConsoleFactory implements IConsoleFactory
 
 	@Inject NablaGeneratorMessageDispatcher dispatcher
 	MessageConsole console
-	MessageConsoleStream stream
+	Map<Color, MessageConsoleStream> streams = newHashMap
 
 	override openConsole()
 	{
@@ -60,21 +61,22 @@ class NabLabConsoleFactory implements IConsoleFactory
 	{
 		if (console !== null)
 		{
-			if (stream === null) {
-				stream = console.newMessageStream
+			val color = switch type
+			{
+				case MessageType.Exec: BLUE
+				case MessageType.Warning: ORANGE
+				case MessageType.Error: RED
+				default: BLACK
 			}
-			val display = Display.^default
-			display.syncExec
-			([
-				stream.color = switch type
-				{
-					case MessageType.Exec: BLUE
-					case MessageType.Warning: ORANGE
-					case MessageType.Error: RED
-					default: BLACK
-				}
-				stream.println(msg)
+			
+			val stream = streams.computeIfAbsent(color, [c|
+				val s = console.newMessageStream
+				s.color = color
+				return s
 			])
+			
+			val display = Display.^default
+			display.syncExec([stream.println(msg)])
 		}
 	}
 }
