@@ -15,37 +15,37 @@ import fr.cea.nabla.interpreter.runtime.NablaNull;
 public class NablaModulePrologNode extends NablaInstructionNode {
 	JsonObject jsonMesh;
 	@Children
-	private NablaWriteVariableNode[] connectivityVariables;
+	private NablaWriteVariableNode[] connectivitySizes;
+	@Children
+	private NablaWriteVariableNode[] optionDefinitions;
 	@Children
 	private NablaWriteVariableNode[] variableDefinitions;
-	@Children
-	private NablaWriteVariableNode[] variableDeclarations;
 	
 	public NablaModulePrologNode(JsonObject jsonMesh,
-			NablaWriteVariableNode[] connectivityVariables, NablaWriteVariableNode[] variableDeclarations,
+			NablaWriteVariableNode[] connectivitySizes, NablaWriteVariableNode[] optionDefinitions,
 			NablaWriteVariableNode[] variableDefinitions) {
 		this.jsonMesh = jsonMesh;
-		this.variableDeclarations = variableDeclarations;
+		this.optionDefinitions = optionDefinitions;
 		this.variableDefinitions = variableDefinitions;
-		this.connectivityVariables = connectivityVariables;
+		this.connectivitySizes = connectivitySizes;
 	}
 
 	@ExplodeLoop
 	@Override
 	public Object executeGeneric(VirtualFrame frame) {
 
-		for (int i = 0; i < variableDefinitions.length; i++) {
-			variableDefinitions[i].executeGeneric(frame);
-		}
-
 		NablaContext.initializeMesh(jsonMesh);
 
-		for (int i = 0; i < connectivityVariables.length; i++) {
-			connectivityVariables[i].executeGeneric(frame);
+		for (int i = 0; i < connectivitySizes.length; i++) {
+			connectivitySizes[i].executeGeneric(frame);
 		}
 
-		for (int i = 0; i < variableDeclarations.length; i++) {
-			variableDeclarations[i].executeGeneric(frame);
+		for (int i = 0; i < optionDefinitions.length; i++) {
+			optionDefinitions[i].executeGeneric(frame);
+		}
+		
+		for (int i = 0; i < variableDefinitions.length; i++) {
+			variableDefinitions[i].executeGeneric(frame);
 		}
 
 		return NablaNull.SINGLETON;

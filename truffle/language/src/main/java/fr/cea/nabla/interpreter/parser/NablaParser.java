@@ -1,14 +1,10 @@
 package fr.cea.nabla.interpreter.parser;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.log4j.LogManager;
 import org.eclipse.emf.ecore.EPackage;
 import org.graalvm.options.OptionValues;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.Truffle;
@@ -32,11 +28,12 @@ public class NablaParser {
 		String pathToMeshLibrary = options.get(NablaOptions.MESH_LIB);
 		EPackage.Registry.INSTANCE.put(IrPackage.eNS_URI, IrPackage.eINSTANCE);
 		final IrModule irModule = getIrModule(source, options.get(NablaOptions.GENMODEL));
-		final Map<String, JsonElement> jsonOptions = new HashMap<>();
+		final JsonObject jsonOptions;
 		if (jsonOptionsString != null && !jsonOptionsString.isEmpty()) {
 			final Gson gson = new Gson();
-			gson.fromJson(jsonOptionsString, JsonObject.class).entrySet()
-					.forEach(e -> jsonOptions.put(e.getKey(), e.getValue()));
+			jsonOptions = gson.fromJson(jsonOptionsString, JsonObject.class);
+		} else {
+			jsonOptions = null;
 		}
 		
 		final RootCallTarget moduleCallTarget = Truffle.getRuntime()

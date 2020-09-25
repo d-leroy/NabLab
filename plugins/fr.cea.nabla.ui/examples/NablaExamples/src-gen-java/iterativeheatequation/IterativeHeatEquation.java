@@ -1,18 +1,29 @@
 package iterativeheatequation;
 
-import java.io.FileNotFoundException;
+import static org.iq80.leveldb.impl.Iq80DBFactory.bytes;
+import static org.iq80.leveldb.impl.Iq80DBFactory.factory;
+
+import java.io.File;
 import java.io.FileReader;
-import java.util.HashMap;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.stream.IntStream;
+
+import org.iq80.leveldb.DB;
+import org.iq80.leveldb.WriteBatch;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
 
 import fr.cea.nabla.javalib.types.*;
 import fr.cea.nabla.javalib.mesh.*;
+import fr.cea.nabla.javalib.utils.*;
 
 @SuppressWarnings("all")
 public final class IterativeHeatEquation
@@ -20,12 +31,72 @@ public final class IterativeHeatEquation
 	public final static class Options
 	{
 		public String outputPath;
+		public String nonRegression;
 		public int outputPeriod;
 		public double u0;
 		public double stopTime;
 		public int maxIterations;
 		public int maxIterationsK;
 		public double epsilon;
+	}
+
+	public final static class OptionsDeserializer implements JsonDeserializer<Options>
+	{
+		@Override
+		public Options deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+		{
+			final JsonObject d = json.getAsJsonObject();
+			Options options = new Options();
+			// outputPath
+			assert(d.has("outputPath"));
+			final JsonElement valueof_outputPath = d.get("outputPath");
+			options.outputPath = valueof_outputPath.getAsJsonPrimitive().getAsString();
+			// outputPeriod
+			assert(d.has("outputPeriod"));
+			final JsonElement valueof_outputPeriod = d.get("outputPeriod");
+			options.outputPeriod = valueof_outputPeriod.getAsJsonPrimitive().getAsInt();
+			// u0
+			if (d.has("u0"))
+			{
+				final JsonElement valueof_u0 = d.get("u0");
+				options.u0 = valueof_u0.getAsJsonPrimitive().getAsDouble();
+			}
+			else
+				options.u0 = 1.0;
+			// stopTime
+			if (d.has("stopTime"))
+			{
+				final JsonElement valueof_stopTime = d.get("stopTime");
+				options.stopTime = valueof_stopTime.getAsJsonPrimitive().getAsDouble();
+			}
+			else
+				options.stopTime = 0.1;
+			// maxIterations
+			if (d.has("maxIterations"))
+			{
+				final JsonElement valueof_maxIterations = d.get("maxIterations");
+				options.maxIterations = valueof_maxIterations.getAsJsonPrimitive().getAsInt();
+			}
+			else
+				options.maxIterations = 500000000;
+			// maxIterationsK
+			if (d.has("maxIterationsK"))
+			{
+				final JsonElement valueof_maxIterationsK = d.get("maxIterationsK");
+				options.maxIterationsK = valueof_maxIterationsK.getAsJsonPrimitive().getAsInt();
+			}
+			else
+				options.maxIterationsK = 1000;
+			// epsilon
+			if (d.has("epsilon"))
+			{
+				final JsonElement valueof_epsilon = d.get("epsilon");
+				options.epsilon = valueof_epsilon.getAsJsonPrimitive().getAsDouble();
+			}
+			else
+				options.epsilon = 1.0E-8;
+			return options;
+		}
 	}
 
 	// Mesh and mesh variables
@@ -36,16 +107,14 @@ public final class IterativeHeatEquation
 	private final Options options;
 	private final FileWriter writer;
 
-	// Global definitions
+	// Global variables
+	private int lastDump;
+	private int n;
+	private int k;
 	private final double[] vectOne;
 	private double t_n;
 	private double t_nplus1;
 	private double deltat;
-	private int lastDump;
-
-	// Global declarations
-	private int n;
-	private int k;
 	private double[][] X;
 	private double[][] Xc;
 	private double[] u_n;
@@ -76,11 +145,11 @@ public final class IterativeHeatEquation
 		writer = new PvdFileWriter2D("IterativeHeatEquation", options.outputPath);
 
 		// Initialize variables with default values
+		lastDump = Integer.MIN_VALUE;
 		vectOne = new double[] {1.0, 1.0};
 		t_n = 0.0;
 		t_nplus1 = 0.0;
 		deltat = 0.001;
-		lastDump = Integer.MIN_VALUE;
 
 		// Allocate arrays
 		X = new double[nbNodes][2];
@@ -119,14 +188,16 @@ public final class IterativeHeatEquation
 		System.out.println("End of execution of module IterativeHeatEquation");
 	}
 
-	public static void main(String[] args) throws FileNotFoundException
+	public static void main(String[] args) throws IOException
 	{
 		if (args.length == 1)
 		{
 			String dataFileName = args[0];
 			JsonParser parser = new JsonParser();
 			JsonObject o = parser.parse(new FileReader(dataFileName)).getAsJsonObject();
-			Gson gson = new Gson();
+			GsonBuilder gsonBuilder = new GsonBuilder();
+			gsonBuilder.registerTypeAdapter(Options.class, new IterativeHeatEquation.OptionsDeserializer());
+			Gson gson = gsonBuilder.create();
 
 			assert(o.has("mesh"));
 			CartesianMesh2DFactory meshFactory = gson.fromJson(o.get("mesh"), CartesianMesh2DFactory.class);
@@ -136,6 +207,16 @@ public final class IterativeHeatEquation
 
 			IterativeHeatEquation simulator = new IterativeHeatEquation(mesh, options);
 			simulator.simulate();
+
+			// Non regression testing
+			if (options.nonRegression!=null &&  options.nonRegression.equals("CreateReference"))
+				simulator.createDB("IterativeHeatEquationDB.ref");
+			if (options.nonRegression!=null &&  options.nonRegression.equals("CompareToReference"))
+			{
+				simulator.createDB("IterativeHeatEquationDB.current");
+				LevelDBUtils.compareDB("IterativeHeatEquationDB.current", "IterativeHeatEquationDB.ref");
+				LevelDBUtils.destroyDB("IterativeHeatEquationDB.current");
+			}
 		}
 		else
 		{
@@ -550,5 +631,50 @@ public final class IterativeHeatEquation
 			writer.writeFile(content);
 			lastDump = n;
 		}
+	}
+
+	private void createDB(String db_name) throws IOException
+	{
+		org.iq80.leveldb.Options levelDBOptions = new org.iq80.leveldb.Options();
+
+		// Destroy if exists
+		factory.destroy(new File(db_name), levelDBOptions);
+
+		// Create data base
+		levelDBOptions.createIfMissing(true);
+		DB db = factory.open(new File(db_name), levelDBOptions);
+
+		WriteBatch batch = db.createWriteBatch();
+		try
+		{
+			batch.put(bytes("lastDump"), LevelDBUtils.serialize(lastDump));
+			batch.put(bytes("n"), LevelDBUtils.serialize(n));
+			batch.put(bytes("k"), LevelDBUtils.serialize(k));
+			batch.put(bytes("vectOne"), LevelDBUtils.serialize(vectOne));
+			batch.put(bytes("t_n"), LevelDBUtils.serialize(t_n));
+			batch.put(bytes("t_nplus1"), LevelDBUtils.serialize(t_nplus1));
+			batch.put(bytes("deltat"), LevelDBUtils.serialize(deltat));
+			batch.put(bytes("X"), LevelDBUtils.serialize(X));
+			batch.put(bytes("Xc"), LevelDBUtils.serialize(Xc));
+			batch.put(bytes("u_n"), LevelDBUtils.serialize(u_n));
+			batch.put(bytes("u_nplus1"), LevelDBUtils.serialize(u_nplus1));
+			batch.put(bytes("u_nplus1_k"), LevelDBUtils.serialize(u_nplus1_k));
+			batch.put(bytes("u_nplus1_kplus1"), LevelDBUtils.serialize(u_nplus1_kplus1));
+			batch.put(bytes("V"), LevelDBUtils.serialize(V));
+			batch.put(bytes("D"), LevelDBUtils.serialize(D));
+			batch.put(bytes("faceLength"), LevelDBUtils.serialize(faceLength));
+			batch.put(bytes("faceConductivity"), LevelDBUtils.serialize(faceConductivity));
+			batch.put(bytes("alpha"), LevelDBUtils.serialize(alpha));
+			batch.put(bytes("residual"), LevelDBUtils.serialize(residual));
+
+			db.write(batch);
+		}
+		finally
+		{
+			// Make sure you close the batch to avoid resource leaks.
+			batch.close();
+		}
+		db.close();
+		System.out.println("Reference database " + db_name + " created.");
 	}
 };

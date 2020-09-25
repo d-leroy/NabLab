@@ -1,18 +1,29 @@
 package glace2d;
 
-import java.io.FileNotFoundException;
+import static org.iq80.leveldb.impl.Iq80DBFactory.bytes;
+import static org.iq80.leveldb.impl.Iq80DBFactory.factory;
+
+import java.io.File;
 import java.io.FileReader;
-import java.util.HashMap;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.stream.IntStream;
+
+import org.iq80.leveldb.DB;
+import org.iq80.leveldb.WriteBatch;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
 
 import fr.cea.nabla.javalib.types.*;
 import fr.cea.nabla.javalib.mesh.*;
+import fr.cea.nabla.javalib.utils.*;
 
 @SuppressWarnings("all")
 public final class Glace2d
@@ -20,6 +31,7 @@ public final class Glace2d
 	public final static class Options
 	{
 		public String outputPath;
+		public String nonRegression;
 		public int outputPeriod;
 		public double stopTime;
 		public int maxIterations;
@@ -33,6 +45,105 @@ public final class Glace2d
 		public double pIniZd;
 	}
 
+	public final static class OptionsDeserializer implements JsonDeserializer<Options>
+	{
+		@Override
+		public Options deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+		{
+			final JsonObject d = json.getAsJsonObject();
+			Options options = new Options();
+			// outputPath
+			assert(d.has("outputPath"));
+			final JsonElement valueof_outputPath = d.get("outputPath");
+			options.outputPath = valueof_outputPath.getAsJsonPrimitive().getAsString();
+			// outputPeriod
+			assert(d.has("outputPeriod"));
+			final JsonElement valueof_outputPeriod = d.get("outputPeriod");
+			options.outputPeriod = valueof_outputPeriod.getAsJsonPrimitive().getAsInt();
+			// stopTime
+			if (d.has("stopTime"))
+			{
+				final JsonElement valueof_stopTime = d.get("stopTime");
+				options.stopTime = valueof_stopTime.getAsJsonPrimitive().getAsDouble();
+			}
+			else
+				options.stopTime = 0.2;
+			// maxIterations
+			if (d.has("maxIterations"))
+			{
+				final JsonElement valueof_maxIterations = d.get("maxIterations");
+				options.maxIterations = valueof_maxIterations.getAsJsonPrimitive().getAsInt();
+			}
+			else
+				options.maxIterations = 20000;
+			// gamma
+			if (d.has("gamma"))
+			{
+				final JsonElement valueof_gamma = d.get("gamma");
+				options.gamma = valueof_gamma.getAsJsonPrimitive().getAsDouble();
+			}
+			else
+				options.gamma = 1.4;
+			// xInterface
+			if (d.has("xInterface"))
+			{
+				final JsonElement valueof_xInterface = d.get("xInterface");
+				options.xInterface = valueof_xInterface.getAsJsonPrimitive().getAsDouble();
+			}
+			else
+				options.xInterface = 0.5;
+			// deltatIni
+			if (d.has("deltatIni"))
+			{
+				final JsonElement valueof_deltatIni = d.get("deltatIni");
+				options.deltatIni = valueof_deltatIni.getAsJsonPrimitive().getAsDouble();
+			}
+			else
+				options.deltatIni = 1.0E-5;
+			// deltatCfl
+			if (d.has("deltatCfl"))
+			{
+				final JsonElement valueof_deltatCfl = d.get("deltatCfl");
+				options.deltatCfl = valueof_deltatCfl.getAsJsonPrimitive().getAsDouble();
+			}
+			else
+				options.deltatCfl = 0.4;
+			// rhoIniZg
+			if (d.has("rhoIniZg"))
+			{
+				final JsonElement valueof_rhoIniZg = d.get("rhoIniZg");
+				options.rhoIniZg = valueof_rhoIniZg.getAsJsonPrimitive().getAsDouble();
+			}
+			else
+				options.rhoIniZg = 1.0;
+			// rhoIniZd
+			if (d.has("rhoIniZd"))
+			{
+				final JsonElement valueof_rhoIniZd = d.get("rhoIniZd");
+				options.rhoIniZd = valueof_rhoIniZd.getAsJsonPrimitive().getAsDouble();
+			}
+			else
+				options.rhoIniZd = 0.125;
+			// pIniZg
+			if (d.has("pIniZg"))
+			{
+				final JsonElement valueof_pIniZg = d.get("pIniZg");
+				options.pIniZg = valueof_pIniZg.getAsJsonPrimitive().getAsDouble();
+			}
+			else
+				options.pIniZg = 1.0;
+			// pIniZd
+			if (d.has("pIniZd"))
+			{
+				final JsonElement valueof_pIniZd = d.get("pIniZd");
+				options.pIniZd = valueof_pIniZd.getAsJsonPrimitive().getAsDouble();
+			}
+			else
+				options.pIniZd = 0.1;
+			return options;
+		}
+	}
+
 	// Mesh and mesh variables
 	private final CartesianMesh2D mesh;
 	private final int nbNodes, nbCells, nbInnerNodes, nbTopNodes, nbBottomNodes, nbLeftNodes, nbRightNodes, nbNodesOfCell, nbCellsOfNode;
@@ -41,15 +152,13 @@ public final class Glace2d
 	private final Options options;
 	private final FileWriter writer;
 
-	// Global definitions
+	// Global variables
+	private int lastDump;
+	private int n;
 	private double t_n;
 	private double t_nplus1;
 	private double deltat_n;
 	private double deltat_nplus1;
-	private int lastDump;
-
-	// Global declarations
-	private int n;
 	private double[][] X_n;
 	private double[][] X_nplus1;
 	private double[][] X_n0;
@@ -94,11 +203,11 @@ public final class Glace2d
 		writer = new PvdFileWriter2D("Glace2d", options.outputPath);
 
 		// Initialize variables with default values
+		lastDump = Integer.MIN_VALUE;
 		t_n = 0.0;
 		t_nplus1 = 0.0;
 		deltat_n = options.deltatIni;
 		deltat_nplus1 = options.deltatIni;
-		lastDump = Integer.MIN_VALUE;
 
 		// Allocate arrays
 		X_n = new double[nbNodes][2];
@@ -145,14 +254,16 @@ public final class Glace2d
 		System.out.println("End of execution of module Glace2d");
 	}
 
-	public static void main(String[] args) throws FileNotFoundException
+	public static void main(String[] args) throws IOException
 	{
 		if (args.length == 1)
 		{
 			String dataFileName = args[0];
 			JsonParser parser = new JsonParser();
 			JsonObject o = parser.parse(new FileReader(dataFileName)).getAsJsonObject();
-			Gson gson = new Gson();
+			GsonBuilder gsonBuilder = new GsonBuilder();
+			gsonBuilder.registerTypeAdapter(Options.class, new Glace2d.OptionsDeserializer());
+			Gson gson = gsonBuilder.create();
 
 			assert(o.has("mesh"));
 			CartesianMesh2DFactory meshFactory = gson.fromJson(o.get("mesh"), CartesianMesh2DFactory.class);
@@ -162,6 +273,16 @@ public final class Glace2d
 
 			Glace2d simulator = new Glace2d(mesh, options);
 			simulator.simulate();
+
+			// Non regression testing
+			if (options.nonRegression!=null &&  options.nonRegression.equals("CreateReference"))
+				simulator.createDB("Glace2dDB.ref");
+			if (options.nonRegression!=null &&  options.nonRegression.equals("CompareToReference"))
+			{
+				simulator.createDB("Glace2dDB.current");
+				LevelDBUtils.compareDB("Glace2dDB.current", "Glace2dDB.ref");
+				LevelDBUtils.destroyDB("Glace2dDB.current");
+			}
 		}
 		else
 		{
@@ -877,5 +998,61 @@ public final class Glace2d
 			writer.writeFile(content);
 			lastDump = n;
 		}
+	}
+
+	private void createDB(String db_name) throws IOException
+	{
+		org.iq80.leveldb.Options levelDBOptions = new org.iq80.leveldb.Options();
+
+		// Destroy if exists
+		factory.destroy(new File(db_name), levelDBOptions);
+
+		// Create data base
+		levelDBOptions.createIfMissing(true);
+		DB db = factory.open(new File(db_name), levelDBOptions);
+
+		WriteBatch batch = db.createWriteBatch();
+		try
+		{
+			batch.put(bytes("lastDump"), LevelDBUtils.serialize(lastDump));
+			batch.put(bytes("n"), LevelDBUtils.serialize(n));
+			batch.put(bytes("t_n"), LevelDBUtils.serialize(t_n));
+			batch.put(bytes("t_nplus1"), LevelDBUtils.serialize(t_nplus1));
+			batch.put(bytes("deltat_n"), LevelDBUtils.serialize(deltat_n));
+			batch.put(bytes("deltat_nplus1"), LevelDBUtils.serialize(deltat_nplus1));
+			batch.put(bytes("X_n"), LevelDBUtils.serialize(X_n));
+			batch.put(bytes("X_nplus1"), LevelDBUtils.serialize(X_nplus1));
+			batch.put(bytes("X_n0"), LevelDBUtils.serialize(X_n0));
+			batch.put(bytes("b"), LevelDBUtils.serialize(b));
+			batch.put(bytes("bt"), LevelDBUtils.serialize(bt));
+			batch.put(bytes("Ar"), LevelDBUtils.serialize(Ar));
+			batch.put(bytes("Mt"), LevelDBUtils.serialize(Mt));
+			batch.put(bytes("ur"), LevelDBUtils.serialize(ur));
+			batch.put(bytes("c"), LevelDBUtils.serialize(c));
+			batch.put(bytes("m"), LevelDBUtils.serialize(m));
+			batch.put(bytes("p"), LevelDBUtils.serialize(p));
+			batch.put(bytes("rho"), LevelDBUtils.serialize(rho));
+			batch.put(bytes("e"), LevelDBUtils.serialize(e));
+			batch.put(bytes("E_n"), LevelDBUtils.serialize(E_n));
+			batch.put(bytes("E_nplus1"), LevelDBUtils.serialize(E_nplus1));
+			batch.put(bytes("V"), LevelDBUtils.serialize(V));
+			batch.put(bytes("deltatj"), LevelDBUtils.serialize(deltatj));
+			batch.put(bytes("uj_n"), LevelDBUtils.serialize(uj_n));
+			batch.put(bytes("uj_nplus1"), LevelDBUtils.serialize(uj_nplus1));
+			batch.put(bytes("l"), LevelDBUtils.serialize(l));
+			batch.put(bytes("Cjr_ic"), LevelDBUtils.serialize(Cjr_ic));
+			batch.put(bytes("C"), LevelDBUtils.serialize(C));
+			batch.put(bytes("F"), LevelDBUtils.serialize(F));
+			batch.put(bytes("Ajr"), LevelDBUtils.serialize(Ajr));
+
+			db.write(batch);
+		}
+		finally
+		{
+			// Make sure you close the batch to avoid resource leaks.
+			batch.close();
+		}
+		db.close();
+		System.out.println("Reference database " + db_name + " created.");
 	}
 };

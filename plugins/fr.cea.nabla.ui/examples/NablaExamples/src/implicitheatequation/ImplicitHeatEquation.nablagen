@@ -7,8 +7,6 @@
  * SPDX-License-Identifier: EPL-2.0
  * Contributors: see AUTHORS file
  *******************************************************************************/
-with ImplicitHeatEquation.*;
-
 nablagen for ImplicitHeatEquation;
 
 SimulationVariables
@@ -26,6 +24,11 @@ VtkOutput
 	periodReferenceVariable = n;
 	outputVariables = u as "Temperature";
 }
+
+//LevelDB
+//{
+//	levelDBPath = "$ENV{HOME}/leveldb/leveldb-install";
+//}
 
 Java
 {

@@ -162,7 +162,7 @@ import fr.cea.nabla.ir.ir.SimpleVariable;
 import fr.cea.nabla.ir.ir.TimeLoopJob;
 import fr.cea.nabla.ir.ir.UnaryExpression;
 import fr.cea.nabla.ir.ir.Variable;
-import fr.cea.nabla.ir.ir.VariableDefinition;
+import fr.cea.nabla.ir.ir.VariableDeclaration;
 import fr.cea.nabla.ir.ir.VectorConstant;
 import fr.cea.nabla.javalib.types.LinearAlgebraFunctions;
 
@@ -424,7 +424,7 @@ public class NablaNodeFactory {
 		return getWriteVariableNode(indexSlot, indexOfNode);
 	}
 
-	public NablaRootNode createModule(IrModule module, Map<String, JsonElement> jsonOptions, String pathToMeshLibrary) {
+	public NablaRootNode createModule(IrModule module, JsonObject jsonFileContent, String pathToMeshLibrary) {
 		assert lexicalScope == null;
 
 		lexicalScope = new LexicalScope(lexicalScope);
@@ -432,17 +432,11 @@ public class NablaNodeFactory {
 		moduleFrameDescriptor = lexicalScope.descriptor;
 
 		final String moduleName = module.getName();
+		
+		final JsonObject jsonOptions = jsonFileContent.getAsJsonObject("options");
 
-		final NablaWriteVariableNode[] variableDefinitions = module.getDefinitions().stream().map(v -> {
-			if (v.isOption()) {
-				//TODO check if value present in JSON
-				return createVariableDeclaration(v, jsonOptions.get(v.getName()));
-			}
-			return createVariableDeclaration(v);
-		}).filter(n -> n != null).collect(Collectors.toList()).toArray(new NablaWriteVariableNode[0]);
-
-		final NablaWriteVariableNode[] connectivityVariableNodes;
-		connectivityVariableNodes = module.getConnectivities().stream().filter(c -> c.isMultiple()).map(c -> {
+		final NablaWriteVariableNode[] connectivitySizeNodes;
+		connectivitySizeNodes = module.getConnectivities().stream().filter(c -> c.isMultiple()).map(c -> {
 			final String connectivityName = c.getName();
 			final FrameSlot frameSlot = moduleFrameDescriptor.findOrAddFrameSlot(connectivityName, null,
 					FrameSlotKind.Illegal);
@@ -460,14 +454,21 @@ public class NablaNodeFactory {
 			setSourceSection(c, result);
 			return result;
 		}).collect(Collectors.toList()).toArray(new NablaWriteVariableNode[0]);
-
-		final NablaWriteVariableNode[] variableDeclarations = module.getDeclarations().stream().map(v -> {
-			if (v instanceof SimpleVariable && ((SimpleVariable) v).isOption()) {
-				return createVariableDeclaration(v, jsonOptions.get(v.getName()));
+		
+		final NablaWriteVariableNode[] optionDefinitions = module.getOptions().stream().map(o -> {
+			if (jsonOptions.has(o.getName())) {
+				return createVariableDeclaration(o, jsonOptions.get(o.getName()));
+			} else if (o.getDefaultValue() == null) {
+				throw new IllegalStateException("Mandatory option missing in Json file: " + o.getName());
+			} else {
+				return createVariableDeclaration(o);
 			}
-			return createVariableDeclaration(v);
 		}).filter(n -> n != null).collect(Collectors.toList()).toArray(new NablaWriteVariableNode[0]);
 
+		final NablaWriteVariableNode[] variableDefinitions = module.getVariables().stream().map(v -> {
+			return createVariableDeclaration(v);
+		}).filter(n -> n != null).collect(Collectors.toList()).toArray(new NablaWriteVariableNode[0]);
+		
 		final String nodeCoordName = module.getInitNodeCoordVariable().getName();
 		final FrameSlot coordinatesSlot = moduleFrameDescriptor.findOrAddFrameSlot(nodeCoordName, null,
 				FrameSlotKind.Illegal);
@@ -483,9 +484,9 @@ public class NablaNodeFactory {
 				.sorted((j1, j2) -> Double.compare(j1.getAt(), j2.getAt())).map(j -> createNablaJobNode(j))
 				.collect(Collectors.toList()).toArray(new NablaRootNode[0]);
 
-		final JsonObject jsonMesh = (JsonObject)jsonOptions.get("mesh");
+		final JsonObject jsonMesh = jsonFileContent.getAsJsonObject("mesh");
 		final NablaModuleNode moduleNode = new NablaModuleNode(jsonMesh, coordinatesSlot,
-				connectivityVariableNodes, variableDeclarations, variableDefinitions, jobNodes);
+				connectivitySizeNodes, optionDefinitions, variableDefinitions, jobNodes);
 
 		final NablaRootNode moduleRootNode = new NablaRootNode(language, moduleFrameDescriptor, null,
 				new NablaInstructionBlockNode(new NablaInstructionNode[] { moduleNode }), moduleName);
@@ -882,9 +883,9 @@ public class NablaNodeFactory {
 		case IrPackage.SET_DEFINITION:
 			instructionNode = createSetDefinitionNode((SetDefinition) instruction);
 			break;
-		case IrPackage.VARIABLE_DEFINITION:
-			final VariableDefinition varDefinition = (VariableDefinition) instruction;
-			instructionNode = createVariableDeclaration(varDefinition.getVariable());
+		case IrPackage.VARIABLE_DECLARATION:
+			final VariableDeclaration varDeclaration = (VariableDeclaration) instruction;
+			instructionNode = createVariableDeclaration(varDeclaration.getVariable());
 			break;
 		case IrPackage.ITEM_ID_DEFINITION:
 			instructionNode = createItemIdDefinitionNode((ItemIdDefinition) instruction);

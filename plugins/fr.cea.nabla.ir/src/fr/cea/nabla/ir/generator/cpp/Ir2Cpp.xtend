@@ -98,7 +98,7 @@ class Ir2Cpp extends CodeGenerator
 		struct Options
 		{
 			«IF postProcessingInfo !== null»std::string «TagOutputVariables.OutputPathNameAndValue.key»;«ENDIF»
-			«FOR v : allOptions»
+			«FOR v : options»
 			«v.cppType» «v.name»;
 			«ENDFOR»
 			«IF levelDB»std::string «Utils.NonRegressionNameAndValue.key»;«ENDIF»
@@ -149,22 +149,22 @@ class Ir2Cpp extends CodeGenerator
 	«name»::Options::jsonInit(const rapidjson::Value::ConstObject& d)
 	{
 		«IF postProcessingInfo !== null»
-		// outputPath
 		«val opName = TagOutputVariables.OutputPathNameAndValue.key»
+		// «opName»
 		assert(d.HasMember("«opName»"));
-		const rapidjson::Value& valueof_«opName» = d["«opName»"];
-		assert(valueof_«opName».IsString());
-		«opName» = valueof_«opName».GetString();
+		const rapidjson::Value& «opName.jsonName» = d["«opName»"];
+		assert(«opName.jsonName».IsString());
+		«opName» = «opName.jsonName».GetString();
 		«ENDIF»
 		«IF levelDB»
 		// Non regression
 		«val nrName = Utils.NonRegressionNameAndValue.key»
 		assert(d.HasMember("«nrName»"));
-		const rapidjson::Value& valueof_«nrName» = d["«nrName»"];
-		assert(valueof_«nrName».IsString());
-		«nrName» = valueof_«nrName».GetString();
+		const rapidjson::Value& «nrName.jsonName» = d["«nrName»"];
+		assert(«nrName.jsonName».IsString());
+		«nrName» = «nrName.jsonName».GetString();
 		«ENDIF»
-		«FOR v : allOptions»
+		«FOR v : options»
 		«v.jsonContent»
 		«ENDFOR»
 	}
@@ -181,14 +181,14 @@ class Ir2Cpp extends CodeGenerator
 	, «s.toFirstLower»(a«s»)
 	«ENDFOR»
 	«IF postProcessingInfo !== null», writer("«name»", options.«TagOutputVariables.OutputPathNameAndValue.key»)«ENDIF»
-	«FOR v : allDefinitions.filter[x | !x.constExpr]»
+	«FOR v : variablesWithDefaultValue.filter[x | !x.constExpr]»
 	, «v.name»(«v.defaultValue.content»)
 	«ENDFOR»
-	«FOR v : declarations.filter(ConnectivityVariable)»
+	«FOR v : variables.filter(ConnectivityVariable)»
 	, «v.name»(«v.cstrInit»)
 	«ENDFOR»
 	{
-		«val dynamicArrayVariables = declarations.filter[!type.baseTypeStatic]»
+		«val dynamicArrayVariables = variables.filter[!type.baseTypeStatic]»
 		«IF !dynamicArrayVariables.empty»
 			// Allocate dynamic arrays (RealArrays with at least a dynamic dimension)
 			«FOR v : dynamicArrayVariables»
@@ -263,12 +263,13 @@ class Ir2Cpp extends CodeGenerator
 		assert(status.ok());
 		// Batch to write all data at once
 		leveldb::WriteBatch batch;
-		«FOR v : definitions + declarations»
+		«FOR v : variables.filter[d | !d.linearAlgebra]»
 		batch.Put("«v.name»", serialize(«v.name»));
 		«ENDFOR»
 		status = db->Write(leveldb::WriteOptions(), &batch);
 		// Checking everything was ok
 		assert(status.ok());
+		std::cout << "Reference database " << db_name << " created." << std::endl;
 		// Freeing memory
 		delete db;
 	}
@@ -280,8 +281,7 @@ class Ir2Cpp extends CodeGenerator
 
 		«callsHeader»
 		«callsContent»
-		«backend.traceContentProvider.endOfSimuTrace»
-		«IF linearAlgebra && mainTimeLoop !== null»«backend.traceContentProvider.getCGInfoTrace(mainTimeLoop.iterationCounter.name)»«ENDIF»
+		«backend.traceContentProvider.getEndOfSimuTrace(linearAlgebra)»
 	}
 	«IF levelDB»
 
@@ -297,7 +297,11 @@ class Ir2Cpp extends CodeGenerator
 		leveldb::Options options_ref;
 		options_ref.create_if_missing = false;
 		leveldb::Status status = leveldb::DB::Open(options_ref, ref, &db_ref);
-		assert(status.ok());
+		if (!status.ok())
+		{
+			std::cout << "No ref database to compare with ! Looking for " << ref << std::endl;
+			return false;
+		}
 		leveldb::Iterator* it_ref = db_ref->NewIterator(leveldb::ReadOptions());
 
 
@@ -338,7 +342,7 @@ class Ir2Cpp extends CodeGenerator
 		else
 			'''CartesianMesh2D::MaxNb«c.name.toFirstUpper»'''
 	}
-	
+
 	private def isLevelDB()
 	{
 		!backend.includesContentProvider.levelDBPath.nullOrEmpty

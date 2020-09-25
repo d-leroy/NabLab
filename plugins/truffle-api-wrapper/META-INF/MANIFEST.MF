@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: fr.cea.library.truffle-api-wrapper
 Bundle-SymbolicName: truffle-api-wrapper
-Bundle-Version: 0.3.2.qualifier
+Bundle-Version: 0.3.3.qualifier
 Bundle-Vendor: ORACLE
 Automatic-Module-Name: truffle-api-wrapper
 Bundle-ClassPath: mvn/org.graalvm.sdk.graal-sdk-20.1.0.jar

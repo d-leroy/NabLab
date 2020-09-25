@@ -34,14 +34,10 @@ public class NablaModuleNode extends NablaInstructionNode implements Instrumenta
 	private NablaJobBlockNode jobBlock;
 
 	public NablaModuleNode(JsonObject jsonMesh, FrameSlot coordinatesSlot,
-			NablaWriteVariableNode[] connectivityVariables, NablaWriteVariableNode[] variableDeclarations,
+			NablaWriteVariableNode[] connectivitySizes, NablaWriteVariableNode[] optionDefinitions,
 			NablaWriteVariableNode[] variableDefinitions, NablaRootNode[] jobs) {
-		this.prologNode = new NablaModulePrologNode(jsonMesh, connectivityVariables, variableDeclarations, variableDefinitions);
-//		this.mandatoryVariables = mandatoryVariables;
+		this.prologNode = new NablaModulePrologNode(jsonMesh, connectivitySizes, optionDefinitions, variableDefinitions);
 		this.coordinatesSlot = coordinatesSlot;
-//		this.variableDeclarations = variableDeclarations;
-//		this.variableDefinitions = variableDefinitions;
-//		this.connectivityVariables = connectivityVariables;
 		this.jobBlock = new NablaJobBlockNode(jobs);
 	}
 

@@ -83,7 +83,7 @@ class NablaRunner {
 				.options(optionsMap) //
 				.build();
 		
-		val nablaSource = Source.newBuilder('nabla', new File(source)).build();
+		val nablaSource = Source.newBuilder('nabla', new File(source)).build()
 		val outputGobbler = new StreamGobbler(consoleIn, consoleFactory)
 		outputGobbler.start()
 		
