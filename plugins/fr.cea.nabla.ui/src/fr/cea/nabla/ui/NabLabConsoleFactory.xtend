@@ -69,14 +69,16 @@ class NabLabConsoleFactory implements IConsoleFactory
 				default: BLACK
 			}
 			
-			val stream = streams.computeIfAbsent(color, [c|
-				val s = console.newMessageStream
-				s.color = color
-				return s
-			])
-			
 			val display = Display.^default
-			display.syncExec([stream.println(msg)])
+			display.syncExec([
+				val stream = streams.computeIfAbsent(color, [c|
+					val s = console.newMessageStream
+					s.color = color
+					return s
+				])
+				
+				stream.println(msg)
+			])
 		}
 	}
 }

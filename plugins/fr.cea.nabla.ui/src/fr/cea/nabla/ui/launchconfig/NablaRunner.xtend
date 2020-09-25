@@ -18,9 +18,16 @@ import java.io.File
 import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.io.PipedInputStream
+import java.io.PipedOutputStream
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.util.Map
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.Path
 import org.eclipse.debug.core.ILaunchConfiguration
+import org.graalvm.polyglot.Context
+import org.graalvm.polyglot.Source
 
 @Singleton
 class NablaRunner {
@@ -34,7 +41,7 @@ class NablaRunner {
 				.rawLocation.makeAbsolute.toString
 		val options = ResourcesPlugin.workspace.root.getFile(new Path(configuration.getAttribute(NablaLaunchConstants::OPTIONS_FILE_LOCATION, '')))
 				.rawLocation.makeAbsolute.toString
-		val moniloggers = configuration.getAttribute(NablaLaunchConstants::MONILOGGER_FILES_LOCATIONS, newArrayList).map[m|
+		val moniloggers = configuration.getAttribute(NablaLaunchConstants::MONILOGGER_FILES_LOCATIONS, newArrayList).filter[s|!s.blank].map[m|
 							ResourcesPlugin.workspace.root.getFile(new Path(m)).rawLocation.makeAbsolute.toString]
 
 		val name = source.substring(source.lastIndexOf(File::separator) + 1)
@@ -43,31 +50,82 @@ class NablaRunner {
 		new Thread([
 			consoleFactory.clearAndActivateConsole
 			consoleFactory.printConsole(MessageType.Start, 'Starting execution: ' + name)
-			
-			val args = if (moniloggers.empty) {
-					#[graalVMHome + '/bin/nabla', source, gen, options]
-				} else {
-					#[
-						graalVMHome + '/bin/nabla',
-						source,
-						gen,
-						options,
-						'--monilogger.files=' + moniloggers.reduce [ s1, s2 |
-							s1 + ',' + s2
-						]
-					]
-				}
-
-			val pb = new ProcessBuilder(args)
-			pb.redirectErrorStream(true)
 			val t0 = System::nanoTime
-			val p = pb.start
-			val outputGobbler = new StreamGobbler(p.getInputStream(), consoleFactory);
-			outputGobbler.start();
-			p.waitFor
+			
+			doGraal(source, gen, options, moniloggers)
+			
 			val t = (System::nanoTime - t0) * 0.000000001
 			consoleFactory.printConsole(MessageType.End, 'End of execution: ' + name + ' (' + t + 's)')
 		]).start
+	}
+	
+	private def double doGraal(String source, String gen, String options, Iterable<String> moniloggers) {
+		val Map<String, String> optionsMap = newHashMap
+
+		val genmodel = readFileAsString(gen);
+		optionsMap.put("nabla.genmodel", genmodel);
+
+		val optionsContent = readFileAsString(options);
+		optionsMap.put("nabla.options", optionsContent);
+		
+		if (!moniloggers.empty) {
+			optionsMap.put("monilogger.files", moniloggers.reduce [ s1, s2 |
+				s1 + ',' + s2
+			])
+		}
+		
+		val out = new PipedOutputStream
+		val consoleIn = new PipedInputStream(out)
+		
+		val context = Context.newBuilder().out(out).err(out) //
+				.allowAllAccess(true) //
+				.allowExperimentalOptions(true) //
+				.options(optionsMap) //
+				.build();
+		
+		val nablaSource = Source.newBuilder('nabla', new File(source)).build();
+		val outputGobbler = new StreamGobbler(consoleIn, consoleFactory)
+		outputGobbler.start()
+		
+		val t0 = System::nanoTime
+		context.eval(nablaSource)
+		out.close
+		val t = (System::nanoTime - t0) * 0.000000001
+		
+		return t
+	}
+	
+	private def double doDefault(String graalVMHome, String source, String gen, String options, Iterable<String> moniloggers) {
+		val args = if (moniloggers.empty) {
+				#[graalVMHome + '/bin/nabla', source, gen, options]
+			} else {
+				#[
+					graalVMHome + '/bin/nabla',
+					source,
+					gen,
+					options,
+					'--monilogger.files=' + moniloggers.reduce [ s1, s2 |
+						s1 + ',' + s2
+					]
+				]
+			}
+
+		val pb = new ProcessBuilder(args)
+		pb.redirectErrorStream(true)
+		val t0 = System::nanoTime
+		val p = pb.start
+		val outputGobbler = new StreamGobbler(p.getInputStream(), consoleFactory)
+		outputGobbler.start
+		p.waitFor
+		outputGobbler.join
+		val t = (System::nanoTime - t0) * 0.000000001
+		
+		return t
+	}
+	
+	
+	private def String readFileAsString(String filePath) throws IOException	{
+		return new String(Files.readAllBytes(Paths.get(filePath)))
 	}
 }
 

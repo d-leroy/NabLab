@@ -435,6 +435,7 @@ public class NablaNodeFactory {
 
 		final NablaWriteVariableNode[] variableDefinitions = module.getDefinitions().stream().map(v -> {
 			if (v.isOption()) {
+				//TODO check if value present in JSON
 				return createVariableDeclaration(v, jsonOptions.get(v.getName()));
 			}
 			return createVariableDeclaration(v);

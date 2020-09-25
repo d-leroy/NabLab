@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
-<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="NabLab Target platform" sequenceNumber="1590411146">
+<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl --><target name="NabLab Target platform" sequenceNumber="1590411146">
   <locations>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="false" includeConfigurePhase="false" type="InstallableUnit">
+    <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
       <unit id="org.eclipse.sdk.feature.group" version="4.15.0.v20200305-0155"/>
       <unit id="org.eclipse.rcp.feature.group" version="4.15.0.v20200305-0155"/>
       <unit id="org.eclipse.equinox.p2.sdk.feature.group" version="3.11.700.v20200222-1600"/>
@@ -28,7 +27,7 @@
       <unit id="org.eclipse.zest.layouts" version="1.1.300.201606061308"/>
       <repository id="eclipse" location="https://download.eclipse.org/releases/2020-03"/>
     </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="false" includeConfigurePhase="false" type="InstallableUnit">
+    <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
       <unit id="org.eclipse.sirius.aql.feature.group" version="6.3.0.201910180815"/>
       <unit id="org.eclipse.sirius.runtime.feature.group" version="6.3.0.201910180815"/>
       <unit id="org.eclipse.sirius.runtime.aql.feature.group" version="6.3.0.201910180815"/>
@@ -41,15 +40,15 @@
       <unit id="org.eclipse.eef.ext.widgets.reference.feature.feature.group" version="2.1.3.201909051307"/>
       <repository id="sirius" location="https://download.eclipse.org/sirius/updates/releases/6.3.0/2019-06"/>
     </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="false" includeConfigurePhase="false" type="InstallableUnit">
+    <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
       <unit id="org.python.pydev.feature.feature.group" version="7.4.0.201910251334"/>
       <repository location="http://www.pydev.org/update_sites/7.4.0"/>
     </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="false" includeConfigurePhase="false" type="InstallableUnit">
+    <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
       <unit id="jsonedit-feature.feature.group" version="1.1.3"/>
       <repository id="jsoneditor" location="http://boothen.github.io/Json-Eclipse-Plugin"/>
     </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="false" includeConfigurePhase="false" type="InstallableUnit">
+    <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
       <unit id="org.hamcrest.core" version="1.3.0.v20180420-1519"/>
       <unit id="org.apache.commons.lang3" version="3.1.0.v201403281430"/>
       <unit id="com.google.guava" version="27.1.0.v20190517-1946"/>
