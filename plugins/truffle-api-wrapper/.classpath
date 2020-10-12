@@ -6,6 +6,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry exported="true" kind="lib" path="mvn/org.graalvm.sdk.graal-sdk-20.1.0.jar" sourcepath="/home/dleroy/.m2/repository/org/graalvm/sdk/graal-sdk/20.1.0/graal-sdk-20.1.0-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="mvn/org.graalvm.sdk.graal-sdk-20.2.0.jar" sourcepath="/home/dleroy/.m2/repository/org/graalvm/sdk/graal-sdk/20.2.0/graal-sdk-20.2.0-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -7,10 +7,10 @@ import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.library.LibraryFactory;
+import com.oracle.truffle.api.nodes.EncapsulatingNodeReference;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
-import com.oracle.truffle.api.nodes.NodeUtil;
 import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.interpreter.nodes.expression.NablaIndexOfNode;
 import fr.cea.nabla.interpreter.values.NV0Int;
@@ -24,8 +24,8 @@ public final class NablaIndexOfNodeGen extends NablaIndexOfNode {
 
     @Child private NablaExpressionNode arrayNode_;
     @Child private NablaExpressionNode value_;
-    @CompilationFinal private int state_;
-    @CompilationFinal private int exclude_;
+    @CompilationFinal private volatile int state_;
+    @CompilationFinal private volatile int exclude_;
     @Child private ReadNV1Int1Index0Data readNV1Int1Index0_cache;
 
     private NablaIndexOfNodeGen(NablaExpressionNode arrayNode, NablaExpressionNode value) {
@@ -51,13 +51,17 @@ public final class NablaIndexOfNodeGen extends NablaIndexOfNode {
                 }
             }
             if ((state & 0b10) != 0 /* is-active readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */) {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+                EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                Node prev_ = encapsulating_.set(this);
                 try {
-                    if (((N_V1_INT_LIBRARY_.getUncached(arrayNodeValue_)).isArray(arrayNodeValue_))) {
-                        return readNV1Int1Index(frameValue, arrayNodeValue_, valueValue__, (N_V1_INT_LIBRARY_.getUncached(arrayNodeValue_)));
+                    {
+                        NV1IntLibrary readNV1Int1Index1_arrays__ = (N_V1_INT_LIBRARY_.getUncached(arrayNodeValue_));
+                        if ((readNV1Int1Index1_arrays__.isArray(arrayNodeValue_))) {
+                            return readNV1Int1Index(frameValue, arrayNodeValue_, valueValue__, readNV1Int1Index1_arrays__);
+                        }
                     }
                 } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
+                    encapsulating_.set(prev_);
                 }
             }
         }
@@ -105,22 +109,26 @@ public final class NablaIndexOfNodeGen extends NablaIndexOfNode {
                     }
                 }
                 {
-                    Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                    try {
-                        {
-                            NV1IntLibrary readNV1Int1Index1_arrays__ = (N_V1_INT_LIBRARY_.getUncached(arrayNodeValue));
-                            if ((readNV1Int1Index1_arrays__.isArray(arrayNodeValue))) {
-                                this.exclude_ = exclude = exclude | 0b1 /* add-excluded readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */;
-                                this.readNV1Int1Index0_cache = null;
-                                state = state & 0xfffffffe /* remove-active readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */;
-                                this.state_ = state = state | 0b10 /* add-active readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */;
-                                lock.unlock();
-                                hasLock = false;
-                                return readNV1Int1Index(frameValue, arrayNodeValue, valueValue_, readNV1Int1Index1_arrays__);
+                    NV1IntLibrary readNV1Int1Index1_arrays__ = null;
+                    {
+                        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                        Node prev_ = encapsulating_.set(this);
+                        try {
+                            {
+                                readNV1Int1Index1_arrays__ = (N_V1_INT_LIBRARY_.getUncached(arrayNodeValue));
+                                if ((readNV1Int1Index1_arrays__.isArray(arrayNodeValue))) {
+                                    this.exclude_ = exclude = exclude | 0b1 /* add-excluded readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */;
+                                    this.readNV1Int1Index0_cache = null;
+                                    state = state & 0xfffffffe /* remove-active readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */;
+                                    this.state_ = state = state | 0b10 /* add-active readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */;
+                                    lock.unlock();
+                                    hasLock = false;
+                                    return readNV1Int1Index(frameValue, arrayNodeValue, valueValue_, readNV1Int1Index1_arrays__);
+                                }
                             }
+                        } finally {
+                            encapsulating_.set(prev_);
                         }
-                    } finally {
-                        NodeUtil.popEncapsulatingNode(prev_);
                     }
                 }
             }

@@ -1,12 +1,11 @@
 package fr.cea.nabla.interpreter.values;
 
+import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.interop.InteropException;
 import com.oracle.truffle.api.interop.InteropLibrary;
 import com.oracle.truffle.api.library.CachedLibrary;
 import com.oracle.truffle.api.nodes.Node;
-
-import fr.cea.nabla.interpreter.runtime.NablaInternalError;
 
 public abstract class BoxValueNode extends Node {
 
@@ -24,7 +23,7 @@ public abstract class BoxValueNode extends Node {
 				return objLibrary.asBoolean(obj);
 			} catch (InteropException e) {
 			}
-			throw NablaInternalError.shouldNotReachHere();
+			throw CompilerDirectives.shouldNotReachHere();
 		}
 		
 		@Specialization(guards = "isBoolArray1()", limit = "3")
@@ -38,7 +37,7 @@ public abstract class BoxValueNode extends Node {
 				return valArray;
 			} catch (InteropException e) {
 			}
-			throw NablaInternalError.shouldNotReachHere();
+			throw CompilerDirectives.shouldNotReachHere();
 		}
 
 		@Specialization(guards = "isBoolArray2()", limit = "3")
@@ -55,7 +54,7 @@ public abstract class BoxValueNode extends Node {
 				return valArray;
 			} catch (InteropException e) {
 			}
-			throw NablaInternalError.shouldNotReachHere();
+			throw CompilerDirectives.shouldNotReachHere();
 		}
 
 		@Specialization(guards = "isBoolArray3()", limit = "3")
@@ -75,7 +74,7 @@ public abstract class BoxValueNode extends Node {
 				return valArray;
 			} catch (InteropException e) {
 			}
-			throw NablaInternalError.shouldNotReachHere();
+			throw CompilerDirectives.shouldNotReachHere();
 		}
 
 		@Specialization(guards = "isBoolArray4()", limit = "3")
@@ -98,7 +97,7 @@ public abstract class BoxValueNode extends Node {
 				return valArray;
 			} catch (InteropException e) {
 			}
-			throw NablaInternalError.shouldNotReachHere();
+			throw CompilerDirectives.shouldNotReachHere();
 		}
 		
 		@Specialization(guards = "isInt()", limit = "3")
@@ -107,7 +106,7 @@ public abstract class BoxValueNode extends Node {
 				return objLibrary.asInt(obj);
 			} catch (InteropException e) {
 			}
-			throw NablaInternalError.shouldNotReachHere();
+			throw CompilerDirectives.shouldNotReachHere();
 		}
 
 		@Specialization(guards = "isIntArray1()", limit = "3")
@@ -121,7 +120,7 @@ public abstract class BoxValueNode extends Node {
 				return valArray;
 			} catch (InteropException e) {
 			}
-			throw NablaInternalError.shouldNotReachHere();
+			throw CompilerDirectives.shouldNotReachHere();
 		}
 
 		@Specialization(guards = "isIntArray2()", limit = "3")
@@ -138,7 +137,7 @@ public abstract class BoxValueNode extends Node {
 				return valArray;
 			} catch (InteropException e) {
 			}
-			throw NablaInternalError.shouldNotReachHere();
+			throw CompilerDirectives.shouldNotReachHere();
 		}
 
 		@Specialization(guards = "isIntArray3()", limit = "3")
@@ -158,7 +157,7 @@ public abstract class BoxValueNode extends Node {
 				return valArray;
 			} catch (InteropException e) {
 			}
-			throw NablaInternalError.shouldNotReachHere();
+			throw CompilerDirectives.shouldNotReachHere();
 		}
 
 		@Specialization(guards = "isIntArray4()", limit = "3")
@@ -181,7 +180,7 @@ public abstract class BoxValueNode extends Node {
 				return valArray;
 			} catch (InteropException e) {
 			}
-			throw NablaInternalError.shouldNotReachHere();
+			throw CompilerDirectives.shouldNotReachHere();
 		}
 		
 		@Specialization(guards = "isDouble()", limit = "3")
@@ -190,7 +189,7 @@ public abstract class BoxValueNode extends Node {
 				return objLibrary.asDouble(obj);
 			} catch (InteropException e) {
 			}
-			throw NablaInternalError.shouldNotReachHere();
+			throw CompilerDirectives.shouldNotReachHere();
 		}
 
 		@Specialization(guards = "isDoubleArray1()", limit = "3")
@@ -204,7 +203,7 @@ public abstract class BoxValueNode extends Node {
 				return valArray;
 			} catch (InteropException e) {
 			}
-			throw NablaInternalError.shouldNotReachHere();
+			throw CompilerDirectives.shouldNotReachHere();
 		}
 
 		@Specialization(guards = "isDoubleArray2()", limit = "3")
@@ -221,7 +220,7 @@ public abstract class BoxValueNode extends Node {
 				return valArray;
 			} catch (InteropException e) {
 			}
-			throw NablaInternalError.shouldNotReachHere();
+			throw CompilerDirectives.shouldNotReachHere();
 		}
 
 		@Specialization(guards = "isDoubleArray3()", limit = "3")
@@ -241,7 +240,7 @@ public abstract class BoxValueNode extends Node {
 				return valArray;
 			} catch (InteropException e) {
 			}
-			throw NablaInternalError.shouldNotReachHere();
+			throw CompilerDirectives.shouldNotReachHere();
 		}
 
 		@Specialization(guards = "isDoubleArray4()", limit = "3")
@@ -264,7 +263,7 @@ public abstract class BoxValueNode extends Node {
 				return valArray;
 			} catch (InteropException e) {
 			}
-			throw NablaInternalError.shouldNotReachHere();
+			throw CompilerDirectives.shouldNotReachHere();
 		}
 
 		protected boolean isBool() {

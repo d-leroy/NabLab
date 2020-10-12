@@ -56,7 +56,7 @@ final class VariablesMapObjectGen {
 
             @Override
             public boolean accepts(Object receiver) {
-                assert !(receiver instanceof VariablesMapObject) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'fr.cea.nabla.interpreter.nodes.local.NablaLexicalScope.VariablesMapObject'. Exported receiver with dynamic dispatch found but not expected.";
+                assert !(receiver instanceof VariablesMapObject) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof VariablesMapObject;
             }
 
@@ -118,7 +118,7 @@ final class VariablesMapObjectGen {
             @TruffleBoundary
             @Override
             public boolean accepts(Object receiver) {
-                assert !(receiver instanceof VariablesMapObject) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'fr.cea.nabla.interpreter.nodes.local.NablaLexicalScope.VariablesMapObject'. Exported receiver with dynamic dispatch found but not expected.";
+                assert !(receiver instanceof VariablesMapObject) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof VariablesMapObject;
             }
 

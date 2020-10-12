@@ -51,7 +51,7 @@ final class NodeObjectDescriptorKeysGen {
         @GeneratedBy(NodeObjectDescriptorKeys.class)
         private static final class Cached extends InteropLibrary {
 
-            @CompilationFinal private int state_;
+            @CompilationFinal private volatile int state_;
             @CompilationFinal private BranchProfile exception_;
 
             Cached() {
@@ -59,7 +59,7 @@ final class NodeObjectDescriptorKeysGen {
 
             @Override
             public boolean accepts(Object receiver) {
-                assert !(receiver instanceof NodeObjectDescriptorKeys) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'fr.cea.nabla.interpreter.nodes.interop.NodeObjectDescriptorKeys'. Exported receiver with dynamic dispatch found but not expected.";
+                assert !(receiver instanceof NodeObjectDescriptorKeys) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof NodeObjectDescriptorKeys;
             }
 
@@ -135,7 +135,7 @@ final class NodeObjectDescriptorKeysGen {
             @TruffleBoundary
             @Override
             public boolean accepts(Object receiver) {
-                assert !(receiver instanceof NodeObjectDescriptorKeys) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'fr.cea.nabla.interpreter.nodes.interop.NodeObjectDescriptorKeys'. Exported receiver with dynamic dispatch found but not expected.";
+                assert !(receiver instanceof NodeObjectDescriptorKeys) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof NodeObjectDescriptorKeys;
             }
 

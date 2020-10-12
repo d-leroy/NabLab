@@ -13,7 +13,7 @@ import java.util.concurrent.locks.Lock;
 @GeneratedBy(NablaExitNode.class)
 public final class NablaExitNodeGen extends NablaExitNode {
 
-    @CompilationFinal private int state_;
+    @CompilationFinal private volatile int state_;
     @CompilationFinal private BranchProfile exception_;
 
     private NablaExitNodeGen(String message) {

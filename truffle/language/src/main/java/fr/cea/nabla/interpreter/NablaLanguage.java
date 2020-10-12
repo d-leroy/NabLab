@@ -23,7 +23,6 @@ import fr.cea.nabla.interpreter.nodes.local.NablaLexicalScope;
 import fr.cea.nabla.interpreter.parser.NablaParser;
 import fr.cea.nabla.interpreter.runtime.NablaContext;
 import fr.cea.nabla.interpreter.runtime.NablaLanguageView;
-import fr.cea.nabla.interpreter.values.NablaOutput;
 import fr.cea.nabla.interpreter.values.NablaValue;
 
 @TruffleLanguage.Registration( //
@@ -66,7 +65,7 @@ public final class NablaLanguage extends TruffleLanguage<NablaContext> {
 	protected boolean isObjectOfLanguage(Object object) {
 		if (!(object instanceof TruffleObject)) {
 			return false;
-		} else if (object instanceof NablaValue || object instanceof NablaOutput) {
+		} else if (object instanceof NablaValue) {
 			return true;
 		} else {
 			return false;

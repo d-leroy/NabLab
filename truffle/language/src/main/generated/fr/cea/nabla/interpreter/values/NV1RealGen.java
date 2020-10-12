@@ -58,7 +58,7 @@ final class NV1RealGen {
 
             @Override
             public boolean accepts(Object receiver) {
-                assert receiver.getClass() != this.receiverClass_ || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'fr.cea.nabla.interpreter.values.NV1Real'. Exported receiver with dynamic dispatch found but not expected.";
+                assert receiver.getClass() != this.receiverClass_ || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver.getClass() == this.receiverClass_;
             }
 
@@ -129,7 +129,7 @@ final class NV1RealGen {
             @TruffleBoundary
             @Override
             public boolean accepts(Object receiver) {
-                assert receiver.getClass() != this.receiverClass_ || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'fr.cea.nabla.interpreter.values.NV1Real'. Exported receiver with dynamic dispatch found but not expected.";
+                assert receiver.getClass() != this.receiverClass_ || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver.getClass() == this.receiverClass_;
             }
 

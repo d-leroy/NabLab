@@ -13,7 +13,7 @@
 	<properties>
 	    <maven.compiler.release>11</maven.compiler.release>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<graalvm.version>20.1.0</graalvm.version>
+		<graalvm.version>20.2.0</graalvm.version>
 	</properties>
 
 	<name>NabLab truffle-based interpreter</name>
@@ -22,6 +22,7 @@
 	<modules>
 		<module>language</module>
 		<module>launcher</module>
+<!-- 		<module>native</module> -->
 		<module>component</module>
 	</modules>
 </project>

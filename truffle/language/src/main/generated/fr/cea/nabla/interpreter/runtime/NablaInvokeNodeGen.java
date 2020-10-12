@@ -7,10 +7,10 @@ import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.interop.InteropLibrary;
 import com.oracle.truffle.api.library.LibraryFactory;
+import com.oracle.truffle.api.nodes.EncapsulatingNodeReference;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
-import com.oracle.truffle.api.nodes.NodeUtil;
 import fr.cea.nabla.interpreter.runtime.NablaInvokeNode;
 import java.util.concurrent.locks.Lock;
 
@@ -19,8 +19,8 @@ public final class NablaInvokeNodeGen extends NablaInvokeNode {
 
     private static final LibraryFactory<InteropLibrary> INTEROP_LIBRARY_ = LibraryFactory.resolve(InteropLibrary.class);
 
-    @CompilationFinal private int state_;
-    @CompilationFinal private int exclude_;
+    @CompilationFinal private volatile int state_;
+    @CompilationFinal private volatile int exclude_;
     @Child private Default0Data default0_cache;
 
     private NablaInvokeNodeGen() {
@@ -41,13 +41,17 @@ public final class NablaInvokeNodeGen extends NablaInvokeNode {
                 }
             }
             if ((state & 0b10) != 0 /* is-active doDefault(Object, String, Object[], InteropLibrary) */) {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+                EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                Node prev_ = encapsulating_.set(this);
                 try {
-                    if (((INTEROP_LIBRARY_.getUncached(arg0Value)).isMemberInvocable(arg0Value, arg1Value))) {
-                        return doDefault(arg0Value, arg1Value, arg2Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+                    {
+                        InteropLibrary default1_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                        if ((default1_objLibrary__.isMemberInvocable(arg0Value, arg1Value))) {
+                            return doDefault(arg0Value, arg1Value, arg2Value, default1_objLibrary__);
+                        }
                     }
                 } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
+                    encapsulating_.set(prev_);
                 }
             }
         }
@@ -93,22 +97,26 @@ public final class NablaInvokeNodeGen extends NablaInvokeNode {
                 }
             }
             {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                try {
-                    {
-                        InteropLibrary default1_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
-                        if ((default1_objLibrary__.isMemberInvocable(arg0Value, arg1Value))) {
-                            this.exclude_ = exclude = exclude | 0b1 /* add-excluded doDefault(Object, String, Object[], InteropLibrary) */;
-                            this.default0_cache = null;
-                            state = state & 0xfffffffe /* remove-active doDefault(Object, String, Object[], InteropLibrary) */;
-                            this.state_ = state = state | 0b10 /* add-active doDefault(Object, String, Object[], InteropLibrary) */;
-                            lock.unlock();
-                            hasLock = false;
-                            return doDefault(arg0Value, arg1Value, arg2Value, default1_objLibrary__);
+                InteropLibrary default1_objLibrary__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        {
+                            default1_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                            if ((default1_objLibrary__.isMemberInvocable(arg0Value, arg1Value))) {
+                                this.exclude_ = exclude = exclude | 0b1 /* add-excluded doDefault(Object, String, Object[], InteropLibrary) */;
+                                this.default0_cache = null;
+                                state = state & 0xfffffffe /* remove-active doDefault(Object, String, Object[], InteropLibrary) */;
+                                this.state_ = state = state | 0b10 /* add-active doDefault(Object, String, Object[], InteropLibrary) */;
+                                lock.unlock();
+                                hasLock = false;
+                                return doDefault(arg0Value, arg1Value, arg2Value, default1_objLibrary__);
+                            }
                         }
+                    } finally {
+                        encapsulating_.set(prev_);
                     }
-                } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
                 }
             }
             throw new UnsupportedSpecializationException(this, new Node[] {null, null, null}, arg0Value, arg1Value, arg2Value);

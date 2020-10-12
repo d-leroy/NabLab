@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>org.graalvm.sdk</groupId>
 			<artifactId>graal-sdk</artifactId>
-			<version>20.1.0</version>
+			<version>20.2.0</version>
 		</dependency>
 	</dependencies>
 </project>

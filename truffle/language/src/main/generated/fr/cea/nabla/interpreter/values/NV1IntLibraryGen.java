@@ -10,10 +10,10 @@ import com.oracle.truffle.api.library.LibraryExport;
 import com.oracle.truffle.api.library.LibraryFactory;
 import com.oracle.truffle.api.library.Message;
 import com.oracle.truffle.api.library.ReflectionLibrary;
+import com.oracle.truffle.api.nodes.EncapsulatingNodeReference;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
-import com.oracle.truffle.api.nodes.NodeUtil;
 import com.oracle.truffle.api.utilities.FinalBitSet;
 import fr.cea.nabla.interpreter.values.NV1IntLibrary;
 import java.util.Arrays;
@@ -69,7 +69,7 @@ final class NV1IntLibraryGen extends LibraryFactory<NV1IntLibrary> {
         NV1IntLibrary lib = (NV1IntLibrary) originalLib;
         MessageImpl messageImpl = (MessageImpl) message;
         if (messageImpl.getParameterCount() - 1 != args.length - offset) {
-            CompilerDirectives.transferToInterpreter();
+            CompilerDirectives.transferToInterpreterAndInvalidate();
             throw new IllegalArgumentException("Invalid number of arguments.");
         }
         switch (messageImpl.index) {
@@ -99,7 +99,7 @@ final class NV1IntLibraryGen extends LibraryFactory<NV1IntLibrary> {
         try {
             return (Class<NV1IntLibrary>) Class.forName("fr.cea.nabla.interpreter.values.NV1IntLibrary", false, NV1IntLibraryGen.class.getClassLoader());
         } catch (ClassNotFoundException e) {
-            throw new AssertionError(e);
+            throw CompilerDirectives.shouldNotReachHere(e);
         }
     }
 
@@ -235,8 +235,7 @@ final class NV1IntLibraryGen extends LibraryFactory<NV1IntLibrary> {
             } catch (RuntimeException e_) {
                 throw e_;
             } catch (Exception e_) {
-                CompilerDirectives.transferToInterpreter();
-                throw new AssertionError(e_);
+                throw CompilerDirectives.shouldNotReachHere(e_);
             }
         }
 
@@ -247,8 +246,7 @@ final class NV1IntLibraryGen extends LibraryFactory<NV1IntLibrary> {
             } catch (RuntimeException e_) {
                 throw e_;
             } catch (Exception e_) {
-                CompilerDirectives.transferToInterpreter();
-                throw new AssertionError(e_);
+                throw CompilerDirectives.shouldNotReachHere(e_);
             }
         }
 
@@ -259,8 +257,7 @@ final class NV1IntLibraryGen extends LibraryFactory<NV1IntLibrary> {
             } catch (RuntimeException e_) {
                 throw e_;
             } catch (Exception e_) {
-                CompilerDirectives.transferToInterpreter();
-                throw new AssertionError(e_);
+                throw CompilerDirectives.shouldNotReachHere(e_);
             }
         }
 
@@ -337,11 +334,12 @@ final class NV1IntLibraryGen extends LibraryFactory<NV1IntLibrary> {
         @Override
         public boolean isArray(Object receiver_) {
             assert getRootNode() != null : "Invalid libray usage. Cached library must be adopted by a RootNode before it is executed.";
-            Node prev_ = NodeUtil.pushEncapsulatingNode(getParent());
+            EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+            Node prev_ = encapsulating_.set(getParent());
             try {
                 return INSTANCE.getUncached(receiver_).isArray(receiver_);
             } finally {
-                NodeUtil.popEncapsulatingNode(prev_);
+                encapsulating_.set(prev_);
             }
         }
 
@@ -349,11 +347,12 @@ final class NV1IntLibraryGen extends LibraryFactory<NV1IntLibrary> {
         @Override
         public int read(Object receiver_, int index) {
             assert getRootNode() != null : "Invalid libray usage. Cached library must be adopted by a RootNode before it is executed.";
-            Node prev_ = NodeUtil.pushEncapsulatingNode(getParent());
+            EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+            Node prev_ = encapsulating_.set(getParent());
             try {
                 return INSTANCE.getUncached(receiver_).read(receiver_, index);
             } finally {
-                NodeUtil.popEncapsulatingNode(prev_);
+                encapsulating_.set(prev_);
             }
         }
 
@@ -361,11 +360,12 @@ final class NV1IntLibraryGen extends LibraryFactory<NV1IntLibrary> {
         @Override
         public int length(Object receiver_) {
             assert getRootNode() != null : "Invalid libray usage. Cached library must be adopted by a RootNode before it is executed.";
-            Node prev_ = NodeUtil.pushEncapsulatingNode(getParent());
+            EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+            Node prev_ = encapsulating_.set(getParent());
             try {
                 return INSTANCE.getUncached(receiver_).length(receiver_);
             } finally {
-                NodeUtil.popEncapsulatingNode(prev_);
+                encapsulating_.set(prev_);
             }
         }
 
@@ -422,7 +422,7 @@ final class NV1IntLibraryGen extends LibraryFactory<NV1IntLibrary> {
 
         @Override
         int getLimit() {
-            throw new AssertionError();
+            throw CompilerDirectives.shouldNotReachHere();
         }
 
         @Override

@@ -20,7 +20,7 @@ public final class NablaInt1ConstantNodeGen extends NablaInt1ConstantNode {
 
     @Child private NablaExpressionNode value_;
     @Child private NablaExpressionNode size_;
-    @CompilationFinal private int state_;
+    @CompilationFinal private volatile int state_;
     @CompilationFinal private DefaultCachedData defaultCached_cache;
     @CompilationFinal private CachedData cached_cache;
 
@@ -114,12 +114,12 @@ public final class NablaInt1ConstantNodeGen extends NablaInt1ConstantNode {
                     }
                     if (s2_ == null) {
                         {
-                            int cachedSize__ = (sizeValue_.getData());
-                            if ((cachedSize__ == sizeValue_.getData()) && count2_ < (3)) {
+                            int cachedSize__1 = (sizeValue_.getData());
+                            if ((cachedSize__1 == sizeValue_.getData()) && count2_ < (3)) {
                                 s2_ = new CachedData(cached_cache);
                                 s2_.cachedValue_ = (valueValue_.getData());
-                                s2_.cachedSize_ = cachedSize__;
-                                s2_.result_ = (getResult(s2_.cachedValue_, cachedSize__));
+                                s2_.cachedSize_ = cachedSize__1;
+                                s2_.result_ = (getResult(s2_.cachedValue_, cachedSize__1));
                                 this.cached_cache = s2_;
                                 this.state_ = state = state | 0b10 /* add-active doCached(VirtualFrame, NV0Int, NV0Int, int, int, NV1Int) */;
                             }

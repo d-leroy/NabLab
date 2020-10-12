@@ -8,10 +8,10 @@ import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.library.LibraryFactory;
+import com.oracle.truffle.api.nodes.EncapsulatingNodeReference;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
-import com.oracle.truffle.api.nodes.NodeUtil;
 import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.interpreter.nodes.expression.NablaInitializeVariableFromJsonNode;
 import fr.cea.nabla.interpreter.values.NV0Bool;
@@ -37,8 +37,8 @@ public final class NablaInitializeVariableFromJsonNodeGen extends NablaInitializ
     private static final LibraryFactory<NV1IntLibrary> N_V1_INT_LIBRARY_ = LibraryFactory.resolve(NV1IntLibrary.class);
 
     @Child private NablaExpressionNode value_;
-    @CompilationFinal private int state_;
-    @CompilationFinal private int exclude_;
+    @CompilationFinal private volatile int state_;
+    @CompilationFinal private volatile int exclude_;
     @Child private Initialize6Data initialize6_cache;
 
     private NablaInitializeVariableFromJsonNodeGen(JsonElement initialValue, NablaExpressionNode value) {
@@ -90,13 +90,17 @@ public final class NablaInitializeVariableFromJsonNodeGen extends NablaInitializ
                 }
             }
             if ((state & 0b10000000) != 0 /* is-active doInitialize(Object, NV1IntLibrary) */) {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+                EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                Node prev_ = encapsulating_.set(this);
                 try {
-                    if (((N_V1_INT_LIBRARY_.getUncached(valueValue_)).isArray(valueValue_))) {
-                        return doInitialize(valueValue_, (N_V1_INT_LIBRARY_.getUncached(valueValue_)));
+                    {
+                        NV1IntLibrary initialize7_arrays__ = (N_V1_INT_LIBRARY_.getUncached(valueValue_));
+                        if ((initialize7_arrays__.isArray(valueValue_))) {
+                            return doInitialize(valueValue_, initialize7_arrays__);
+                        }
                     }
                 } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
+                    encapsulating_.set(prev_);
                 }
             }
         }
@@ -216,22 +220,26 @@ public final class NablaInitializeVariableFromJsonNodeGen extends NablaInitializ
                 }
             }
             {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                try {
-                    {
-                        NV1IntLibrary initialize7_arrays__ = (N_V1_INT_LIBRARY_.getUncached(valueValue));
-                        if ((initialize7_arrays__.isArray(valueValue))) {
-                            this.exclude_ = exclude = exclude | 0b1 /* add-excluded doInitialize(Object, NV1IntLibrary) */;
-                            this.initialize6_cache = null;
-                            state = state & 0xffffffbf /* remove-active doInitialize(Object, NV1IntLibrary) */;
-                            this.state_ = state = state | 0b10000000 /* add-active doInitialize(Object, NV1IntLibrary) */;
-                            lock.unlock();
-                            hasLock = false;
-                            return doInitialize(valueValue, initialize7_arrays__);
+                NV1IntLibrary initialize7_arrays__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        {
+                            initialize7_arrays__ = (N_V1_INT_LIBRARY_.getUncached(valueValue));
+                            if ((initialize7_arrays__.isArray(valueValue))) {
+                                this.exclude_ = exclude = exclude | 0b1 /* add-excluded doInitialize(Object, NV1IntLibrary) */;
+                                this.initialize6_cache = null;
+                                state = state & 0xffffffbf /* remove-active doInitialize(Object, NV1IntLibrary) */;
+                                this.state_ = state = state | 0b10000000 /* add-active doInitialize(Object, NV1IntLibrary) */;
+                                lock.unlock();
+                                hasLock = false;
+                                return doInitialize(valueValue, initialize7_arrays__);
+                            }
                         }
+                    } finally {
+                        encapsulating_.set(prev_);
                     }
-                } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
                 }
             }
             if (valueValue instanceof NV2Int) {

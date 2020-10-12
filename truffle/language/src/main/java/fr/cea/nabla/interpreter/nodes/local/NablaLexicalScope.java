@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.frame.Frame;
 import com.oracle.truffle.api.frame.FrameSlot;
@@ -87,7 +88,7 @@ public final class NablaLexicalScope {
 		if (block == null) {
 			block = findChildrenBlock(node);
 			if (block == null) {
-				NablaInternalError.shouldNotReachHere("Corrupted AST, no block found");
+				throw CompilerDirectives.shouldNotReachHere("Corrupted AST, no block found");
 			}
 		}
 		

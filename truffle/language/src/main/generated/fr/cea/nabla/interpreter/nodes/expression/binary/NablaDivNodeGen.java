@@ -7,10 +7,10 @@ import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.library.LibraryFactory;
+import com.oracle.truffle.api.nodes.EncapsulatingNodeReference;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
-import com.oracle.truffle.api.nodes.NodeUtil;
 import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.interpreter.nodes.expression.binary.NablaDivNode;
 import fr.cea.nabla.interpreter.values.NV0Int;
@@ -28,8 +28,8 @@ public final class NablaDivNodeGen extends NablaDivNode {
 
     @Child private NablaExpressionNode leftNode_;
     @Child private NablaExpressionNode rightNode_;
-    @CompilationFinal private long state_;
-    @CompilationFinal private int exclude_;
+    @CompilationFinal private volatile long state_;
+    @CompilationFinal private volatile int exclude_;
     @Child private Div2Data div2_cache;
     @Child private Div9Data div9_cache;
     @Child private Div14Data div14_cache;
@@ -72,13 +72,17 @@ public final class NablaDivNodeGen extends NablaDivNode {
                     }
                 }
                 if ((state & 0b1000) != 0 /* is-active div(NV0Int, Object, NV1IntLibrary) */) {
-                    Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
                     try {
-                        if (((N_V1_INT_LIBRARY_.getUncached(rightNodeValue_)).isArray(rightNodeValue_))) {
-                            return div(leftNodeValue__, rightNodeValue_, (N_V1_INT_LIBRARY_.getUncached(rightNodeValue_)));
+                        {
+                            NV1IntLibrary div3_arrays__ = (N_V1_INT_LIBRARY_.getUncached(rightNodeValue_));
+                            if ((div3_arrays__.isArray(rightNodeValue_))) {
+                                return div(leftNodeValue__, rightNodeValue_, div3_arrays__);
+                            }
                         }
                     } finally {
-                        NodeUtil.popEncapsulatingNode(prev_);
+                        encapsulating_.set(prev_);
                     }
                 }
             }
@@ -116,13 +120,17 @@ public final class NablaDivNodeGen extends NablaDivNode {
                     }
                 }
                 if ((state & 0b10000000000) != 0 /* is-active div(NV0Real, Object, NV1IntLibrary) */) {
-                    Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
                     try {
-                        if (((N_V1_INT_LIBRARY_.getUncached(rightNodeValue_)).isArray(rightNodeValue_))) {
-                            return div(leftNodeValue__, rightNodeValue_, (N_V1_INT_LIBRARY_.getUncached(rightNodeValue_)));
+                        {
+                            NV1IntLibrary div10_arrays__ = (N_V1_INT_LIBRARY_.getUncached(rightNodeValue_));
+                            if ((div10_arrays__.isArray(rightNodeValue_))) {
+                                return div(leftNodeValue__, rightNodeValue_, div10_arrays__);
+                            }
                         }
                     } finally {
-                        NodeUtil.popEncapsulatingNode(prev_);
+                        encapsulating_.set(prev_);
                     }
                 }
             }
@@ -152,13 +160,17 @@ public final class NablaDivNodeGen extends NablaDivNode {
                     }
                 }
                 if ((state & 0b1000000000000000) != 0 /* is-active div(Object, NV0Int, NV1IntLibrary) */) {
-                    Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
                     try {
-                        if (((N_V1_INT_LIBRARY_.getUncached(leftNodeValue_)).isArray(leftNodeValue_))) {
-                            return div(leftNodeValue_, rightNodeValue__, (N_V1_INT_LIBRARY_.getUncached(leftNodeValue_)));
+                        {
+                            NV1IntLibrary div15_arrays__ = (N_V1_INT_LIBRARY_.getUncached(leftNodeValue_));
+                            if ((div15_arrays__.isArray(leftNodeValue_))) {
+                                return div(leftNodeValue_, rightNodeValue__, div15_arrays__);
+                            }
                         }
                     } finally {
-                        NodeUtil.popEncapsulatingNode(prev_);
+                        encapsulating_.set(prev_);
                     }
                 }
             }
@@ -174,13 +186,17 @@ public final class NablaDivNodeGen extends NablaDivNode {
                     }
                 }
                 if ((state & 0x20000L) != 0 /* is-active div(Object, NV0Real, NV1IntLibrary) */) {
-                    Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
                     try {
-                        if (((N_V1_INT_LIBRARY_.getUncached(leftNodeValue_)).isArray(leftNodeValue_))) {
-                            return div(leftNodeValue_, rightNodeValue__, (N_V1_INT_LIBRARY_.getUncached(leftNodeValue_)));
+                        {
+                            NV1IntLibrary div17_arrays__ = (N_V1_INT_LIBRARY_.getUncached(leftNodeValue_));
+                            if ((div17_arrays__.isArray(leftNodeValue_))) {
+                                return div(leftNodeValue_, rightNodeValue__, div17_arrays__);
+                            }
                         }
                     } finally {
-                        NodeUtil.popEncapsulatingNode(prev_);
+                        encapsulating_.set(prev_);
                     }
                 }
             }
@@ -195,13 +211,20 @@ public final class NablaDivNodeGen extends NablaDivNode {
                     }
                 }
                 if ((state & 0x80000L) != 0 /* is-active div(Object, Object, NV1IntLibrary, NV1IntLibrary) */) {
-                    Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
                     try {
-                        if (((N_V1_INT_LIBRARY_.getUncached(leftNodeValue_)).isArray(leftNodeValue_)) && ((N_V1_INT_LIBRARY_.getUncached(rightNodeValue_)).isArray(rightNodeValue_))) {
-                            return div(leftNodeValue_, rightNodeValue_, (N_V1_INT_LIBRARY_.getUncached(leftNodeValue_)), (N_V1_INT_LIBRARY_.getUncached(rightNodeValue_)));
+                        {
+                            NV1IntLibrary div19_arraysLeft__ = (N_V1_INT_LIBRARY_.getUncached(leftNodeValue_));
+                            if ((div19_arraysLeft__.isArray(leftNodeValue_))) {
+                                NV1IntLibrary div19_arraysRight__ = (N_V1_INT_LIBRARY_.getUncached(rightNodeValue_));
+                                if ((div19_arraysRight__.isArray(rightNodeValue_))) {
+                                    return div(leftNodeValue_, rightNodeValue_, div19_arraysLeft__, div19_arraysRight__);
+                                }
+                            }
                         }
                     } finally {
-                        NodeUtil.popEncapsulatingNode(prev_);
+                        encapsulating_.set(prev_);
                     }
                 }
             }
@@ -217,13 +240,17 @@ public final class NablaDivNodeGen extends NablaDivNode {
                     }
                 }
                 if ((state & 0x200000L) != 0 /* is-active div(Object, NV1Real, NV1IntLibrary) */) {
-                    Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
                     try {
-                        if (((N_V1_INT_LIBRARY_.getUncached(leftNodeValue_)).isArray(leftNodeValue_))) {
-                            return div(leftNodeValue_, rightNodeValue__, (N_V1_INT_LIBRARY_.getUncached(leftNodeValue_)));
+                        {
+                            NV1IntLibrary div21_arrays__ = (N_V1_INT_LIBRARY_.getUncached(leftNodeValue_));
+                            if ((div21_arrays__.isArray(leftNodeValue_))) {
+                                return div(leftNodeValue_, rightNodeValue__, div21_arrays__);
+                            }
                         }
                     } finally {
-                        NodeUtil.popEncapsulatingNode(prev_);
+                        encapsulating_.set(prev_);
                     }
                 }
             }
@@ -249,13 +276,17 @@ public final class NablaDivNodeGen extends NablaDivNode {
                     }
                 }
                 if ((state & 0x2000000L) != 0 /* is-active div(NV1Real, Object, NV1IntLibrary) */) {
-                    Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
                     try {
-                        if (((N_V1_INT_LIBRARY_.getUncached(rightNodeValue_)).isArray(rightNodeValue_))) {
-                            return div(leftNodeValue__, rightNodeValue_, (N_V1_INT_LIBRARY_.getUncached(rightNodeValue_)));
+                        {
+                            NV1IntLibrary div25_arrays__ = (N_V1_INT_LIBRARY_.getUncached(rightNodeValue_));
+                            if ((div25_arrays__.isArray(rightNodeValue_))) {
+                                return div(leftNodeValue__, rightNodeValue_, div25_arrays__);
+                            }
                         }
                     } finally {
-                        NodeUtil.popEncapsulatingNode(prev_);
+                        encapsulating_.set(prev_);
                     }
                 }
             }
@@ -374,22 +405,26 @@ public final class NablaDivNodeGen extends NablaDivNode {
                     }
                 }
                 {
-                    Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                    try {
-                        {
-                            NV1IntLibrary div3_arrays__ = (N_V1_INT_LIBRARY_.getUncached(rightNodeValue));
-                            if ((div3_arrays__.isArray(rightNodeValue))) {
-                                this.exclude_ = exclude = exclude | 0b1 /* add-excluded div(NV0Int, Object, NV1IntLibrary) */;
-                                this.div2_cache = null;
-                                state = state & 0xfffffffffffffffbL /* remove-active div(NV0Int, Object, NV1IntLibrary) */;
-                                this.state_ = state = state | 0b1000 /* add-active div(NV0Int, Object, NV1IntLibrary) */;
-                                lock.unlock();
-                                hasLock = false;
-                                return div(leftNodeValue_, rightNodeValue, div3_arrays__);
+                    NV1IntLibrary div3_arrays__ = null;
+                    {
+                        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                        Node prev_ = encapsulating_.set(this);
+                        try {
+                            {
+                                div3_arrays__ = (N_V1_INT_LIBRARY_.getUncached(rightNodeValue));
+                                if ((div3_arrays__.isArray(rightNodeValue))) {
+                                    this.exclude_ = exclude = exclude | 0b1 /* add-excluded div(NV0Int, Object, NV1IntLibrary) */;
+                                    this.div2_cache = null;
+                                    state = state & 0xfffffffffffffffbL /* remove-active div(NV0Int, Object, NV1IntLibrary) */;
+                                    this.state_ = state = state | 0b1000 /* add-active div(NV0Int, Object, NV1IntLibrary) */;
+                                    lock.unlock();
+                                    hasLock = false;
+                                    return div(leftNodeValue_, rightNodeValue, div3_arrays__);
+                                }
                             }
+                        } finally {
+                            encapsulating_.set(prev_);
                         }
-                    } finally {
-                        NodeUtil.popEncapsulatingNode(prev_);
                     }
                 }
                 if (rightNodeValue instanceof NV1Real) {
@@ -444,11 +479,11 @@ public final class NablaDivNodeGen extends NablaDivNode {
                     }
                     if (s10_ == null) {
                         {
-                            NV1IntLibrary arrays__ = super.insert((N_V1_INT_LIBRARY_.create(rightNodeValue)));
+                            NV1IntLibrary arrays__1 = super.insert((N_V1_INT_LIBRARY_.create(rightNodeValue)));
                             // assert (s10_.arrays_.accepts(rightNodeValue));
-                            if ((arrays__.isArray(rightNodeValue)) && count10_ < (3)) {
+                            if ((arrays__1.isArray(rightNodeValue)) && count10_ < (3)) {
                                 s10_ = super.insert(new Div9Data(div9_cache));
-                                s10_.arrays_ = s10_.insertAccessor(arrays__);
+                                s10_.arrays_ = s10_.insertAccessor(arrays__1);
                                 this.div9_cache = s10_;
                                 this.state_ = state = state | 0b1000000000 /* add-active div(NV0Real, Object, NV1IntLibrary) */;
                             }
@@ -461,22 +496,26 @@ public final class NablaDivNodeGen extends NablaDivNode {
                     }
                 }
                 {
-                    Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                    try {
-                        {
-                            NV1IntLibrary div10_arrays__ = (N_V1_INT_LIBRARY_.getUncached(rightNodeValue));
-                            if ((div10_arrays__.isArray(rightNodeValue))) {
-                                this.exclude_ = exclude = exclude | 0b10 /* add-excluded div(NV0Real, Object, NV1IntLibrary) */;
-                                this.div9_cache = null;
-                                state = state & 0xfffffffffffffdffL /* remove-active div(NV0Real, Object, NV1IntLibrary) */;
-                                this.state_ = state = state | 0b10000000000 /* add-active div(NV0Real, Object, NV1IntLibrary) */;
-                                lock.unlock();
-                                hasLock = false;
-                                return div(leftNodeValue_, rightNodeValue, div10_arrays__);
+                    NV1IntLibrary div10_arrays__ = null;
+                    {
+                        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                        Node prev_ = encapsulating_.set(this);
+                        try {
+                            {
+                                div10_arrays__ = (N_V1_INT_LIBRARY_.getUncached(rightNodeValue));
+                                if ((div10_arrays__.isArray(rightNodeValue))) {
+                                    this.exclude_ = exclude = exclude | 0b10 /* add-excluded div(NV0Real, Object, NV1IntLibrary) */;
+                                    this.div9_cache = null;
+                                    state = state & 0xfffffffffffffdffL /* remove-active div(NV0Real, Object, NV1IntLibrary) */;
+                                    this.state_ = state = state | 0b10000000000 /* add-active div(NV0Real, Object, NV1IntLibrary) */;
+                                    lock.unlock();
+                                    hasLock = false;
+                                    return div(leftNodeValue_, rightNodeValue, div10_arrays__);
+                                }
                             }
+                        } finally {
+                            encapsulating_.set(prev_);
                         }
-                    } finally {
-                        NodeUtil.popEncapsulatingNode(prev_);
                     }
                 }
                 if (rightNodeValue instanceof NV1Real) {
@@ -517,11 +556,11 @@ public final class NablaDivNodeGen extends NablaDivNode {
                     }
                     if (s15_ == null) {
                         {
-                            NV1IntLibrary arrays__ = super.insert((N_V1_INT_LIBRARY_.create(leftNodeValue)));
+                            NV1IntLibrary arrays__2 = super.insert((N_V1_INT_LIBRARY_.create(leftNodeValue)));
                             // assert (s15_.arrays_.accepts(leftNodeValue));
-                            if ((arrays__.isArray(leftNodeValue)) && count15_ < (3)) {
+                            if ((arrays__2.isArray(leftNodeValue)) && count15_ < (3)) {
                                 s15_ = super.insert(new Div14Data(div14_cache));
-                                s15_.arrays_ = s15_.insertAccessor(arrays__);
+                                s15_.arrays_ = s15_.insertAccessor(arrays__2);
                                 this.div14_cache = s15_;
                                 this.state_ = state = state | 0b100000000000000 /* add-active div(Object, NV0Int, NV1IntLibrary) */;
                             }
@@ -534,22 +573,26 @@ public final class NablaDivNodeGen extends NablaDivNode {
                     }
                 }
                 {
-                    Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                    try {
-                        {
-                            NV1IntLibrary div15_arrays__ = (N_V1_INT_LIBRARY_.getUncached(leftNodeValue));
-                            if ((div15_arrays__.isArray(leftNodeValue))) {
-                                this.exclude_ = exclude = exclude | 0b100 /* add-excluded div(Object, NV0Int, NV1IntLibrary) */;
-                                this.div14_cache = null;
-                                state = state & 0xffffffffffffbfffL /* remove-active div(Object, NV0Int, NV1IntLibrary) */;
-                                this.state_ = state = state | 0b1000000000000000 /* add-active div(Object, NV0Int, NV1IntLibrary) */;
-                                lock.unlock();
-                                hasLock = false;
-                                return div(leftNodeValue, rightNodeValue_, div15_arrays__);
+                    NV1IntLibrary div15_arrays__ = null;
+                    {
+                        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                        Node prev_ = encapsulating_.set(this);
+                        try {
+                            {
+                                div15_arrays__ = (N_V1_INT_LIBRARY_.getUncached(leftNodeValue));
+                                if ((div15_arrays__.isArray(leftNodeValue))) {
+                                    this.exclude_ = exclude = exclude | 0b100 /* add-excluded div(Object, NV0Int, NV1IntLibrary) */;
+                                    this.div14_cache = null;
+                                    state = state & 0xffffffffffffbfffL /* remove-active div(Object, NV0Int, NV1IntLibrary) */;
+                                    this.state_ = state = state | 0b1000000000000000 /* add-active div(Object, NV0Int, NV1IntLibrary) */;
+                                    lock.unlock();
+                                    hasLock = false;
+                                    return div(leftNodeValue, rightNodeValue_, div15_arrays__);
+                                }
                             }
+                        } finally {
+                            encapsulating_.set(prev_);
                         }
-                    } finally {
-                        NodeUtil.popEncapsulatingNode(prev_);
                     }
                 }
             }
@@ -569,11 +612,11 @@ public final class NablaDivNodeGen extends NablaDivNode {
                     }
                     if (s17_ == null) {
                         {
-                            NV1IntLibrary arrays__ = super.insert((N_V1_INT_LIBRARY_.create(leftNodeValue)));
+                            NV1IntLibrary arrays__3 = super.insert((N_V1_INT_LIBRARY_.create(leftNodeValue)));
                             // assert (s17_.arrays_.accepts(leftNodeValue));
-                            if ((arrays__.isArray(leftNodeValue)) && count17_ < (3)) {
+                            if ((arrays__3.isArray(leftNodeValue)) && count17_ < (3)) {
                                 s17_ = super.insert(new Div16Data(div16_cache));
-                                s17_.arrays_ = s17_.insertAccessor(arrays__);
+                                s17_.arrays_ = s17_.insertAccessor(arrays__3);
                                 this.div16_cache = s17_;
                                 this.state_ = state = state | 0x10000L /* add-active div(Object, NV0Real, NV1IntLibrary) */;
                             }
@@ -586,22 +629,26 @@ public final class NablaDivNodeGen extends NablaDivNode {
                     }
                 }
                 {
-                    Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                    try {
-                        {
-                            NV1IntLibrary div17_arrays__ = (N_V1_INT_LIBRARY_.getUncached(leftNodeValue));
-                            if ((div17_arrays__.isArray(leftNodeValue))) {
-                                this.exclude_ = exclude = exclude | 0b1000 /* add-excluded div(Object, NV0Real, NV1IntLibrary) */;
-                                this.div16_cache = null;
-                                state = state & 0xfffffffffffeffffL /* remove-active div(Object, NV0Real, NV1IntLibrary) */;
-                                this.state_ = state = state | 0x20000L /* add-active div(Object, NV0Real, NV1IntLibrary) */;
-                                lock.unlock();
-                                hasLock = false;
-                                return div(leftNodeValue, rightNodeValue_, div17_arrays__);
+                    NV1IntLibrary div17_arrays__ = null;
+                    {
+                        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                        Node prev_ = encapsulating_.set(this);
+                        try {
+                            {
+                                div17_arrays__ = (N_V1_INT_LIBRARY_.getUncached(leftNodeValue));
+                                if ((div17_arrays__.isArray(leftNodeValue))) {
+                                    this.exclude_ = exclude = exclude | 0b1000 /* add-excluded div(Object, NV0Real, NV1IntLibrary) */;
+                                    this.div16_cache = null;
+                                    state = state & 0xfffffffffffeffffL /* remove-active div(Object, NV0Real, NV1IntLibrary) */;
+                                    this.state_ = state = state | 0x20000L /* add-active div(Object, NV0Real, NV1IntLibrary) */;
+                                    lock.unlock();
+                                    hasLock = false;
+                                    return div(leftNodeValue, rightNodeValue_, div17_arrays__);
+                                }
                             }
+                        } finally {
+                            encapsulating_.set(prev_);
                         }
-                    } finally {
-                        NodeUtil.popEncapsulatingNode(prev_);
                     }
                 }
             }
@@ -641,25 +688,30 @@ public final class NablaDivNodeGen extends NablaDivNode {
                 }
             }
             {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                try {
-                    {
-                        NV1IntLibrary div19_arraysLeft__ = (N_V1_INT_LIBRARY_.getUncached(leftNodeValue));
-                        if ((div19_arraysLeft__.isArray(leftNodeValue))) {
-                            NV1IntLibrary div19_arraysRight__ = (N_V1_INT_LIBRARY_.getUncached(rightNodeValue));
-                            if ((div19_arraysRight__.isArray(rightNodeValue))) {
-                                this.exclude_ = exclude = exclude | 0b10000 /* add-excluded div(Object, Object, NV1IntLibrary, NV1IntLibrary) */;
-                                this.div18_cache = null;
-                                state = state & 0xfffffffffffbffffL /* remove-active div(Object, Object, NV1IntLibrary, NV1IntLibrary) */;
-                                this.state_ = state = state | 0x80000L /* add-active div(Object, Object, NV1IntLibrary, NV1IntLibrary) */;
-                                lock.unlock();
-                                hasLock = false;
-                                return div(leftNodeValue, rightNodeValue, div19_arraysLeft__, div19_arraysRight__);
+                NV1IntLibrary div19_arraysRight__ = null;
+                NV1IntLibrary div19_arraysLeft__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        {
+                            div19_arraysLeft__ = (N_V1_INT_LIBRARY_.getUncached(leftNodeValue));
+                            if ((div19_arraysLeft__.isArray(leftNodeValue))) {
+                                div19_arraysRight__ = (N_V1_INT_LIBRARY_.getUncached(rightNodeValue));
+                                if ((div19_arraysRight__.isArray(rightNodeValue))) {
+                                    this.exclude_ = exclude = exclude | 0b10000 /* add-excluded div(Object, Object, NV1IntLibrary, NV1IntLibrary) */;
+                                    this.div18_cache = null;
+                                    state = state & 0xfffffffffffbffffL /* remove-active div(Object, Object, NV1IntLibrary, NV1IntLibrary) */;
+                                    this.state_ = state = state | 0x80000L /* add-active div(Object, Object, NV1IntLibrary, NV1IntLibrary) */;
+                                    lock.unlock();
+                                    hasLock = false;
+                                    return div(leftNodeValue, rightNodeValue, div19_arraysLeft__, div19_arraysRight__);
+                                }
                             }
                         }
+                    } finally {
+                        encapsulating_.set(prev_);
                     }
-                } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
                 }
             }
             if (rightNodeValue instanceof NV1Real) {
@@ -678,11 +730,11 @@ public final class NablaDivNodeGen extends NablaDivNode {
                     }
                     if (s21_ == null) {
                         {
-                            NV1IntLibrary arrays__ = super.insert((N_V1_INT_LIBRARY_.create(leftNodeValue)));
+                            NV1IntLibrary arrays__4 = super.insert((N_V1_INT_LIBRARY_.create(leftNodeValue)));
                             // assert (s21_.arrays_.accepts(leftNodeValue));
-                            if ((arrays__.isArray(leftNodeValue)) && count21_ < (3)) {
+                            if ((arrays__4.isArray(leftNodeValue)) && count21_ < (3)) {
                                 s21_ = super.insert(new Div20Data(div20_cache));
-                                s21_.arrays_ = s21_.insertAccessor(arrays__);
+                                s21_.arrays_ = s21_.insertAccessor(arrays__4);
                                 this.div20_cache = s21_;
                                 this.state_ = state = state | 0x100000L /* add-active div(Object, NV1Real, NV1IntLibrary) */;
                             }
@@ -695,22 +747,26 @@ public final class NablaDivNodeGen extends NablaDivNode {
                     }
                 }
                 {
-                    Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                    try {
-                        {
-                            NV1IntLibrary div21_arrays__ = (N_V1_INT_LIBRARY_.getUncached(leftNodeValue));
-                            if ((div21_arrays__.isArray(leftNodeValue))) {
-                                this.exclude_ = exclude = exclude | 0b100000 /* add-excluded div(Object, NV1Real, NV1IntLibrary) */;
-                                this.div20_cache = null;
-                                state = state & 0xffffffffffefffffL /* remove-active div(Object, NV1Real, NV1IntLibrary) */;
-                                this.state_ = state = state | 0x200000L /* add-active div(Object, NV1Real, NV1IntLibrary) */;
-                                lock.unlock();
-                                hasLock = false;
-                                return div(leftNodeValue, rightNodeValue_, div21_arrays__);
+                    NV1IntLibrary div21_arrays__ = null;
+                    {
+                        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                        Node prev_ = encapsulating_.set(this);
+                        try {
+                            {
+                                div21_arrays__ = (N_V1_INT_LIBRARY_.getUncached(leftNodeValue));
+                                if ((div21_arrays__.isArray(leftNodeValue))) {
+                                    this.exclude_ = exclude = exclude | 0b100000 /* add-excluded div(Object, NV1Real, NV1IntLibrary) */;
+                                    this.div20_cache = null;
+                                    state = state & 0xffffffffffefffffL /* remove-active div(Object, NV1Real, NV1IntLibrary) */;
+                                    this.state_ = state = state | 0x200000L /* add-active div(Object, NV1Real, NV1IntLibrary) */;
+                                    lock.unlock();
+                                    hasLock = false;
+                                    return div(leftNodeValue, rightNodeValue_, div21_arrays__);
+                                }
                             }
+                        } finally {
+                            encapsulating_.set(prev_);
                         }
-                    } finally {
-                        NodeUtil.popEncapsulatingNode(prev_);
                     }
                 }
             }
@@ -744,11 +800,11 @@ public final class NablaDivNodeGen extends NablaDivNode {
                     }
                     if (s25_ == null) {
                         {
-                            NV1IntLibrary arrays__ = super.insert((N_V1_INT_LIBRARY_.create(rightNodeValue)));
+                            NV1IntLibrary arrays__5 = super.insert((N_V1_INT_LIBRARY_.create(rightNodeValue)));
                             // assert (s25_.arrays_.accepts(rightNodeValue));
-                            if ((arrays__.isArray(rightNodeValue)) && count25_ < (3)) {
+                            if ((arrays__5.isArray(rightNodeValue)) && count25_ < (3)) {
                                 s25_ = super.insert(new Div24Data(div24_cache));
-                                s25_.arrays_ = s25_.insertAccessor(arrays__);
+                                s25_.arrays_ = s25_.insertAccessor(arrays__5);
                                 this.div24_cache = s25_;
                                 this.state_ = state = state | 0x1000000L /* add-active div(NV1Real, Object, NV1IntLibrary) */;
                             }
@@ -761,22 +817,26 @@ public final class NablaDivNodeGen extends NablaDivNode {
                     }
                 }
                 {
-                    Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                    try {
-                        {
-                            NV1IntLibrary div25_arrays__ = (N_V1_INT_LIBRARY_.getUncached(rightNodeValue));
-                            if ((div25_arrays__.isArray(rightNodeValue))) {
-                                this.exclude_ = exclude = exclude | 0b1000000 /* add-excluded div(NV1Real, Object, NV1IntLibrary) */;
-                                this.div24_cache = null;
-                                state = state & 0xfffffffffeffffffL /* remove-active div(NV1Real, Object, NV1IntLibrary) */;
-                                this.state_ = state = state | 0x2000000L /* add-active div(NV1Real, Object, NV1IntLibrary) */;
-                                lock.unlock();
-                                hasLock = false;
-                                return div(leftNodeValue_, rightNodeValue, div25_arrays__);
+                    NV1IntLibrary div25_arrays__ = null;
+                    {
+                        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                        Node prev_ = encapsulating_.set(this);
+                        try {
+                            {
+                                div25_arrays__ = (N_V1_INT_LIBRARY_.getUncached(rightNodeValue));
+                                if ((div25_arrays__.isArray(rightNodeValue))) {
+                                    this.exclude_ = exclude = exclude | 0b1000000 /* add-excluded div(NV1Real, Object, NV1IntLibrary) */;
+                                    this.div24_cache = null;
+                                    state = state & 0xfffffffffeffffffL /* remove-active div(NV1Real, Object, NV1IntLibrary) */;
+                                    this.state_ = state = state | 0x2000000L /* add-active div(NV1Real, Object, NV1IntLibrary) */;
+                                    lock.unlock();
+                                    hasLock = false;
+                                    return div(leftNodeValue_, rightNodeValue, div25_arrays__);
+                                }
                             }
+                        } finally {
+                            encapsulating_.set(prev_);
                         }
-                    } finally {
-                        NodeUtil.popEncapsulatingNode(prev_);
                     }
                 }
                 if (rightNodeValue instanceof NV1Real) {

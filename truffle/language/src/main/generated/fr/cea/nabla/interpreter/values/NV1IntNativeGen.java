@@ -57,7 +57,7 @@ final class NV1IntNativeGen {
 
             @Override
             public boolean accepts(Object receiver) {
-                assert !(receiver instanceof NV1IntNative) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'fr.cea.nabla.interpreter.values.NV1IntNative'. Exported receiver with dynamic dispatch found but not expected.";
+                assert !(receiver instanceof NV1IntNative) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof NV1IntNative;
             }
 
@@ -130,7 +130,7 @@ final class NV1IntNativeGen {
             @TruffleBoundary
             @Override
             public boolean accepts(Object receiver) {
-                assert !(receiver instanceof NV1IntNative) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'fr.cea.nabla.interpreter.values.NV1IntNative'. Exported receiver with dynamic dispatch found but not expected.";
+                assert !(receiver instanceof NV1IntNative) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof NV1IntNative;
             }
 
@@ -240,7 +240,7 @@ final class NV1IntNativeGen {
 
             @Override
             public boolean accepts(Object receiver) {
-                assert !(receiver instanceof NV1IntNative) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'fr.cea.nabla.interpreter.values.NV1IntNative'. Exported receiver with dynamic dispatch found but not expected.";
+                assert !(receiver instanceof NV1IntNative) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof NV1IntNative;
             }
 
@@ -277,7 +277,7 @@ final class NV1IntNativeGen {
             @TruffleBoundary
             @Override
             public boolean accepts(Object receiver) {
-                assert !(receiver instanceof NV1IntNative) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'fr.cea.nabla.interpreter.values.NV1IntNative'. Exported receiver with dynamic dispatch found but not expected.";
+                assert !(receiver instanceof NV1IntNative) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof NV1IntNative;
             }
 

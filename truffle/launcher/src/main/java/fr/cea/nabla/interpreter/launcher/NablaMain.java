@@ -78,7 +78,7 @@ public final class NablaMain {
 		out.println("== running on " + context.getEngine());
 
 		try {
-			context.eval(source);
+			context.eval(source); 
 			return 0;
 		} catch (PolyglotException ex) {
 			if (ex.isInternalError()) {

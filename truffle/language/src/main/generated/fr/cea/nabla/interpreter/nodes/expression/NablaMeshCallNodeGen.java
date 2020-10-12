@@ -16,7 +16,7 @@ import org.graalvm.polyglot.Value;
 @GeneratedBy(NablaMeshCallNode.class)
 public final class NablaMeshCallNodeGen extends NablaMeshCallNode {
 
-    @CompilationFinal private int state_;
+    @CompilationFinal private volatile int state_;
     @CompilationFinal private Value call0_mesh_;
     @CompilationFinal private Value call0_value_;
     @CompilationFinal private Value call1_value_;

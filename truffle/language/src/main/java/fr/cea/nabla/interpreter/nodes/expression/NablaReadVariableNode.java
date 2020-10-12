@@ -45,7 +45,7 @@ public abstract class NablaReadVariableNode extends NablaExpressionNode {
 			return toRead.getObject(slot);
 		} catch (FrameSlotTypeException e) {
 			e.printStackTrace();
-			throw NablaInternalError.shouldNotReachHere();
+			throw CompilerDirectives.shouldNotReachHere();
 		}
 	}
 	

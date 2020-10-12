@@ -8,10 +8,10 @@ import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.interop.InteropLibrary;
 import com.oracle.truffle.api.library.LibraryFactory;
+import com.oracle.truffle.api.nodes.EncapsulatingNodeReference;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
-import com.oracle.truffle.api.nodes.NodeUtil;
 import fr.cea.nabla.interpreter.values.BoxValueNode;
 import java.util.concurrent.locks.Lock;
 
@@ -21,8 +21,8 @@ public final class BoxValueNodeGen extends BoxValueNode {
 
     private static final LibraryFactory<InteropLibrary> INTEROP_LIBRARY_ = LibraryFactory.resolve(InteropLibrary.class);
 
-    @CompilationFinal private int state_;
-    @CompilationFinal private int exclude_;
+    @CompilationFinal private volatile int state_;
+    @CompilationFinal private volatile int exclude_;
     @Child private Bool0Data bool0_cache;
     @Child private Bool11Data bool11_cache;
     @Child private Bool20Data bool20_cache;
@@ -265,151 +265,211 @@ public final class BoxValueNodeGen extends BoxValueNode {
 
     @TruffleBoundary
     private Object bool10Boundary(int state, Object arg0Value) {
-        Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+        Node prev_ = encapsulating_.set(this);
         try {
-            return doBool(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+            {
+                InteropLibrary bool10_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                return doBool(arg0Value, bool10_objLibrary__);
+            }
         } finally {
-            NodeUtil.popEncapsulatingNode(prev_);
+            encapsulating_.set(prev_);
         }
     }
 
     @TruffleBoundary
     private Object bool12Boundary(int state, Object arg0Value) {
-        Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+        Node prev_ = encapsulating_.set(this);
         try {
-            return doBool1(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+            {
+                InteropLibrary bool12_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                return doBool1(arg0Value, bool12_objLibrary__);
+            }
         } finally {
-            NodeUtil.popEncapsulatingNode(prev_);
+            encapsulating_.set(prev_);
         }
     }
 
     @TruffleBoundary
     private Object bool21Boundary(int state, Object arg0Value) {
-        Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+        Node prev_ = encapsulating_.set(this);
         try {
-            return doBool2(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+            {
+                InteropLibrary bool21_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                return doBool2(arg0Value, bool21_objLibrary__);
+            }
         } finally {
-            NodeUtil.popEncapsulatingNode(prev_);
+            encapsulating_.set(prev_);
         }
     }
 
     @TruffleBoundary
     private Object bool31Boundary(int state, Object arg0Value) {
-        Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+        Node prev_ = encapsulating_.set(this);
         try {
-            return doBool3(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+            {
+                InteropLibrary bool31_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                return doBool3(arg0Value, bool31_objLibrary__);
+            }
         } finally {
-            NodeUtil.popEncapsulatingNode(prev_);
+            encapsulating_.set(prev_);
         }
     }
 
     @TruffleBoundary
     private Object bool41Boundary(int state, Object arg0Value) {
-        Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+        Node prev_ = encapsulating_.set(this);
         try {
-            return doBool4(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+            {
+                InteropLibrary bool41_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                return doBool4(arg0Value, bool41_objLibrary__);
+            }
         } finally {
-            NodeUtil.popEncapsulatingNode(prev_);
+            encapsulating_.set(prev_);
         }
     }
 
     @TruffleBoundary
     private Object int10Boundary(int state, Object arg0Value) {
-        Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+        Node prev_ = encapsulating_.set(this);
         try {
-            return doInt(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+            {
+                InteropLibrary int10_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                return doInt(arg0Value, int10_objLibrary__);
+            }
         } finally {
-            NodeUtil.popEncapsulatingNode(prev_);
+            encapsulating_.set(prev_);
         }
     }
 
     @TruffleBoundary
     private Object int12Boundary(int state, Object arg0Value) {
-        Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+        Node prev_ = encapsulating_.set(this);
         try {
-            return doInt1(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+            {
+                InteropLibrary int12_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                return doInt1(arg0Value, int12_objLibrary__);
+            }
         } finally {
-            NodeUtil.popEncapsulatingNode(prev_);
+            encapsulating_.set(prev_);
         }
     }
 
     @TruffleBoundary
     private Object int21Boundary(int state, Object arg0Value) {
-        Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+        Node prev_ = encapsulating_.set(this);
         try {
-            return doInt2(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+            {
+                InteropLibrary int21_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                return doInt2(arg0Value, int21_objLibrary__);
+            }
         } finally {
-            NodeUtil.popEncapsulatingNode(prev_);
+            encapsulating_.set(prev_);
         }
     }
 
     @TruffleBoundary
     private Object int31Boundary(int state, Object arg0Value) {
-        Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+        Node prev_ = encapsulating_.set(this);
         try {
-            return doInt3(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+            {
+                InteropLibrary int31_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                return doInt3(arg0Value, int31_objLibrary__);
+            }
         } finally {
-            NodeUtil.popEncapsulatingNode(prev_);
+            encapsulating_.set(prev_);
         }
     }
 
     @TruffleBoundary
     private Object int41Boundary(int state, Object arg0Value) {
-        Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+        Node prev_ = encapsulating_.set(this);
         try {
-            return doInt4(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+            {
+                InteropLibrary int41_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                return doInt4(arg0Value, int41_objLibrary__);
+            }
         } finally {
-            NodeUtil.popEncapsulatingNode(prev_);
+            encapsulating_.set(prev_);
         }
     }
 
     @TruffleBoundary
     private Object double10Boundary(int state, Object arg0Value) {
-        Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+        Node prev_ = encapsulating_.set(this);
         try {
-            return doDouble(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+            {
+                InteropLibrary double10_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                return doDouble(arg0Value, double10_objLibrary__);
+            }
         } finally {
-            NodeUtil.popEncapsulatingNode(prev_);
+            encapsulating_.set(prev_);
         }
     }
 
     @TruffleBoundary
     private Object double12Boundary(int state, Object arg0Value) {
-        Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+        Node prev_ = encapsulating_.set(this);
         try {
-            return doDouble1(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+            {
+                InteropLibrary double12_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                return doDouble1(arg0Value, double12_objLibrary__);
+            }
         } finally {
-            NodeUtil.popEncapsulatingNode(prev_);
+            encapsulating_.set(prev_);
         }
     }
 
     @TruffleBoundary
     private Object double21Boundary(int state, Object arg0Value) {
-        Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+        Node prev_ = encapsulating_.set(this);
         try {
-            return doDouble2(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+            {
+                InteropLibrary double21_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                return doDouble2(arg0Value, double21_objLibrary__);
+            }
         } finally {
-            NodeUtil.popEncapsulatingNode(prev_);
+            encapsulating_.set(prev_);
         }
     }
 
     @TruffleBoundary
     private Object double31Boundary(int state, Object arg0Value) {
-        Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+        Node prev_ = encapsulating_.set(this);
         try {
-            return doDouble3(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+            {
+                InteropLibrary double31_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                return doDouble3(arg0Value, double31_objLibrary__);
+            }
         } finally {
-            NodeUtil.popEncapsulatingNode(prev_);
+            encapsulating_.set(prev_);
         }
     }
 
     @TruffleBoundary
     private Object double41Boundary(int state, Object arg0Value) {
-        Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+        EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+        Node prev_ = encapsulating_.set(this);
         try {
-            return doDouble4(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+            {
+                InteropLibrary double41_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                return doDouble4(arg0Value, double41_objLibrary__);
+            }
         } finally {
-            NodeUtil.popEncapsulatingNode(prev_);
+            encapsulating_.set(prev_);
         }
     }
 
@@ -449,19 +509,24 @@ public final class BoxValueNodeGen extends BoxValueNode {
                 }
             }
             {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                try {
-                    if ((isBool())) {
-                        this.exclude_ = exclude = exclude | 0b1 /* add-excluded doBool(Object, InteropLibrary) */;
-                        this.bool0_cache = null;
-                        state = state & 0xfffffffe /* remove-active doBool(Object, InteropLibrary) */;
-                        this.state_ = state = state | 0b10 /* add-active doBool(Object, InteropLibrary) */;
-                        lock.unlock();
-                        hasLock = false;
-                        return doBool(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+                InteropLibrary bool10_objLibrary__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        if ((isBool())) {
+                            bool10_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                            this.exclude_ = exclude = exclude | 0b1 /* add-excluded doBool(Object, InteropLibrary) */;
+                            this.bool0_cache = null;
+                            state = state & 0xfffffffe /* remove-active doBool(Object, InteropLibrary) */;
+                            this.state_ = state = state | 0b10 /* add-active doBool(Object, InteropLibrary) */;
+                            lock.unlock();
+                            hasLock = false;
+                            return doBool(arg0Value, bool10_objLibrary__);
+                        }
+                    } finally {
+                        encapsulating_.set(prev_);
                     }
-                } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
                 }
             }
             if (((exclude & 0b10)) == 0 /* is-not-excluded doBool1(Object, InteropLibrary) */) {
@@ -493,19 +558,24 @@ public final class BoxValueNodeGen extends BoxValueNode {
                 }
             }
             {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                try {
-                    if ((isBoolArray1())) {
-                        this.exclude_ = exclude = exclude | 0b10 /* add-excluded doBool1(Object, InteropLibrary) */;
-                        this.bool11_cache = null;
-                        state = state & 0xfffffffb /* remove-active doBool1(Object, InteropLibrary) */;
-                        this.state_ = state = state | 0b1000 /* add-active doBool1(Object, InteropLibrary) */;
-                        lock.unlock();
-                        hasLock = false;
-                        return doBool1(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+                InteropLibrary bool12_objLibrary__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        if ((isBoolArray1())) {
+                            bool12_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                            this.exclude_ = exclude = exclude | 0b10 /* add-excluded doBool1(Object, InteropLibrary) */;
+                            this.bool11_cache = null;
+                            state = state & 0xfffffffb /* remove-active doBool1(Object, InteropLibrary) */;
+                            this.state_ = state = state | 0b1000 /* add-active doBool1(Object, InteropLibrary) */;
+                            lock.unlock();
+                            hasLock = false;
+                            return doBool1(arg0Value, bool12_objLibrary__);
+                        }
+                    } finally {
+                        encapsulating_.set(prev_);
                     }
-                } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
                 }
             }
             if (((exclude & 0b100)) == 0 /* is-not-excluded doBool2(Object, InteropLibrary) */) {
@@ -537,19 +607,24 @@ public final class BoxValueNodeGen extends BoxValueNode {
                 }
             }
             {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                try {
-                    if ((isBoolArray2())) {
-                        this.exclude_ = exclude = exclude | 0b100 /* add-excluded doBool2(Object, InteropLibrary) */;
-                        this.bool20_cache = null;
-                        state = state & 0xffffffef /* remove-active doBool2(Object, InteropLibrary) */;
-                        this.state_ = state = state | 0b100000 /* add-active doBool2(Object, InteropLibrary) */;
-                        lock.unlock();
-                        hasLock = false;
-                        return doBool2(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+                InteropLibrary bool21_objLibrary__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        if ((isBoolArray2())) {
+                            bool21_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                            this.exclude_ = exclude = exclude | 0b100 /* add-excluded doBool2(Object, InteropLibrary) */;
+                            this.bool20_cache = null;
+                            state = state & 0xffffffef /* remove-active doBool2(Object, InteropLibrary) */;
+                            this.state_ = state = state | 0b100000 /* add-active doBool2(Object, InteropLibrary) */;
+                            lock.unlock();
+                            hasLock = false;
+                            return doBool2(arg0Value, bool21_objLibrary__);
+                        }
+                    } finally {
+                        encapsulating_.set(prev_);
                     }
-                } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
                 }
             }
             if (((exclude & 0b1000)) == 0 /* is-not-excluded doBool3(Object, InteropLibrary) */) {
@@ -581,19 +656,24 @@ public final class BoxValueNodeGen extends BoxValueNode {
                 }
             }
             {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                try {
-                    if ((isBoolArray3())) {
-                        this.exclude_ = exclude = exclude | 0b1000 /* add-excluded doBool3(Object, InteropLibrary) */;
-                        this.bool30_cache = null;
-                        state = state & 0xffffffbf /* remove-active doBool3(Object, InteropLibrary) */;
-                        this.state_ = state = state | 0b10000000 /* add-active doBool3(Object, InteropLibrary) */;
-                        lock.unlock();
-                        hasLock = false;
-                        return doBool3(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+                InteropLibrary bool31_objLibrary__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        if ((isBoolArray3())) {
+                            bool31_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                            this.exclude_ = exclude = exclude | 0b1000 /* add-excluded doBool3(Object, InteropLibrary) */;
+                            this.bool30_cache = null;
+                            state = state & 0xffffffbf /* remove-active doBool3(Object, InteropLibrary) */;
+                            this.state_ = state = state | 0b10000000 /* add-active doBool3(Object, InteropLibrary) */;
+                            lock.unlock();
+                            hasLock = false;
+                            return doBool3(arg0Value, bool31_objLibrary__);
+                        }
+                    } finally {
+                        encapsulating_.set(prev_);
                     }
-                } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
                 }
             }
             if (((exclude & 0b10000)) == 0 /* is-not-excluded doBool4(Object, InteropLibrary) */) {
@@ -625,19 +705,24 @@ public final class BoxValueNodeGen extends BoxValueNode {
                 }
             }
             {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                try {
-                    if ((isBoolArray4())) {
-                        this.exclude_ = exclude = exclude | 0b10000 /* add-excluded doBool4(Object, InteropLibrary) */;
-                        this.bool40_cache = null;
-                        state = state & 0xfffffeff /* remove-active doBool4(Object, InteropLibrary) */;
-                        this.state_ = state = state | 0b1000000000 /* add-active doBool4(Object, InteropLibrary) */;
-                        lock.unlock();
-                        hasLock = false;
-                        return doBool4(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+                InteropLibrary bool41_objLibrary__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        if ((isBoolArray4())) {
+                            bool41_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                            this.exclude_ = exclude = exclude | 0b10000 /* add-excluded doBool4(Object, InteropLibrary) */;
+                            this.bool40_cache = null;
+                            state = state & 0xfffffeff /* remove-active doBool4(Object, InteropLibrary) */;
+                            this.state_ = state = state | 0b1000000000 /* add-active doBool4(Object, InteropLibrary) */;
+                            lock.unlock();
+                            hasLock = false;
+                            return doBool4(arg0Value, bool41_objLibrary__);
+                        }
+                    } finally {
+                        encapsulating_.set(prev_);
                     }
-                } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
                 }
             }
             if (((exclude & 0b100000)) == 0 /* is-not-excluded doInt(Object, InteropLibrary) */) {
@@ -669,19 +754,24 @@ public final class BoxValueNodeGen extends BoxValueNode {
                 }
             }
             {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                try {
-                    if ((isInt())) {
-                        this.exclude_ = exclude = exclude | 0b100000 /* add-excluded doInt(Object, InteropLibrary) */;
-                        this.int0_cache = null;
-                        state = state & 0xfffffbff /* remove-active doInt(Object, InteropLibrary) */;
-                        this.state_ = state = state | 0b100000000000 /* add-active doInt(Object, InteropLibrary) */;
-                        lock.unlock();
-                        hasLock = false;
-                        return doInt(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+                InteropLibrary int10_objLibrary__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        if ((isInt())) {
+                            int10_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                            this.exclude_ = exclude = exclude | 0b100000 /* add-excluded doInt(Object, InteropLibrary) */;
+                            this.int0_cache = null;
+                            state = state & 0xfffffbff /* remove-active doInt(Object, InteropLibrary) */;
+                            this.state_ = state = state | 0b100000000000 /* add-active doInt(Object, InteropLibrary) */;
+                            lock.unlock();
+                            hasLock = false;
+                            return doInt(arg0Value, int10_objLibrary__);
+                        }
+                    } finally {
+                        encapsulating_.set(prev_);
                     }
-                } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
                 }
             }
             if (((exclude & 0b1000000)) == 0 /* is-not-excluded doInt1(Object, InteropLibrary) */) {
@@ -713,19 +803,24 @@ public final class BoxValueNodeGen extends BoxValueNode {
                 }
             }
             {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                try {
-                    if ((isIntArray1())) {
-                        this.exclude_ = exclude = exclude | 0b1000000 /* add-excluded doInt1(Object, InteropLibrary) */;
-                        this.int11_cache = null;
-                        state = state & 0xffffefff /* remove-active doInt1(Object, InteropLibrary) */;
-                        this.state_ = state = state | 0b10000000000000 /* add-active doInt1(Object, InteropLibrary) */;
-                        lock.unlock();
-                        hasLock = false;
-                        return doInt1(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+                InteropLibrary int12_objLibrary__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        if ((isIntArray1())) {
+                            int12_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                            this.exclude_ = exclude = exclude | 0b1000000 /* add-excluded doInt1(Object, InteropLibrary) */;
+                            this.int11_cache = null;
+                            state = state & 0xffffefff /* remove-active doInt1(Object, InteropLibrary) */;
+                            this.state_ = state = state | 0b10000000000000 /* add-active doInt1(Object, InteropLibrary) */;
+                            lock.unlock();
+                            hasLock = false;
+                            return doInt1(arg0Value, int12_objLibrary__);
+                        }
+                    } finally {
+                        encapsulating_.set(prev_);
                     }
-                } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
                 }
             }
             if (((exclude & 0b10000000)) == 0 /* is-not-excluded doInt2(Object, InteropLibrary) */) {
@@ -757,19 +852,24 @@ public final class BoxValueNodeGen extends BoxValueNode {
                 }
             }
             {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                try {
-                    if ((isIntArray2())) {
-                        this.exclude_ = exclude = exclude | 0b10000000 /* add-excluded doInt2(Object, InteropLibrary) */;
-                        this.int20_cache = null;
-                        state = state & 0xffffbfff /* remove-active doInt2(Object, InteropLibrary) */;
-                        this.state_ = state = state | 0b1000000000000000 /* add-active doInt2(Object, InteropLibrary) */;
-                        lock.unlock();
-                        hasLock = false;
-                        return doInt2(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+                InteropLibrary int21_objLibrary__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        if ((isIntArray2())) {
+                            int21_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                            this.exclude_ = exclude = exclude | 0b10000000 /* add-excluded doInt2(Object, InteropLibrary) */;
+                            this.int20_cache = null;
+                            state = state & 0xffffbfff /* remove-active doInt2(Object, InteropLibrary) */;
+                            this.state_ = state = state | 0b1000000000000000 /* add-active doInt2(Object, InteropLibrary) */;
+                            lock.unlock();
+                            hasLock = false;
+                            return doInt2(arg0Value, int21_objLibrary__);
+                        }
+                    } finally {
+                        encapsulating_.set(prev_);
                     }
-                } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
                 }
             }
             if (((exclude & 0b100000000)) == 0 /* is-not-excluded doInt3(Object, InteropLibrary) */) {
@@ -801,19 +901,24 @@ public final class BoxValueNodeGen extends BoxValueNode {
                 }
             }
             {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                try {
-                    if ((isIntArray3())) {
-                        this.exclude_ = exclude = exclude | 0b100000000 /* add-excluded doInt3(Object, InteropLibrary) */;
-                        this.int30_cache = null;
-                        state = state & 0xfffeffff /* remove-active doInt3(Object, InteropLibrary) */;
-                        this.state_ = state = state | 0x20000 /* add-active doInt3(Object, InteropLibrary) */;
-                        lock.unlock();
-                        hasLock = false;
-                        return doInt3(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+                InteropLibrary int31_objLibrary__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        if ((isIntArray3())) {
+                            int31_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                            this.exclude_ = exclude = exclude | 0b100000000 /* add-excluded doInt3(Object, InteropLibrary) */;
+                            this.int30_cache = null;
+                            state = state & 0xfffeffff /* remove-active doInt3(Object, InteropLibrary) */;
+                            this.state_ = state = state | 0x20000 /* add-active doInt3(Object, InteropLibrary) */;
+                            lock.unlock();
+                            hasLock = false;
+                            return doInt3(arg0Value, int31_objLibrary__);
+                        }
+                    } finally {
+                        encapsulating_.set(prev_);
                     }
-                } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
                 }
             }
             if (((exclude & 0b1000000000)) == 0 /* is-not-excluded doInt4(Object, InteropLibrary) */) {
@@ -845,19 +950,24 @@ public final class BoxValueNodeGen extends BoxValueNode {
                 }
             }
             {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                try {
-                    if ((isIntArray4())) {
-                        this.exclude_ = exclude = exclude | 0b1000000000 /* add-excluded doInt4(Object, InteropLibrary) */;
-                        this.int40_cache = null;
-                        state = state & 0xfffbffff /* remove-active doInt4(Object, InteropLibrary) */;
-                        this.state_ = state = state | 0x80000 /* add-active doInt4(Object, InteropLibrary) */;
-                        lock.unlock();
-                        hasLock = false;
-                        return doInt4(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+                InteropLibrary int41_objLibrary__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        if ((isIntArray4())) {
+                            int41_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                            this.exclude_ = exclude = exclude | 0b1000000000 /* add-excluded doInt4(Object, InteropLibrary) */;
+                            this.int40_cache = null;
+                            state = state & 0xfffbffff /* remove-active doInt4(Object, InteropLibrary) */;
+                            this.state_ = state = state | 0x80000 /* add-active doInt4(Object, InteropLibrary) */;
+                            lock.unlock();
+                            hasLock = false;
+                            return doInt4(arg0Value, int41_objLibrary__);
+                        }
+                    } finally {
+                        encapsulating_.set(prev_);
                     }
-                } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
                 }
             }
             if (((exclude & 0b10000000000)) == 0 /* is-not-excluded doDouble(Object, InteropLibrary) */) {
@@ -889,19 +999,24 @@ public final class BoxValueNodeGen extends BoxValueNode {
                 }
             }
             {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                try {
-                    if ((isDouble())) {
-                        this.exclude_ = exclude = exclude | 0b10000000000 /* add-excluded doDouble(Object, InteropLibrary) */;
-                        this.double0_cache = null;
-                        state = state & 0xffefffff /* remove-active doDouble(Object, InteropLibrary) */;
-                        this.state_ = state = state | 0x200000 /* add-active doDouble(Object, InteropLibrary) */;
-                        lock.unlock();
-                        hasLock = false;
-                        return doDouble(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+                InteropLibrary double10_objLibrary__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        if ((isDouble())) {
+                            double10_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                            this.exclude_ = exclude = exclude | 0b10000000000 /* add-excluded doDouble(Object, InteropLibrary) */;
+                            this.double0_cache = null;
+                            state = state & 0xffefffff /* remove-active doDouble(Object, InteropLibrary) */;
+                            this.state_ = state = state | 0x200000 /* add-active doDouble(Object, InteropLibrary) */;
+                            lock.unlock();
+                            hasLock = false;
+                            return doDouble(arg0Value, double10_objLibrary__);
+                        }
+                    } finally {
+                        encapsulating_.set(prev_);
                     }
-                } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
                 }
             }
             if (((exclude & 0b100000000000)) == 0 /* is-not-excluded doDouble1(Object, InteropLibrary) */) {
@@ -933,19 +1048,24 @@ public final class BoxValueNodeGen extends BoxValueNode {
                 }
             }
             {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                try {
-                    if ((isDoubleArray1())) {
-                        this.exclude_ = exclude = exclude | 0b100000000000 /* add-excluded doDouble1(Object, InteropLibrary) */;
-                        this.double11_cache = null;
-                        state = state & 0xffbfffff /* remove-active doDouble1(Object, InteropLibrary) */;
-                        this.state_ = state = state | 0x800000 /* add-active doDouble1(Object, InteropLibrary) */;
-                        lock.unlock();
-                        hasLock = false;
-                        return doDouble1(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+                InteropLibrary double12_objLibrary__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        if ((isDoubleArray1())) {
+                            double12_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                            this.exclude_ = exclude = exclude | 0b100000000000 /* add-excluded doDouble1(Object, InteropLibrary) */;
+                            this.double11_cache = null;
+                            state = state & 0xffbfffff /* remove-active doDouble1(Object, InteropLibrary) */;
+                            this.state_ = state = state | 0x800000 /* add-active doDouble1(Object, InteropLibrary) */;
+                            lock.unlock();
+                            hasLock = false;
+                            return doDouble1(arg0Value, double12_objLibrary__);
+                        }
+                    } finally {
+                        encapsulating_.set(prev_);
                     }
-                } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
                 }
             }
             if (((exclude & 0b1000000000000)) == 0 /* is-not-excluded doDouble2(Object, InteropLibrary) */) {
@@ -977,19 +1097,24 @@ public final class BoxValueNodeGen extends BoxValueNode {
                 }
             }
             {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                try {
-                    if ((isDoubleArray2())) {
-                        this.exclude_ = exclude = exclude | 0b1000000000000 /* add-excluded doDouble2(Object, InteropLibrary) */;
-                        this.double20_cache = null;
-                        state = state & 0xfeffffff /* remove-active doDouble2(Object, InteropLibrary) */;
-                        this.state_ = state = state | 0x2000000 /* add-active doDouble2(Object, InteropLibrary) */;
-                        lock.unlock();
-                        hasLock = false;
-                        return doDouble2(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+                InteropLibrary double21_objLibrary__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        if ((isDoubleArray2())) {
+                            double21_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                            this.exclude_ = exclude = exclude | 0b1000000000000 /* add-excluded doDouble2(Object, InteropLibrary) */;
+                            this.double20_cache = null;
+                            state = state & 0xfeffffff /* remove-active doDouble2(Object, InteropLibrary) */;
+                            this.state_ = state = state | 0x2000000 /* add-active doDouble2(Object, InteropLibrary) */;
+                            lock.unlock();
+                            hasLock = false;
+                            return doDouble2(arg0Value, double21_objLibrary__);
+                        }
+                    } finally {
+                        encapsulating_.set(prev_);
                     }
-                } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
                 }
             }
             if (((exclude & 0b10000000000000)) == 0 /* is-not-excluded doDouble3(Object, InteropLibrary) */) {
@@ -1021,19 +1146,24 @@ public final class BoxValueNodeGen extends BoxValueNode {
                 }
             }
             {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                try {
-                    if ((isDoubleArray3())) {
-                        this.exclude_ = exclude = exclude | 0b10000000000000 /* add-excluded doDouble3(Object, InteropLibrary) */;
-                        this.double30_cache = null;
-                        state = state & 0xfbffffff /* remove-active doDouble3(Object, InteropLibrary) */;
-                        this.state_ = state = state | 0x8000000 /* add-active doDouble3(Object, InteropLibrary) */;
-                        lock.unlock();
-                        hasLock = false;
-                        return doDouble3(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+                InteropLibrary double31_objLibrary__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        if ((isDoubleArray3())) {
+                            double31_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                            this.exclude_ = exclude = exclude | 0b10000000000000 /* add-excluded doDouble3(Object, InteropLibrary) */;
+                            this.double30_cache = null;
+                            state = state & 0xfbffffff /* remove-active doDouble3(Object, InteropLibrary) */;
+                            this.state_ = state = state | 0x8000000 /* add-active doDouble3(Object, InteropLibrary) */;
+                            lock.unlock();
+                            hasLock = false;
+                            return doDouble3(arg0Value, double31_objLibrary__);
+                        }
+                    } finally {
+                        encapsulating_.set(prev_);
                     }
-                } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
                 }
             }
             if (((exclude & 0b100000000000000)) == 0 /* is-not-excluded doDouble4(Object, InteropLibrary) */) {
@@ -1065,19 +1195,24 @@ public final class BoxValueNodeGen extends BoxValueNode {
                 }
             }
             {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                try {
-                    if ((isDoubleArray4())) {
-                        this.exclude_ = exclude = exclude | 0b100000000000000 /* add-excluded doDouble4(Object, InteropLibrary) */;
-                        this.double40_cache = null;
-                        state = state & 0xefffffff /* remove-active doDouble4(Object, InteropLibrary) */;
-                        this.state_ = state = state | 0x20000000 /* add-active doDouble4(Object, InteropLibrary) */;
-                        lock.unlock();
-                        hasLock = false;
-                        return doDouble4(arg0Value, (INTEROP_LIBRARY_.getUncached(arg0Value)));
+                InteropLibrary double41_objLibrary__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        if ((isDoubleArray4())) {
+                            double41_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                            this.exclude_ = exclude = exclude | 0b100000000000000 /* add-excluded doDouble4(Object, InteropLibrary) */;
+                            this.double40_cache = null;
+                            state = state & 0xefffffff /* remove-active doDouble4(Object, InteropLibrary) */;
+                            this.state_ = state = state | 0x20000000 /* add-active doDouble4(Object, InteropLibrary) */;
+                            lock.unlock();
+                            hasLock = false;
+                            return doDouble4(arg0Value, double41_objLibrary__);
+                        }
+                    } finally {
+                        encapsulating_.set(prev_);
                     }
-                } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
                 }
             }
             throw new UnsupportedSpecializationException(this, new Node[] {null}, arg0Value);

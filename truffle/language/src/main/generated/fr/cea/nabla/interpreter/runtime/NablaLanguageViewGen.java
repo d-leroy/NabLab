@@ -77,7 +77,7 @@ final class NablaLanguageViewGen {
 
             @Override
             public boolean accepts(Object receiver) {
-                assert !(receiver instanceof NablaLanguageView) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'fr.cea.nabla.interpreter.runtime.NablaLanguageView'. Exported receiver with dynamic dispatch found but not expected.";
+                assert !(receiver instanceof NablaLanguageView) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 if (!(receiver instanceof NablaLanguageView)) {
                     return false;
                 } else if (!this.receiverDelegateInteropLibrary_.accepts((((NablaLanguageView) receiver).delegate))) {
@@ -89,21 +89,24 @@ final class NablaLanguageViewGen {
 
             @Override
             public boolean hasLanguage(Object receiver) {
-                assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
+                assert receiver instanceof NablaLanguageView : "Invalid library usage. Library does not accept given receiver.";
                 return (((NablaLanguageView) receiver)).hasLanguage();
             }
 
             @Override
             public Class<? extends TruffleLanguage<?>> getLanguage(Object receiver) throws UnsupportedMessageException {
-                assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
+                assert receiver instanceof NablaLanguageView : "Invalid library usage. Library does not accept given receiver.";
                 return (((NablaLanguageView) receiver)).getLanguage();
             }
 
             @Override
             public boolean hasMetaObject(Object arg0Value_) {
-                assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
+                assert arg0Value_ instanceof NablaLanguageView : "Invalid library usage. Library does not accept given receiver.";
                 NablaLanguageView arg0Value = ((NablaLanguageView) arg0Value_);
-                return arg0Value.hasMetaObject(this.receiverDelegateInteropLibrary_);
+                {
+                    InteropLibrary hasMetaObjectNode__interop__ = this.receiverDelegateInteropLibrary_;
+                    return arg0Value.hasMetaObject(hasMetaObjectNode__interop__);
+                }
             }
 
             @Override
@@ -113,16 +116,22 @@ final class NablaLanguageViewGen {
 
             @Override
             public Object getMetaObject(Object arg0Value_) throws UnsupportedMessageException {
-                assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
+                assert arg0Value_ instanceof NablaLanguageView : "Invalid library usage. Library does not accept given receiver.";
                 NablaLanguageView arg0Value = ((NablaLanguageView) arg0Value_);
-                return arg0Value.getMetaObject(this.receiverDelegateInteropLibrary_);
+                {
+                    InteropLibrary getMetaObjectNode__interop__ = this.receiverDelegateInteropLibrary_;
+                    return arg0Value.getMetaObject(getMetaObjectNode__interop__);
+                }
             }
 
             @Override
             public Object toDisplayString(Object arg0Value_, boolean arg1Value) {
-                assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
+                assert arg0Value_ instanceof NablaLanguageView : "Invalid library usage. Library does not accept given receiver.";
                 NablaLanguageView arg0Value = ((NablaLanguageView) arg0Value_);
-                return arg0Value.toDisplayString(arg1Value, this.receiverDelegateInteropLibrary_);
+                {
+                    InteropLibrary toDisplayStringNode__interop__ = this.receiverDelegateInteropLibrary_;
+                    return arg0Value.toDisplayString(arg1Value, toDisplayStringNode__interop__);
+                }
             }
 
         }
@@ -150,7 +159,7 @@ final class NablaLanguageViewGen {
             @TruffleBoundary
             @Override
             public boolean accepts(Object receiver) {
-                assert !(receiver instanceof NablaLanguageView) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'fr.cea.nabla.interpreter.runtime.NablaLanguageView'. Exported receiver with dynamic dispatch found but not expected.";
+                assert !(receiver instanceof NablaLanguageView) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof NablaLanguageView;
             }
 

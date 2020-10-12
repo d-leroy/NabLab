@@ -16,8 +16,8 @@ import java.util.concurrent.locks.Lock;
 @GeneratedBy(GetFrameNode.class)
 public final class GetFrameNodeGen extends GetFrameNode {
 
-    @CompilationFinal private int state_;
-    @CompilationFinal private int exclude_;
+    @CompilationFinal private volatile int state_;
+    @CompilationFinal private volatile int exclude_;
     @CompilationFinal private Frame cached_result_;
 
     private GetFrameNodeGen(String name) {

@@ -55,7 +55,7 @@ final class WriteDescriptorGen {
 
             @Override
             public boolean accepts(Object receiver) {
-                assert !(receiver instanceof WriteDescriptor) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'fr.cea.nabla.interpreter.nodes.interop.NodeObjectDescriptor.WriteDescriptor'. Exported receiver with dynamic dispatch found but not expected.";
+                assert !(receiver instanceof WriteDescriptor) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof WriteDescriptor;
             }
 
@@ -98,7 +98,7 @@ final class WriteDescriptorGen {
             @TruffleBoundary
             @Override
             public boolean accepts(Object receiver) {
-                assert !(receiver instanceof WriteDescriptor) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'fr.cea.nabla.interpreter.nodes.interop.NodeObjectDescriptor.WriteDescriptor'. Exported receiver with dynamic dispatch found but not expected.";
+                assert !(receiver instanceof WriteDescriptor) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof WriteDescriptor;
             }
 

@@ -7,10 +7,10 @@ import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.library.LibraryFactory;
+import com.oracle.truffle.api.nodes.EncapsulatingNodeReference;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
-import com.oracle.truffle.api.nodes.NodeUtil;
 import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.interpreter.nodes.expression.unary.NablaAbsNode;
 import fr.cea.nabla.interpreter.values.NV0Int;
@@ -27,8 +27,8 @@ public final class NablaAbsNodeGen extends NablaAbsNode {
     private static final LibraryFactory<NV1IntLibrary> N_V1_INT_LIBRARY_ = LibraryFactory.resolve(NV1IntLibrary.class);
 
     @Child private NablaExpressionNode valueNode_;
-    @CompilationFinal private int state_;
-    @CompilationFinal private int exclude_;
+    @CompilationFinal private volatile int state_;
+    @CompilationFinal private volatile int exclude_;
     @Child private Abs2Data abs2_cache;
 
     private NablaAbsNodeGen(NablaExpressionNode valueNode) {
@@ -59,13 +59,17 @@ public final class NablaAbsNodeGen extends NablaAbsNode {
                 }
             }
             if ((state & 0b1000) != 0 /* is-active abs(Object, NV1IntLibrary) */) {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
+                EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                Node prev_ = encapsulating_.set(this);
                 try {
-                    if (((N_V1_INT_LIBRARY_.getUncached(valueNodeValue_)).isArray(valueNodeValue_))) {
-                        return abs(valueNodeValue_, (N_V1_INT_LIBRARY_.getUncached(valueNodeValue_)));
+                    {
+                        NV1IntLibrary abs3_arrays__ = (N_V1_INT_LIBRARY_.getUncached(valueNodeValue_));
+                        if ((abs3_arrays__.isArray(valueNodeValue_))) {
+                            return abs(valueNodeValue_, abs3_arrays__);
+                        }
                     }
                 } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
+                    encapsulating_.set(prev_);
                 }
             }
         }
@@ -137,22 +141,26 @@ public final class NablaAbsNodeGen extends NablaAbsNode {
                 }
             }
             {
-                Node prev_ = NodeUtil.pushEncapsulatingNode(this);
-                try {
-                    {
-                        NV1IntLibrary abs3_arrays__ = (N_V1_INT_LIBRARY_.getUncached(valueNodeValue));
-                        if ((abs3_arrays__.isArray(valueNodeValue))) {
-                            this.exclude_ = exclude = exclude | 0b1 /* add-excluded abs(Object, NV1IntLibrary) */;
-                            this.abs2_cache = null;
-                            state = state & 0xfffffffb /* remove-active abs(Object, NV1IntLibrary) */;
-                            this.state_ = state = state | 0b1000 /* add-active abs(Object, NV1IntLibrary) */;
-                            lock.unlock();
-                            hasLock = false;
-                            return abs(valueNodeValue, abs3_arrays__);
+                NV1IntLibrary abs3_arrays__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        {
+                            abs3_arrays__ = (N_V1_INT_LIBRARY_.getUncached(valueNodeValue));
+                            if ((abs3_arrays__.isArray(valueNodeValue))) {
+                                this.exclude_ = exclude = exclude | 0b1 /* add-excluded abs(Object, NV1IntLibrary) */;
+                                this.abs2_cache = null;
+                                state = state & 0xfffffffb /* remove-active abs(Object, NV1IntLibrary) */;
+                                this.state_ = state = state | 0b1000 /* add-active abs(Object, NV1IntLibrary) */;
+                                lock.unlock();
+                                hasLock = false;
+                                return abs(valueNodeValue, abs3_arrays__);
+                            }
                         }
+                    } finally {
+                        encapsulating_.set(prev_);
                     }
-                } finally {
-                    NodeUtil.popEncapsulatingNode(prev_);
                 }
             }
             if (valueNodeValue instanceof NV1Real) {

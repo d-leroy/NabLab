@@ -55,7 +55,7 @@ final class KeysGen {
 
             @Override
             public boolean accepts(Object receiver) {
-                assert !(receiver instanceof Keys) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'fr.cea.nabla.interpreter.runtime.NablaObjectType.Keys'. Exported receiver with dynamic dispatch found but not expected.";
+                assert !(receiver instanceof Keys) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof Keys;
             }
 
@@ -98,7 +98,7 @@ final class KeysGen {
             @TruffleBoundary
             @Override
             public boolean accepts(Object receiver) {
-                assert !(receiver instanceof Keys) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'fr.cea.nabla.interpreter.runtime.NablaObjectType.Keys'. Exported receiver with dynamic dispatch found but not expected.";
+                assert !(receiver instanceof Keys) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof Keys;
             }
 

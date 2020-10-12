@@ -53,7 +53,7 @@ final class NablaFunctionGen {
 
             @Override
             public boolean accepts(Object receiver) {
-                assert !(receiver instanceof NablaFunction) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'fr.cea.nabla.interpreter.runtime.NablaFunction'. Exported receiver with dynamic dispatch found but not expected.";
+                assert !(receiver instanceof NablaFunction) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof NablaFunction;
             }
 
@@ -72,7 +72,7 @@ final class NablaFunctionGen {
             @TruffleBoundary
             @Override
             public boolean accepts(Object receiver) {
-                assert !(receiver instanceof NablaFunction) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'fr.cea.nabla.interpreter.runtime.NablaFunction'. Exported receiver with dynamic dispatch found but not expected.";
+                assert !(receiver instanceof NablaFunction) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof NablaFunction;
             }
 
