@@ -155,13 +155,12 @@ LinearAlgebraFunctions::printMatlabStyle(const VectorType& v, std::string A) {
  * \param A:         [in] Kokkos sparse matrix
  * \param b:         [in] Kokkos vector
  * \param x0:        [in] Kokkos vector (initial guess, can be null vector)
- * \param info:      [in/out] Misc. informations on computation result
  * \param max_it:    [in] Iteration threshold (default = 200)
  * \param tolerance: [in] Convergence threshold (default = std::numeric_limits<double>::epsilon)
  * \return: Solution vector
  */
 VectorType
-LinearAlgebraFunctions::CGSolve(const SparseMatrixType& A, const VectorType& b, const VectorType& x0, CGInfo& info,
+LinearAlgebraFunctions::CGSolve(const SparseMatrixType& A, const VectorType& b, const VectorType& x0,
                                 const size_t max_it, const double tolerance) {
 
   size_t it(0);
@@ -217,13 +216,13 @@ LinearAlgebraFunctions::CGSolve(const SparseMatrixType& A, const VectorType& b, 
   VectorType::execution_space().fence();
 
   // fill infos
-  info.m_display << "---== Solved A * x = b ==---" << std::endl;
-  info.m_display << "Nb it = " << it << std::endl;
-  info.m_display << "Res = " << norm_res << std::endl;
-  info.m_display << "----------------------------" << std::endl;
-  info.m_nb_it += it;
-  info.m_nb_call++;
-  info.m_norm_res += norm_res;
+  m_info.m_display << "---== Solved A * x = b ==---" << std::endl;
+  m_info.m_display << "Nb it = " << it << std::endl;
+  m_info.m_display << "Res = " << norm_res << std::endl;
+  m_info.m_display << "----------------------------" << std::endl;
+  m_info.m_nb_it += it;
+  m_info.m_nb_call++;
+  m_info.m_norm_res += norm_res;
 
   return x;
 }
@@ -234,7 +233,6 @@ LinearAlgebraFunctions::CGSolve(const SparseMatrixType& A, const VectorType& b, 
  * \param b:         [in] Kokkos vector
  * \param C_minus_1: [in] Kokkos sparse matrix (preconditioner matrix)
  * \param x0:        [in] Kokkos vector (initial guess, can be null vector)
- * \param info:      [in/out] Misc. informations on computation result
  * \param max_it:    [in] Iteration threshold (default = 200)
  * \param tolerance: [in] Convergence threshold (default = std::numeric_limits<double>::epsilon)
  * \return: Solution vector
@@ -242,7 +240,7 @@ LinearAlgebraFunctions::CGSolve(const SparseMatrixType& A, const VectorType& b, 
 VectorType
 LinearAlgebraFunctions::CGSolve(const SparseMatrixType& A, const VectorType& b,
                                 const SparseMatrixType& C_minus_1, const VectorType& x0,
-                                CGInfo& info, const size_t max_it, const double tolerance) {
+                                const size_t max_it, const double tolerance) {
   
   size_t it(0);
   double norm_res(0.0);
@@ -307,13 +305,13 @@ LinearAlgebraFunctions::CGSolve(const SparseMatrixType& A, const VectorType& b,
   VectorType::execution_space().fence();
 
   // fill infos
-  info.m_display << "---== Solved A * x = b ==---" << std::endl;
-  info.m_display << "Nb it = " << it << std::endl;
-  info.m_display << "Res = " << norm_res << std::endl;
-  info.m_display << "----------------------------" << std::endl;
-  info.m_nb_it += it;
-  info.m_nb_call++;
-  info.m_norm_res += norm_res;
+  m_info.m_display << "---== Solved A * x = b ==---" << std::endl;
+  m_info.m_display << "Nb it = " << it << std::endl;
+  m_info.m_display << "Res = " << norm_res << std::endl;
+  m_info.m_display << "----------------------------" << std::endl;
+  m_info.m_nb_it += it;
+  m_info.m_nb_call++;
+  m_info.m_norm_res += norm_res;
 
   return x;
 }
@@ -322,23 +320,22 @@ LinearAlgebraFunctions::CGSolve(const SparseMatrixType& A, const VectorType& b,
  * \brief Call to conjugate gradient to solve A x = b
  * \param A:         [in] Sparse matrix
  * \param b:         [in] Vector
- * \param info:      [in/out] Misc. informations on computation result
  * \param x0:        [in/out] Initial guess of the solution. If none is provided, a null vector is used.
  * \param max_it:    [in] Iteration threshold (default = 100)
  * \param tolerance: [in] Convergence threshold (default = 1.e-8)
  * \return: Solution vector
  */
 VectorType
-LinearAlgebraFunctions::solveLinearSystem(NablaSparseMatrix& A, const VectorType& b, CGInfo& info,
+LinearAlgebraFunctions::solveLinearSystem(NablaSparseMatrix& A, const VectorType& b,
                                           VectorType* x0, const size_t max_it, const double tolerance)
 {
   if (!x0) {
     VectorType default_x0("x0", b.extent(0));
     for (size_t i(0); i < b.extent(0); ++i)
       default_x0(i) = 0.0;
-    return CGSolve(A.crsMatrix(), b, default_x0, info, max_it, tolerance);
+    return CGSolve(A.crsMatrix(), b, default_x0, max_it, tolerance);
   } else {
-    return CGSolve(A.crsMatrix(), b, *x0, info, max_it, tolerance);
+    return CGSolve(A.crsMatrix(), b, *x0, max_it, tolerance);
   }
 }
 
@@ -348,23 +345,22 @@ LinearAlgebraFunctions::solveLinearSystem(NablaSparseMatrix& A, const VectorType
  * \param A:         [in] Sparse matrix
  * \param b:         [in] Vector
  * \param C_minus_1: [in] Sparse matrix used as preconditioner
- * \param info:      [in/out] Misc. informations on computation result
  * \param x0:        [in/out] Initial guess of the solution. If none is provided, a null vector is used.
  * \param max_it:    [in] Iteration threshold (default = 100)
  * \param tolerance: [in] Convergence threshold (default = 1.e-8)
  * \return: Solution vector
  */
 VectorType
-LinearAlgebraFunctions::solveLinearSystem(NablaSparseMatrix& A, const VectorType& b, NablaSparseMatrix& C_minus_1, CGInfo& info,
+LinearAlgebraFunctions::solveLinearSystem(NablaSparseMatrix& A, const VectorType& b, NablaSparseMatrix& C_minus_1,
                                           VectorType* x0, const size_t max_it, const double tolerance)
 {
   if (!x0) {
     VectorType default_x0("x0", b.extent(0));
     for (size_t i(0); i < b.extent(0); ++i)
       default_x0(i) = 0.0;
-    return CGSolve(A.crsMatrix(), b, C_minus_1.crsMatrix(), default_x0, info, max_it, tolerance);
+    return CGSolve(A.crsMatrix(), b, C_minus_1.crsMatrix(), default_x0, max_it, tolerance);
   } else {
-    return CGSolve(A.crsMatrix(), b, C_minus_1.crsMatrix(), *x0, info, max_it, tolerance);
+    return CGSolve(A.crsMatrix(), b, C_minus_1.crsMatrix(), *x0, max_it, tolerance);
   }
 }
   

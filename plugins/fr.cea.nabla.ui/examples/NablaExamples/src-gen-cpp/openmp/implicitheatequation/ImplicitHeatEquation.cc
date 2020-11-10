@@ -246,7 +246,7 @@ void ImplicitHeatEquation::initXc() noexcept
  */
 void ImplicitHeatEquation::updateU() noexcept
 {
-	u_nplus1 = linearAlgebraFunctions.solveLinearSystem(alpha, u_n, cg_info);
+	u_nplus1 = linearAlgebraFunctions.solveLinearSystem(alpha, u_n);
 }
 
 /**
@@ -454,7 +454,7 @@ void ImplicitHeatEquation::simulate()
 	executeTimeLoopN(); // @4.0
 	
 	std::cout << __YELLOW__ << "\n\tDone ! Took " << __MAGENTA__ << __BOLD__ << globalTimer.print() << __RESET__ << std::endl;
-	std::cout << "[CG] average iteration: " << cg_info.m_nb_it / cg_info.m_nb_call << std::endl;
+	std::cout << "[CG] average iteration: " << linearAlgebraFunctions.m_info.m_nb_it / linearAlgebraFunctions.m_info.m_nb_call << std::endl;
 }
 
 /******************** Module definition ********************/
@@ -462,6 +462,7 @@ void ImplicitHeatEquation::simulate()
 int main(int argc, char* argv[]) 
 {
 	string dataFile;
+	int ret = 0;
 	
 	if (argc == 2)
 	{
@@ -512,5 +513,5 @@ int main(int argc, char* argv[])
 	// simulator must be deleted before calling finalize
 	delete simulator;
 	delete mesh;
-	return 0;
+	return ret;
 }

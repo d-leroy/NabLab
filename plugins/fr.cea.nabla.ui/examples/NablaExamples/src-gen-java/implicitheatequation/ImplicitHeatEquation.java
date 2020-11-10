@@ -51,14 +51,22 @@ public final class ImplicitHeatEquation
 			assert(d.has("outputPath"));
 			final JsonElement valueof_outputPath = d.get("outputPath");
 			options.outputPath = valueof_outputPath.getAsJsonPrimitive().getAsString();
+			// Non regression
+			if(d.has("nonRegression"))
+			{
+				final JsonElement valueof_nonRegression = d.get("nonRegression");
+				options.nonRegression = valueof_nonRegression.getAsJsonPrimitive().getAsString();
+			}
 			// outputPeriod
 			assert(d.has("outputPeriod"));
 			final JsonElement valueof_outputPeriod = d.get("outputPeriod");
+			assert(valueof_outputPeriod.isJsonPrimitive());
 			options.outputPeriod = valueof_outputPeriod.getAsJsonPrimitive().getAsInt();
 			// u0
 			if (d.has("u0"))
 			{
 				final JsonElement valueof_u0 = d.get("u0");
+				assert(valueof_u0.isJsonPrimitive());
 				options.u0 = valueof_u0.getAsJsonPrimitive().getAsDouble();
 			}
 			else
@@ -67,6 +75,7 @@ public final class ImplicitHeatEquation
 			if (d.has("stopTime"))
 			{
 				final JsonElement valueof_stopTime = d.get("stopTime");
+				assert(valueof_stopTime.isJsonPrimitive());
 				options.stopTime = valueof_stopTime.getAsJsonPrimitive().getAsDouble();
 			}
 			else
@@ -75,6 +84,7 @@ public final class ImplicitHeatEquation
 			if (d.has("maxIterations"))
 			{
 				final JsonElement valueof_maxIterations = d.get("maxIterations");
+				assert(valueof_maxIterations.isJsonPrimitive());
 				options.maxIterations = valueof_maxIterations.getAsJsonPrimitive().getAsInt();
 			}
 			else
@@ -178,6 +188,7 @@ public final class ImplicitHeatEquation
 			GsonBuilder gsonBuilder = new GsonBuilder();
 			gsonBuilder.registerTypeAdapter(Options.class, new ImplicitHeatEquation.OptionsDeserializer());
 			Gson gson = gsonBuilder.create();
+			int ret = 0;
 
 			assert(o.has("mesh"));
 			CartesianMesh2DFactory meshFactory = gson.fromJson(o.get("mesh"), CartesianMesh2DFactory.class);
@@ -195,14 +206,17 @@ public final class ImplicitHeatEquation
 			if (options.nonRegression!=null &&  options.nonRegression.equals("CompareToReference"))
 			{
 				simulator.createDB("ImplicitHeatEquationDB.current");
-				LevelDBUtils.compareDB("ImplicitHeatEquationDB.current", "ImplicitHeatEquationDB.ref");
+				if (!LevelDBUtils.compareDB("ImplicitHeatEquationDB.current", "ImplicitHeatEquationDB.ref"))
+					ret = 1;
 				LevelDBUtils.destroyDB("ImplicitHeatEquationDB.current");
+				System.exit(ret);
 			}
 		}
 		else
 		{
-			System.out.println("[ERROR] Wrong number of arguments: expected 1, actual " + args.length);
-			System.out.println("        Expecting user data file name, for example ImplicitHeatEquationDefault.json");
+			System.err.println("[ERROR] Wrong number of arguments: expected 1, actual " + args.length);
+			System.err.println("        Expecting user data file name, for example ImplicitHeatEquationDefault.json");
+			System.exit(1);
 		}
 	}
 
