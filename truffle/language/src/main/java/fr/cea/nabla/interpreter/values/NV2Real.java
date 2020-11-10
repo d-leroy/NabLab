@@ -53,7 +53,7 @@ public class NV2Real implements NablaValue {
 	@ExportMessage
 	Object readArrayElement(long index) {
 		if (index < data.length) {
-			return new NV1Real(data[(int) index]);
+			return new NV1RealJava(data[(int) index]);
 		}
 		throw new ArrayIndexOutOfBoundsException();
 	}

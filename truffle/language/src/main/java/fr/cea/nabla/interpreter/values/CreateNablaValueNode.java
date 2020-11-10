@@ -2,16 +2,42 @@ package fr.cea.nabla.interpreter.values;
 
 import org.graalvm.polyglot.Value;
 
+import com.oracle.truffle.api.TruffleLanguage.Env;
+import com.oracle.truffle.api.dsl.Cached;
+import com.oracle.truffle.api.dsl.CachedContext;
+import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
-import com.oracle.truffle.api.nodes.Node;
+import com.oracle.truffle.api.interop.InteropLibrary;
+import com.oracle.truffle.api.library.CachedLibrary;
 
-public abstract class CreateNablaValueNode extends Node {
+import fr.cea.nabla.interpreter.NablaLanguage;
+import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
+import fr.cea.nabla.interpreter.runtime.NablaContext;
 
-	public abstract NablaValue execute(Object object);
+@NodeChild(value = "expression", type = NablaExpressionNode.class)
+public abstract class CreateNablaValueNode extends NablaExpressionNode {
 
+	protected final Class<?> expectedType;
+	
+	protected CreateNablaValueNode(Class<?> expectedType) {
+		this.expectedType = expectedType;
+	}
+	
 	@Specialization
 	protected NablaValue createNablaValue(NablaValue v) {
 		return v;
+	}
+
+	@Specialization(guards = "value.isHostObject()")
+	protected Object doHostObjectValue(Value value) {
+		return value.asHostObject();
+	}
+	
+	@Specialization(guards = "env.isHostObject(value)")
+	protected Object doHostObject(Object value, //
+			@CachedContext(NablaLanguage.class) NablaContext context, //
+			@Cached("context.getEnv()") Env env) {
+		return env.asHostObject(value);
 	}
 	
 	@Specialization
@@ -35,13 +61,23 @@ public abstract class CreateNablaValueNode extends Node {
 	}
 
 	@Specialization
+	protected NablaValue createNablaValue(Long x) {
+		return new NV0Int(x.intValue());
+	}
+
+	@Specialization
 	protected NablaValue createNablaValue(int[] x) {
 		return new NV1IntJava(x);
 	}
 
-	@Specialization(guards = { "v.isNativePointer()", "v.hasArrayElements()"})
-	protected NablaValue createNablaValue(Value v) {
+	@Specialization(guards = { "expectsInt1()", "v.isNativePointer()", "v.hasArrayElements()" })
+	protected NablaValue createNablaValueInt1(Value v) {
 		return new NV1IntNative(v);
+	}
+
+	@Specialization(guards = { "expectsInt1()", "pointers.isPointer(v)", "pointers.hasArrayElements(v)" })
+	protected NablaValue createNablaValueInt1(Object v, @CachedLibrary(limit="3") InteropLibrary pointers) {
+		return new NV1IntNative(Value.asValue(v));
 	}
 
 	@Specialization
@@ -56,12 +92,30 @@ public abstract class CreateNablaValueNode extends Node {
 
 	@Specialization
 	protected NablaValue createNablaValue(double[] x) {
-		return new NV1Real(x);
+		return new NV1RealJava(x);
+	}
+
+	@Specialization(guards = { "expectsDouble1()", "v.isNativePointer()", "v.hasArrayElements()" })
+	protected NablaValue createNablaValueDouble1(Value v) {
+		return new NV1RealNative(v);
+	}
+
+	@Specialization(guards = { "expectsDouble1()", "pointers.isPointer(v)", "pointers.hasArrayElements(v)" })
+	protected NablaValue createNablaValueDouble1(Object v, @CachedLibrary(limit="3") InteropLibrary pointers) {
+		return new NV1RealNative(Value.asValue(v));
 	}
 
 	@Specialization
 	protected NablaValue createNablaValue(double[][] x) {
 		return new NV2Real(x);
+	}
+	
+	protected boolean expectsInt1() {
+		return expectedType.equals(int[].class);
+	}
+	
+	protected boolean expectsDouble1() {
+		return expectedType.equals(double[].class);
 	}
 
 }

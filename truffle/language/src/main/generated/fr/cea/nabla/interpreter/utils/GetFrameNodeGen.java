@@ -28,7 +28,6 @@ public final class GetFrameNodeGen extends GetFrameNode {
     public Frame execute(VirtualFrame frameValue) {
         int state = state_;
         if ((state & 0b1) != 0 /* is-active initialize(VirtualFrame) */) {
-            assert (initializationRequired);
             try {
                 return initialize(frameValue);
             } catch (NablaInitializationPerformedException ex) {
@@ -45,12 +44,11 @@ public final class GetFrameNodeGen extends GetFrameNode {
             }
         }
         if ((state & 0b10) != 0 /* is-active doLocal(VirtualFrame) */) {
-            assert (!(initializationRequired));
             assert (isLocal);
             return doLocal(frameValue);
         }
         if ((state & 0b100) != 0 /* is-active doCached(VirtualFrame, Frame) */) {
-            assert (!(initializationRequired));
+            assert (!(isLocal));
             return doCached(frameValue, this.cached_result_);
         }
         CompilerDirectives.transferToInterpreterAndInvalidate();
@@ -65,32 +63,30 @@ public final class GetFrameNodeGen extends GetFrameNode {
         int exclude = exclude_;
         try {
             if ((exclude) == 0 /* is-not-excluded initialize(VirtualFrame) */) {
-                if ((initializationRequired)) {
-                    this.state_ = state = state | 0b1 /* add-active initialize(VirtualFrame) */;
+                this.state_ = state = state | 0b1 /* add-active initialize(VirtualFrame) */;
+                try {
+                    lock.unlock();
+                    hasLock = false;
+                    return initialize(frameValue);
+                } catch (NablaInitializationPerformedException ex) {
+                    CompilerDirectives.transferToInterpreterAndInvalidate();
+                    lock.lock();
                     try {
+                        this.exclude_ = this.exclude_ | 0b1 /* add-excluded initialize(VirtualFrame) */;
+                        this.state_ = this.state_ & 0xfffffffe /* remove-active initialize(VirtualFrame) */;
+                    } finally {
                         lock.unlock();
-                        hasLock = false;
-                        return initialize(frameValue);
-                    } catch (NablaInitializationPerformedException ex) {
-                        CompilerDirectives.transferToInterpreterAndInvalidate();
-                        lock.lock();
-                        try {
-                            this.exclude_ = this.exclude_ | 0b1 /* add-excluded initialize(VirtualFrame) */;
-                            this.state_ = this.state_ & 0xfffffffe /* remove-active initialize(VirtualFrame) */;
-                        } finally {
-                            lock.unlock();
-                        }
-                        return executeAndSpecialize(frameValue);
                     }
+                    return executeAndSpecialize(frameValue);
                 }
             }
-            if ((!(initializationRequired)) && (isLocal)) {
+            if ((isLocal)) {
                 this.state_ = state = state | 0b10 /* add-active doLocal(VirtualFrame) */;
                 lock.unlock();
                 hasLock = false;
                 return doLocal(frameValue);
             }
-            if ((!(initializationRequired))) {
+            if ((!(isLocal))) {
                 this.cached_result_ = (getFrame(frameValue));
                 this.state_ = state = state | 0b100 /* add-active doCached(VirtualFrame, Frame) */;
                 lock.unlock();

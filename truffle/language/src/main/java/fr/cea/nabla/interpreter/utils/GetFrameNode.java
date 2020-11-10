@@ -15,8 +15,6 @@ import fr.cea.nabla.interpreter.runtime.NablaInitializationPerformedException;
 public abstract class GetFrameNode extends Node {
 
 	@CompilationFinal
-	protected boolean initializationRequired = true;
-	@CompilationFinal
 	protected boolean isLocal = true;
 	private final String slotName;
 
@@ -26,24 +24,38 @@ public abstract class GetFrameNode extends Node {
 
 	public abstract Frame execute(VirtualFrame frame);
 
-	@Specialization(guards = "initializationRequired", //
-			rewriteOn = NablaInitializationPerformedException.class)
+//	@Specialization
+//	protected Frame doDefault(VirtualFrame frame) {
+//		if (CompilerDirectives.inCompiledCode()) {
+//			return frame;
+//		} else {
+//			return Truffle.getRuntime().iterateFrames(f -> {
+//				final FrameDescriptor descriptor = f.getFrame(FrameAccess.READ_ONLY).getFrameDescriptor();
+//				if (descriptor.findFrameSlot(slotName) == null) {
+//					return null;
+//				} else {
+//					return f.getFrame(FrameAccess.READ_WRITE);
+//				}
+//			});
+//		}
+//	}
+	
+	@Specialization(rewriteOn = NablaInitializationPerformedException.class)
 	protected Frame initialize(VirtualFrame frame) throws NablaInitializationPerformedException {
 		CompilerDirectives.transferToInterpreterAndInvalidate();
 		final FrameDescriptor descriptor = frame.getFrameDescriptor();
 		if (descriptor.findFrameSlot(slotName) == null) {
 			isLocal = false;
 		}
-		initializationRequired = false;
 		throw new NablaInitializationPerformedException();
 	}
 
-	@Specialization(guards = { "!initializationRequired", "isLocal" })
+	@Specialization(guards = { "isLocal" })
 	protected Frame doLocal(VirtualFrame frame) {
 		return frame;
 	}
 
-	@Specialization(guards = "!initializationRequired")
+	@Specialization(guards = { "!isLocal" })
 	protected Frame doCached(VirtualFrame frame, @Cached("getFrame(frame)") Frame result) {
 		return result;
 	}

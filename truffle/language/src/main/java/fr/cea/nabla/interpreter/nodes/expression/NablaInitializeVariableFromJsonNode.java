@@ -12,7 +12,8 @@ import fr.cea.nabla.interpreter.values.NV0Real;
 import fr.cea.nabla.interpreter.values.NV1Bool;
 import fr.cea.nabla.interpreter.values.NV1IntJava;
 import fr.cea.nabla.interpreter.values.NV1IntLibrary;
-import fr.cea.nabla.interpreter.values.NV1Real;
+import fr.cea.nabla.interpreter.values.NV1RealJava;
+import fr.cea.nabla.interpreter.values.NV1RealLibrary;
 import fr.cea.nabla.interpreter.values.NV2Bool;
 import fr.cea.nabla.interpreter.values.NV2Int;
 import fr.cea.nabla.interpreter.values.NV2Real;
@@ -161,15 +162,15 @@ public abstract class NablaInitializeVariableFromJsonNode extends NablaExpressio
 		value.setData(initialValue.getAsDouble());
 		return value;
 	}
-
-	@Specialization
-	protected Object doInitialize(NV1Real value) {
+	
+	@Specialization(guards = "arrays.isArray(value)", limit = "3")
+	protected Object doInitialize(Object value, @CachedLibrary("value") NV1RealLibrary arrays) {
 		final JsonArray ja = initialValue.getAsJsonArray();
-		final double[] data = new double[value.getData().length];
+		final double[] data = new double[arrays.length(value)];
 		for (int i = 0; i < data.length; i++) {
 			data[i] = ja.get(i).getAsDouble();
 		}
-		return new NV1Real(data);
+		return new NV1RealJava(data);
 	}
 
 	@Specialization

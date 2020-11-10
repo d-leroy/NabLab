@@ -19,7 +19,7 @@ import fr.cea.nabla.interpreter.values.NV0Int;
 import fr.cea.nabla.interpreter.values.NV0Real;
 import fr.cea.nabla.interpreter.values.NV1Bool;
 import fr.cea.nabla.interpreter.values.NV1IntLibrary;
-import fr.cea.nabla.interpreter.values.NV1Real;
+import fr.cea.nabla.interpreter.values.NV1RealLibrary;
 import fr.cea.nabla.interpreter.values.NV2Bool;
 import fr.cea.nabla.interpreter.values.NV2Int;
 import fr.cea.nabla.interpreter.values.NV2Real;
@@ -35,11 +35,13 @@ import java.util.concurrent.locks.Lock;
 public final class NablaInitializeVariableFromJsonNodeGen extends NablaInitializeVariableFromJsonNode {
 
     private static final LibraryFactory<NV1IntLibrary> N_V1_INT_LIBRARY_ = LibraryFactory.resolve(NV1IntLibrary.class);
+    private static final LibraryFactory<NV1RealLibrary> N_V1_REAL_LIBRARY_ = LibraryFactory.resolve(NV1RealLibrary.class);
 
     @Child private NablaExpressionNode value_;
     @CompilationFinal private volatile int state_;
     @CompilationFinal private volatile int exclude_;
     @Child private Initialize6Data initialize6_cache;
+    @Child private Initialize12Data initialize12_cache;
 
     private NablaInitializeVariableFromJsonNodeGen(JsonElement initialValue, NablaExpressionNode value) {
         super(initialValue);
@@ -120,19 +122,40 @@ public final class NablaInitializeVariableFromJsonNodeGen extends NablaInitializ
             NV0Real valueValue__ = (NV0Real) valueValue_;
             return doInitialize(valueValue__);
         }
-        if ((state & 0b1000000000000) != 0 /* is-active doInitialize(NV1Real) */ && valueValue_ instanceof NV1Real) {
-            NV1Real valueValue__ = (NV1Real) valueValue_;
-            return doInitialize(valueValue__);
+        if ((state & 0b11000000000000) != 0 /* is-active doInitialize(Object, NV1RealLibrary) || doInitialize(Object, NV1RealLibrary) */) {
+            if ((state & 0b1000000000000) != 0 /* is-active doInitialize(Object, NV1RealLibrary) */) {
+                Initialize12Data s13_ = this.initialize12_cache;
+                while (s13_ != null) {
+                    if ((s13_.arrays_.accepts(valueValue_)) && (s13_.arrays_.isArray(valueValue_))) {
+                        return doInitialize(valueValue_, s13_.arrays_);
+                    }
+                    s13_ = s13_.next_;
+                }
+            }
+            if ((state & 0b10000000000000) != 0 /* is-active doInitialize(Object, NV1RealLibrary) */) {
+                EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                Node prev_ = encapsulating_.set(this);
+                try {
+                    {
+                        NV1RealLibrary initialize13_arrays__ = (N_V1_REAL_LIBRARY_.getUncached(valueValue_));
+                        if ((initialize13_arrays__.isArray(valueValue_))) {
+                            return doInitialize(valueValue_, initialize13_arrays__);
+                        }
+                    }
+                } finally {
+                    encapsulating_.set(prev_);
+                }
+            }
         }
-        if ((state & 0b10000000000000) != 0 /* is-active doInitialize(NV2Real) */ && valueValue_ instanceof NV2Real) {
+        if ((state & 0b100000000000000) != 0 /* is-active doInitialize(NV2Real) */ && valueValue_ instanceof NV2Real) {
             NV2Real valueValue__ = (NV2Real) valueValue_;
             return doInitialize(valueValue__);
         }
-        if ((state & 0b100000000000000) != 0 /* is-active doInitialize(NV3Real) */ && valueValue_ instanceof NV3Real) {
+        if ((state & 0b1000000000000000) != 0 /* is-active doInitialize(NV3Real) */ && valueValue_ instanceof NV3Real) {
             NV3Real valueValue__ = (NV3Real) valueValue_;
             return doInitialize(valueValue__);
         }
-        if ((state & 0b1000000000000000) != 0 /* is-active doInitialize(NV4Real) */ && valueValue_ instanceof NV4Real) {
+        if ((state & 0x10000) != 0 /* is-active doInitialize(NV4Real) */ && valueValue_ instanceof NV4Real) {
             NV4Real valueValue__ = (NV4Real) valueValue_;
             return doInitialize(valueValue__);
         }
@@ -189,7 +212,7 @@ public final class NablaInitializeVariableFromJsonNodeGen extends NablaInitializ
                 hasLock = false;
                 return doInitialize(valueValue_);
             }
-            if ((exclude) == 0 /* is-not-excluded doInitialize(Object, NV1IntLibrary) */) {
+            if (((exclude & 0b1)) == 0 /* is-not-excluded doInitialize(Object, NV1IntLibrary) */) {
                 int count7_ = 0;
                 Initialize6Data s7_ = this.initialize6_cache;
                 if ((state & 0b1000000) != 0 /* is-active doInitialize(Object, NV1IntLibrary) */) {
@@ -270,30 +293,76 @@ public final class NablaInitializeVariableFromJsonNodeGen extends NablaInitializ
                 hasLock = false;
                 return doInitialize(valueValue_);
             }
-            if (valueValue instanceof NV1Real) {
-                NV1Real valueValue_ = (NV1Real) valueValue;
-                this.state_ = state = state | 0b1000000000000 /* add-active doInitialize(NV1Real) */;
-                lock.unlock();
-                hasLock = false;
-                return doInitialize(valueValue_);
+            if (((exclude & 0b10)) == 0 /* is-not-excluded doInitialize(Object, NV1RealLibrary) */) {
+                int count13_ = 0;
+                Initialize12Data s13_ = this.initialize12_cache;
+                if ((state & 0b1000000000000) != 0 /* is-active doInitialize(Object, NV1RealLibrary) */) {
+                    while (s13_ != null) {
+                        if ((s13_.arrays_.accepts(valueValue)) && (s13_.arrays_.isArray(valueValue))) {
+                            break;
+                        }
+                        s13_ = s13_.next_;
+                        count13_++;
+                    }
+                }
+                if (s13_ == null) {
+                    {
+                        NV1RealLibrary arrays__1 = super.insert((N_V1_REAL_LIBRARY_.create(valueValue)));
+                        // assert (s13_.arrays_.accepts(valueValue));
+                        if ((arrays__1.isArray(valueValue)) && count13_ < (3)) {
+                            s13_ = super.insert(new Initialize12Data(initialize12_cache));
+                            s13_.arrays_ = s13_.insertAccessor(arrays__1);
+                            this.initialize12_cache = s13_;
+                            this.state_ = state = state | 0b1000000000000 /* add-active doInitialize(Object, NV1RealLibrary) */;
+                        }
+                    }
+                }
+                if (s13_ != null) {
+                    lock.unlock();
+                    hasLock = false;
+                    return doInitialize(valueValue, s13_.arrays_);
+                }
+            }
+            {
+                NV1RealLibrary initialize13_arrays__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        {
+                            initialize13_arrays__ = (N_V1_REAL_LIBRARY_.getUncached(valueValue));
+                            if ((initialize13_arrays__.isArray(valueValue))) {
+                                this.exclude_ = exclude = exclude | 0b10 /* add-excluded doInitialize(Object, NV1RealLibrary) */;
+                                this.initialize12_cache = null;
+                                state = state & 0xffffefff /* remove-active doInitialize(Object, NV1RealLibrary) */;
+                                this.state_ = state = state | 0b10000000000000 /* add-active doInitialize(Object, NV1RealLibrary) */;
+                                lock.unlock();
+                                hasLock = false;
+                                return doInitialize(valueValue, initialize13_arrays__);
+                            }
+                        }
+                    } finally {
+                        encapsulating_.set(prev_);
+                    }
+                }
             }
             if (valueValue instanceof NV2Real) {
                 NV2Real valueValue_ = (NV2Real) valueValue;
-                this.state_ = state = state | 0b10000000000000 /* add-active doInitialize(NV2Real) */;
+                this.state_ = state = state | 0b100000000000000 /* add-active doInitialize(NV2Real) */;
                 lock.unlock();
                 hasLock = false;
                 return doInitialize(valueValue_);
             }
             if (valueValue instanceof NV3Real) {
                 NV3Real valueValue_ = (NV3Real) valueValue;
-                this.state_ = state = state | 0b100000000000000 /* add-active doInitialize(NV3Real) */;
+                this.state_ = state = state | 0b1000000000000000 /* add-active doInitialize(NV3Real) */;
                 lock.unlock();
                 hasLock = false;
                 return doInitialize(valueValue_);
             }
             if (valueValue instanceof NV4Real) {
                 NV4Real valueValue_ = (NV4Real) valueValue;
-                this.state_ = state = state | 0b1000000000000000 /* add-active doInitialize(NV4Real) */;
+                this.state_ = state = state | 0x10000 /* add-active doInitialize(NV4Real) */;
                 lock.unlock();
                 hasLock = false;
                 return doInitialize(valueValue_);
@@ -313,7 +382,8 @@ public final class NablaInitializeVariableFromJsonNodeGen extends NablaInitializ
             return NodeCost.UNINITIALIZED;
         } else if ((state & (state - 1)) == 0 /* is-single-active  */) {
             Initialize6Data s7_ = this.initialize6_cache;
-            if ((s7_ == null || s7_.next_ == null)) {
+            Initialize12Data s13_ = this.initialize12_cache;
+            if ((s7_ == null || s7_.next_ == null) && (s13_ == null || s13_.next_ == null)) {
                 return NodeCost.MONOMORPHIC;
             }
         }
@@ -335,6 +405,26 @@ public final class NablaInitializeVariableFromJsonNodeGen extends NablaInitializ
         @Child NV1IntLibrary arrays_;
 
         Initialize6Data(Initialize6Data next_) {
+            this.next_ = next_;
+        }
+
+        @Override
+        public NodeCost getCost() {
+            return NodeCost.NONE;
+        }
+
+        <T extends Node> T insertAccessor(T node) {
+            return super.insert(node);
+        }
+
+    }
+    @GeneratedBy(NablaInitializeVariableFromJsonNode.class)
+    private static final class Initialize12Data extends Node {
+
+        @Child Initialize12Data next_;
+        @Child NV1RealLibrary arrays_;
+
+        Initialize12Data(Initialize12Data next_) {
             this.next_ = next_;
         }
 

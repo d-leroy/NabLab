@@ -20,9 +20,8 @@ import fr.cea.nabla.interpreter.values.NV0Bool;
 import fr.cea.nabla.interpreter.values.NV0Int;
 import fr.cea.nabla.interpreter.values.NV0Real;
 import fr.cea.nabla.interpreter.values.NV1Bool;
-import fr.cea.nabla.interpreter.values.NV1Int;
 import fr.cea.nabla.interpreter.values.NV1IntJava;
-import fr.cea.nabla.interpreter.values.NV1Real;
+import fr.cea.nabla.interpreter.values.NV1RealJava;
 import fr.cea.nabla.interpreter.values.NV2Bool;
 import fr.cea.nabla.interpreter.values.NV2Int;
 import fr.cea.nabla.interpreter.values.NV2Real;
@@ -85,8 +84,11 @@ public abstract class NablaWriteVariableNode extends NablaInstructionNode implem
 	}
 
 	@Specialization
-	protected Object doWrite(NV1Int value, Frame toWrite) {
-		toWrite.setObject(slot, new NV1IntJava(((NV1IntJava)value).getData().clone()));
+	protected Object doWrite(NV1IntJava value, Frame toWrite) {
+		final int[] src = value.getData();
+		final int[] dest = new int[src.length];
+		System.arraycopy(src, 0, dest, 0, src.length);
+		toWrite.setObject(slot, new NV1IntJava(dest));
 		return value;
 	}
 
@@ -115,11 +117,11 @@ public abstract class NablaWriteVariableNode extends NablaInstructionNode implem
 	}
 
 	@Specialization
-	protected Object doWrite(NV1Real value, Frame toWrite) {
+	protected Object doWrite(NV1RealJava value, Frame toWrite) {
 		final double[] src = value.getData();
 		final double[] dest = new double[src.length];
 		System.arraycopy(src, 0, dest, 0, src.length);
-		toWrite.setObject(slot, new NV1Real(dest));
+		toWrite.setObject(slot, new NV1RealJava(dest));
 		return value;
 	}
 

@@ -21,11 +21,11 @@ import fr.cea.nabla.interpreter.NablaLanguage;
 import fr.cea.nabla.interpreter.runtime.NablaType;
 
 @ExportLibrary(InteropLibrary.class)
-@ExportLibrary(NV1IntLibrary.class)
-public final class NV1IntNative implements NV1Int {
+@ExportLibrary(NV1RealLibrary.class)
+public final class NV1RealNative implements NablaValue {
 	private final Value data;
 
-	public NV1IntNative(final Value data) {
+	public NV1RealNative(final Value data) {
 		this.data = data;
 	}
 
@@ -35,8 +35,8 @@ public final class NV1IntNative implements NV1Int {
 	}
 
 	@ExportMessage
-	int read(int index) {
-		return data.getArrayElement(index).asInt();
+	double read(int index) {
+		return data.getArrayElement(index).asDouble();
 	}
 
 	@ExportMessage
@@ -82,7 +82,7 @@ public final class NV1IntNative implements NV1Int {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		NV1IntNative other = (NV1IntNative) obj;
+		NV1RealNative other = (NV1RealNative) obj;
 		if (this.data == null) {
 			if (other.data != null)
 				return false;

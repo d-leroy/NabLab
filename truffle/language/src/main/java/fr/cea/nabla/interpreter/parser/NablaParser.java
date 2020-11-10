@@ -6,6 +6,7 @@ import org.graalvm.options.OptionValues;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.TruffleLanguage.Env;
@@ -21,26 +22,33 @@ import fr.cea.nabla.ir.ir.IrPackage;
 public class NablaParser {
 
 	public RootCallTarget parseNabla(NablaLanguage nablaLanguage, Source source) {
-		LogManager.shutdown();
-		final Env env = NablaLanguage.getCurrentContext().getEnv();
-		final OptionValues options = env.getOptions();
-		String jsonOptionsString = options.get(NablaOptions.OPTIONS);
-		String pathToMeshLibrary = options.get(NablaOptions.MESH_LIB);
-		EPackage.Registry.INSTANCE.put(IrPackage.eNS_URI, IrPackage.eINSTANCE);
-		final IrModule irModule = getIrModule(source, options.get(NablaOptions.GENMODEL));
-		final JsonObject jsonOptions;
-		if (jsonOptionsString != null && !jsonOptionsString.isEmpty()) {
-			final Gson gson = new Gson();
-			jsonOptions = gson.fromJson(jsonOptionsString, JsonObject.class);
-		} else {
-			jsonOptions = null;
+		try {
+			return CompilerDirectives.interpreterOnly(() -> {
+				LogManager.shutdown();
+				final Env env = NablaLanguage.getCurrentContext().getEnv();
+				final OptionValues options = env.getOptions();
+				String jsonOptionsString = options.get(NablaOptions.OPTIONS);
+				String pathToMeshLibrary = options.get(NablaOptions.MESH_LIB);
+				EPackage.Registry.INSTANCE.put(IrPackage.eNS_URI, IrPackage.eINSTANCE);
+				final IrModule irModule = getIrModule(source, options.get(NablaOptions.GENMODEL));
+				final JsonObject jsonOptions;
+				if (jsonOptionsString != null && !jsonOptionsString.isEmpty()) {
+					final Gson gson = new Gson();
+					jsonOptions = gson.fromJson(jsonOptionsString, JsonObject.class);
+				} else {
+					jsonOptions = null;
+				}
+				
+				final RootCallTarget moduleCallTarget = Truffle.getRuntime()
+						.createCallTarget(new NablaNodeFactory(nablaLanguage, source).createModule(irModule, jsonOptions, pathToMeshLibrary));
+				final RootNode evalModule = new NablaEvalRootNode(nablaLanguage, moduleCallTarget);
+				final RootCallTarget result = Truffle.getRuntime().createCallTarget(evalModule);
+				return result;
+			});
+		} catch (Exception e) {
+			CompilerDirectives.shouldNotReachHere(e);
+			return null;
 		}
-		
-		final RootCallTarget moduleCallTarget = Truffle.getRuntime()
-				.createCallTarget(new NablaNodeFactory(nablaLanguage, source).createModule(irModule, jsonOptions, pathToMeshLibrary));
-		final RootNode evalModule = new NablaEvalRootNode(nablaLanguage, moduleCallTarget);
-		final RootCallTarget result = Truffle.getRuntime().createCallTarget(evalModule);
-		return result;
 	}
 
 	private IrModule getIrModule(Source source, String genModel) {

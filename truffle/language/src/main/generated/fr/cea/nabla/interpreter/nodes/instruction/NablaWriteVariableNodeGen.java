@@ -17,8 +17,8 @@ import fr.cea.nabla.interpreter.values.NV0Bool;
 import fr.cea.nabla.interpreter.values.NV0Int;
 import fr.cea.nabla.interpreter.values.NV0Real;
 import fr.cea.nabla.interpreter.values.NV1Bool;
-import fr.cea.nabla.interpreter.values.NV1Int;
-import fr.cea.nabla.interpreter.values.NV1Real;
+import fr.cea.nabla.interpreter.values.NV1IntJava;
+import fr.cea.nabla.interpreter.values.NV1RealJava;
 import fr.cea.nabla.interpreter.values.NV2Bool;
 import fr.cea.nabla.interpreter.values.NV2Int;
 import fr.cea.nabla.interpreter.values.NV2Real;
@@ -52,7 +52,7 @@ public final class NablaWriteVariableNodeGen extends NablaWriteVariableNode {
         int state = state_;
         Object valueValue_ = this.value_.executeGeneric(frameValue);
         Frame frameToWriteValue_ = this.frameToWrite_.execute(frameValue);
-        if (state != 0 /* is-active doWrite(NV0Bool, Frame) || doWrite(NV1Bool, Frame) || doWrite(NV2Bool, Frame) || doWrite(NV3Bool, Frame) || doWrite(NV4Bool, Frame) || doWrite(NV0Int, Frame) || doWrite(NV1Int, Frame) || doWrite(NV2Int, Frame) || doWrite(NV3Int, Frame) || doWrite(NV4Int, Frame) || doWrite(NV0Real, Frame) || doWrite(NV1Real, Frame) || doWrite(NV2Real, Frame) || doWrite(NV3Real, Frame) || doWrite(NV4Real, Frame) */) {
+        if (state != 0 /* is-active doWrite(NV0Bool, Frame) || doWrite(NV1Bool, Frame) || doWrite(NV2Bool, Frame) || doWrite(NV3Bool, Frame) || doWrite(NV4Bool, Frame) || doWrite(NV0Int, Frame) || doWrite(NV1IntJava, Frame) || doWrite(NV2Int, Frame) || doWrite(NV3Int, Frame) || doWrite(NV4Int, Frame) || doWrite(NV0Real, Frame) || doWrite(NV1RealJava, Frame) || doWrite(NV2Real, Frame) || doWrite(NV3Real, Frame) || doWrite(NV4Real, Frame) */) {
             if ((state & 0b1) != 0 /* is-active doWrite(NV0Bool, Frame) */ && valueValue_ instanceof NV0Bool) {
                 NV0Bool valueValue__ = (NV0Bool) valueValue_;
                 return doWrite(valueValue__, frameToWriteValue_);
@@ -77,8 +77,8 @@ public final class NablaWriteVariableNodeGen extends NablaWriteVariableNode {
                 NV0Int valueValue__ = (NV0Int) valueValue_;
                 return doWrite(valueValue__, frameToWriteValue_);
             }
-            if ((state & 0b1000000) != 0 /* is-active doWrite(NV1Int, Frame) */ && valueValue_ instanceof NV1Int) {
-                NV1Int valueValue__ = (NV1Int) valueValue_;
+            if ((state & 0b1000000) != 0 /* is-active doWrite(NV1IntJava, Frame) */ && valueValue_ instanceof NV1IntJava) {
+                NV1IntJava valueValue__ = (NV1IntJava) valueValue_;
                 return doWrite(valueValue__, frameToWriteValue_);
             }
             if ((state & 0b10000000) != 0 /* is-active doWrite(NV2Int, Frame) */ && valueValue_ instanceof NV2Int) {
@@ -97,8 +97,8 @@ public final class NablaWriteVariableNodeGen extends NablaWriteVariableNode {
                 NV0Real valueValue__ = (NV0Real) valueValue_;
                 return doWrite(valueValue__, frameToWriteValue_);
             }
-            if ((state & 0b100000000000) != 0 /* is-active doWrite(NV1Real, Frame) */ && valueValue_ instanceof NV1Real) {
-                NV1Real valueValue__ = (NV1Real) valueValue_;
+            if ((state & 0b100000000000) != 0 /* is-active doWrite(NV1RealJava, Frame) */ && valueValue_ instanceof NV1RealJava) {
+                NV1RealJava valueValue__ = (NV1RealJava) valueValue_;
                 return doWrite(valueValue__, frameToWriteValue_);
             }
             if ((state & 0b1000000000000) != 0 /* is-active doWrite(NV2Real, Frame) */ && valueValue_ instanceof NV2Real) {
@@ -150,9 +150,9 @@ public final class NablaWriteVariableNodeGen extends NablaWriteVariableNode {
             this.state_ = state = state | 0b100000 /* add-active doWrite(NV0Int, Frame) */;
             return doWrite(valueValue_, frameToWriteValue);
         }
-        if (valueValue instanceof NV1Int) {
-            NV1Int valueValue_ = (NV1Int) valueValue;
-            this.state_ = state = state | 0b1000000 /* add-active doWrite(NV1Int, Frame) */;
+        if (valueValue instanceof NV1IntJava) {
+            NV1IntJava valueValue_ = (NV1IntJava) valueValue;
+            this.state_ = state = state | 0b1000000 /* add-active doWrite(NV1IntJava, Frame) */;
             return doWrite(valueValue_, frameToWriteValue);
         }
         if (valueValue instanceof NV2Int) {
@@ -175,9 +175,9 @@ public final class NablaWriteVariableNodeGen extends NablaWriteVariableNode {
             this.state_ = state = state | 0b10000000000 /* add-active doWrite(NV0Real, Frame) */;
             return doWrite(valueValue_, frameToWriteValue);
         }
-        if (valueValue instanceof NV1Real) {
-            NV1Real valueValue_ = (NV1Real) valueValue;
-            this.state_ = state = state | 0b100000000000 /* add-active doWrite(NV1Real, Frame) */;
+        if (valueValue instanceof NV1RealJava) {
+            NV1RealJava valueValue_ = (NV1RealJava) valueValue;
+            this.state_ = state = state | 0b100000000000 /* add-active doWrite(NV1RealJava, Frame) */;
             return doWrite(valueValue_, frameToWriteValue);
         }
         if (valueValue instanceof NV2Real) {

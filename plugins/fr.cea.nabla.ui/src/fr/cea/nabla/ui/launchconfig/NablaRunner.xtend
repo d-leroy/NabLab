@@ -28,10 +28,15 @@ import org.eclipse.core.runtime.Path
 import org.eclipse.debug.core.ILaunchConfiguration
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Source
+import org.graalvm.polyglot.Engine
 
 @Singleton
 class NablaRunner {
 	@Inject NabLabConsoleFactory consoleFactory
+
+	static val Engine engine = Engine.newBuilder().out(System.out).err(System.out) //
+				.allowExperimentalOptions(true) //
+				.build()
 
 	package def launch(ILaunchConfiguration configuration) {
 		val graalVMHome = configuration.getAttribute(NablaLaunchConstants::GRAAL_HOME_LOCATION, '')
@@ -77,9 +82,8 @@ class NablaRunner {
 		val out = new PipedOutputStream
 		val consoleIn = new PipedInputStream(out)
 		
-		val context = Context.newBuilder().out(out).err(out) //
+		val context = Context.newBuilder().engine(engine) //
 				.allowAllAccess(true) //
-				.allowExperimentalOptions(true) //
 				.options(optionsMap) //
 				.build();
 		

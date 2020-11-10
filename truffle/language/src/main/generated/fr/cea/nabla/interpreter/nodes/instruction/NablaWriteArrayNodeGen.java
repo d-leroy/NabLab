@@ -16,8 +16,8 @@ import fr.cea.nabla.interpreter.runtime.NablaInitializationPerformedException;
 import fr.cea.nabla.interpreter.utils.GetFrameNode;
 import fr.cea.nabla.interpreter.values.NV0Int;
 import fr.cea.nabla.interpreter.values.NV0Real;
-import fr.cea.nabla.interpreter.values.NV1Int;
-import fr.cea.nabla.interpreter.values.NV1Real;
+import fr.cea.nabla.interpreter.values.NV1IntJava;
+import fr.cea.nabla.interpreter.values.NV1RealJava;
 import fr.cea.nabla.interpreter.values.NV2Real;
 import java.util.concurrent.locks.Lock;
 
@@ -45,7 +45,7 @@ public final class NablaWriteArrayNodeGen extends NablaWriteArrayNode {
         int state = state_;
         Object valueValue_ = this.value_.executeGeneric(frameValue);
         Frame frameToReadValue_ = this.frameToRead_.execute(frameValue);
-        if (state != 0 /* is-active write(VirtualFrame, Object, Frame) || writeNV1Int(VirtualFrame, NV0Int, Frame) || writeNV2Int(VirtualFrame, NV0Int, Frame) || writeNV2Int(VirtualFrame, NV1Int, Frame) || writeNV1Real(VirtualFrame, NV0Real, Frame) || writeNV2Real(VirtualFrame, NV0Real, Frame) || writeNV2Real(VirtualFrame, NV1Real, Frame) || writeNV3Real(VirtualFrame, NV1Real, Frame) || writeNV3Real(VirtualFrame, NV2Real, Frame) || writeNV4Real(VirtualFrame, NV2Real, Frame) */) {
+        if (state != 0 /* is-active write(VirtualFrame, Object, Frame) || writeNV1Int(VirtualFrame, NV0Int, Frame) || writeNV2Int(VirtualFrame, NV0Int, Frame) || writeNV2Int(VirtualFrame, NV1IntJava, Frame) || writeNV1Real(VirtualFrame, NV0Real, Frame) || writeNV2Real(VirtualFrame, NV0Real, Frame) || writeNV2Real(VirtualFrame, NV1RealJava, Frame) || writeNV3Real(VirtualFrame, NV1RealJava, Frame) || writeNV3Real(VirtualFrame, NV2Real, Frame) || writeNV4Real(VirtualFrame, NV2Real, Frame) */) {
             if ((state & 0b1) != 0 /* is-active write(VirtualFrame, Object, Frame) */) {
                 try {
                     return write(frameValue, valueValue_, frameToReadValue_);
@@ -73,8 +73,8 @@ public final class NablaWriteArrayNodeGen extends NablaWriteArrayNode {
                     return writeNV2Int(frameValue, valueValue__, frameToReadValue_);
                 }
             }
-            if ((state & 0b1000) != 0 /* is-active writeNV2Int(VirtualFrame, NV1Int, Frame) */ && valueValue_ instanceof NV1Int) {
-                NV1Int valueValue__ = (NV1Int) valueValue_;
+            if ((state & 0b1000) != 0 /* is-active writeNV2Int(VirtualFrame, NV1IntJava, Frame) */ && valueValue_ instanceof NV1IntJava) {
+                NV1IntJava valueValue__ = (NV1IntJava) valueValue_;
                 assert (isNV2Int());
                 return writeNV2Int(frameValue, valueValue__, frameToReadValue_);
             }
@@ -89,13 +89,13 @@ public final class NablaWriteArrayNodeGen extends NablaWriteArrayNode {
                     return writeNV2Real(frameValue, valueValue__, frameToReadValue_);
                 }
             }
-            if ((state & 0b11000000) != 0 /* is-active writeNV2Real(VirtualFrame, NV1Real, Frame) || writeNV3Real(VirtualFrame, NV1Real, Frame) */ && valueValue_ instanceof NV1Real) {
-                NV1Real valueValue__ = (NV1Real) valueValue_;
-                if ((state & 0b1000000) != 0 /* is-active writeNV2Real(VirtualFrame, NV1Real, Frame) */) {
+            if ((state & 0b11000000) != 0 /* is-active writeNV2Real(VirtualFrame, NV1RealJava, Frame) || writeNV3Real(VirtualFrame, NV1RealJava, Frame) */ && valueValue_ instanceof NV1RealJava) {
+                NV1RealJava valueValue__ = (NV1RealJava) valueValue_;
+                if ((state & 0b1000000) != 0 /* is-active writeNV2Real(VirtualFrame, NV1RealJava, Frame) */) {
                     assert (isNV2Real());
                     return writeNV2Real(frameValue, valueValue__, frameToReadValue_);
                 }
-                if ((state & 0b10000000) != 0 /* is-active writeNV3Real(VirtualFrame, NV1Real, Frame) */) {
+                if ((state & 0b10000000) != 0 /* is-active writeNV3Real(VirtualFrame, NV1RealJava, Frame) */) {
                     assert (isNV3Real());
                     return writeNV3Real(frameValue, valueValue__, frameToReadValue_);
                 }
@@ -156,10 +156,10 @@ public final class NablaWriteArrayNodeGen extends NablaWriteArrayNode {
                     return writeNV2Int(frameValue, valueValue_, frameToReadValue);
                 }
             }
-            if (valueValue instanceof NV1Int) {
-                NV1Int valueValue_ = (NV1Int) valueValue;
+            if (valueValue instanceof NV1IntJava) {
+                NV1IntJava valueValue_ = (NV1IntJava) valueValue;
                 if ((isNV2Int())) {
-                    this.state_ = state = state | 0b1000 /* add-active writeNV2Int(VirtualFrame, NV1Int, Frame) */;
+                    this.state_ = state = state | 0b1000 /* add-active writeNV2Int(VirtualFrame, NV1IntJava, Frame) */;
                     lock.unlock();
                     hasLock = false;
                     return writeNV2Int(frameValue, valueValue_, frameToReadValue);
@@ -180,16 +180,16 @@ public final class NablaWriteArrayNodeGen extends NablaWriteArrayNode {
                     return writeNV2Real(frameValue, valueValue_, frameToReadValue);
                 }
             }
-            if (valueValue instanceof NV1Real) {
-                NV1Real valueValue_ = (NV1Real) valueValue;
+            if (valueValue instanceof NV1RealJava) {
+                NV1RealJava valueValue_ = (NV1RealJava) valueValue;
                 if ((isNV2Real())) {
-                    this.state_ = state = state | 0b1000000 /* add-active writeNV2Real(VirtualFrame, NV1Real, Frame) */;
+                    this.state_ = state = state | 0b1000000 /* add-active writeNV2Real(VirtualFrame, NV1RealJava, Frame) */;
                     lock.unlock();
                     hasLock = false;
                     return writeNV2Real(frameValue, valueValue_, frameToReadValue);
                 }
                 if ((isNV3Real())) {
-                    this.state_ = state = state | 0b10000000 /* add-active writeNV3Real(VirtualFrame, NV1Real, Frame) */;
+                    this.state_ = state = state | 0b10000000 /* add-active writeNV3Real(VirtualFrame, NV1RealJava, Frame) */;
                     lock.unlock();
                     hasLock = false;
                     return writeNV3Real(frameValue, valueValue_, frameToReadValue);

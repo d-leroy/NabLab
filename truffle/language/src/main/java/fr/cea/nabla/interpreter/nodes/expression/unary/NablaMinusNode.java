@@ -13,6 +13,8 @@ import fr.cea.nabla.interpreter.values.NV1Int;
 import fr.cea.nabla.interpreter.values.NV1IntJava;
 import fr.cea.nabla.interpreter.values.NV1IntLibrary;
 import fr.cea.nabla.interpreter.values.NV1Real;
+import fr.cea.nabla.interpreter.values.NV1RealJava;
+import fr.cea.nabla.interpreter.values.NV1RealLibrary;
 import fr.cea.nabla.interpreter.values.NV2Int;
 import fr.cea.nabla.interpreter.values.NV2Real;
 
@@ -42,19 +44,16 @@ public abstract class NablaMinusNode extends NablaExpressionNode {
 		return new NV1IntJava(result);
 	}
 
-	@Specialization
-	protected NV1Real minus(NV1Real value) {
-		final double[] valueData = value.getData();
+	@Specialization(guards = "arrays.isArray(value)", limit = "3")
+	protected NV1Real minus(Object value, @CachedLibrary("value") NV1RealLibrary arrays) {
+		final int length = arrays.length(value);
+		final double[] result = new double[length];
 
-		CompilerAsserts.compilationConstant(valueData.length);
-
-		final double[] result = new double[valueData.length];
-
-		for (int i = 0; i < valueData.length; i++) {
-			result[i] = -1 * valueData[i];
+		for (int i = 0; i < length; i++) {
+			result[i] = -1 * arrays.read(value, i);
 		}
 
-		return new NV1Real(result);
+		return new NV1RealJava(result);
 	}
 
 	@Specialization

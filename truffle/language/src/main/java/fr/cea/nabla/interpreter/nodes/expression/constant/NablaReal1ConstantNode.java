@@ -10,6 +10,7 @@ import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.interpreter.values.NV0Int;
 import fr.cea.nabla.interpreter.values.NV0Real;
 import fr.cea.nabla.interpreter.values.NV1Real;
+import fr.cea.nabla.interpreter.values.NV1RealJava;
 
 @NodeChild(value = "value", type = NablaExpressionNode.class)
 @NodeChild(value = "size", type = NablaExpressionNode.class)
@@ -34,7 +35,7 @@ public abstract class NablaReal1ConstantNode extends NablaExpressionNode {
 
 	protected NV1Real getDefaultResult(int size) {
 		final double[] computedValues = new double[size];
-		return new NV1Real(computedValues);
+		return new NV1RealJava(computedValues);
 	}
 
 	@ExplodeLoop
@@ -43,6 +44,6 @@ public abstract class NablaReal1ConstantNode extends NablaExpressionNode {
 		for (int i = 0; i < size; i++) {
 			computedValues[i] = value;
 		}
-		return new NV1Real(computedValues);
+		return new NV1RealJava(computedValues);
 	}
 }

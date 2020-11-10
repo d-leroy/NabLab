@@ -1,0 +1,19 @@
+{
+  "resources":[
+    {"pattern":"\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"}, 
+    {"pattern":"\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"}, 
+    {"pattern":"\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"}, 
+    {"pattern":"\\QMETA-INF/services/java.nio.file.spi.FileSystemProvider\\E"}, 
+    {"pattern":"\\Qcom/google/inject/internal/util/$Finalizer.class\\E"}, 
+    {"pattern":"\\Qcom/oracle/truffle/nfi/impl/NFILanguageImpl.class\\E"}, 
+    {"pattern":"\\Qfr/cea/nabla/Nabla.xtextbin\\E"}, 
+    {"pattern":"\\Qfr/cea/nabla/Nablagen.xtextbin\\E"}, 
+    {"pattern":"\\Qfr/cea/nabla/parser/antlr/internal/InternalNabla.tokens\\E"}, 
+    {"pattern":"\\Qfr/cea/nabla/parser/antlr/internal/InternalNablagen.tokens\\E"}, 
+    {"pattern":"\\Qlog4j.properties\\E"}, 
+    {"pattern":"\\Qnablalib/linearalgebrafunctions.nabla\\E"}, 
+    {"pattern":"\\Qnablalib/mathfunctions.nabla\\E"}, 
+    {"pattern":"\\Qorg/eclipse/emf/ecore/plugin/EcorePlugin.class\\E"}
+  ],
+  "bundles":[]
+}

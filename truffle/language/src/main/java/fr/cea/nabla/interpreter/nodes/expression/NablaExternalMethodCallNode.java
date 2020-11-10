@@ -8,10 +8,6 @@ import com.oracle.truffle.api.nodes.ExplodeLoop;
 import fr.cea.nabla.interpreter.runtime.NablaContext;
 import fr.cea.nabla.interpreter.runtime.NablaInvokeNode;
 import fr.cea.nabla.interpreter.runtime.NablaInvokeNodeGen;
-import fr.cea.nabla.interpreter.values.BoxValueNode;
-import fr.cea.nabla.interpreter.values.BoxValueNodeGen;
-import fr.cea.nabla.interpreter.values.CreateNablaValueNode;
-import fr.cea.nabla.interpreter.values.CreateNablaValueNodeGen;
 import fr.cea.nabla.interpreter.values.UnboxValueNode;
 import fr.cea.nabla.interpreter.values.UnboxValueNodeGen;
 
@@ -21,10 +17,6 @@ public class NablaExternalMethodCallNode extends NablaExpressionNode {
 	private UnboxValueNode[] unboxArgNodes;
 	@Child
 	private NablaInvokeNode invokeNode;
-	@Child
-	private BoxValueNode unboxNode;
-	@Child
-	private CreateNablaValueNode createNablaValueNode;
 	private final String methodName;
 	private final Object receiverObject;
 
@@ -37,8 +29,6 @@ public class NablaExternalMethodCallNode extends NablaExpressionNode {
 		this.methodName = methodName;
 		this.receiverObject = NablaContext.getCurrent().getEnv().lookupHostSymbol(receiverClass);
 		this.invokeNode = NablaInvokeNodeGen.create();
-		this.unboxNode = BoxValueNodeGen.create(returnType);
-		this.createNablaValueNode = CreateNablaValueNodeGen.create();
 	}
 
 	@Override
@@ -49,8 +39,7 @@ public class NablaExternalMethodCallNode extends NablaExpressionNode {
 			argumentValues[i] = unboxArgNodes[i].execute(frame);
 		}
 
-		final Object invokeResult = invokeNode.execute(receiverObject, methodName, argumentValues);
-		return createNablaValueNode.execute(unboxNode.execute(invokeResult));
+		return invokeNode.execute(receiverObject, methodName, argumentValues);
 	}
 
 	@Override

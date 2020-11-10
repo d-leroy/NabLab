@@ -6,6 +6,7 @@ import com.oracle.truffle.api.nodes.ExplodeLoop;
 
 import fr.cea.nabla.interpreter.NablaTypesGen;
 import fr.cea.nabla.interpreter.values.NV1Real;
+import fr.cea.nabla.interpreter.values.NV1RealJava;
 
 public abstract class NablaReal1Node extends NablaExpressionNode {
 
@@ -24,6 +25,6 @@ public abstract class NablaReal1Node extends NablaExpressionNode {
 		for (int i = 0; i < values.length; i++) {
 			computedValues[i] = NablaTypesGen.asNV0Real(values[i].executeGeneric(frame)).getData();
 		}
-		return new NV1Real(computedValues);
+		return new NV1RealJava(computedValues);
 	}
 }

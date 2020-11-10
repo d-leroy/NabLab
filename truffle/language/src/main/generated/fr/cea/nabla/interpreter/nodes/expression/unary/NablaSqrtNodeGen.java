@@ -16,7 +16,7 @@ import fr.cea.nabla.interpreter.nodes.expression.unary.NablaSqrtNode;
 import fr.cea.nabla.interpreter.values.NV0Int;
 import fr.cea.nabla.interpreter.values.NV0Real;
 import fr.cea.nabla.interpreter.values.NV1IntLibrary;
-import fr.cea.nabla.interpreter.values.NV1Real;
+import fr.cea.nabla.interpreter.values.NV1RealLibrary;
 import fr.cea.nabla.interpreter.values.NV2Int;
 import fr.cea.nabla.interpreter.values.NV2Real;
 import java.util.concurrent.locks.Lock;
@@ -25,11 +25,13 @@ import java.util.concurrent.locks.Lock;
 public final class NablaSqrtNodeGen extends NablaSqrtNode {
 
     private static final LibraryFactory<NV1IntLibrary> N_V1_INT_LIBRARY_ = LibraryFactory.resolve(NV1IntLibrary.class);
+    private static final LibraryFactory<NV1RealLibrary> N_V1_REAL_LIBRARY_ = LibraryFactory.resolve(NV1RealLibrary.class);
 
     @Child private NablaExpressionNode valueNode_;
     @CompilationFinal private volatile int state_;
     @CompilationFinal private volatile int exclude_;
     @Child private Sqrt2Data sqrt2_cache;
+    @Child private Sqrt4Data sqrt4_cache;
 
     private NablaSqrtNodeGen(NablaExpressionNode valueNode) {
         this.valueNode_ = valueNode;
@@ -48,7 +50,7 @@ public final class NablaSqrtNodeGen extends NablaSqrtNode {
             NV0Real valueNodeValue__ = (NV0Real) valueNodeValue_;
             return sqrt(valueNodeValue__);
         }
-        if ((state & 0b1100) != 0 /* is-active sqrt(Object, NV1IntLibrary) || sqrt(Object, NV1IntLibrary) */) {
+        if ((state & 0b111100) != 0 /* is-active sqrt(Object, NV1IntLibrary) || sqrt(Object, NV1IntLibrary) || sqrt(Object, NV1RealLibrary) || sqrt(Object, NV1RealLibrary) */) {
             if ((state & 0b100) != 0 /* is-active sqrt(Object, NV1IntLibrary) */) {
                 Sqrt2Data s3_ = this.sqrt2_cache;
                 while (s3_ != null) {
@@ -72,16 +74,35 @@ public final class NablaSqrtNodeGen extends NablaSqrtNode {
                     encapsulating_.set(prev_);
                 }
             }
+            if ((state & 0b10000) != 0 /* is-active sqrt(Object, NV1RealLibrary) */) {
+                Sqrt4Data s5_ = this.sqrt4_cache;
+                while (s5_ != null) {
+                    if ((s5_.arrays_.accepts(valueNodeValue_)) && (s5_.arrays_.isArray(valueNodeValue_))) {
+                        return sqrt(valueNodeValue_, s5_.arrays_);
+                    }
+                    s5_ = s5_.next_;
+                }
+            }
+            if ((state & 0b100000) != 0 /* is-active sqrt(Object, NV1RealLibrary) */) {
+                EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                Node prev_ = encapsulating_.set(this);
+                try {
+                    {
+                        NV1RealLibrary sqrt5_arrays__ = (N_V1_REAL_LIBRARY_.getUncached(valueNodeValue_));
+                        if ((sqrt5_arrays__.isArray(valueNodeValue_))) {
+                            return sqrt(valueNodeValue_, sqrt5_arrays__);
+                        }
+                    }
+                } finally {
+                    encapsulating_.set(prev_);
+                }
+            }
         }
-        if ((state & 0b10000) != 0 /* is-active sqrt(NV1Real) */ && valueNodeValue_ instanceof NV1Real) {
-            NV1Real valueNodeValue__ = (NV1Real) valueNodeValue_;
-            return sqrt(valueNodeValue__);
-        }
-        if ((state & 0b100000) != 0 /* is-active sqrt(NV2Int) */ && valueNodeValue_ instanceof NV2Int) {
+        if ((state & 0b1000000) != 0 /* is-active sqrt(NV2Int) */ && valueNodeValue_ instanceof NV2Int) {
             NV2Int valueNodeValue__ = (NV2Int) valueNodeValue_;
             return sqrt(valueNodeValue__);
         }
-        if ((state & 0b1000000) != 0 /* is-active sqrt(NV2Real) */ && valueNodeValue_ instanceof NV2Real) {
+        if ((state & 0b10000000) != 0 /* is-active sqrt(NV2Real) */ && valueNodeValue_ instanceof NV2Real) {
             NV2Real valueNodeValue__ = (NV2Real) valueNodeValue_;
             return sqrt(valueNodeValue__);
         }
@@ -110,7 +131,7 @@ public final class NablaSqrtNodeGen extends NablaSqrtNode {
                 hasLock = false;
                 return sqrt(valueNodeValue_);
             }
-            if ((exclude) == 0 /* is-not-excluded sqrt(Object, NV1IntLibrary) */) {
+            if (((exclude & 0b1)) == 0 /* is-not-excluded sqrt(Object, NV1IntLibrary) */) {
                 int count3_ = 0;
                 Sqrt2Data s3_ = this.sqrt2_cache;
                 if ((state & 0b100) != 0 /* is-active sqrt(Object, NV1IntLibrary) */) {
@@ -163,23 +184,69 @@ public final class NablaSqrtNodeGen extends NablaSqrtNode {
                     }
                 }
             }
-            if (valueNodeValue instanceof NV1Real) {
-                NV1Real valueNodeValue_ = (NV1Real) valueNodeValue;
-                this.state_ = state = state | 0b10000 /* add-active sqrt(NV1Real) */;
-                lock.unlock();
-                hasLock = false;
-                return sqrt(valueNodeValue_);
+            if (((exclude & 0b10)) == 0 /* is-not-excluded sqrt(Object, NV1RealLibrary) */) {
+                int count5_ = 0;
+                Sqrt4Data s5_ = this.sqrt4_cache;
+                if ((state & 0b10000) != 0 /* is-active sqrt(Object, NV1RealLibrary) */) {
+                    while (s5_ != null) {
+                        if ((s5_.arrays_.accepts(valueNodeValue)) && (s5_.arrays_.isArray(valueNodeValue))) {
+                            break;
+                        }
+                        s5_ = s5_.next_;
+                        count5_++;
+                    }
+                }
+                if (s5_ == null) {
+                    {
+                        NV1RealLibrary arrays__1 = super.insert((N_V1_REAL_LIBRARY_.create(valueNodeValue)));
+                        // assert (s5_.arrays_.accepts(valueNodeValue));
+                        if ((arrays__1.isArray(valueNodeValue)) && count5_ < (3)) {
+                            s5_ = super.insert(new Sqrt4Data(sqrt4_cache));
+                            s5_.arrays_ = s5_.insertAccessor(arrays__1);
+                            this.sqrt4_cache = s5_;
+                            this.state_ = state = state | 0b10000 /* add-active sqrt(Object, NV1RealLibrary) */;
+                        }
+                    }
+                }
+                if (s5_ != null) {
+                    lock.unlock();
+                    hasLock = false;
+                    return sqrt(valueNodeValue, s5_.arrays_);
+                }
+            }
+            {
+                NV1RealLibrary sqrt5_arrays__ = null;
+                {
+                    EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
+                    Node prev_ = encapsulating_.set(this);
+                    try {
+                        {
+                            sqrt5_arrays__ = (N_V1_REAL_LIBRARY_.getUncached(valueNodeValue));
+                            if ((sqrt5_arrays__.isArray(valueNodeValue))) {
+                                this.exclude_ = exclude = exclude | 0b10 /* add-excluded sqrt(Object, NV1RealLibrary) */;
+                                this.sqrt4_cache = null;
+                                state = state & 0xffffffef /* remove-active sqrt(Object, NV1RealLibrary) */;
+                                this.state_ = state = state | 0b100000 /* add-active sqrt(Object, NV1RealLibrary) */;
+                                lock.unlock();
+                                hasLock = false;
+                                return sqrt(valueNodeValue, sqrt5_arrays__);
+                            }
+                        }
+                    } finally {
+                        encapsulating_.set(prev_);
+                    }
+                }
             }
             if (valueNodeValue instanceof NV2Int) {
                 NV2Int valueNodeValue_ = (NV2Int) valueNodeValue;
-                this.state_ = state = state | 0b100000 /* add-active sqrt(NV2Int) */;
+                this.state_ = state = state | 0b1000000 /* add-active sqrt(NV2Int) */;
                 lock.unlock();
                 hasLock = false;
                 return sqrt(valueNodeValue_);
             }
             if (valueNodeValue instanceof NV2Real) {
                 NV2Real valueNodeValue_ = (NV2Real) valueNodeValue;
-                this.state_ = state = state | 0b1000000 /* add-active sqrt(NV2Real) */;
+                this.state_ = state = state | 0b10000000 /* add-active sqrt(NV2Real) */;
                 lock.unlock();
                 hasLock = false;
                 return sqrt(valueNodeValue_);
@@ -199,7 +266,8 @@ public final class NablaSqrtNodeGen extends NablaSqrtNode {
             return NodeCost.UNINITIALIZED;
         } else if ((state & (state - 1)) == 0 /* is-single-active  */) {
             Sqrt2Data s3_ = this.sqrt2_cache;
-            if ((s3_ == null || s3_.next_ == null)) {
+            Sqrt4Data s5_ = this.sqrt4_cache;
+            if ((s3_ == null || s3_.next_ == null) && (s5_ == null || s5_.next_ == null)) {
                 return NodeCost.MONOMORPHIC;
             }
         }
@@ -217,6 +285,26 @@ public final class NablaSqrtNodeGen extends NablaSqrtNode {
         @Child NV1IntLibrary arrays_;
 
         Sqrt2Data(Sqrt2Data next_) {
+            this.next_ = next_;
+        }
+
+        @Override
+        public NodeCost getCost() {
+            return NodeCost.NONE;
+        }
+
+        <T extends Node> T insertAccessor(T node) {
+            return super.insert(node);
+        }
+
+    }
+    @GeneratedBy(NablaSqrtNode.class)
+    private static final class Sqrt4Data extends Node {
+
+        @Child Sqrt4Data next_;
+        @Child NV1RealLibrary arrays_;
+
+        Sqrt4Data(Sqrt4Data next_) {
             this.next_ = next_;
         }
 

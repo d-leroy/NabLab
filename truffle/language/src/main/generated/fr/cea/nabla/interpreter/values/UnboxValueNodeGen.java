@@ -14,7 +14,7 @@ import fr.cea.nabla.interpreter.values.NV0Int;
 import fr.cea.nabla.interpreter.values.NV0Real;
 import fr.cea.nabla.interpreter.values.NV1Bool;
 import fr.cea.nabla.interpreter.values.NV1IntJava;
-import fr.cea.nabla.interpreter.values.NV1Real;
+import fr.cea.nabla.interpreter.values.NV1RealJava;
 import fr.cea.nabla.interpreter.values.NV2Bool;
 import fr.cea.nabla.interpreter.values.NV2Int;
 import fr.cea.nabla.interpreter.values.NV2Real;
@@ -62,8 +62,8 @@ public final class UnboxValueNodeGen extends UnboxValueNode {
             NV0Real valueValue__ = (NV0Real) valueValue_;
             return unbox(valueValue__);
         }
-        if ((state & 0b10000000) != 0 /* is-active unbox(NV1Real) */ && valueValue_ instanceof NV1Real) {
-            NV1Real valueValue__ = (NV1Real) valueValue_;
+        if ((state & 0b10000000) != 0 /* is-active unbox(NV1RealJava) */ && valueValue_ instanceof NV1RealJava) {
+            NV1RealJava valueValue__ = (NV1RealJava) valueValue_;
             return unbox(valueValue__);
         }
         if ((state & 0b100000000) != 0 /* is-active unbox(NV2Real) */ && valueValue_ instanceof NV2Real) {
@@ -111,9 +111,9 @@ public final class UnboxValueNodeGen extends UnboxValueNode {
             this.state_ = state = state | 0b1000000 /* add-active unbox(NV0Real) */;
             return unbox(valueValue_);
         }
-        if (valueValue instanceof NV1Real) {
-            NV1Real valueValue_ = (NV1Real) valueValue;
-            this.state_ = state = state | 0b10000000 /* add-active unbox(NV1Real) */;
+        if (valueValue instanceof NV1RealJava) {
+            NV1RealJava valueValue_ = (NV1RealJava) valueValue;
+            this.state_ = state = state | 0b10000000 /* add-active unbox(NV1RealJava) */;
             return unbox(valueValue_);
         }
         if (valueValue instanceof NV2Real) {

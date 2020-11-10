@@ -48,7 +48,7 @@ public abstract class UnboxValueNode extends Node {
 	}
 
 	@Specialization
-	protected Object unbox(NV1Real it) {
+	protected Object unbox(NV1RealJava it) {
 		return it.getData();
 	}
 

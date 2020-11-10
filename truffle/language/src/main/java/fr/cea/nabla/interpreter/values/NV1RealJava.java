@@ -9,7 +9,10 @@
  */
 package fr.cea.nabla.interpreter.values;
 
-import org.graalvm.polyglot.Value;
+import java.util.Arrays;
+
+import org.apache.commons.math3.linear.ArrayRealVector;
+import org.apache.commons.math3.linear.RealVector;
 
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.TruffleLanguage;
@@ -21,12 +24,16 @@ import fr.cea.nabla.interpreter.NablaLanguage;
 import fr.cea.nabla.interpreter.runtime.NablaType;
 
 @ExportLibrary(InteropLibrary.class)
-@ExportLibrary(NV1IntLibrary.class)
-public final class NV1IntNative implements NV1Int {
-	private final Value data;
+@ExportLibrary(NV1RealLibrary.class)
+public final class NV1RealJava implements NV1Real {
+	private final double[] data;
 
-	public NV1IntNative(final Value data) {
+	public NV1RealJava(final double[] data) {
 		this.data = data;
+	}
+	
+	public RealVector asVector() {
+		return new ArrayRealVector(data);
 	}
 
 	@ExportMessage
@@ -35,13 +42,13 @@ public final class NV1IntNative implements NV1Int {
 	}
 
 	@ExportMessage
-	int read(int index) {
-		return data.getArrayElement(index).asInt();
+	double read(int index) {
+		return data[index];
 	}
-
+	
 	@ExportMessage
 	int length() {
-		return (int) data.getArraySize();
+		return data.length;
 	}
 
 	@ExportMessage
@@ -51,18 +58,18 @@ public final class NV1IntNative implements NV1Int {
 
 	@ExportMessage
 	long getArraySize() {
-		return data.getArraySize();
+		return data.length;
 	}
 
 	@ExportMessage
 	boolean isArrayElementReadable(long index) {
-		return index < data.getArraySize();
+		return index < data.length;
 	}
 
 	@ExportMessage
 	Object readArrayElement(long index) {
-		if (index < data.getArraySize()) {
-			return data.getArrayElement(index);
+		if (index < data.length) {
+			return data[(int) index];
 		}
 		throw new ArrayIndexOutOfBoundsException();
 	}
@@ -70,7 +77,7 @@ public final class NV1IntNative implements NV1Int {
 	@Override
 	@TruffleBoundary
 	public int hashCode() {
-		return 31 * 1 + ((this.data == null) ? 0 : Long.hashCode(this.data.asNativePointer()));
+		return 31 * 1 + ((this.data == null) ? 0 : Arrays.hashCode(this.data));
 	}
 
 	@Override
@@ -82,19 +89,23 @@ public final class NV1IntNative implements NV1Int {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		NV1IntNative other = (NV1IntNative) obj;
+		NV1RealJava other = (NV1RealJava) obj;
 		if (this.data == null) {
 			if (other.data != null)
 				return false;
-		} else if (this.data.asNativePointer() != other.data.asNativePointer())
+		} else if (!Arrays.equals(this.data, other.data))
 			return false;
 		return true;
+	}
+
+	public double[] getData() {
+		return this.data;
 	}
 
 	@Override
 	public int getDimension(int dimension) {
 		assert (dimension == 1);
-		return 1;
+		return data.length;
 	}
 
 	@ExportMessage

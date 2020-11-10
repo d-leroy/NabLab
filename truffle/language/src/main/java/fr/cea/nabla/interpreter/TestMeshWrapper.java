@@ -14,12 +14,23 @@ class TestMeshWrapper {
 				.allowAllAccess(true)
 //				.option("inspect", "9229") //Uncomment to debug C++ in chrome
 				.build();
-		File file = new File("meshlib.so");
+		File file = new File("libcppnabla.so");
 		Source source = Source.newBuilder("llvm", file).build();
 		Value library = polyglot.eval(source);
-		Value wrapper = library.getMember("get_wrapper").execute(2, 2, 1.0, 1.0);
-		Value v1 = library.getMember("getOuterFaces").execute(wrapper);
-		Value v2 = library.getMember("getNodesOfCell").execute(wrapper, 0);
+//		Value wrapper = library.getMember("jsonInit").execute(
+//				"/home/dleroy/nablab/workspace/NablaExamples/src/iterativeheatequation/IterativeHeatEquation.json\0");
+		Value wrapper = library.getMember("jsonInit").execute("{\n" + 
+				"	\"mesh\":\n" + 
+				"	{\n" + 
+				"		\"nbXQuads\":40,\n" + 
+				"		\"nbYQuads\":40,\n" + 
+				"		\"xSize\":0.05,\n" + 
+				"		\"ySize\":0.05\n" + 
+				"	}\n" + 
+				"}" + "\0");
+		Value v1 = library.getMember("getNodes").execute(wrapper);
+		Value v2 = library.getMember("getNbNodes").execute(wrapper);
+		Value v3 = library.getMember("getNodesOfCell").execute(wrapper, 0);
 		System.out.println("v1 = " + v1 + " ; v2 = " + v2);
 		library.getMember("free_wrapper").execute(wrapper);
 	}

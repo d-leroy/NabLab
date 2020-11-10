@@ -5,6 +5,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 
 import fr.cea.nabla.interpreter.NablaTypesGen;
+import fr.cea.nabla.interpreter.values.NV1RealJava;
 import fr.cea.nabla.interpreter.values.NV2Real;
 
 public abstract class NablaReal2Node extends NablaExpressionNode {
@@ -29,7 +30,7 @@ public abstract class NablaReal2Node extends NablaExpressionNode {
 		}
 		final double[][] computedValues = new double[computedDimensions[0]][computedDimensions[1]];
 		for (int i = 0; i < values.length; i++) {
-			computedValues[i] = NablaTypesGen.asNV1Real(values[i].executeGeneric(frame)).getData();
+			computedValues[i] = ((NV1RealJava) NablaTypesGen.asNV1Real(values[i].executeGeneric(frame))).getData();
 		}
 		return new NV2Real(computedValues);
 	}

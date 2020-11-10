@@ -10,7 +10,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.instrumentation.StandardTags;
 import com.oracle.truffle.api.instrumentation.Tag;
 
-import fr.cea.nabla.interpreter.values.NV1Real;
+import fr.cea.nabla.interpreter.values.NV1RealJava;
 import fr.cea.nabla.interpreter.values.NV2Real;
 import fr.cea.nabla.interpreter.values.NablaValue;
 import fr.cea.nabla.javalib.types.LinearAlgebraFunctions;
@@ -26,8 +26,8 @@ public abstract class NablaLinearSolverCallNode extends NablaExpressionNode {
 	}
 
 	@Specialization
-	public final NablaValue solve(VirtualFrame frame, NV2Real matrix, NV1Real vector) {
-		return new NV1Real(solve(matrix.asMatrix(), vector.asVector()));
+	public final NablaValue solve(VirtualFrame frame, NV2Real matrix, NV1RealJava vector) {
+		return new NV1RealJava(solve(matrix.asMatrix(), vector.asVector()));
 	}
 	
 	@TruffleBoundary

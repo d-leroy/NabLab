@@ -24,6 +24,7 @@ import fr.cea.nabla.interpreter.values.NV0Real;
 import fr.cea.nabla.interpreter.values.NV1Int;
 import fr.cea.nabla.interpreter.values.NV1IntJava;
 import fr.cea.nabla.interpreter.values.NV1Real;
+import fr.cea.nabla.interpreter.values.NV1RealJava;
 import fr.cea.nabla.interpreter.values.NV2Int;
 import fr.cea.nabla.interpreter.values.NV2Real;
 import fr.cea.nabla.interpreter.values.NV3Int;
@@ -82,16 +83,16 @@ public abstract class NablaWriteArrayNode extends NablaInstructionNode implement
 	}
 
 	@Specialization(guards = "isNV2Int()")
-	protected NV2Int writeNV2Int(VirtualFrame frame, NV1Int value, Frame toRead) {
+	protected NV2Int writeNV2Int(VirtualFrame frame, NV1IntJava value, Frame toRead) {
 		NV2Int array = NablaTypesGen.asNV2Int(FrameUtil.getObjectSafe(toRead, slot));
 		final int idx = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
-		array.getData()[idx] = ((NV1IntJava) value).getData();
+		array.getData()[idx] = value.getData();
 		return array;
 	}
 
 	@Specialization(guards = "isNV1Real()")
 	protected NV1Real writeNV1Real(VirtualFrame frame, NV0Real value, Frame toRead) {
-		NV1Real array = NablaTypesGen.asNV1Real(FrameUtil.getObjectSafe(toRead, slot));
+		NV1RealJava array = (NV1RealJava) NablaTypesGen.asNV1Real(FrameUtil.getObjectSafe(toRead, slot));
 		final int idx = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
 		array.getData()[idx] = value.getData();
 		return array;
@@ -107,7 +108,7 @@ public abstract class NablaWriteArrayNode extends NablaInstructionNode implement
 	}
 
 	@Specialization(guards = "isNV2Real()")
-	protected NV2Real writeNV2Real(VirtualFrame frame, NV1Real value, Frame toRead) {
+	protected NV2Real writeNV2Real(VirtualFrame frame, NV1RealJava value, Frame toRead) {
 		NV2Real array = NablaTypesGen.asNV2Real(FrameUtil.getObjectSafe(toRead, slot));
 		final int idx = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
 		array.getData()[idx] = value.getData();
@@ -115,7 +116,7 @@ public abstract class NablaWriteArrayNode extends NablaInstructionNode implement
 	}
 
 	@Specialization(guards = "isNV3Real()")
-	protected NV3Real writeNV3Real(VirtualFrame frame, NV1Real value, Frame toRead) {
+	protected NV3Real writeNV3Real(VirtualFrame frame, NV1RealJava value, Frame toRead) {
 		NV3Real array = NablaTypesGen.asNV3Real(FrameUtil.getObjectSafe(toRead, slot));
 		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
 		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
@@ -161,7 +162,7 @@ public abstract class NablaWriteArrayNode extends NablaInstructionNode implement
 	}
 
 	protected boolean isNV1Real() {
-		return !initializationRequired && arrayClass == NV1Real.class;
+		return !initializationRequired && arrayClass == NV1RealJava.class;
 	}
 
 	protected boolean isNV2Real() {
