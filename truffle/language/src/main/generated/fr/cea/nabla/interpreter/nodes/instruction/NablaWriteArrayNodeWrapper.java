@@ -6,7 +6,6 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.instrumentation.ProbeNode;
 import com.oracle.truffle.api.instrumentation.InstrumentableNode.WrapperNode;
 import com.oracle.truffle.api.nodes.NodeCost;
-import fr.cea.nabla.interpreter.nodes.instruction.NablaWriteArrayNode;
 
 @GeneratedBy(NablaWriteArrayNode.class)
 final class NablaWriteArrayNodeWrapper extends NablaWriteArrayNode implements WrapperNode {

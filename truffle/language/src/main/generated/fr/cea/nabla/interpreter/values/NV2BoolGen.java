@@ -12,7 +12,6 @@ import com.oracle.truffle.api.library.DynamicDispatchLibrary;
 import com.oracle.truffle.api.library.LibraryExport;
 import com.oracle.truffle.api.library.LibraryFactory;
 import com.oracle.truffle.api.nodes.NodeCost;
-import fr.cea.nabla.interpreter.values.NV2Bool;
 
 @GeneratedBy(NV2Bool.class)
 final class NV2BoolGen {

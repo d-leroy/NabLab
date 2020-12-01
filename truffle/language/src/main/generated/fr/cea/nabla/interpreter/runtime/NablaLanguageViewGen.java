@@ -12,7 +12,6 @@ import com.oracle.truffle.api.library.LibraryExport;
 import com.oracle.truffle.api.library.LibraryFactory;
 import com.oracle.truffle.api.nodes.NodeCost;
 import com.oracle.truffle.api.utilities.FinalBitSet;
-import fr.cea.nabla.interpreter.runtime.NablaLanguageView;
 
 @GeneratedBy(NablaLanguageView.class)
 final class NablaLanguageViewGen {

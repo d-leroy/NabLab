@@ -9,7 +9,6 @@ import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
-import fr.cea.nabla.interpreter.nodes.expression.NablaReadArgumentNode;
 
 @GeneratedBy(NablaReadArgumentNode.class)
 public final class NablaReadArgumentNodeGen extends NablaReadArgumentNode {

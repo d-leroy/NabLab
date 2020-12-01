@@ -9,17 +9,17 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
 import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
-import fr.cea.nabla.interpreter.nodes.expression.binary.NablaOrNode;
 import fr.cea.nabla.interpreter.values.NV0Bool;
 
-@GeneratedBy(NablaOrNode.class)
-public final class NablaOrNodeGen extends NablaOrNode {
+@GeneratedBy(NablaBinaryBooleanNode.class)
+public final class NablaBinaryBooleanNodeGen extends NablaBinaryBooleanNode {
 
     @Child private NablaExpressionNode leftNode_;
     @Child private NablaExpressionNode rightNode_;
     @CompilationFinal private int state_;
 
-    private NablaOrNodeGen(NablaExpressionNode leftNode, NablaExpressionNode rightNode) {
+    private NablaBinaryBooleanNodeGen(BooleanOperator operator, NablaExpressionNode leftNode, NablaExpressionNode rightNode) {
+        super(operator);
         this.leftNode_ = leftNode;
         this.rightNode_ = rightNode;
     }
@@ -29,11 +29,11 @@ public final class NablaOrNodeGen extends NablaOrNode {
         int state = state_;
         Object leftNodeValue_ = this.leftNode_.executeGeneric(frameValue);
         Object rightNodeValue_ = this.rightNode_.executeGeneric(frameValue);
-        if (state != 0 /* is-active add(NV0Bool, NV0Bool) */ && leftNodeValue_ instanceof NV0Bool) {
+        if (state != 0 /* is-active and(NV0Bool, NV0Bool) */ && leftNodeValue_ instanceof NV0Bool) {
             NV0Bool leftNodeValue__ = (NV0Bool) leftNodeValue_;
             if (rightNodeValue_ instanceof NV0Bool) {
                 NV0Bool rightNodeValue__ = (NV0Bool) rightNodeValue_;
-                return add(leftNodeValue__, rightNodeValue__);
+                return and(leftNodeValue__, rightNodeValue__);
             }
         }
         CompilerDirectives.transferToInterpreterAndInvalidate();
@@ -46,8 +46,8 @@ public final class NablaOrNodeGen extends NablaOrNode {
             NV0Bool leftNodeValue_ = (NV0Bool) leftNodeValue;
             if (rightNodeValue instanceof NV0Bool) {
                 NV0Bool rightNodeValue_ = (NV0Bool) rightNodeValue;
-                this.state_ = state = state | 0b1 /* add-active add(NV0Bool, NV0Bool) */;
-                return add(leftNodeValue_, rightNodeValue_);
+                this.state_ = state = state | 0b1 /* add-active and(NV0Bool, NV0Bool) */;
+                return and(leftNodeValue_, rightNodeValue_);
             }
         }
         throw new UnsupportedSpecializationException(this, new Node[] {this.leftNode_, this.rightNode_}, leftNodeValue, rightNodeValue);
@@ -63,8 +63,8 @@ public final class NablaOrNodeGen extends NablaOrNode {
         }
     }
 
-    public static NablaOrNode create(NablaExpressionNode leftNode, NablaExpressionNode rightNode) {
-        return new NablaOrNodeGen(leftNode, rightNode);
+    public static NablaBinaryBooleanNode create(BooleanOperator operator, NablaExpressionNode leftNode, NablaExpressionNode rightNode) {
+        return new NablaBinaryBooleanNodeGen(operator, leftNode, rightNode);
     }
 
 }

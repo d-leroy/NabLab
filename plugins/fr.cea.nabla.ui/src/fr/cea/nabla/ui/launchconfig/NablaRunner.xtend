@@ -27,20 +27,30 @@ import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.Path
 import org.eclipse.debug.core.ILaunchConfiguration
 import org.graalvm.polyglot.Context
-import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Engine
+import org.graalvm.polyglot.Source
 
 @Singleton
 class NablaRunner {
 	@Inject NabLabConsoleFactory consoleFactory
 
-	static val Engine engine = Engine.newBuilder().out(System.out).err(System.out) //
+	static val Engine engine = Engine.newBuilder() //
 				.allowExperimentalOptions(true) //
+//				.option("engine.TraceCompilation", "true")
+				.option("engine.TraceCompilationDetails", "true")
+//				.option("engine.TraceAssumptions", "true")
+//				.option("engine.TraceTransferToInterpreter", "true")
+//				.option("engine.OSRCompilationThreshold", "2")
+//				.option("engine.CompileImmediately", "true")
+//				.option("engine.CompilationFailureAction", "Print")
+//				.option("engine.TraceInlining", "true")
+//				.option("engine.TraceInliningDetails", "true")
+//				.option("engine.TracePerformanceWarnings", "all")
 				.build()
 
 	package def launch(ILaunchConfiguration configuration) {
 		val graalVMHome = configuration.getAttribute(NablaLaunchConstants::GRAAL_HOME_LOCATION, '')
-		val source = ResourcesPlugin.workspace.root.getFile(new Path(configuration.getAttribute(NablaLaunchConstants::SOURCE_FILE_LOCATION, '')))
+		val source = ResourcesPlugin.workspace.root.getFile(new Path(configuration.getAttribute(NablaLaunchConstants::SOURCE_FILE_LOCATION, '')))	
 				.rawLocation.makeAbsolute.toString
 		val gen = ResourcesPlugin.workspace.root.getFile(new Path(configuration.getAttribute(NablaLaunchConstants::GEN_FILE_LOCATION, '')))
 				.rawLocation.makeAbsolute.toString
@@ -52,7 +62,7 @@ class NablaRunner {
 		val name = source.substring(source.lastIndexOf(File::separator) + 1)
 
 		consoleFactory.openConsole
-		new Thread([
+		val thread = new Thread([
 			consoleFactory.clearAndActivateConsole
 			consoleFactory.printConsole(MessageType.Start, 'Starting execution: ' + name)
 			val t0 = System::nanoTime
@@ -61,10 +71,15 @@ class NablaRunner {
 			
 			val t = (System::nanoTime - t0) * 0.000000001
 			consoleFactory.printConsole(MessageType.End, 'End of execution: ' + name + ' (' + t + 's)')
-		]).start
+		])
+		
+		thread.contextClassLoader = engine.class.classLoader
+		
+		thread.start
 	}
 	
 	private def double doGraal(String source, String gen, String options, Iterable<String> moniloggers) {
+		
 		val Map<String, String> optionsMap = newHashMap
 
 		val genmodel = readFileAsString(gen);
@@ -79,20 +94,29 @@ class NablaRunner {
 			])
 		}
 		
+//		val Debugger debugger = Debugger::find(engine)
+//		val DebuggerSession session = debugger.startSession([s|println("stopped") s.session.suspendAll s.session.resumeAll])
+//		session.suspendAll
+		
 		val out = new PipedOutputStream
 		val consoleIn = new PipedInputStream(out)
+		var long t0
 		
-		val context = Context.newBuilder().engine(engine) //
+		try (val context = Context.newBuilder().err(out).out(out).engine(engine) //
 				.allowAllAccess(true) //
+				.option("nabla.extlib.CartesianMesh2D", "/home/dleroy/git/NabLab/plugins/fr.cea.nabla.cpplib/src/libcppnabla.so") //
 				.options(optionsMap) //
+				.option("python.Executable", "/home/dleroy/venv-graal/bin/graalpython") //
+				.option("python.ForceImportSite", "true") //
 				.build();
+		) {
+			val nablaSource = Source.newBuilder('nabla', new File(source)).build()
+			val outputGobbler = new StreamGobbler(consoleIn, consoleFactory)
+			outputGobbler.start()
+			t0 = System::nanoTime
+			context.eval(nablaSource)
+		}
 		
-		val nablaSource = Source.newBuilder('nabla', new File(source)).build()
-		val outputGobbler = new StreamGobbler(consoleIn, consoleFactory)
-		outputGobbler.start()
-		
-		val t0 = System::nanoTime
-		context.eval(nablaSource)
 		out.close
 		val t = (System::nanoTime - t0) * 0.000000001
 		

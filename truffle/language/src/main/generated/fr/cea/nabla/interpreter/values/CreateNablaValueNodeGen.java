@@ -16,8 +16,6 @@ import com.oracle.truffle.api.nodes.NodeCost;
 import fr.cea.nabla.interpreter.NablaLanguage;
 import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
 import fr.cea.nabla.interpreter.runtime.NablaContext;
-import fr.cea.nabla.interpreter.values.CreateNablaValueNode;
-import fr.cea.nabla.interpreter.values.NablaValue;
 import java.util.concurrent.locks.Lock;
 import org.graalvm.polyglot.Value;
 
@@ -50,6 +48,7 @@ public final class CreateNablaValueNodeGen extends CreateNablaValueNode {
         if ((state & 0b10) != 0 /* is-active doHostObjectValue(Value) */ && expressionValue_ instanceof Value) {
             Value expressionValue__ = (Value) expressionValue_;
             if ((expressionValue__.isHostObject())) {
+                assert (expectsDouble2());
                 return doHostObjectValue(expressionValue__);
             }
         }
@@ -86,49 +85,55 @@ public final class CreateNablaValueNodeGen extends CreateNablaValueNode {
             Long expressionValue__ = (Long) expressionValue_;
             return createNablaValue(expressionValue__);
         }
-        if ((state & 0b100000000) != 0 /* is-active createNablaValue(int[]) */ && expressionValue_ instanceof int[]) {
+        if ((state & 0b100000000) != 0 /* is-active createNablaValue(Value) */ && expressionValue_ instanceof Value) {
+            Value expressionValue__ = (Value) expressionValue_;
+            if ((expressionValue__.fitsInInt())) {
+                return createNablaValue(expressionValue__);
+            }
+        }
+        if ((state & 0b1000000000) != 0 /* is-active createNablaValue(int[]) */ && expressionValue_ instanceof int[]) {
             int[] expressionValue__ = (int[]) expressionValue_;
             return createNablaValue(expressionValue__);
         }
-        if ((state & 0b1000000000) != 0 /* is-active createNablaValueInt1(Value) */ && expressionValue_ instanceof Value) {
+        if ((state & 0b10000000000) != 0 /* is-active createNablaValueInt1(Value) */ && expressionValue_ instanceof Value) {
             Value expressionValue__ = (Value) expressionValue_;
             assert (expectsInt1());
             if ((expressionValue__.isNativePointer()) && (expressionValue__.hasArrayElements())) {
                 return createNablaValueInt1(expressionValue__);
             }
         }
-        if ((state & 0b10000000000) != 0 /* is-active createNablaValueInt1(Object, InteropLibrary) */) {
+        if ((state & 0b100000000000) != 0 /* is-active createNablaValueInt1(Object, InteropLibrary) */) {
             assert (expectsInt1());
             if ((this.createNablaValueInt11_pointers_.isPointer(expressionValue_)) && (this.createNablaValueInt11_pointers_.hasArrayElements(expressionValue_))) {
                 return createNablaValueInt1(expressionValue_, this.createNablaValueInt11_pointers_);
             }
         }
-        if ((state & 0b100000000000) != 0 /* is-active createNablaValue(int[][]) */ && expressionValue_ instanceof int[][]) {
+        if ((state & 0b1000000000000) != 0 /* is-active createNablaValue(int[][]) */ && expressionValue_ instanceof int[][]) {
             int[][] expressionValue__ = (int[][]) expressionValue_;
             return createNablaValue(expressionValue__);
         }
-        if ((state & 0b1000000000000) != 0 /* is-active createNablaValue(Double) */ && expressionValue_ instanceof Double) {
+        if ((state & 0b10000000000000) != 0 /* is-active createNablaValue(Double) */ && expressionValue_ instanceof Double) {
             Double expressionValue__ = (Double) expressionValue_;
             return createNablaValue(expressionValue__);
         }
-        if ((state & 0b10000000000000) != 0 /* is-active createNablaValue(double[]) */ && expressionValue_ instanceof double[]) {
+        if ((state & 0b100000000000000) != 0 /* is-active createNablaValue(double[]) */ && expressionValue_ instanceof double[]) {
             double[] expressionValue__ = (double[]) expressionValue_;
             return createNablaValue(expressionValue__);
         }
-        if ((state & 0b100000000000000) != 0 /* is-active createNablaValueDouble1(Value) */ && expressionValue_ instanceof Value) {
+        if ((state & 0b1000000000000000) != 0 /* is-active createNablaValueDouble1(Value) */ && expressionValue_ instanceof Value) {
             Value expressionValue__ = (Value) expressionValue_;
             assert (expectsDouble1());
             if ((expressionValue__.isNativePointer()) && (expressionValue__.hasArrayElements())) {
                 return createNablaValueDouble1(expressionValue__);
             }
         }
-        if ((state & 0b1000000000000000) != 0 /* is-active createNablaValueDouble1(Object, InteropLibrary) */) {
+        if ((state & 0x10000) != 0 /* is-active createNablaValueDouble1(Object, InteropLibrary) */) {
             assert (expectsDouble1());
             if ((this.createNablaValueDouble11_pointers_.isPointer(expressionValue_)) && (this.createNablaValueDouble11_pointers_.hasArrayElements(expressionValue_))) {
                 return createNablaValueDouble1(expressionValue_, this.createNablaValueDouble11_pointers_);
             }
         }
-        if ((state & 0x10000) != 0 /* is-active createNablaValue(double[][]) */ && expressionValue_ instanceof double[][]) {
+        if ((state & 0x20000) != 0 /* is-active createNablaValue(double[][]) */ && expressionValue_ instanceof double[][]) {
             double[][] expressionValue__ = (double[][]) expressionValue_;
             return createNablaValue(expressionValue__);
         }
@@ -151,7 +156,7 @@ public final class CreateNablaValueNodeGen extends CreateNablaValueNode {
             }
             if (expressionValue instanceof Value) {
                 Value expressionValue_ = (Value) expressionValue;
-                if ((expressionValue_.isHostObject())) {
+                if ((expressionValue_.isHostObject()) && (expectsDouble2())) {
                     this.state_ = state = state | 0b10 /* add-active doHostObjectValue(Value) */;
                     lock.unlock();
                     hasLock = false;
@@ -235,9 +240,18 @@ public final class CreateNablaValueNodeGen extends CreateNablaValueNode {
                 hasLock = false;
                 return createNablaValue(expressionValue_);
             }
+            if (expressionValue instanceof Value) {
+                Value expressionValue_ = (Value) expressionValue;
+                if ((expressionValue_.fitsInInt())) {
+                    this.state_ = state = state | 0b100000000 /* add-active createNablaValue(Value) */;
+                    lock.unlock();
+                    hasLock = false;
+                    return createNablaValue(expressionValue_);
+                }
+            }
             if (expressionValue instanceof int[]) {
                 int[] expressionValue_ = (int[]) expressionValue;
-                this.state_ = state = state | 0b100000000 /* add-active createNablaValue(int[]) */;
+                this.state_ = state = state | 0b1000000000 /* add-active createNablaValue(int[]) */;
                 lock.unlock();
                 hasLock = false;
                 return createNablaValue(expressionValue_);
@@ -245,7 +259,7 @@ public final class CreateNablaValueNodeGen extends CreateNablaValueNode {
             if (expressionValue instanceof Value) {
                 Value expressionValue_ = (Value) expressionValue;
                 if ((expectsInt1()) && (expressionValue_.isNativePointer()) && (expressionValue_.hasArrayElements())) {
-                    this.state_ = state = state | 0b1000000000 /* add-active createNablaValueInt1(Value) */;
+                    this.state_ = state = state | 0b10000000000 /* add-active createNablaValueInt1(Value) */;
                     lock.unlock();
                     hasLock = false;
                     return createNablaValueInt1(expressionValue_);
@@ -255,7 +269,7 @@ public final class CreateNablaValueNodeGen extends CreateNablaValueNode {
                 InteropLibrary createNablaValueInt11_pointers__ = super.insert((INTEROP_LIBRARY_.createDispatched(3)));
                 if ((createNablaValueInt11_pointers__.isPointer(expressionValue)) && (createNablaValueInt11_pointers__.hasArrayElements(expressionValue))) {
                     this.createNablaValueInt11_pointers_ = super.insert(createNablaValueInt11_pointers__);
-                    this.state_ = state = state | 0b10000000000 /* add-active createNablaValueInt1(Object, InteropLibrary) */;
+                    this.state_ = state = state | 0b100000000000 /* add-active createNablaValueInt1(Object, InteropLibrary) */;
                     lock.unlock();
                     hasLock = false;
                     return createNablaValueInt1(expressionValue, createNablaValueInt11_pointers__);
@@ -263,21 +277,21 @@ public final class CreateNablaValueNodeGen extends CreateNablaValueNode {
             }
             if (expressionValue instanceof int[][]) {
                 int[][] expressionValue_ = (int[][]) expressionValue;
-                this.state_ = state = state | 0b100000000000 /* add-active createNablaValue(int[][]) */;
+                this.state_ = state = state | 0b1000000000000 /* add-active createNablaValue(int[][]) */;
                 lock.unlock();
                 hasLock = false;
                 return createNablaValue(expressionValue_);
             }
             if (expressionValue instanceof Double) {
                 Double expressionValue_ = (Double) expressionValue;
-                this.state_ = state = state | 0b1000000000000 /* add-active createNablaValue(Double) */;
+                this.state_ = state = state | 0b10000000000000 /* add-active createNablaValue(Double) */;
                 lock.unlock();
                 hasLock = false;
                 return createNablaValue(expressionValue_);
             }
             if (expressionValue instanceof double[]) {
                 double[] expressionValue_ = (double[]) expressionValue;
-                this.state_ = state = state | 0b10000000000000 /* add-active createNablaValue(double[]) */;
+                this.state_ = state = state | 0b100000000000000 /* add-active createNablaValue(double[]) */;
                 lock.unlock();
                 hasLock = false;
                 return createNablaValue(expressionValue_);
@@ -285,7 +299,7 @@ public final class CreateNablaValueNodeGen extends CreateNablaValueNode {
             if (expressionValue instanceof Value) {
                 Value expressionValue_ = (Value) expressionValue;
                 if ((expectsDouble1()) && (expressionValue_.isNativePointer()) && (expressionValue_.hasArrayElements())) {
-                    this.state_ = state = state | 0b100000000000000 /* add-active createNablaValueDouble1(Value) */;
+                    this.state_ = state = state | 0b1000000000000000 /* add-active createNablaValueDouble1(Value) */;
                     lock.unlock();
                     hasLock = false;
                     return createNablaValueDouble1(expressionValue_);
@@ -295,7 +309,7 @@ public final class CreateNablaValueNodeGen extends CreateNablaValueNode {
                 InteropLibrary createNablaValueDouble11_pointers__ = super.insert((INTEROP_LIBRARY_.createDispatched(3)));
                 if ((createNablaValueDouble11_pointers__.isPointer(expressionValue)) && (createNablaValueDouble11_pointers__.hasArrayElements(expressionValue))) {
                     this.createNablaValueDouble11_pointers_ = super.insert(createNablaValueDouble11_pointers__);
-                    this.state_ = state = state | 0b1000000000000000 /* add-active createNablaValueDouble1(Object, InteropLibrary) */;
+                    this.state_ = state = state | 0x10000 /* add-active createNablaValueDouble1(Object, InteropLibrary) */;
                     lock.unlock();
                     hasLock = false;
                     return createNablaValueDouble1(expressionValue, createNablaValueDouble11_pointers__);
@@ -303,7 +317,7 @@ public final class CreateNablaValueNodeGen extends CreateNablaValueNode {
             }
             if (expressionValue instanceof double[][]) {
                 double[][] expressionValue_ = (double[][]) expressionValue;
-                this.state_ = state = state | 0x10000 /* add-active createNablaValue(double[][]) */;
+                this.state_ = state = state | 0x20000 /* add-active createNablaValue(double[][]) */;
                 lock.unlock();
                 hasLock = false;
                 return createNablaValue(expressionValue_);

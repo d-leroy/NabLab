@@ -36,7 +36,7 @@ Require-Bundle: fr.cea.nabla,
  org.eclipse.ui.navigator,
  org.eclipse.zest.core,
  org.eclipse.zest.layouts,
- truffle-api-wrapper;bundle-version="0.3.2"
+ truffle-api-wrapper;bundle-version="0.3.3"
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: fr.cea.nabla.ui,

@@ -2,7 +2,6 @@
 package fr.cea.nabla.interpreter;
 
 import com.oracle.truffle.api.dsl.GeneratedBy;
-import fr.cea.nabla.interpreter.NablaOptions;
 import java.util.Arrays;
 import java.util.Iterator;
 import org.graalvm.options.OptionCategory;

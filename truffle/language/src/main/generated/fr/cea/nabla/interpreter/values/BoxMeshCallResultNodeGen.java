@@ -7,7 +7,6 @@ import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
-import fr.cea.nabla.interpreter.values.BoxMeshCallResultNode;
 import org.graalvm.polyglot.Value;
 
 @GeneratedBy(BoxMeshCallResultNode.class)

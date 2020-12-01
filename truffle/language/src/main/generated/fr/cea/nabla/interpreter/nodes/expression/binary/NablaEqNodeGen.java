@@ -9,7 +9,6 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
 import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
-import fr.cea.nabla.interpreter.nodes.expression.binary.NablaEqNode;
 import fr.cea.nabla.interpreter.values.NV0Bool;
 import fr.cea.nabla.interpreter.values.NV0Int;
 import fr.cea.nabla.interpreter.values.NV0Real;

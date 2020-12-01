@@ -25,12 +25,14 @@ import fr.cea.nabla.interpreter.runtime.NablaContext;
 import fr.cea.nabla.interpreter.runtime.NablaLanguageView;
 import fr.cea.nabla.interpreter.values.NablaValue;
 
+@SuppressWarnings("deprecation")
 @TruffleLanguage.Registration( //
 		id = NablaLanguage.ID, //
 		name = "Nabla", //
+		dependentLanguages = "llvm",
 		defaultMimeType = NablaLanguage.MIME_TYPE, //
 		characterMimeTypes = NablaLanguage.MIME_TYPE, //
-		contextPolicy = ContextPolicy.SHARED, //
+		contextPolicy = ContextPolicy.REUSE, //
 		fileTypeDetectors = NablaFileDetector.class)
 @ProvidedTags({ //
 		StandardTags.CallTag.class, //
@@ -51,8 +53,23 @@ public final class NablaLanguage extends TruffleLanguage<NablaContext> {
 	}
 
 	@Override
+	protected boolean isThreadAccessAllowed(Thread thread, boolean singleThreaded) {
+		return true;
+	}
+	
+	@Override
 	protected NablaContext createContext(Env env) {
 		return new NablaContext(this, env);
+	}
+	
+	@Override
+	protected void initializeContext(NablaContext context) throws Exception {
+		context.initializeNativeExtensions();
+	}
+	
+	@Override
+	protected void finalizeContext(NablaContext context) {
+		context.getContextActive().invalidate("context closed");
 	}
 
 	@Override
@@ -103,8 +120,9 @@ public final class NablaLanguage extends TruffleLanguage<NablaContext> {
 	protected Object getLanguageView(NablaContext context, Object value) {
 		return NablaLanguageView.create(value);
 	}
-
+	
 	@Override
+	@Deprecated
 	public Iterable<Scope> findLocalScopes(NablaContext context, Node node, Frame frame) {
 		final NablaLexicalScope scope = NablaLexicalScope.createScope(node, frame);
 		final Iterable<Scope> result = new Iterable<Scope>() {
@@ -149,6 +167,7 @@ public final class NablaLanguage extends TruffleLanguage<NablaContext> {
 	}
 
 	@Override
+	@Deprecated
 	protected Iterable<Scope> findTopScopes(NablaContext context) {
 		return context.getTopScopes();
 	}

@@ -15,7 +15,6 @@ import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
 import com.oracle.truffle.api.utilities.FinalBitSet;
-import fr.cea.nabla.interpreter.values.NV1IntLibrary;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collections;

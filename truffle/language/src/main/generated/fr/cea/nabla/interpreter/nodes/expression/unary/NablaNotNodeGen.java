@@ -7,7 +7,6 @@ import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeCost;
 import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
-import fr.cea.nabla.interpreter.nodes.expression.unary.NablaNotNode;
 import fr.cea.nabla.interpreter.values.NV0Bool;
 
 @GeneratedBy(NablaNotNode.class)

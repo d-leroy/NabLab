@@ -14,7 +14,6 @@ import com.oracle.truffle.api.library.LibraryFactory;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
-import fr.cea.nabla.interpreter.runtime.NablaType;
 import fr.cea.nabla.interpreter.runtime.NablaType.IsMetaInstance;
 import java.util.concurrent.locks.Lock;
 

@@ -3,6 +3,7 @@ package fr.cea.nabla.interpreter.nodes.expression.unary;
 
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.frame.VirtualFrame;
@@ -12,7 +13,6 @@ import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
 import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
-import fr.cea.nabla.interpreter.nodes.expression.unary.NablaSqrtNode;
 import fr.cea.nabla.interpreter.values.NV0Int;
 import fr.cea.nabla.interpreter.values.NV0Real;
 import fr.cea.nabla.interpreter.values.NV1IntLibrary;
@@ -22,6 +22,7 @@ import fr.cea.nabla.interpreter.values.NV2Real;
 import java.util.concurrent.locks.Lock;
 
 @GeneratedBy(NablaSqrtNode.class)
+@SuppressWarnings("unused")
 public final class NablaSqrtNodeGen extends NablaSqrtNode {
 
     private static final LibraryFactory<NV1IntLibrary> N_V1_INT_LIBRARY_ = LibraryFactory.resolve(NV1IntLibrary.class);
@@ -65,9 +66,9 @@ public final class NablaSqrtNodeGen extends NablaSqrtNode {
                 Node prev_ = encapsulating_.set(this);
                 try {
                     {
-                        NV1IntLibrary sqrt3_arrays__ = (N_V1_INT_LIBRARY_.getUncached(valueNodeValue_));
+                        NV1IntLibrary sqrt3_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                         if ((sqrt3_arrays__.isArray(valueNodeValue_))) {
-                            return sqrt(valueNodeValue_, sqrt3_arrays__);
+                            return this.sqrt3Boundary(state, valueNodeValue_);
                         }
                     }
                 } finally {
@@ -88,9 +89,9 @@ public final class NablaSqrtNodeGen extends NablaSqrtNode {
                 Node prev_ = encapsulating_.set(this);
                 try {
                     {
-                        NV1RealLibrary sqrt5_arrays__ = (N_V1_REAL_LIBRARY_.getUncached(valueNodeValue_));
+                        NV1RealLibrary sqrt5_arrays__ = (N_V1_REAL_LIBRARY_.getUncached());
                         if ((sqrt5_arrays__.isArray(valueNodeValue_))) {
-                            return sqrt(valueNodeValue_, sqrt5_arrays__);
+                            return this.sqrt5Boundary(state, valueNodeValue_);
                         }
                     }
                 } finally {
@@ -108,6 +109,24 @@ public final class NablaSqrtNodeGen extends NablaSqrtNode {
         }
         CompilerDirectives.transferToInterpreterAndInvalidate();
         return executeAndSpecialize(valueNodeValue_);
+    }
+
+    @SuppressWarnings("static-method")
+    @TruffleBoundary
+    private Object sqrt3Boundary(int state, Object valueNodeValue_) {
+        {
+            NV1IntLibrary sqrt3_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
+            return sqrt(valueNodeValue_, sqrt3_arrays__);
+        }
+    }
+
+    @SuppressWarnings("static-method")
+    @TruffleBoundary
+    private Object sqrt5Boundary(int state, Object valueNodeValue_) {
+        {
+            NV1RealLibrary sqrt5_arrays__ = (N_V1_REAL_LIBRARY_.getUncached());
+            return sqrt(valueNodeValue_, sqrt5_arrays__);
+        }
     }
 
     private Object executeAndSpecialize(Object valueNodeValue) {
@@ -168,7 +187,7 @@ public final class NablaSqrtNodeGen extends NablaSqrtNode {
                     Node prev_ = encapsulating_.set(this);
                     try {
                         {
-                            sqrt3_arrays__ = (N_V1_INT_LIBRARY_.getUncached(valueNodeValue));
+                            sqrt3_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                             if ((sqrt3_arrays__.isArray(valueNodeValue))) {
                                 this.exclude_ = exclude = exclude | 0b1 /* add-excluded sqrt(Object, NV1IntLibrary) */;
                                 this.sqrt2_cache = null;
@@ -221,7 +240,7 @@ public final class NablaSqrtNodeGen extends NablaSqrtNode {
                     Node prev_ = encapsulating_.set(this);
                     try {
                         {
-                            sqrt5_arrays__ = (N_V1_REAL_LIBRARY_.getUncached(valueNodeValue));
+                            sqrt5_arrays__ = (N_V1_REAL_LIBRARY_.getUncached());
                             if ((sqrt5_arrays__.isArray(valueNodeValue))) {
                                 this.exclude_ = exclude = exclude | 0b10 /* add-excluded sqrt(Object, NV1RealLibrary) */;
                                 this.sqrt4_cache = null;

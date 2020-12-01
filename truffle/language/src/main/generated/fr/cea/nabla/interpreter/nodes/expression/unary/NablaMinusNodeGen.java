@@ -3,6 +3,7 @@ package fr.cea.nabla.interpreter.nodes.expression.unary;
 
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.frame.VirtualFrame;
@@ -12,7 +13,6 @@ import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
 import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
-import fr.cea.nabla.interpreter.nodes.expression.unary.NablaMinusNode;
 import fr.cea.nabla.interpreter.values.NV0Int;
 import fr.cea.nabla.interpreter.values.NV0Real;
 import fr.cea.nabla.interpreter.values.NV1IntLibrary;
@@ -22,6 +22,7 @@ import fr.cea.nabla.interpreter.values.NV2Real;
 import java.util.concurrent.locks.Lock;
 
 @GeneratedBy(NablaMinusNode.class)
+@SuppressWarnings("unused")
 public final class NablaMinusNodeGen extends NablaMinusNode {
 
     private static final LibraryFactory<NV1IntLibrary> N_V1_INT_LIBRARY_ = LibraryFactory.resolve(NV1IntLibrary.class);
@@ -65,9 +66,9 @@ public final class NablaMinusNodeGen extends NablaMinusNode {
                 Node prev_ = encapsulating_.set(this);
                 try {
                     {
-                        NV1IntLibrary minus3_arrays__ = (N_V1_INT_LIBRARY_.getUncached(valueNodeValue_));
+                        NV1IntLibrary minus3_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                         if ((minus3_arrays__.isArray(valueNodeValue_))) {
-                            return minus(valueNodeValue_, minus3_arrays__);
+                            return this.minus3Boundary(state, valueNodeValue_);
                         }
                     }
                 } finally {
@@ -88,9 +89,9 @@ public final class NablaMinusNodeGen extends NablaMinusNode {
                 Node prev_ = encapsulating_.set(this);
                 try {
                     {
-                        NV1RealLibrary minus5_arrays__ = (N_V1_REAL_LIBRARY_.getUncached(valueNodeValue_));
+                        NV1RealLibrary minus5_arrays__ = (N_V1_REAL_LIBRARY_.getUncached());
                         if ((minus5_arrays__.isArray(valueNodeValue_))) {
-                            return minus(valueNodeValue_, minus5_arrays__);
+                            return this.minus5Boundary(state, valueNodeValue_);
                         }
                     }
                 } finally {
@@ -108,6 +109,24 @@ public final class NablaMinusNodeGen extends NablaMinusNode {
         }
         CompilerDirectives.transferToInterpreterAndInvalidate();
         return executeAndSpecialize(valueNodeValue_);
+    }
+
+    @SuppressWarnings("static-method")
+    @TruffleBoundary
+    private Object minus3Boundary(int state, Object valueNodeValue_) {
+        {
+            NV1IntLibrary minus3_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
+            return minus(valueNodeValue_, minus3_arrays__);
+        }
+    }
+
+    @SuppressWarnings("static-method")
+    @TruffleBoundary
+    private Object minus5Boundary(int state, Object valueNodeValue_) {
+        {
+            NV1RealLibrary minus5_arrays__ = (N_V1_REAL_LIBRARY_.getUncached());
+            return minus(valueNodeValue_, minus5_arrays__);
+        }
     }
 
     private Object executeAndSpecialize(Object valueNodeValue) {
@@ -168,7 +187,7 @@ public final class NablaMinusNodeGen extends NablaMinusNode {
                     Node prev_ = encapsulating_.set(this);
                     try {
                         {
-                            minus3_arrays__ = (N_V1_INT_LIBRARY_.getUncached(valueNodeValue));
+                            minus3_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                             if ((minus3_arrays__.isArray(valueNodeValue))) {
                                 this.exclude_ = exclude = exclude | 0b1 /* add-excluded minus(Object, NV1IntLibrary) */;
                                 this.minus2_cache = null;
@@ -221,7 +240,7 @@ public final class NablaMinusNodeGen extends NablaMinusNode {
                     Node prev_ = encapsulating_.set(this);
                     try {
                         {
-                            minus5_arrays__ = (N_V1_REAL_LIBRARY_.getUncached(valueNodeValue));
+                            minus5_arrays__ = (N_V1_REAL_LIBRARY_.getUncached());
                             if ((minus5_arrays__.isArray(valueNodeValue))) {
                                 this.exclude_ = exclude = exclude | 0b10 /* add-excluded minus(Object, NV1RealLibrary) */;
                                 this.minus4_cache = null;

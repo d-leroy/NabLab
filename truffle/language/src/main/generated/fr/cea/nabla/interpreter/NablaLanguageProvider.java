@@ -14,15 +14,13 @@ import com.oracle.truffle.api.instrumentation.StandardTags.RootBodyTag;
 import com.oracle.truffle.api.instrumentation.StandardTags.RootTag;
 import com.oracle.truffle.api.instrumentation.StandardTags.StatementTag;
 import com.oracle.truffle.api.instrumentation.StandardTags.WriteVariableTag;
-import fr.cea.nabla.interpreter.NablaFileDetector;
-import fr.cea.nabla.interpreter.NablaLanguage;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 @GeneratedBy(NablaLanguage.class)
-@Registration(characterMimeTypes = {"application/x-nabla"}, contextPolicy = ContextPolicy.SHARED, defaultMimeType = "application/x-nabla", id = "nabla", name = "Nabla")
+@Registration(characterMimeTypes = {"application/x-nabla"}, contextPolicy = ContextPolicy.REUSE, defaultMimeType = "application/x-nabla", dependentLanguages = {"llvm"}, id = "nabla", name = "Nabla")
 @ProvidedTags({CallTag.class, StatementTag.class, RootTag.class, RootBodyTag.class, ExpressionTag.class, WriteVariableTag.class})
 public final class NablaLanguageProvider implements Provider {
 

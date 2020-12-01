@@ -14,6 +14,7 @@
 #include <algorithm>
 
 #include "mesh/NodeIdContainer.h"
+#include "types/Types.h"
 
 using namespace std;
 

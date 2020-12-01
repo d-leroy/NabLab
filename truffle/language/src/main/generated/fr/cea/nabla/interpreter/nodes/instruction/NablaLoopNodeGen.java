@@ -13,8 +13,6 @@ import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
 import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
-import fr.cea.nabla.interpreter.nodes.instruction.NablaInstructionNode;
-import fr.cea.nabla.interpreter.nodes.instruction.NablaLoopNode;
 import fr.cea.nabla.interpreter.values.NV0Int;
 import fr.cea.nabla.interpreter.values.NV1IntLibrary;
 import java.util.concurrent.locks.Lock;
@@ -68,7 +66,7 @@ public final class NablaLoopNodeGen extends NablaLoopNode {
                 }
             }
             if ((state & 0b1000) != 0 /* is-active doLoop(VirtualFrame, Object, NV1IntLibrary, int) */) {
-                NV1IntLibrary arrays__ = (N_V1_INT_LIBRARY_.getUncached(countValue_));
+                NV1IntLibrary arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                 if ((arrays__.isArray(countValue_))) {
                     Loop3Data s4_ = this.loop3_cache;
                     while (s4_ != null) {
@@ -99,7 +97,7 @@ public final class NablaLoopNodeGen extends NablaLoopNode {
                 Node prev_ = encapsulating_.set(this);
                 try {
                     {
-                        NV1IntLibrary loop5_arrays__ = (N_V1_INT_LIBRARY_.getUncached(countValue_));
+                        NV1IntLibrary loop5_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                         if ((loop5_arrays__.isArray(countValue_))) {
                             return doLoop(frameValue, countValue_, loop5_arrays__);
                         }
@@ -190,7 +188,7 @@ public final class NablaLoopNodeGen extends NablaLoopNode {
             }
             {
                 NV1IntLibrary arrays__ = null;
-                arrays__ = (N_V1_INT_LIBRARY_.getUncached(countValue));
+                arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                 if ((arrays__.isArray(countValue))) {
                     {
                         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
@@ -269,7 +267,7 @@ public final class NablaLoopNodeGen extends NablaLoopNode {
                     Node prev_ = encapsulating_.set(this);
                     try {
                         {
-                            loop5_arrays__ = (N_V1_INT_LIBRARY_.getUncached(countValue));
+                            loop5_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                             if ((loop5_arrays__.isArray(countValue))) {
                                 this.exclude_ = exclude = exclude | 0b10 /* add-excluded doLoop(VirtualFrame, Object, NV1IntLibrary) */;
                                 this.loop4_cache = null;

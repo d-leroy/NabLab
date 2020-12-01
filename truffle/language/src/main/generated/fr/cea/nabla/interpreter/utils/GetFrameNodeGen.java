@@ -4,21 +4,17 @@ package fr.cea.nabla.interpreter.utils;
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
 import com.oracle.truffle.api.dsl.GeneratedBy;
-import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.frame.Frame;
 import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
 import fr.cea.nabla.interpreter.runtime.NablaInitializationPerformedException;
-import fr.cea.nabla.interpreter.utils.GetFrameNode;
 import java.util.concurrent.locks.Lock;
 
 @GeneratedBy(GetFrameNode.class)
 public final class GetFrameNodeGen extends GetFrameNode {
 
-    @CompilationFinal private volatile int state_;
-    @CompilationFinal private volatile int exclude_;
-    @CompilationFinal private Frame cached_result_;
+    @CompilationFinal private int state_;
+    @CompilationFinal private int exclude_;
 
     private GetFrameNodeGen(String name) {
         super(name);
@@ -43,13 +39,8 @@ public final class GetFrameNodeGen extends GetFrameNode {
                 return executeAndSpecialize(frameValue);
             }
         }
-        if ((state & 0b10) != 0 /* is-active doLocal(VirtualFrame) */) {
-            assert (isLocal);
-            return doLocal(frameValue);
-        }
-        if ((state & 0b100) != 0 /* is-active doCached(VirtualFrame, Frame) */) {
-            assert (!(isLocal));
-            return doCached(frameValue, this.cached_result_);
+        if ((state & 0b10) != 0 /* is-active doCached(VirtualFrame) */) {
+            return doCached(frameValue);
         }
         CompilerDirectives.transferToInterpreterAndInvalidate();
         return executeAndSpecialize(frameValue);
@@ -80,20 +71,10 @@ public final class GetFrameNodeGen extends GetFrameNode {
                     return executeAndSpecialize(frameValue);
                 }
             }
-            if ((isLocal)) {
-                this.state_ = state = state | 0b10 /* add-active doLocal(VirtualFrame) */;
-                lock.unlock();
-                hasLock = false;
-                return doLocal(frameValue);
-            }
-            if ((!(isLocal))) {
-                this.cached_result_ = (getFrame(frameValue));
-                this.state_ = state = state | 0b100 /* add-active doCached(VirtualFrame, Frame) */;
-                lock.unlock();
-                hasLock = false;
-                return doCached(frameValue, this.cached_result_);
-            }
-            throw new UnsupportedSpecializationException(this, new Node[] {});
+            this.state_ = state = state | 0b10 /* add-active doCached(VirtualFrame) */;
+            lock.unlock();
+            hasLock = false;
+            return doCached(frameValue);
         } finally {
             if (hasLock) {
                 lock.unlock();

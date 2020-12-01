@@ -7,7 +7,6 @@ import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.frame.Frame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeCost;
-import fr.cea.nabla.interpreter.nodes.expression.NablaReadVariableNode;
 import fr.cea.nabla.interpreter.runtime.NablaInitializationPerformedException;
 import fr.cea.nabla.interpreter.utils.GetFrameNode;
 import java.util.concurrent.locks.Lock;

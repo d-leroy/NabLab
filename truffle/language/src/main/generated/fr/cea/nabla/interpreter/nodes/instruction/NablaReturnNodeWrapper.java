@@ -6,7 +6,6 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.instrumentation.ProbeNode;
 import com.oracle.truffle.api.instrumentation.InstrumentableNode.WrapperNode;
 import com.oracle.truffle.api.nodes.NodeCost;
-import fr.cea.nabla.interpreter.nodes.instruction.NablaReturnNode;
 
 @GeneratedBy(NablaReturnNode.class)
 final class NablaReturnNodeWrapper extends NablaReturnNode implements WrapperNode {

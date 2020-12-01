@@ -3,6 +3,7 @@ package fr.cea.nabla.interpreter.nodes.expression.binary;
 
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.frame.VirtualFrame;
@@ -12,8 +13,6 @@ import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
 import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
-import fr.cea.nabla.interpreter.nodes.expression.binary.NablaArithmeticNode;
-import fr.cea.nabla.interpreter.nodes.expression.binary.Operator;
 import fr.cea.nabla.interpreter.values.NV0Int;
 import fr.cea.nabla.interpreter.values.NV0Real;
 import fr.cea.nabla.interpreter.values.NV1IntLibrary;
@@ -23,8 +22,9 @@ import fr.cea.nabla.interpreter.values.NV2Int;
 import fr.cea.nabla.interpreter.values.NV2Real;
 import java.util.concurrent.locks.Lock;
 
-@GeneratedBy(NablaArithmeticNode.class)
-public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
+@GeneratedBy(NablaBinaryArithmeticNode.class)
+@SuppressWarnings("unused")
+public final class NablaBinaryArithmeticNodeGen extends NablaBinaryArithmeticNode {
 
     private static final LibraryFactory<NV1IntLibrary> N_V1_INT_LIBRARY_ = LibraryFactory.resolve(NV1IntLibrary.class);
     private static final LibraryFactory<NV1RealLibrary> N_V1_REAL_LIBRARY_ = LibraryFactory.resolve(NV1RealLibrary.class);
@@ -45,7 +45,7 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
     @Child private NV1NV1CachedData nV1NV1Cached_cache;
     @Child private Add28Data add28_cache;
 
-    private NablaArithmeticNodeGen(Operator operator, NablaExpressionNode leftNode, NablaExpressionNode rightNode) {
+    private NablaBinaryArithmeticNodeGen(ArithmeticOperator operator, NablaExpressionNode leftNode, NablaExpressionNode rightNode) {
         super(operator);
         this.leftNode_ = leftNode;
         this.rightNode_ = rightNode;
@@ -82,9 +82,9 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
                     Node prev_ = encapsulating_.set(this);
                     try {
                         {
-                            NV1IntLibrary add3_arrays__ = (N_V1_INT_LIBRARY_.getUncached(rightNodeValue_));
+                            NV1IntLibrary add3_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                             if ((add3_arrays__.isArray(rightNodeValue_))) {
-                                return add(leftNodeValue__, rightNodeValue_, add3_arrays__);
+                                return this.add3Boundary(state, leftNodeValue__, rightNodeValue_);
                             }
                         }
                     } finally {
@@ -105,9 +105,9 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
                     Node prev_ = encapsulating_.set(this);
                     try {
                         {
-                            NV1RealLibrary add5_arrays__ = (N_V1_REAL_LIBRARY_.getUncached(rightNodeValue_));
+                            NV1RealLibrary add5_arrays__ = (N_V1_REAL_LIBRARY_.getUncached());
                             if ((add5_arrays__.isArray(rightNodeValue_))) {
-                                return add(leftNodeValue__, rightNodeValue_, add5_arrays__);
+                                return this.add5Boundary(state, leftNodeValue__, rightNodeValue_);
                             }
                         }
                     } finally {
@@ -149,9 +149,9 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
                     Node prev_ = encapsulating_.set(this);
                     try {
                         {
-                            NV1IntLibrary add11_arrays__ = (N_V1_INT_LIBRARY_.getUncached(rightNodeValue_));
+                            NV1IntLibrary add11_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                             if ((add11_arrays__.isArray(rightNodeValue_))) {
-                                return add(leftNodeValue__, rightNodeValue_, add11_arrays__);
+                                return this.add11Boundary(state, leftNodeValue__, rightNodeValue_);
                             }
                         }
                     } finally {
@@ -172,9 +172,9 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
                     Node prev_ = encapsulating_.set(this);
                     try {
                         {
-                            NV1RealLibrary add13_arrays__ = (N_V1_REAL_LIBRARY_.getUncached(rightNodeValue_));
+                            NV1RealLibrary add13_arrays__ = (N_V1_REAL_LIBRARY_.getUncached());
                             if ((add13_arrays__.isArray(rightNodeValue_))) {
-                                return add(leftNodeValue__, rightNodeValue_, add13_arrays__);
+                                return this.add13Boundary(state, leftNodeValue__, rightNodeValue_);
                             }
                         }
                     } finally {
@@ -208,9 +208,9 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
                     Node prev_ = encapsulating_.set(this);
                     try {
                         {
-                            NV1IntLibrary add17_arrays__ = (N_V1_INT_LIBRARY_.getUncached(leftNodeValue_));
+                            NV1IntLibrary add17_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                             if ((add17_arrays__.isArray(leftNodeValue_))) {
-                                return add(leftNodeValue_, rightNodeValue__, add17_arrays__);
+                                return this.add17Boundary(state, leftNodeValue_, rightNodeValue__);
                             }
                         }
                     } finally {
@@ -234,9 +234,9 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
                     Node prev_ = encapsulating_.set(this);
                     try {
                         {
-                            NV1IntLibrary add19_arrays__ = (N_V1_INT_LIBRARY_.getUncached(leftNodeValue_));
+                            NV1IntLibrary add19_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                             if ((add19_arrays__.isArray(leftNodeValue_))) {
-                                return add(leftNodeValue_, rightNodeValue__, add19_arrays__);
+                                return this.add19Boundary(state, leftNodeValue_, rightNodeValue__);
                             }
                         }
                     } finally {
@@ -259,11 +259,11 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
                     Node prev_ = encapsulating_.set(this);
                     try {
                         {
-                            NV1IntLibrary add21_arraysLeft__ = (N_V1_INT_LIBRARY_.getUncached(leftNodeValue_));
+                            NV1IntLibrary add21_arraysLeft__ = (N_V1_INT_LIBRARY_.getUncached());
                             if ((add21_arraysLeft__.isArray(leftNodeValue_))) {
-                                NV1IntLibrary add21_arraysRight__ = (N_V1_INT_LIBRARY_.getUncached(rightNodeValue_));
+                                NV1IntLibrary add21_arraysRight__ = (N_V1_INT_LIBRARY_.getUncached());
                                 if ((add21_arraysRight__.isArray(rightNodeValue_))) {
-                                    return add(leftNodeValue_, rightNodeValue_, add21_arraysLeft__, add21_arraysRight__);
+                                    return this.add21Boundary(state, leftNodeValue_, rightNodeValue_);
                                 }
                             }
                         }
@@ -285,11 +285,11 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
                     Node prev_ = encapsulating_.set(this);
                     try {
                         {
-                            NV1IntLibrary add23_arraysLeft__ = (N_V1_INT_LIBRARY_.getUncached(leftNodeValue_));
+                            NV1IntLibrary add23_arraysLeft__ = (N_V1_INT_LIBRARY_.getUncached());
                             if ((add23_arraysLeft__.isArray(leftNodeValue_))) {
-                                NV1RealLibrary add23_arraysRight__ = (N_V1_REAL_LIBRARY_.getUncached(rightNodeValue_));
+                                NV1RealLibrary add23_arraysRight__ = (N_V1_REAL_LIBRARY_.getUncached());
                                 if ((add23_arraysRight__.isArray(rightNodeValue_))) {
-                                    return add(leftNodeValue_, rightNodeValue_, add23_arraysLeft__, add23_arraysRight__);
+                                    return this.add23Boundary(state, leftNodeValue_, rightNodeValue_);
                                 }
                             }
                         }
@@ -324,9 +324,9 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
                     Node prev_ = encapsulating_.set(this);
                     try {
                         {
-                            NV1IntLibrary add27_arrays__ = (N_V1_INT_LIBRARY_.getUncached(rightNodeValue_));
+                            NV1IntLibrary add27_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                             if ((add27_arrays__.isArray(rightNodeValue_))) {
-                                return add(leftNodeValue__, rightNodeValue_, add27_arrays__);
+                                return this.add27Boundary(state, leftNodeValue__, rightNodeValue_);
                             }
                         }
                     } finally {
@@ -359,11 +359,11 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
                 Node prev_ = encapsulating_.set(this);
                 try {
                     {
-                        NV1RealLibrary add29_arraysLeft__ = (N_V1_REAL_LIBRARY_.getUncached(leftNodeValue_));
+                        NV1RealLibrary add29_arraysLeft__ = (N_V1_REAL_LIBRARY_.getUncached());
                         if ((add29_arraysLeft__.isArray(leftNodeValue_))) {
-                            NV1RealLibrary add29_arraysRight__ = (N_V1_REAL_LIBRARY_.getUncached(rightNodeValue_));
+                            NV1RealLibrary add29_arraysRight__ = (N_V1_REAL_LIBRARY_.getUncached());
                             if ((add29_arraysRight__.isArray(rightNodeValue_)) && (add29_arraysLeft__.length(leftNodeValue_) == add29_arraysRight__.length(rightNodeValue_))) {
-                                return add(leftNodeValue_, rightNodeValue_, add29_arraysLeft__, add29_arraysRight__);
+                                return this.add29Boundary(state, leftNodeValue_, rightNodeValue_);
                             }
                         }
                     }
@@ -404,6 +404,99 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
         }
         CompilerDirectives.transferToInterpreterAndInvalidate();
         return executeAndSpecialize(leftNodeValue_, rightNodeValue_);
+    }
+
+    @SuppressWarnings("static-method")
+    @TruffleBoundary
+    private Object add3Boundary(long state, NV0Int leftNodeValue__, Object rightNodeValue_) {
+        {
+            NV1IntLibrary add3_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
+            return add(leftNodeValue__, rightNodeValue_, add3_arrays__);
+        }
+    }
+
+    @SuppressWarnings("static-method")
+    @TruffleBoundary
+    private Object add5Boundary(long state, NV0Int leftNodeValue__, Object rightNodeValue_) {
+        {
+            NV1RealLibrary add5_arrays__ = (N_V1_REAL_LIBRARY_.getUncached());
+            return add(leftNodeValue__, rightNodeValue_, add5_arrays__);
+        }
+    }
+
+    @SuppressWarnings("static-method")
+    @TruffleBoundary
+    private Object add11Boundary(long state, NV0Real leftNodeValue__, Object rightNodeValue_) {
+        {
+            NV1IntLibrary add11_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
+            return add(leftNodeValue__, rightNodeValue_, add11_arrays__);
+        }
+    }
+
+    @SuppressWarnings("static-method")
+    @TruffleBoundary
+    private Object add13Boundary(long state, NV0Real leftNodeValue__, Object rightNodeValue_) {
+        {
+            NV1RealLibrary add13_arrays__ = (N_V1_REAL_LIBRARY_.getUncached());
+            return add(leftNodeValue__, rightNodeValue_, add13_arrays__);
+        }
+    }
+
+    @SuppressWarnings("static-method")
+    @TruffleBoundary
+    private Object add17Boundary(long state, Object leftNodeValue_, NV0Int rightNodeValue__) {
+        {
+            NV1IntLibrary add17_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
+            return add(leftNodeValue_, rightNodeValue__, add17_arrays__);
+        }
+    }
+
+    @SuppressWarnings("static-method")
+    @TruffleBoundary
+    private Object add19Boundary(long state, Object leftNodeValue_, NV0Real rightNodeValue__) {
+        {
+            NV1IntLibrary add19_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
+            return add(leftNodeValue_, rightNodeValue__, add19_arrays__);
+        }
+    }
+
+    @SuppressWarnings("static-method")
+    @TruffleBoundary
+    private Object add21Boundary(long state, Object leftNodeValue_, Object rightNodeValue_) {
+        {
+            NV1IntLibrary add21_arraysLeft__ = (N_V1_INT_LIBRARY_.getUncached());
+            NV1IntLibrary add21_arraysRight__ = (N_V1_INT_LIBRARY_.getUncached());
+            return add(leftNodeValue_, rightNodeValue_, add21_arraysLeft__, add21_arraysRight__);
+        }
+    }
+
+    @SuppressWarnings("static-method")
+    @TruffleBoundary
+    private Object add23Boundary(long state, Object leftNodeValue_, Object rightNodeValue_) {
+        {
+            NV1IntLibrary add23_arraysLeft__ = (N_V1_INT_LIBRARY_.getUncached());
+            NV1RealLibrary add23_arraysRight__ = (N_V1_REAL_LIBRARY_.getUncached());
+            return add(leftNodeValue_, rightNodeValue_, add23_arraysLeft__, add23_arraysRight__);
+        }
+    }
+
+    @SuppressWarnings("static-method")
+    @TruffleBoundary
+    private Object add27Boundary(long state, NV1RealJava leftNodeValue__, Object rightNodeValue_) {
+        {
+            NV1IntLibrary add27_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
+            return add(leftNodeValue__, rightNodeValue_, add27_arrays__);
+        }
+    }
+
+    @SuppressWarnings("static-method")
+    @TruffleBoundary
+    private Object add29Boundary(long state, Object leftNodeValue_, Object rightNodeValue_) {
+        {
+            NV1RealLibrary add29_arraysLeft__ = (N_V1_REAL_LIBRARY_.getUncached());
+            NV1RealLibrary add29_arraysRight__ = (N_V1_REAL_LIBRARY_.getUncached());
+            return add(leftNodeValue_, rightNodeValue_, add29_arraysLeft__, add29_arraysRight__);
+        }
     }
 
     private Object executeAndSpecialize(Object leftNodeValue, Object rightNodeValue) {
@@ -466,7 +559,7 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
                         Node prev_ = encapsulating_.set(this);
                         try {
                             {
-                                add3_arrays__ = (N_V1_INT_LIBRARY_.getUncached(rightNodeValue));
+                                add3_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                                 if ((add3_arrays__.isArray(rightNodeValue))) {
                                     this.exclude_ = exclude = exclude | 0b1 /* add-excluded add(NV0Int, Object, NV1IntLibrary) */;
                                     this.add2_cache = null;
@@ -519,7 +612,7 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
                         Node prev_ = encapsulating_.set(this);
                         try {
                             {
-                                add5_arrays__ = (N_V1_REAL_LIBRARY_.getUncached(rightNodeValue));
+                                add5_arrays__ = (N_V1_REAL_LIBRARY_.getUncached());
                                 if ((add5_arrays__.isArray(rightNodeValue))) {
                                     this.exclude_ = exclude = exclude | 0b10 /* add-excluded add(NV0Int, Object, NV1RealLibrary) */;
                                     this.add4_cache = null;
@@ -603,7 +696,7 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
                         Node prev_ = encapsulating_.set(this);
                         try {
                             {
-                                add11_arrays__ = (N_V1_INT_LIBRARY_.getUncached(rightNodeValue));
+                                add11_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                                 if ((add11_arrays__.isArray(rightNodeValue))) {
                                     this.exclude_ = exclude = exclude | 0b100 /* add-excluded add(NV0Real, Object, NV1IntLibrary) */;
                                     this.add10_cache = null;
@@ -656,7 +749,7 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
                         Node prev_ = encapsulating_.set(this);
                         try {
                             {
-                                add13_arrays__ = (N_V1_REAL_LIBRARY_.getUncached(rightNodeValue));
+                                add13_arrays__ = (N_V1_REAL_LIBRARY_.getUncached());
                                 if ((add13_arrays__.isArray(rightNodeValue))) {
                                     this.exclude_ = exclude = exclude | 0b1000 /* add-excluded add(NV0Real, Object, NV1RealLibrary) */;
                                     this.add12_cache = null;
@@ -726,7 +819,7 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
                         Node prev_ = encapsulating_.set(this);
                         try {
                             {
-                                add17_arrays__ = (N_V1_INT_LIBRARY_.getUncached(leftNodeValue));
+                                add17_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                                 if ((add17_arrays__.isArray(leftNodeValue))) {
                                     this.exclude_ = exclude = exclude | 0b10000 /* add-excluded add(Object, NV0Int, NV1IntLibrary) */;
                                     this.add16_cache = null;
@@ -782,7 +875,7 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
                         Node prev_ = encapsulating_.set(this);
                         try {
                             {
-                                add19_arrays__ = (N_V1_INT_LIBRARY_.getUncached(leftNodeValue));
+                                add19_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                                 if ((add19_arrays__.isArray(leftNodeValue))) {
                                     this.exclude_ = exclude = exclude | 0b100000 /* add-excluded add(Object, NV0Real, NV1IntLibrary) */;
                                     this.add18_cache = null;
@@ -842,9 +935,9 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
                     Node prev_ = encapsulating_.set(this);
                     try {
                         {
-                            add21_arraysLeft__ = (N_V1_INT_LIBRARY_.getUncached(leftNodeValue));
+                            add21_arraysLeft__ = (N_V1_INT_LIBRARY_.getUncached());
                             if ((add21_arraysLeft__.isArray(leftNodeValue))) {
-                                add21_arraysRight__ = (N_V1_INT_LIBRARY_.getUncached(rightNodeValue));
+                                add21_arraysRight__ = (N_V1_INT_LIBRARY_.getUncached());
                                 if ((add21_arraysRight__.isArray(rightNodeValue))) {
                                     this.exclude_ = exclude = exclude | 0b1000000 /* add-excluded add(Object, Object, NV1IntLibrary, NV1IntLibrary) */;
                                     this.add20_cache = null;
@@ -904,9 +997,9 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
                     Node prev_ = encapsulating_.set(this);
                     try {
                         {
-                            add23_arraysLeft__ = (N_V1_INT_LIBRARY_.getUncached(leftNodeValue));
+                            add23_arraysLeft__ = (N_V1_INT_LIBRARY_.getUncached());
                             if ((add23_arraysLeft__.isArray(leftNodeValue))) {
-                                add23_arraysRight__ = (N_V1_REAL_LIBRARY_.getUncached(rightNodeValue));
+                                add23_arraysRight__ = (N_V1_REAL_LIBRARY_.getUncached());
                                 if ((add23_arraysRight__.isArray(rightNodeValue))) {
                                     this.exclude_ = exclude = exclude | 0b10000000 /* add-excluded add(Object, Object, NV1IntLibrary, NV1RealLibrary) */;
                                     this.add22_cache = null;
@@ -976,7 +1069,7 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
                         Node prev_ = encapsulating_.set(this);
                         try {
                             {
-                                add27_arrays__ = (N_V1_INT_LIBRARY_.getUncached(rightNodeValue));
+                                add27_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                                 if ((add27_arrays__.isArray(rightNodeValue))) {
                                     this.exclude_ = exclude = exclude | 0b100000000 /* add-excluded add(NV1RealJava, Object, NV1IntLibrary) */;
                                     this.add26_cache = null;
@@ -1078,9 +1171,9 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
                     Node prev_ = encapsulating_.set(this);
                     try {
                         {
-                            add29_arraysLeft__ = (N_V1_REAL_LIBRARY_.getUncached(leftNodeValue));
+                            add29_arraysLeft__ = (N_V1_REAL_LIBRARY_.getUncached());
                             if ((add29_arraysLeft__.isArray(leftNodeValue))) {
-                                add29_arraysRight__ = (N_V1_REAL_LIBRARY_.getUncached(rightNodeValue));
+                                add29_arraysRight__ = (N_V1_REAL_LIBRARY_.getUncached());
                                 if ((add29_arraysRight__.isArray(rightNodeValue)) && (add29_arraysLeft__.length(leftNodeValue) == add29_arraysRight__.length(rightNodeValue))) {
                                     this.exclude_ = exclude = exclude | 0b11000000000 /* add-excluded doNV1NV1Cached(Object, Object, NV1RealLibrary, NV1RealLibrary, int), add(Object, Object, NV1RealLibrary, NV1RealLibrary) */;
                                     this.nV1NV1Cached_cache = null;
@@ -1178,11 +1271,11 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
         return NodeCost.POLYMORPHIC;
     }
 
-    public static NablaArithmeticNode create(Operator operator, NablaExpressionNode leftNode, NablaExpressionNode rightNode) {
-        return new NablaArithmeticNodeGen(operator, leftNode, rightNode);
+    public static NablaBinaryArithmeticNode create(ArithmeticOperator operator, NablaExpressionNode leftNode, NablaExpressionNode rightNode) {
+        return new NablaBinaryArithmeticNodeGen(operator, leftNode, rightNode);
     }
 
-    @GeneratedBy(NablaArithmeticNode.class)
+    @GeneratedBy(NablaBinaryArithmeticNode.class)
     private static final class Add2Data extends Node {
 
         @Child Add2Data next_;
@@ -1202,7 +1295,7 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
         }
 
     }
-    @GeneratedBy(NablaArithmeticNode.class)
+    @GeneratedBy(NablaBinaryArithmeticNode.class)
     private static final class Add4Data extends Node {
 
         @Child Add4Data next_;
@@ -1222,7 +1315,7 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
         }
 
     }
-    @GeneratedBy(NablaArithmeticNode.class)
+    @GeneratedBy(NablaBinaryArithmeticNode.class)
     private static final class Add10Data extends Node {
 
         @Child Add10Data next_;
@@ -1242,7 +1335,7 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
         }
 
     }
-    @GeneratedBy(NablaArithmeticNode.class)
+    @GeneratedBy(NablaBinaryArithmeticNode.class)
     private static final class Add12Data extends Node {
 
         @Child Add12Data next_;
@@ -1262,7 +1355,7 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
         }
 
     }
-    @GeneratedBy(NablaArithmeticNode.class)
+    @GeneratedBy(NablaBinaryArithmeticNode.class)
     private static final class Add16Data extends Node {
 
         @Child Add16Data next_;
@@ -1282,7 +1375,7 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
         }
 
     }
-    @GeneratedBy(NablaArithmeticNode.class)
+    @GeneratedBy(NablaBinaryArithmeticNode.class)
     private static final class Add18Data extends Node {
 
         @Child Add18Data next_;
@@ -1302,7 +1395,7 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
         }
 
     }
-    @GeneratedBy(NablaArithmeticNode.class)
+    @GeneratedBy(NablaBinaryArithmeticNode.class)
     private static final class Add20Data extends Node {
 
         @Child Add20Data next_;
@@ -1323,7 +1416,7 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
         }
 
     }
-    @GeneratedBy(NablaArithmeticNode.class)
+    @GeneratedBy(NablaBinaryArithmeticNode.class)
     private static final class Add22Data extends Node {
 
         @Child Add22Data next_;
@@ -1344,7 +1437,7 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
         }
 
     }
-    @GeneratedBy(NablaArithmeticNode.class)
+    @GeneratedBy(NablaBinaryArithmeticNode.class)
     private static final class Add26Data extends Node {
 
         @Child Add26Data next_;
@@ -1364,7 +1457,7 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
         }
 
     }
-    @GeneratedBy(NablaArithmeticNode.class)
+    @GeneratedBy(NablaBinaryArithmeticNode.class)
     private static final class NV1NV1CachedData extends Node {
 
         @Child NV1NV1CachedData next_;
@@ -1386,7 +1479,7 @@ public final class NablaArithmeticNodeGen extends NablaArithmeticNode {
         }
 
     }
-    @GeneratedBy(NablaArithmeticNode.class)
+    @GeneratedBy(NablaBinaryArithmeticNode.class)
     private static final class Add28Data extends Node {
 
         @Child Add28Data next_;

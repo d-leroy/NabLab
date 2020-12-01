@@ -11,8 +11,6 @@ import com.oracle.truffle.api.nodes.EncapsulatingNodeReference;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
-import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
-import fr.cea.nabla.interpreter.nodes.expression.NablaIndexOfNode;
 import fr.cea.nabla.interpreter.values.NV0Int;
 import fr.cea.nabla.interpreter.values.NV1IntLibrary;
 import java.util.concurrent.locks.Lock;
@@ -55,7 +53,7 @@ public final class NablaIndexOfNodeGen extends NablaIndexOfNode {
                 Node prev_ = encapsulating_.set(this);
                 try {
                     {
-                        NV1IntLibrary readNV1Int1Index1_arrays__ = (N_V1_INT_LIBRARY_.getUncached(arrayNodeValue_));
+                        NV1IntLibrary readNV1Int1Index1_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                         if ((readNV1Int1Index1_arrays__.isArray(arrayNodeValue_))) {
                             return readNV1Int1Index(frameValue, arrayNodeValue_, valueValue__, readNV1Int1Index1_arrays__);
                         }
@@ -115,7 +113,7 @@ public final class NablaIndexOfNodeGen extends NablaIndexOfNode {
                         Node prev_ = encapsulating_.set(this);
                         try {
                             {
-                                readNV1Int1Index1_arrays__ = (N_V1_INT_LIBRARY_.getUncached(arrayNodeValue));
+                                readNV1Int1Index1_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                                 if ((readNV1Int1Index1_arrays__.isArray(arrayNodeValue))) {
                                     this.exclude_ = exclude = exclude | 0b1 /* add-excluded readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */;
                                     this.readNV1Int1Index0_cache = null;

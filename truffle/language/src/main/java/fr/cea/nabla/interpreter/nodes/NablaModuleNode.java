@@ -1,9 +1,6 @@
 package fr.cea.nabla.interpreter.nodes;
 
-import com.google.gson.JsonObject;
 import com.oracle.truffle.api.dsl.TypeSystemReference;
-import com.oracle.truffle.api.frame.FrameSlot;
-import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.instrumentation.GenerateWrapper;
@@ -19,30 +16,24 @@ import fr.cea.nabla.interpreter.nodes.instruction.NablaWriteVariableNode;
 import fr.cea.nabla.interpreter.nodes.job.NablaJobBlockNode;
 import fr.cea.nabla.interpreter.runtime.NablaContext;
 import fr.cea.nabla.interpreter.runtime.NablaNull;
-import fr.cea.nabla.interpreter.values.NV2Real;
 
 @GenerateWrapper
 @TypeSystemReference(NablaTypes.class)
 public class NablaModuleNode extends NablaInstructionNode implements InstrumentableNode {
 
-	private final FrameSlot coordinatesSlot;
-	
 	@Child
 	private NablaModulePrologNode prologNode;
-	
+
 	@Child
 	private NablaJobBlockNode jobBlock;
 
-	public NablaModuleNode(JsonObject jsonMesh, FrameSlot coordinatesSlot,
-			NablaWriteVariableNode[] connectivitySizes, NablaWriteVariableNode[] optionDefinitions,
+	public NablaModuleNode(NablaWriteVariableNode[] connectivitySizes, NablaWriteVariableNode[] optionDefinitions,
 			NablaWriteVariableNode[] variableDefinitions, NablaRootNode[] jobs) {
-		this.prologNode = new NablaModulePrologNode(jsonMesh, connectivitySizes, optionDefinitions, variableDefinitions);
-		this.coordinatesSlot = coordinatesSlot;
+		this.prologNode = new NablaModulePrologNode(connectivitySizes, optionDefinitions, variableDefinitions);
 		this.jobBlock = new NablaJobBlockNode(jobs);
 	}
 
 	protected NablaModuleNode() {
-		this.coordinatesSlot = null;
 	}
 
 	@ExplodeLoop
@@ -53,9 +44,6 @@ public class NablaModuleNode extends NablaInstructionNode implements Instrumenta
 		NablaContext.getCurrent().setGlobalFrame(this, globalFrame);
 
 		prologNode.executeGeneric(globalFrame);
-
-		globalFrame.setObject(coordinatesSlot, new NV2Real(NablaContext.getNodes().asHostObject()));
-		globalFrame.getFrameDescriptor().setFrameSlotKind(coordinatesSlot, FrameSlotKind.Object);
 
 		jobBlock.executeGeneric(globalFrame);
 

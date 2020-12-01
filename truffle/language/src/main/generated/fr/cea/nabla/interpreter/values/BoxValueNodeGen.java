@@ -16,7 +16,6 @@ import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
 import fr.cea.nabla.interpreter.NablaLanguage;
 import fr.cea.nabla.interpreter.runtime.NablaContext;
-import fr.cea.nabla.interpreter.values.BoxValueNode;
 import java.util.concurrent.locks.Lock;
 import org.graalvm.polyglot.Value;
 
@@ -320,6 +319,7 @@ public final class BoxValueNodeGen extends BoxValueNode {
         return executeAndSpecialize(arg0Value);
     }
 
+    @SuppressWarnings("static-method")
     @TruffleBoundary
     private Object int10Boundary(long state, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
@@ -334,6 +334,7 @@ public final class BoxValueNodeGen extends BoxValueNode {
         }
     }
 
+    @SuppressWarnings("static-method")
     @TruffleBoundary
     private Object int12Boundary(long state, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
@@ -348,6 +349,7 @@ public final class BoxValueNodeGen extends BoxValueNode {
         }
     }
 
+    @SuppressWarnings("static-method")
     @TruffleBoundary
     private Object int21Boundary(long state, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
@@ -362,6 +364,7 @@ public final class BoxValueNodeGen extends BoxValueNode {
         }
     }
 
+    @SuppressWarnings("static-method")
     @TruffleBoundary
     private Object int31Boundary(long state, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
@@ -376,6 +379,7 @@ public final class BoxValueNodeGen extends BoxValueNode {
         }
     }
 
+    @SuppressWarnings("static-method")
     @TruffleBoundary
     private Object int41Boundary(long state, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
@@ -390,6 +394,7 @@ public final class BoxValueNodeGen extends BoxValueNode {
         }
     }
 
+    @SuppressWarnings("static-method")
     @TruffleBoundary
     private Object double20Boundary(long state, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
@@ -404,6 +409,7 @@ public final class BoxValueNodeGen extends BoxValueNode {
         }
     }
 
+    @SuppressWarnings("static-method")
     @TruffleBoundary
     private Object double12Boundary(long state, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
@@ -418,6 +424,7 @@ public final class BoxValueNodeGen extends BoxValueNode {
         }
     }
 
+    @SuppressWarnings("static-method")
     @TruffleBoundary
     private Object double22Boundary(long state, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
@@ -432,6 +439,7 @@ public final class BoxValueNodeGen extends BoxValueNode {
         }
     }
 
+    @SuppressWarnings("static-method")
     @TruffleBoundary
     private Object double31Boundary(long state, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
@@ -446,6 +454,7 @@ public final class BoxValueNodeGen extends BoxValueNode {
         }
     }
 
+    @SuppressWarnings("static-method")
     @TruffleBoundary
     private Object double41Boundary(long state, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
@@ -460,6 +469,7 @@ public final class BoxValueNodeGen extends BoxValueNode {
         }
     }
 
+    @SuppressWarnings("static-method")
     @TruffleBoundary
     private Object bool10Boundary(long state, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
@@ -474,6 +484,7 @@ public final class BoxValueNodeGen extends BoxValueNode {
         }
     }
 
+    @SuppressWarnings("static-method")
     @TruffleBoundary
     private Object bool12Boundary(long state, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
@@ -488,6 +499,7 @@ public final class BoxValueNodeGen extends BoxValueNode {
         }
     }
 
+    @SuppressWarnings("static-method")
     @TruffleBoundary
     private Object bool21Boundary(long state, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
@@ -502,6 +514,7 @@ public final class BoxValueNodeGen extends BoxValueNode {
         }
     }
 
+    @SuppressWarnings("static-method")
     @TruffleBoundary
     private Object bool31Boundary(long state, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
@@ -516,6 +529,7 @@ public final class BoxValueNodeGen extends BoxValueNode {
         }
     }
 
+    @SuppressWarnings("static-method")
     @TruffleBoundary
     private Object bool41Boundary(long state, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();

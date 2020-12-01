@@ -3,7 +3,6 @@ package fr.cea.nabla.interpreter;
 
 import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
-import fr.cea.nabla.interpreter.NablaTypes;
 import fr.cea.nabla.interpreter.values.NV0Bool;
 import fr.cea.nabla.interpreter.values.NV0Int;
 import fr.cea.nabla.interpreter.values.NV0Real;

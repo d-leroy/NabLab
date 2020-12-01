@@ -6,7 +6,6 @@ import com.oracle.truffle.api.dsl.Cached;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.library.CachedLibrary;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
-import com.oracle.truffle.api.nodes.NodeInfo;
 
 import fr.cea.nabla.interpreter.values.NV0Int;
 import fr.cea.nabla.interpreter.values.NV0Real;
@@ -19,12 +18,11 @@ import fr.cea.nabla.interpreter.values.NV1RealLibrary;
 import fr.cea.nabla.interpreter.values.NV2Int;
 import fr.cea.nabla.interpreter.values.NV2Real;
 
-@NodeInfo(shortName = "+")
-public abstract class NablaArithmeticNode extends NablaBinaryExpressionNode {
+public abstract class NablaBinaryArithmeticNode extends NablaBinaryExpressionNode {
 
-	private final Operator op;
+	private final ArithmeticOperator op;
 
-	public NablaArithmeticNode(Operator operator) {
+	public NablaBinaryArithmeticNode(ArithmeticOperator operator) {
 		this.op = operator;
 	}
 

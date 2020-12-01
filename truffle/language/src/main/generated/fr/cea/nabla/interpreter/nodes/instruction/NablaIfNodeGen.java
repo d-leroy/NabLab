@@ -9,8 +9,6 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
 import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
-import fr.cea.nabla.interpreter.nodes.instruction.NablaIfNode;
-import fr.cea.nabla.interpreter.nodes.instruction.NablaInstructionNode;
 
 @GeneratedBy(NablaIfNode.class)
 public final class NablaIfNodeGen extends NablaIfNode {

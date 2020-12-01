@@ -13,7 +13,6 @@ import com.oracle.truffle.api.library.LibraryExport;
 import com.oracle.truffle.api.library.LibraryFactory;
 import com.oracle.truffle.api.nodes.NodeCost;
 import com.oracle.truffle.api.profiles.BranchProfile;
-import fr.cea.nabla.interpreter.nodes.interop.NodeObjectDescriptorKeys;
 import java.util.concurrent.locks.Lock;
 
 @GeneratedBy(NodeObjectDescriptorKeys.class)

@@ -7,7 +7,6 @@ import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeCost;
 import com.oracle.truffle.api.profiles.BranchProfile;
-import fr.cea.nabla.interpreter.nodes.instruction.NablaExitNode;
 import java.util.concurrent.locks.Lock;
 
 @GeneratedBy(NablaExitNode.class)

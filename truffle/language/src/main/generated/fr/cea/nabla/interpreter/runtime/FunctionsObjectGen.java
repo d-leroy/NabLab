@@ -10,7 +10,6 @@ import com.oracle.truffle.api.library.DynamicDispatchLibrary;
 import com.oracle.truffle.api.library.LibraryExport;
 import com.oracle.truffle.api.library.LibraryFactory;
 import com.oracle.truffle.api.nodes.NodeCost;
-import fr.cea.nabla.interpreter.runtime.FunctionsObject;
 
 @GeneratedBy(FunctionsObject.class)
 final class FunctionsObjectGen {

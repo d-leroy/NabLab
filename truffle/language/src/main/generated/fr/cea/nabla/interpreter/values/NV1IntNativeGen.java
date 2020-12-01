@@ -11,8 +11,6 @@ import com.oracle.truffle.api.library.DynamicDispatchLibrary;
 import com.oracle.truffle.api.library.LibraryExport;
 import com.oracle.truffle.api.library.LibraryFactory;
 import com.oracle.truffle.api.nodes.NodeCost;
-import fr.cea.nabla.interpreter.values.NV1IntLibrary;
-import fr.cea.nabla.interpreter.values.NV1IntNative;
 
 @GeneratedBy(NV1IntNative.class)
 final class NV1IntNativeGen {

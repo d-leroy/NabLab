@@ -11,8 +11,6 @@ import com.oracle.truffle.api.nodes.EncapsulatingNodeReference;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
-import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
-import fr.cea.nabla.interpreter.nodes.expression.NablaReadArrayNode;
 import fr.cea.nabla.interpreter.values.NV1Bool;
 import fr.cea.nabla.interpreter.values.NV1IntLibrary;
 import fr.cea.nabla.interpreter.values.NV1RealLibrary;
@@ -59,12 +57,12 @@ public final class NablaReadArrayNodeGen extends NablaReadArrayNode {
                 }
             }
             if ((state & 0b10) != 0 /* is-active readNV1Int1Index(VirtualFrame, Object, NV1IntLibrary) */) {
-                assert (indices.length == 1);
                 EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
                 Node prev_ = encapsulating_.set(this);
                 try {
                     {
-                        NV1IntLibrary readNV1Int1Index1_arrays__ = (N_V1_INT_LIBRARY_.getUncached(arrayNodeValue_));
+                        NV1IntLibrary readNV1Int1Index1_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
+                        assert (indices.length == 1);
                         if ((readNV1Int1Index1_arrays__.isArray(arrayNodeValue_))) {
                             return readNV1Int1Index(frameValue, arrayNodeValue_, readNV1Int1Index1_arrays__);
                         }
@@ -99,12 +97,12 @@ public final class NablaReadArrayNodeGen extends NablaReadArrayNode {
                 }
             }
             if ((state & 0b100000) != 0 /* is-active readNV1Real1Index(VirtualFrame, Object, NV1RealLibrary) */) {
-                assert (indices.length == 1);
                 EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
                 Node prev_ = encapsulating_.set(this);
                 try {
                     {
-                        NV1RealLibrary readNV1Real1Index1_arrays__ = (N_V1_REAL_LIBRARY_.getUncached(arrayNodeValue_));
+                        NV1RealLibrary readNV1Real1Index1_arrays__ = (N_V1_REAL_LIBRARY_.getUncached());
+                        assert (indices.length == 1);
                         if ((readNV1Real1Index1_arrays__.isArray(arrayNodeValue_))) {
                             return readNV1Real1Index(frameValue, arrayNodeValue_, readNV1Real1Index1_arrays__);
                         }
@@ -226,7 +224,7 @@ public final class NablaReadArrayNodeGen extends NablaReadArrayNode {
                     Node prev_ = encapsulating_.set(this);
                     try {
                         if ((indices.length == 1)) {
-                            readNV1Int1Index1_arrays__ = (N_V1_INT_LIBRARY_.getUncached(arrayNodeValue));
+                            readNV1Int1Index1_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                             if ((readNV1Int1Index1_arrays__.isArray(arrayNodeValue))) {
                                 this.exclude_ = exclude = exclude | 0b1 /* add-excluded readNV1Int1Index(VirtualFrame, Object, NV1IntLibrary) */;
                                 this.readNV1Int1Index0_cache = null;
@@ -297,7 +295,7 @@ public final class NablaReadArrayNodeGen extends NablaReadArrayNode {
                     Node prev_ = encapsulating_.set(this);
                     try {
                         if ((indices.length == 1)) {
-                            readNV1Real1Index1_arrays__ = (N_V1_REAL_LIBRARY_.getUncached(arrayNodeValue));
+                            readNV1Real1Index1_arrays__ = (N_V1_REAL_LIBRARY_.getUncached());
                             if ((readNV1Real1Index1_arrays__.isArray(arrayNodeValue))) {
                                 this.exclude_ = exclude = exclude | 0b10 /* add-excluded readNV1Real1Index(VirtualFrame, Object, NV1RealLibrary) */;
                                 this.readNV1Real1Index0_cache = null;

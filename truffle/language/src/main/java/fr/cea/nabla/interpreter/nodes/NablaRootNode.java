@@ -66,6 +66,11 @@ public class NablaRootNode extends RootNode {
 	public String getName() {
 		return name;
 	}
+	
+	@Override
+	public String toString() {
+		return name;
+	}
 
 	public boolean isCloningAllowed() {
 		return isCloningAllowed;

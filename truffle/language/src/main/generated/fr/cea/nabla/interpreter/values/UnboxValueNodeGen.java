@@ -9,16 +9,6 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
 import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
-import fr.cea.nabla.interpreter.values.NV0Bool;
-import fr.cea.nabla.interpreter.values.NV0Int;
-import fr.cea.nabla.interpreter.values.NV0Real;
-import fr.cea.nabla.interpreter.values.NV1Bool;
-import fr.cea.nabla.interpreter.values.NV1IntJava;
-import fr.cea.nabla.interpreter.values.NV1RealJava;
-import fr.cea.nabla.interpreter.values.NV2Bool;
-import fr.cea.nabla.interpreter.values.NV2Int;
-import fr.cea.nabla.interpreter.values.NV2Real;
-import fr.cea.nabla.interpreter.values.UnboxValueNode;
 
 @GeneratedBy(UnboxValueNode.class)
 public final class UnboxValueNodeGen extends UnboxValueNode {

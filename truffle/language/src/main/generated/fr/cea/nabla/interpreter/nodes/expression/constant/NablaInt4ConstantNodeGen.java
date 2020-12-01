@@ -5,7 +5,6 @@ import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeCost;
 import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
-import fr.cea.nabla.interpreter.nodes.expression.constant.NablaInt4ConstantNode;
 
 @GeneratedBy(NablaInt4ConstantNode.class)
 public final class NablaInt4ConstantNodeGen extends NablaInt4ConstantNode {

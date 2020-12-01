@@ -85,6 +85,10 @@
   "name":"com.oracle.truffle.api.interop.DefaultByteExportsGen"
 },
 {
+  "name":"com.oracle.truffle.api.interop.DefaultByteExportsGen$InteropLibraryExports$Cached",
+  "allDeclaredFields":true
+},
+{
   "name":"com.oracle.truffle.api.interop.DefaultCharacterExportsGen"
 },
 {
@@ -97,11 +101,11 @@
   "name":"com.oracle.truffle.api.interop.DefaultIntegerExportsGen"
 },
 {
-  "name":"com.oracle.truffle.api.interop.DefaultIntegerExportsGen$InteropLibraryExports$Cached",
-  "allDeclaredFields":true
+  "name":"com.oracle.truffle.api.interop.DefaultLongExportsGen"
 },
 {
-  "name":"com.oracle.truffle.api.interop.DefaultLongExportsGen"
+  "name":"com.oracle.truffle.api.interop.DefaultLongExportsGen$InteropLibraryExports$Cached",
+  "allDeclaredFields":true
 },
 {
   "name":"com.oracle.truffle.api.interop.DefaultShortExportsGen"
@@ -175,6 +179,10 @@
   ]
 },
 {
+  "name":"com.oracle.truffle.api.nodes.IndirectCallNode",
+  "allDeclaredFields":true
+},
+{
   "name":"com.oracle.truffle.api.nodes.LoopNode",
   "allDeclaredFields":true
 },
@@ -206,6 +214,3801 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"com.oracle.truffle.llvm.Runner$AllocExistingGlobalSymbolsNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.Runner$AllocExistingLocalSymbolsNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.Runner$AllocExternalFunctionNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"nodeFactory", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.Runner$AllocExternalGlobalNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.Runner$AllocExternalSymbolNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"symbol", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.Runner$AllocGlobalNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"name", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.Runner$AllocIntrinsicFunctionNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"intrinsicProvider", "allowUnsafeAccess":true}, 
+    {"name":"nodeFactory", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.Runner$AllocLLVMFunctionNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.Runner$AllocOtherGlobalNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"offset", "allowUnsafeAccess":true}, 
+    {"name":"readOnly", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.Runner$AllocPointerGlobalNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.Runner$AllocScopeNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"symbol", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.Runner$AllocSymbolNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"symbol", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.Runner$InitializeExternalNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"allocExternalSymbols", "allowUnsafeAccess":true}, 
+    {"name":"nodeFactory", "allowUnsafeAccess":true}, 
+    {"name":"writeSymbols", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.Runner$InitializeGlobalNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"dataLayout", "allowUnsafeAccess":true}, 
+    {"name":"globalVarInit", "allowUnsafeAccess":true}, 
+    {"name":"protectRoData", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.Runner$InitializeModuleNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"constructor", "allowUnsafeAccess":true}, 
+    {"name":"dataLayout", "allowUnsafeAccess":true}, 
+    {"name":"destructor", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.Runner$InitializeOverwriteNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"allocExternalSymbols", "allowUnsafeAccess":true}, 
+    {"name":"writeSymbols", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.Runner$InitializeScopeNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"allocScopes", "allowUnsafeAccess":true}, 
+    {"name":"bitcodeID", "allowUnsafeAccess":true}, 
+    {"name":"fileScope", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.Runner$InitializeSymbolsNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"allocFuncs", "allowUnsafeAccess":true}, 
+    {"name":"allocGlobals", "allowUnsafeAccess":true}, 
+    {"name":"allocRoSection", "allowUnsafeAccess":true}, 
+    {"name":"allocRwSection", "allowUnsafeAccess":true}, 
+    {"name":"bitcodeID", "allowUnsafeAccess":true}, 
+    {"name":"checkGlobals", "allowUnsafeAccess":true}, 
+    {"name":"fileScope", "allowUnsafeAccess":true}, 
+    {"name":"globalLength", "allowUnsafeAccess":true}, 
+    {"name":"moduleName", "allowUnsafeAccess":true}, 
+    {"name":"nodeFactory", "allowUnsafeAccess":true}, 
+    {"name":"writeSymbols", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.Runner$LoadModulesNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"ctxRef", "allowUnsafeAccess":true}, 
+    {"name":"initContext", "allowUnsafeAccess":true}, 
+    {"name":"initExternals", "allowUnsafeAccess":true}, 
+    {"name":"initGlobals", "allowUnsafeAccess":true}, 
+    {"name":"initModules", "allowUnsafeAccess":true}, 
+    {"name":"initOverwrite", "allowUnsafeAccess":true}, 
+    {"name":"initScopes", "allowUnsafeAccess":true}, 
+    {"name":"initSymbols", "allowUnsafeAccess":true}, 
+    {"name":"stackPointerSlot", "allowUnsafeAccess":true}, 
+    {"name":"sulongLibrary", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.Runner$StaticInitsNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"moduleName", "allowUnsafeAccess":true}, 
+    {"name":"prefix", "allowUnsafeAccess":true}, 
+    {"name":"statements", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.RunnerFactory$AllocExistingLocalSymbolsNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"allocateFromLocalScopeCached_cache", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageContextReference_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.RunnerFactory$AllocExistingLocalSymbolsNodeGen$AllocateFromLocalScopeCachedData",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"accessSymbol_", "allowUnsafeAccess":true}, 
+    {"name":"cachedLocalSymbol_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.RunnerFactory$AllocExternalFunctionNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"allocateFromGlobalScopeCached_cache", "allowUnsafeAccess":true}, 
+    {"name":"allocateFromLocalScopeCached_cache", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageContextReference_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.RunnerFactory$AllocExternalFunctionNodeGen$AllocateFromGlobalScopeCachedData",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"accessSymbol_", "allowUnsafeAccess":true}, 
+    {"name":"cachedGlobalSymbol_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.RunnerFactory$AllocExternalFunctionNodeGen$AllocateFromLocalScopeCachedData",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"accessSymbol_", "allowUnsafeAccess":true}, 
+    {"name":"cachedLocalSymbol_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.RunnerFactory$AllocExternalGlobalNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"allocateFromGlobalScopeCached_cache", "allowUnsafeAccess":true}, 
+    {"name":"allocateFromLocalScopeCached_cache", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageContextReference_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.RunnerFactory$AllocExternalGlobalNodeGen$AllocateFromLocalScopeCachedData",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"accessSymbol_", "allowUnsafeAccess":true}, 
+    {"name":"cachedLocalSymbol_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.RunnerFactory$StaticInitsNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"lLVMLanguageContextReference_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.LLVMArgumentArrayGen"
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.LLVMArgumentArrayGen$InteropLibraryExports$Cached",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"exception_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.LLVMArgumentBufferGen"
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.LLVMArgumentBufferGen$InteropLibraryExports$Cached",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"oob_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.LLVMContext$1",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"freeRo", "allowUnsafeAccess":true}, 
+    {"name":"freeRw", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.LLVMContext$InitializeContextNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"ctxRef", "allowUnsafeAccess":true}, 
+    {"name":"initContext", "allowUnsafeAccess":true}, 
+    {"name":"stackPointer", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.LLVMContextFactory$InitializeContextNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.LLVMFunctionCode$ResolveFunctionNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.LLVMFunctionCodeFactory$ResolveFunctionNodeGen",
+  "allDeclaredFields":true,
+  "fields":[{"name":"state_", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.LLVMFunctionDescriptorGen"
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.LLVMFunctionDescriptorGen$InteropLibraryExports$Cached",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"cached_cache", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"polymorphic0_call_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.LLVMFunctionDescriptorGen$InteropLibraryExports$Cached$CachedData",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"cachedSelf_", "allowUnsafeAccess":true}, 
+    {"name":"call_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.LLVMGetStackNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.LLVMGetStackNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"cached_cache", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.SulongLibraryGen"
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.global.LLVMGlobalContainerGen"
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.global.LLVMGlobalContainerGen$InteropLibraryExports$Cached",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"toNative_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.global.LLVMGlobalContainerGen$LLVMManagedReadLibraryExports$Cached",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"readPointer_readManaged_toPointer_", "allowUnsafeAccess":true}, 
+    {"name":"receiverInteropLibrary_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.global.LLVMGlobalContainerGen$LLVMManagedWriteLibraryExports$Cached",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"receiverInteropLibrary_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"writeGenericI64_writeNative0_cache", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.LLVMAsForeignNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.LLVMAsForeignNode$StrictAsForeignNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.LLVMAsForeignNodeGen$StrictAsForeignNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"foreign_foreigns_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.LLVMDataEscapeNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.LLVMDataEscapeNode$LLVMI32DataEscapeNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.LLVMDataEscapeNode$LLVMI64DataEscapeNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.LLVMDataEscapeNode$LLVMPointerDataEscapeNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.LLVMDataEscapeNodeFactory$LLVMI32DataEscapeNodeGen",
+  "allDeclaredFields":true,
+  "fields":[{"name":"state_", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.LLVMDataEscapeNodeFactory$LLVMI64DataEscapeNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"escapingPointer_pointerDataEscapeNode_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.LLVMDataEscapeNodeFactory$LLVMPointerDataEscapeNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"escapingForeignNonPointer_foreigns_", "allowUnsafeAccess":true}, 
+    {"name":"escapingManaged_foreigns_", "allowUnsafeAccess":true}, 
+    {"name":"escapingManaged_typedProfile_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.LLVMForeignCallNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"callNode", "allowUnsafeAccess":true}, 
+    {"name":"ctxRef", "allowUnsafeAccess":true}, 
+    {"name":"getStack", "allowUnsafeAccess":true}, 
+    {"name":"packArguments", "allowUnsafeAccess":true}, 
+    {"name":"prepareValueForEscape", "allowUnsafeAccess":true}, 
+    {"name":"returnBaseType", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.LLVMForeignCallNode$PackForeignArgumentsNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"numberOfSourceArguments", "allowUnsafeAccess":true}, 
+    {"name":"toLLVM", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.LLVMForeignCallNodeFactory$PackForeignArgumentsNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"exceptionProfile_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.LLVMGetInteropParamNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.LLVMGetInteropPrimitiveParamNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"index", "allowUnsafeAccess":true}, 
+    {"name":"toLLVM", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.LLVMGetInteropPrimitiveParamNodeGen",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.LLVMInternalTruffleObjectGen"
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.LLVMTypedForeignObjectGen"
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.LLVMTypedForeignObjectGen$LLVMAsForeignLibraryExports$Cached",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.convert.ForeignToLLVM",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.convert.ToI64",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.convert.ToI64NodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"fromForeign0_cache", "allowUnsafeAccess":true}, 
+    {"name":"fromForeign1_exception_", "allowUnsafeAccess":true}, 
+    {"name":"fromForeign1_interop_", "allowUnsafeAccess":true}, 
+    {"name":"fromForeignPointer0_cache", "allowUnsafeAccess":true}, 
+    {"name":"fromForeignPointer1_foreigns_", "allowUnsafeAccess":true}, 
+    {"name":"fromForeignPointer1_toPointer_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.convert.ToI64NodeGen$FromForeign0Data",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"exception_", "allowUnsafeAccess":true}, 
+    {"name":"foreigns_", "allowUnsafeAccess":true}, 
+    {"name":"interop_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.convert.ToPointer",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.convert.ToPointer$InteropTypeNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"type", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.convert.ToPointerNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"child1_", "allowUnsafeAccess":true}, 
+    {"name":"fromNonTypedTruffleObject_foreigns_", "allowUnsafeAccess":true}, 
+    {"name":"fromNonTypedTruffleObject_nativeTypes_", "allowUnsafeAccess":true}, 
+    {"name":"fromTypedTruffleObjectNoAttachedType_foreigns_", "allowUnsafeAccess":true}, 
+    {"name":"fromTypedTruffleObjectNoAttachedType_nativeTypes_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.export.LLVMForeignGetIndexPointerNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.export.LLVMForeignGetIndexPointerNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"cached_cache", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"generic_exception_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.export.LLVMForeignReadNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.export.LLVMForeignReadNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"value_cache", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.export.LLVMForeignReadNodeGen$ValueData",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"cachedKind_", "allowUnsafeAccess":true}, 
+    {"name":"dataEscape_", "allowUnsafeAccess":true}, 
+    {"name":"load_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.nfi.LLVMNativeConvertNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.nfi.LLVMNativeConvertNode$AddressToNative",
+  "allDeclaredFields":true,
+  "fields":[{"name":"toNative", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.nfi.LLVMNativeConvertNode$Id",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.nfi.LLVMNativeConvertNode$NativeToAddress",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.nfi.LLVMNativeConvertNodeFactory$IdNodeGen",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.nfi.LLVMNativeConvertNodeFactory$NativeToAddressNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"function_cache", "allowUnsafeAccess":true}, 
+    {"name":"generic0_cache", "allowUnsafeAccess":true}, 
+    {"name":"pointer_cache", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.nfi.LLVMNativeConvertNodeFactory$NativeToAddressNodeGen$PointerData",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"interop_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.nfi.LLVMNativeWrapperGen"
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.interop.nfi.LLVMNativeWrapperGen$InteropLibraryExports$Cached",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"callbackHelper_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.library.internal.DefaultAsForeignLibraryGen"
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.library.internal.DefaultAsForeignLibraryGen$LLVMAsForeignLibraryExports$Cached",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"dynamicDispatchTarget_", "allowUnsafeAccess":true}, 
+    {"name":"dynamicDispatch_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.library.internal.DefaultLibraryGen"
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.library.internal.DefaultLibraryGen$LLVMNativeLibraryExports$Cached",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"dynamicDispatchTarget_", "allowUnsafeAccess":true}, 
+    {"name":"dynamicDispatch_", "allowUnsafeAccess":true}, 
+    {"name":"exception", "allowUnsafeAccess":true}, 
+    {"name":"receiverInteropLibrary_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.library.internal.LLVMAsForeignLibrary",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.library.internal.LLVMAsForeignLibraryGen"
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.library.internal.LLVMAsForeignLibraryGen$CachedDispatch",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"library", "allowUnsafeAccess":true}, 
+    {"name":"next", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.library.internal.LLVMAsForeignLibraryGen$CachedDispatchFirst",
+  "allDeclaredFields":true,
+  "fields":[{"name":"limit_", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.library.internal.LLVMAsForeignLibraryGen$CachedDispatchNext",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.library.internal.LLVMManagedReadLibrary",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.library.internal.LLVMManagedReadLibraryGen"
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.library.internal.LLVMManagedWriteLibrary",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.library.internal.LLVMManagedWriteLibraryGen"
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.library.internal.LLVMNativeLibrary",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.library.internal.LLVMNativeLibraryGen"
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.library.internal.LongLibraryGen"
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.memory.LLVMMemSetNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.memory.LLVMSyscallOperationNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.memory.LLVMUniquesRegionAllocNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"allocator", "allowUnsafeAccess":true}, 
+    {"name":"stackPointer", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.memory.LLVMUniquesRegionAllocNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.api.LLVMControlFlowNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.api.LLVMExpressionNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.api.LLVMFrameNuller",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"frameSlots", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.api.LLVMFrameNullerExpression",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"expression", "allowUnsafeAccess":true}, 
+    {"name":"frameSlots", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.api.LLVMFrameNullerExpressionNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.api.LLVMFrameNullerNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.api.LLVMInstrumentableNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.api.LLVMLoadNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.api.LLVMNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.api.LLVMStatementNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.api.LLVMStoreNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.api.LLVMToNativeNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.api.LLVMToNativeNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"convert0_cache", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.api.LLVMToNativeNodeGen$Convert0Data",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"nativeLibrary_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.api.LLVMToPointerNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.api.LLVMToPointerNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"generic_toNative_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.api.LLVMVoidStatementNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.api.LLVMVoidStatementNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"value_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.asm.syscall.LLVMSyscallExitNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.asm.syscall.LLVMSyscallNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.asm.syscall.LLVMSyscallNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"arg1_", "allowUnsafeAccess":true}, 
+    {"name":"arg2_", "allowUnsafeAccess":true}, 
+    {"name":"arg3_", "allowUnsafeAccess":true}, 
+    {"name":"arg4_", "allowUnsafeAccess":true}, 
+    {"name":"arg5_", "allowUnsafeAccess":true}, 
+    {"name":"arg6_", "allowUnsafeAccess":true}, 
+    {"name":"cachedSyscall_cache", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageContextReference_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"syscallNum_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.asm.syscall.LLVMSyscallNodeGen$CachedSyscallData",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"cachedSyscallNum_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}, 
+    {"name":"node_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.asm.syscall.LLVMUnknownSyscallNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"nr", "allowUnsafeAccess":true}, 
+    {"name":"syscall", "allowUnsafeAccess":true}, 
+    {"name":"syscallValue", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.asm.syscall.linux.amd64.LinuxAMD64Syscall[]"
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.asm.syscall.posix.LLVMPosixCallNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"name", "allowUnsafeAccess":true}, 
+    {"name":"signature", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.asm.syscall.posix.LLVMPosixCallNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"function_", "allowUnsafeAccess":true}, 
+    {"name":"nativeExecute_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.base.LLVMBasicBlockNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"blockId", "allowUnsafeAccess":true}, 
+    {"name":"blockName", "allowUnsafeAccess":true}, 
+    {"name":"nullableAfter", "allowUnsafeAccess":true}, 
+    {"name":"nullableBefore", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.base.LLVMBasicBlockNode$InitializedBlock",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"blockEntered", "allowUnsafeAccess":true}, 
+    {"name":"controlFlowExceptionProfile", "allowUnsafeAccess":true}, 
+    {"name":"statements", "allowUnsafeAccess":true}, 
+    {"name":"successorExecutionCount", "allowUnsafeAccess":true}, 
+    {"name":"termInstruction", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.base.LLVMBasicBlockNode$LazyBlock",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"statements", "allowUnsafeAccess":true}, 
+    {"name":"termInstruction", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.base.LLVMBasicBlockNodeFactory$InitializedBlockNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.base.LLVMBasicBlockNodeFactory$LazyBlockNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToAddressNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToAddressNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"fromNode_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToDoubleNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToDoubleNode$LLVMUnsignedCastToDoubleNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToDoubleNodeGen$LLVMUnsignedCastToDoubleNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"fromNode_", "allowUnsafeAccess":true}, 
+    {"name":"managedPointer_cache", "allowUnsafeAccess":true}, 
+    {"name":"pointer_recursive_", "allowUnsafeAccess":true}, 
+    {"name":"pointer_toNative_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToI16Node",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToI16Node$LLVMSignedCastToI16Node",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToI16NodeGen$LLVMSignedCastToI16NodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"fromNode_", "allowUnsafeAccess":true}, 
+    {"name":"managedPointer_cache", "allowUnsafeAccess":true}, 
+    {"name":"pointer_toNative_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToI32Node",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToI32Node$LLVMSignedCastToI32Node",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToI32Node$LLVMUnsignedCastToI32Node",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToI32NodeGen$LLVMSignedCastToI32NodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"fromNode_", "allowUnsafeAccess":true}, 
+    {"name":"managedPointer_cache", "allowUnsafeAccess":true}, 
+    {"name":"pointer_toNative_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToI32NodeGen$LLVMUnsignedCastToI32NodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"fromNode_", "allowUnsafeAccess":true}, 
+    {"name":"managedPointer_cache", "allowUnsafeAccess":true}, 
+    {"name":"pointer_toNative_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToI64Node",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToI64Node$LLVMSignedCastToI64Node",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToI64Node$LLVMUnsignedCastToI64Node",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToI64NodeGen$LLVMSignedCastToI64NodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"fromNode_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToI64NodeGen$LLVMUnsignedCastToI64NodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"double_profile_", "allowUnsafeAccess":true}, 
+    {"name":"float_profile_", "allowUnsafeAccess":true}, 
+    {"name":"fromNode_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToI8Node",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToI8Node$LLVMSignedCastToI8Node",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToI8Node$LLVMUnsignedCastToI8Node",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToI8NodeGen$LLVMSignedCastToI8NodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"fromNode_", "allowUnsafeAccess":true}, 
+    {"name":"managedPointer_cache", "allowUnsafeAccess":true}, 
+    {"name":"pointer_toNative_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.cast.LLVMToI8NodeGen$LLVMUnsignedCastToI8NodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"fromNode_", "allowUnsafeAccess":true}, 
+    {"name":"managedPointer_cache", "allowUnsafeAccess":true}, 
+    {"name":"pointer_toNative_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMBrUnconditionalNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMBrUnconditionalNode$LLVMBrUnconditionalNodeImpl",
+  "allDeclaredFields":true,
+  "fields":[{"name":"phi", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMBrUnconditionalNodeFactory$LLVMBrUnconditionalNodeImplNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"successor", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMConditionalBranchNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMConditionalBranchNode$LLVMConditionalBranchNodeImpl",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"falsePhi", "allowUnsafeAccess":true}, 
+    {"name":"truePhi", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMConditionalBranchNodeFactory$LLVMConditionalBranchNodeImplNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"condition_", "allowUnsafeAccess":true}, 
+    {"name":"falseSuccessor", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"trueSuccessor", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMDispatchBasicBlockNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"bodyNodes", "allowUnsafeAccess":true}, 
+    {"name":"debugInfo", "allowUnsafeAccess":true}, 
+    {"name":"exceptionValueSlot", "allowUnsafeAccess":true}, 
+    {"name":"loopSuccessorSlot", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMDispatchBasicBlockNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMFunctionRootNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"copyArgumentsToFrame", "allowUnsafeAccess":true}, 
+    {"name":"frameSlotsToInitialize", "allowUnsafeAccess":true}, 
+    {"name":"rootBody", "allowUnsafeAccess":true}, 
+    {"name":"uniquesRegionAllocNode", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMFunctionRootNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMLoopDispatchNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"bodyNodes", "allowUnsafeAccess":true}, 
+    {"name":"exceptionValueSlot", "allowUnsafeAccess":true}, 
+    {"name":"headerId", "allowUnsafeAccess":true}, 
+    {"name":"indexMapping", "allowUnsafeAccess":true}, 
+    {"name":"loopSuccessors", "allowUnsafeAccess":true}, 
+    {"name":"originalBodyNodes", "allowUnsafeAccess":true}, 
+    {"name":"successorSlot", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMLoopNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMLoopNode$LLVMLoopNodeImpl",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"loop", "allowUnsafeAccess":true}, 
+    {"name":"successors", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMLoopNodeFactory$LLVMLoopNodeImplNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMRetNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMRetNode$LLVMAddressRetNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMRetNode$LLVMI1RetNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMRetNode$LLVMI32RetNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMRetNode$LLVMI64RetNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMRetNode$LLVMI8RetNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMRetNode$LLVMVoidReturnNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMRetNodeFactory$LLVMAddressRetNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"retResult_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMRetNodeFactory$LLVMI1RetNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"retResult_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMRetNodeFactory$LLVMI32RetNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"retResult_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMRetNodeFactory$LLVMI64RetNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"retResult_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMRetNodeFactory$LLVMI8RetNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"retResult_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMRetNodeFactory$LLVMVoidReturnNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMSwitchNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMSwitchNode$LLVMSwitchNodeImpl",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"caseEquals", "allowUnsafeAccess":true}, 
+    {"name":"cases", "allowUnsafeAccess":true}, 
+    {"name":"conditionValueClass", "allowUnsafeAccess":true}, 
+    {"name":"phiNodes", "allowUnsafeAccess":true}, 
+    {"name":"successors", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMSwitchNodeFactory$LLVMSwitchNodeImplNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"cond_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMWritePhisNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"cycleFrom", "allowUnsafeAccess":true}, 
+    {"name":"cycleWrites", "allowUnsafeAccess":true}, 
+    {"name":"ordinaryWrites", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.control.LLVMWritePhisNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.func.LLVMArgNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"index", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.func.LLVMArgNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.func.LLVMCallNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"argumentNodes", "allowUnsafeAccess":true}, 
+    {"name":"dispatchNode", "allowUnsafeAccess":true}, 
+    {"name":"isSourceCall", "allowUnsafeAccess":true}, 
+    {"name":"prepareArgumentNodes", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.func.LLVMCallNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"dispatchTarget_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.func.LLVMDispatchNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"signature", "allowUnsafeAccess":true}, 
+    {"name":"type", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.func.LLVMDispatchNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"cachedNative_cache", "allowUnsafeAccess":true}, 
+    {"name":"directIntrinsic_cache", "allowUnsafeAccess":true}, 
+    {"name":"direct_cache", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"foreign_cache", "allowUnsafeAccess":true}, 
+    {"name":"indirectIntrinsic_cache", "allowUnsafeAccess":true}, 
+    {"name":"indirect_callNode_", "allowUnsafeAccess":true}, 
+    {"name":"indirect_resolve_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageContextReference_", "allowUnsafeAccess":true}, 
+    {"name":"nativeFunction_dispatchNode_", "allowUnsafeAccess":true}, 
+    {"name":"native_cache", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.func.LLVMDispatchNodeGen$CachedNativeData",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"cachedBoundFunction_", "allowUnsafeAccess":true}, 
+    {"name":"cachedDescriptor_", "allowUnsafeAccess":true}, 
+    {"name":"fromNative_", "allowUnsafeAccess":true}, 
+    {"name":"functionCode_", "allowUnsafeAccess":true}, 
+    {"name":"nativeCall_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}, 
+    {"name":"statistics_", "allowUnsafeAccess":true}, 
+    {"name":"toNative_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.func.LLVMDispatchNodeGen$DirectData",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"cachedDescriptor_", "allowUnsafeAccess":true}, 
+    {"name":"callNode_", "allowUnsafeAccess":true}, 
+    {"name":"functionCode_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.func.LLVMFunctionStartNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"bcSource", "allowUnsafeAccess":true}, 
+    {"name":"dataLayout", "allowUnsafeAccess":true}, 
+    {"name":"explicitArgumentsCount", "allowUnsafeAccess":true}, 
+    {"name":"name", "allowUnsafeAccess":true}, 
+    {"name":"node", "allowUnsafeAccess":true}, 
+    {"name":"originalName", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.func.LLVMInvokeNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.func.LLVMInvokeNode$LLVMInvokeNodeImpl",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"argumentNodes", "allowUnsafeAccess":true}, 
+    {"name":"dispatchNode", "allowUnsafeAccess":true}, 
+    {"name":"normalPhiNode", "allowUnsafeAccess":true}, 
+    {"name":"normalSuccessor", "allowUnsafeAccess":true}, 
+    {"name":"returnValueProfile", "allowUnsafeAccess":true}, 
+    {"name":"type", "allowUnsafeAccess":true}, 
+    {"name":"unwindPhiNode", "allowUnsafeAccess":true}, 
+    {"name":"unwindSuccessor", "allowUnsafeAccess":true}, 
+    {"name":"writeResult", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.func.LLVMInvokeNodeFactory$LLVMInvokeNodeImplNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"dispatchTarget_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.func.LLVMLookupDispatchTargetNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"languageRef", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.func.LLVMLookupDispatchTargetNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"derefHandle_getReceiver_", "allowUnsafeAccess":true}, 
+    {"name":"directCached_cache", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"foreign_foreigns_", "allowUnsafeAccess":true}, 
+    {"name":"function_", "allowUnsafeAccess":true}, 
+    {"name":"handleCached_cache", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageContextReference_", "allowUnsafeAccess":true}, 
+    {"name":"nativeFunctionCached_cache", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.func.LLVMPrepareArgumentNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.func.LLVMPrepareArgumentNodeGen",
+  "allDeclaredFields":true,
+  "fields":[{"name":"state_", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.c.LLVMSyscall$SyscallArgConverter",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.c.LLVMSyscallFactory$SyscallArgConverterNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"value_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotAsPrimitive",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotAsPrimitive$AsI8",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotAsPrimitiveFactory$AsI8NodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"asI80_cache", "allowUnsafeAccess":true}, 
+    {"name":"asI81_exception_", "allowUnsafeAccess":true}, 
+    {"name":"asI81_interop_", "allowUnsafeAccess":true}, 
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotAsPrimitiveFactory$AsI8NodeGen$AsI80Data",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"exception_", "allowUnsafeAccess":true}, 
+    {"name":"foreigns_", "allowUnsafeAccess":true}, 
+    {"name":"interop_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotAsString",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"encodeString", "allowUnsafeAccess":true}, 
+    {"name":"writeString", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotAsString$EncodeStringNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotAsString$WriteStringNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"write", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotAsStringNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"buffer_", "allowUnsafeAccess":true}, 
+    {"name":"buflen_", "allowUnsafeAccess":true}, 
+    {"name":"charset_", "allowUnsafeAccess":true}, 
+    {"name":"object_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotAsStringNodeGen$EncodeStringNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"foreign_asForeign_", "allowUnsafeAccess":true}, 
+    {"name":"foreign_encode_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotAsStringNodeGen$WriteStringNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"write_cache", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotBoxedPredicate",
+  "allDeclaredFields":true,
+  "fields":[{"name":"predicate", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotBoxedPredicateNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"matchManaged_cache", "allowUnsafeAccess":true}, 
+    {"name":"matchString0_interop_", "allowUnsafeAccess":true}, 
+    {"name":"object_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotGetArraySize",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotGetArraySizeNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"intrinsic_cache", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotGetArraySizeNodeGen$IntrinsicData",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"asForeign_", "allowUnsafeAccess":true}, 
+    {"name":"exception_", "allowUnsafeAccess":true}, 
+    {"name":"interop_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotGetStringSize",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotGetStringSizeNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"getForeignStringSize_asForeign_", "allowUnsafeAccess":true}, 
+    {"name":"getForeignStringSize_getSize_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotRead",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotRead$LLVMPolyglotGetArrayElement",
+  "allDeclaredFields":true,
+  "fields":[{"name":"toLLVM", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotReadFactory$LLVMPolyglotGetArrayElementNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"child1_", "allowUnsafeAccess":true}, 
+    {"name":"intrinsic_cache", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMPolyglotReadFactory$LLVMPolyglotGetArrayElementNodeGen$IntrinsicData",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"asForeign_", "allowUnsafeAccess":true}, 
+    {"name":"exception_", "allowUnsafeAccess":true}, 
+    {"name":"foreignRead_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMReadCharsetNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"readString", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMReadCharsetNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"cachedOther_cache", "allowUnsafeAccess":true}, 
+    {"name":"cachedPointer_cache", "allowUnsafeAccess":true}, 
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMReadStringNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"readOther", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMReadStringNode$PointerReadStringNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"read", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMReadStringNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"readForeign_foreigns_", "allowUnsafeAccess":true}, 
+    {"name":"readForeign_read_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.LLVMReadStringNodeGen$PointerReadStringNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"cachedPointer_cache", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.typed.LLVMArrayTypeIDNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.typed.LLVMArrayTypeIDNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"base_", "allowUnsafeAccess":true}, 
+    {"name":"len_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.typed.LLVMPolyglotFromTyped",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.typed.LLVMPolyglotFromTypedNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"ptr_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"typeid_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.typed.LLVMTypeIDNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"cachedType", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.interop.typed.LLVMTypeIDNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageContextReference_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.llvm.LLVMBuiltin",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.llvm.LLVMIntrinsic",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.llvm.LLVMLifetimeEnd",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.llvm.LLVMLifetimeEndNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"expected_", "allowUnsafeAccess":true}, 
+    {"name":"size_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.llvm.LLVMLifetimeStart",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.llvm.LLVMLifetimeStartNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"expected_", "allowUnsafeAccess":true}, 
+    {"name":"size_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.llvm.LLVMMemCopy",
+  "allDeclaredFields":true,
+  "fields":[{"name":"memMove", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.llvm.LLVMMemCopyNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"destination_", "allowUnsafeAccess":true}, 
+    {"name":"isVolatile_", "allowUnsafeAccess":true}, 
+    {"name":"length_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"source_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.llvm.LLVMMemMove$LLVMMemMoveI64",
+  "allDeclaredFields":true,
+  "fields":[{"name":"memMove", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.llvm.LLVMMemMoveFactory$LLVMMemMoveI64NodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"dest_", "allowUnsafeAccess":true}, 
+    {"name":"isVolatile_", "allowUnsafeAccess":true}, 
+    {"name":"length_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"src_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.llvm.LLVMMemSet",
+  "allDeclaredFields":true,
+  "fields":[{"name":"memSet", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.llvm.LLVMMemSetNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"address_", "allowUnsafeAccess":true}, 
+    {"name":"isVolatile_", "allowUnsafeAccess":true}, 
+    {"name":"length_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"value_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.llvm.LLVMMemoryIntrinsic",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.llvm.LLVMMemoryIntrinsic$LLVMFree",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.llvm.LLVMMemoryIntrinsic$LLVMMalloc",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.llvm.LLVMMemoryIntrinsic$LLVMRealloc",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.llvm.LLVMMemoryIntrinsicFactory$LLVMFreeNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.llvm.LLVMMemoryIntrinsicFactory$LLVMMallocNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.llvm.LLVMMemoryIntrinsicFactory$LLVMReallocNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"child1_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.multithreading.LLVMPThreadStart$LLVMPThreadFunctionRootNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"argSlot", "allowUnsafeAccess":true}, 
+    {"name":"callNode", "allowUnsafeAccess":true}, 
+    {"name":"ctxRef", "allowUnsafeAccess":true}, 
+    {"name":"functionSlot", "allowUnsafeAccess":true}, 
+    {"name":"spSlot", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.sulong.LLVMRunDestructorFunctions",
+  "allDeclaredFields":true,
+  "fields":[{"name":"callNode", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.intrinsics.sulong.LLVMRunDestructorFunctionsNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"lLVMLanguageContextReference_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.literals.LLVMSimpleLiteralNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.literals.LLVMSimpleLiteralNode$LLVMDoubleLiteralNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"literal", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.literals.LLVMSimpleLiteralNode$LLVMI16LiteralNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"literal", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.literals.LLVMSimpleLiteralNode$LLVMI1LiteralNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"literal", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.literals.LLVMSimpleLiteralNode$LLVMI32LiteralNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"literal", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.literals.LLVMSimpleLiteralNode$LLVMI64LiteralNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"literal", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.literals.LLVMSimpleLiteralNode$LLVMI8LiteralNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"literal", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.literals.LLVMSimpleLiteralNode$LLVMNativePointerLiteralNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"address", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.literals.LLVMSimpleLiteralNodeFactory$LLVMDoubleLiteralNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.literals.LLVMSimpleLiteralNodeFactory$LLVMI16LiteralNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.literals.LLVMSimpleLiteralNodeFactory$LLVMI1LiteralNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.literals.LLVMSimpleLiteralNodeFactory$LLVMI32LiteralNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.literals.LLVMSimpleLiteralNodeFactory$LLVMI64LiteralNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.literals.LLVMSimpleLiteralNodeFactory$LLVMI8LiteralNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.literals.LLVMSimpleLiteralNodeFactory$LLVMNativePointerLiteralNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.literals.LLVMVectorLiteralNode$LLVMDoubleVectorLiteralNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"values", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.literals.LLVMVectorLiteralNodeFactory$LLVMDoubleVectorLiteralNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.AllocateGlobalsBlockNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"size", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.AllocateGlobalsBlockNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.AllocateReadOnlyGlobalsBlockNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"allocateGlobalsBlock", "allowUnsafeAccess":true}, 
+    {"name":"interop", "allowUnsafeAccess":true}, 
+    {"name":"size", "allowUnsafeAccess":true}, 
+    {"name":"toNative", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.FreeReadOnlyGlobalsBlockNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"freeGlobalsBlock", "allowUnsafeAccess":true}, 
+    {"name":"interop", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.LLVMGetElementPtrNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"targetType", "allowUnsafeAccess":true}, 
+    {"name":"typeWidth", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.LLVMGetElementPtrNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"child1_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.LLVMGetStackSpaceInstruction",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"alignment", "allowUnsafeAccess":true}, 
+    {"name":"size", "allowUnsafeAccess":true}, 
+    {"name":"stackPointer", "allowUnsafeAccess":true}, 
+    {"name":"symbolType", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.LLVMGetStackSpaceInstruction$LLVMAllocaConstInstruction",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.LLVMGetStackSpaceInstruction$LLVMAllocaInstruction",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.LLVMGetStackSpaceInstruction$LLVMGetStackForConstInstruction",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"offsets", "allowUnsafeAccess":true}, 
+    {"name":"types", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.LLVMGetStackSpaceInstruction$LLVMGetUniqueStackSpaceInstruction",
+  "allDeclaredFields":true,
+  "fields":[{"name":"uniqueSlot", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.LLVMGetStackSpaceInstructionFactory$LLVMAllocaConstInstructionNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.LLVMGetStackSpaceInstructionFactory$LLVMAllocaInstructionNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.LLVMGetStackSpaceInstructionFactory$LLVMGetUniqueStackSpaceInstructionNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.NativeMemSetNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"inJava", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.NativeMemSetNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"memset1_cache", "allowUnsafeAccess":true}, 
+    {"name":"memset2_globalAccess_", "allowUnsafeAccess":true}, 
+    {"name":"memsetManagedI160_cache", "allowUnsafeAccess":true}, 
+    {"name":"memsetManagedI320_cache", "allowUnsafeAccess":true}, 
+    {"name":"memsetManagedI640_cache", "allowUnsafeAccess":true}, 
+    {"name":"memsetManagedI80_cache", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.NativeProfiledMemMove",
+  "allDeclaredFields":true,
+  "fields":[{"name":"inJava", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.NativeProfiledMemMoveNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"managedAliasing_cache", "allowUnsafeAccess":true}, 
+    {"name":"managedNative_cache", "allowUnsafeAccess":true}, 
+    {"name":"managedNonAliasing_cache", "allowUnsafeAccess":true}, 
+    {"name":"nativeManaged_cache", "allowUnsafeAccess":true}, 
+    {"name":"native_convertSource_", "allowUnsafeAccess":true}, 
+    {"name":"native_convertTarget_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.ProtectReadOnlyGlobalsBlockNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"interop", "allowUnsafeAccess":true}, 
+    {"name":"protectReadonlyGlobalsBlock", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.literal.LLVMArrayLiteralNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"stride", "allowUnsafeAccess":true}, 
+    {"name":"values", "allowUnsafeAccess":true}, 
+    {"name":"write", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.literal.LLVMArrayLiteralNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"address_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.literal.LLVMStructArrayLiteralNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"memMove", "allowUnsafeAccess":true}, 
+    {"name":"stride", "allowUnsafeAccess":true}, 
+    {"name":"values", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.literal.LLVMStructArrayLiteralNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"address_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.load.LLVMDirectLoadNode$LLVMPointerDirectLoadNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.load.LLVMDirectLoadNode$LLVMStructDirectLoadNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.load.LLVMDirectLoadNodeFactory$LLVMPointerDirectLoadNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"address_", "allowUnsafeAccess":true}, 
+    {"name":"derefHandle_getReceiver_", "allowUnsafeAccess":true}, 
+    {"name":"derefHandle_nativeRead_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"indirectedForeign0_cache", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.load.LLVMDirectLoadNodeFactory$LLVMPointerDirectLoadNodeGen$IndirectedForeign0Data",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"nativeRead_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.load.LLVMDirectLoadNodeFactory$LLVMStructDirectLoadNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"address_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.load.LLVMDoubleLoadNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.load.LLVMDoubleLoadNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"address_", "allowUnsafeAccess":true}, 
+    {"name":"doubleDerefHandle_getReceiver_", "allowUnsafeAccess":true}, 
+    {"name":"doubleDerefHandle_nativeRead_", "allowUnsafeAccess":true}, 
+    {"name":"doubleManaged0_cache", "allowUnsafeAccess":true}, 
+    {"name":"doubleNative_profile_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.load.LLVMI16LoadNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.load.LLVMI16LoadNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"address_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"shortDerefHandle_getReceiver_", "allowUnsafeAccess":true}, 
+    {"name":"shortDerefHandle_nativeRead_", "allowUnsafeAccess":true}, 
+    {"name":"shortManaged0_cache", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.load.LLVMI32LoadNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.load.LLVMI32LoadNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"address_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"i32DerefHandle_getReceiver_", "allowUnsafeAccess":true}, 
+    {"name":"i32DerefHandle_nativeRead_", "allowUnsafeAccess":true}, 
+    {"name":"i32Managed0_cache", "allowUnsafeAccess":true}, 
+    {"name":"i32Native_profile_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.load.LLVMI64LoadNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.load.LLVMI64LoadNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"address_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"genericI64DerefHandle_getReceiver_", "allowUnsafeAccess":true}, 
+    {"name":"genericI64DerefHandle_nativeRead_", "allowUnsafeAccess":true}, 
+    {"name":"genericI64Managed0_cache", "allowUnsafeAccess":true}, 
+    {"name":"i64DerefHandle_getReceiver_", "allowUnsafeAccess":true}, 
+    {"name":"i64DerefHandle_nativeRead_", "allowUnsafeAccess":true}, 
+    {"name":"i64Managed_cache", "allowUnsafeAccess":true}, 
+    {"name":"i64Native_profile_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.load.LLVMI64LoadNodeGen$I64ManagedData",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"nativeRead_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.load.LLVMI8LoadNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.load.LLVMI8LoadNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"address_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"i8DerefHandle_getReceiver_", "allowUnsafeAccess":true}, 
+    {"name":"i8DerefHandle_nativeRead_", "allowUnsafeAccess":true}, 
+    {"name":"i8Managed0_cache", "allowUnsafeAccess":true}, 
+    {"name":"i8Native_profile_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.load.LLVMLoadVectorNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.load.LLVMLoadVectorNode$LLVMLoadDoubleVectorNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.load.LLVMLoadVectorNodeFactory$LLVMLoadDoubleVectorNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"address_", "allowUnsafeAccess":true}, 
+    {"name":"doubleVector_getReceiver_", "allowUnsafeAccess":true}, 
+    {"name":"doubleVector_load_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"foreign0_cache", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"vectorLength", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.rmw.LLVMI32RMWNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.rmw.LLVMI32RMWNode$LLVMI32RMWAddNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.rmw.LLVMI32RMWNodeFactory$LLVMI32RMWAddNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"op1_read_", "allowUnsafeAccess":true}, 
+    {"name":"op1_write_", "allowUnsafeAccess":true}, 
+    {"name":"pointerNode_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"valueNode_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.rmw.LLVMI64RMWNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.rmw.LLVMI64RMWNode$LLVMI64RMWAddNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.rmw.LLVMI64RMWNodeFactory$LLVMI64RMWAddNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"op1_cache", "allowUnsafeAccess":true}, 
+    {"name":"pointerNode_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"valueNode_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.store.LLVMDoubleStoreNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.store.LLVMDoubleStoreNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"address_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"opDerefHandle_getReceiver_", "allowUnsafeAccess":true}, 
+    {"name":"opDerefHandle_nativeWrite_", "allowUnsafeAccess":true}, 
+    {"name":"opManaged0_cache", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"value_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.store.LLVMI16StoreNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.store.LLVMI16StoreNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"address_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"opDerefHandle_getReceiver_", "allowUnsafeAccess":true}, 
+    {"name":"opDerefHandle_nativeWrite_", "allowUnsafeAccess":true}, 
+    {"name":"opManaged0_cache", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"value_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.store.LLVMI1StoreNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.store.LLVMI1StoreNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"address_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"opDerefHandle_getReceiver_", "allowUnsafeAccess":true}, 
+    {"name":"opDerefHandle_nativeWrite_", "allowUnsafeAccess":true}, 
+    {"name":"opManaged0_cache", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"value_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.store.LLVMI32StoreNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.store.LLVMI32StoreNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"address_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"opDerefHandle_getReceiver_", "allowUnsafeAccess":true}, 
+    {"name":"opDerefHandle_nativeWrite_", "allowUnsafeAccess":true}, 
+    {"name":"opManaged0_cache", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"value_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.store.LLVMI64StoreNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.store.LLVMI64StoreNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"address_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"op1_toAddress_", "allowUnsafeAccess":true}, 
+    {"name":"opDerefHandleI64_getReceiver_", "allowUnsafeAccess":true}, 
+    {"name":"opDerefHandleI64_nativeWrite_", "allowUnsafeAccess":true}, 
+    {"name":"opDerefHandle_getReceiver_", "allowUnsafeAccess":true}, 
+    {"name":"opDerefHandle_nativeWrite_", "allowUnsafeAccess":true}, 
+    {"name":"opManaged0_cache", "allowUnsafeAccess":true}, 
+    {"name":"opManagedI64_cache", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"value_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.store.LLVMI8StoreNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.store.LLVMI8StoreNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"address_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"opDerefHandle_getReceiver_", "allowUnsafeAccess":true}, 
+    {"name":"opDerefHandle_nativeWrite_", "allowUnsafeAccess":true}, 
+    {"name":"opManaged0_cache", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"value_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.store.LLVMPointerStoreNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.store.LLVMPointerStoreNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"address0_toNative_", "allowUnsafeAccess":true}, 
+    {"name":"address1_toNative_", "allowUnsafeAccess":true}, 
+    {"name":"address_", "allowUnsafeAccess":true}, 
+    {"name":"derefAddress_cache", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"opDerefHandle_cache", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"truffleObject0_cache", "allowUnsafeAccess":true}, 
+    {"name":"truffleObject1_toPointer_", "allowUnsafeAccess":true}, 
+    {"name":"value_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.store.LLVMPointerStoreNodeGen$TruffleObject0Data",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"nativeWrite_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}, 
+    {"name":"toPointer_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.store.LLVMStoreNodeCommon",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.store.LLVMStoreVectorNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.store.LLVMStoreVectorNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"address_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"value_", "allowUnsafeAccess":true}, 
+    {"name":"vectorLength", "allowUnsafeAccess":true}, 
+    {"name":"writeVector10_cache", "allowUnsafeAccess":true}, 
+    {"name":"writeVector12_cache", "allowUnsafeAccess":true}, 
+    {"name":"writeVector14_cache", "allowUnsafeAccess":true}, 
+    {"name":"writeVector16_cache", "allowUnsafeAccess":true}, 
+    {"name":"writeVector18_cache", "allowUnsafeAccess":true}, 
+    {"name":"writeVector20_cache", "allowUnsafeAccess":true}, 
+    {"name":"writeVector22_cache", "allowUnsafeAccess":true}, 
+    {"name":"writeVector7_write_", "allowUnsafeAccess":true}, 
+    {"name":"writeVector8_cache", "allowUnsafeAccess":true}, 
+    {"name":"writeVectorDerefHandle_getReceiver_", "allowUnsafeAccess":true}, 
+    {"name":"writeVectorDerefHandle_store_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.store.LLVMStructStoreNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"memMove", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.memory.store.LLVMStructStoreNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"address_", "allowUnsafeAccess":true}, 
+    {"name":"convert_toNative_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageReference_", "allowUnsafeAccess":true}, 
+    {"name":"opDerefHandle_getReceiver_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"structSize", "allowUnsafeAccess":true}, 
+    {"name":"value_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMAbstractCompareNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMAddressEqualsNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMAddressEqualsNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"child1_", "allowUnsafeAccess":true}, 
+    {"name":"compare2_equals_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMArithmeticNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"op", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMArithmeticNode$LLVMAbstractI64ArithmeticNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMArithmeticNode$LLVMDoubleArithmeticNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMArithmeticNode$LLVMFloatingArithmeticNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMArithmeticNode$LLVMI16ArithmeticNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMArithmeticNode$LLVMI1ArithmeticNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMArithmeticNode$LLVMI32ArithmeticNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMArithmeticNode$LLVMI64ArithmeticNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMArithmeticNode$LLVMI64SubNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMArithmeticNode$LLVMI8ArithmeticNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMArithmeticNode$PointerToI64Node",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMArithmeticNodeFactory$LLVMDoubleArithmeticNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"leftNode_", "allowUnsafeAccess":true}, 
+    {"name":"rightNode_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMArithmeticNodeFactory$LLVMI16ArithmeticNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"leftNode_", "allowUnsafeAccess":true}, 
+    {"name":"rightNode_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMArithmeticNodeFactory$LLVMI1ArithmeticNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"leftNode_", "allowUnsafeAccess":true}, 
+    {"name":"rightNode_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMArithmeticNodeFactory$LLVMI32ArithmeticNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"leftNode_", "allowUnsafeAccess":true}, 
+    {"name":"rightNode_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMArithmeticNodeFactory$LLVMI64ArithmeticNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"leftNode_", "allowUnsafeAccess":true}, 
+    {"name":"managedLeftLong_node_", "allowUnsafeAccess":true}, 
+    {"name":"managedLeft_node_", "allowUnsafeAccess":true}, 
+    {"name":"managedRightLong_node_", "allowUnsafeAccess":true}, 
+    {"name":"managedRight_node_", "allowUnsafeAccess":true}, 
+    {"name":"pointer0_cache", "allowUnsafeAccess":true}, 
+    {"name":"pointerLeft0_cache", "allowUnsafeAccess":true}, 
+    {"name":"pointerRight0_cache", "allowUnsafeAccess":true}, 
+    {"name":"rightNode_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMArithmeticNodeFactory$LLVMI64SubNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"leftNode_", "allowUnsafeAccess":true}, 
+    {"name":"managedLeftLong_node_", "allowUnsafeAccess":true}, 
+    {"name":"managedLeft_node_", "allowUnsafeAccess":true}, 
+    {"name":"managedRightLong_node_", "allowUnsafeAccess":true}, 
+    {"name":"managedRight_node_", "allowUnsafeAccess":true}, 
+    {"name":"notSameObject0_cache", "allowUnsafeAccess":true}, 
+    {"name":"notSameObject1_cache", "allowUnsafeAccess":true}, 
+    {"name":"pointerLeft0_cache", "allowUnsafeAccess":true}, 
+    {"name":"pointerRight0_cache", "allowUnsafeAccess":true}, 
+    {"name":"rightNode_", "allowUnsafeAccess":true}, 
+    {"name":"sameObjectLong_cache", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMArithmeticNodeFactory$LLVMI8ArithmeticNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"leftNode_", "allowUnsafeAccess":true}, 
+    {"name":"rightNode_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMArithmeticNodeFactory$PointerToI64NodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"generic0_cache", "allowUnsafeAccess":true}, 
+    {"name":"managed_cache", "allowUnsafeAccess":true}, 
+    {"name":"pointer_cache", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMCompareNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMCompareNode$LLVMEqNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMCompareNode$LLVMNeNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMCompareNode$LLVMOrderedGtNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMCompareNode$LLVMSignedLeNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMCompareNode$LLVMSignedLtNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMCompareNode$LLVMUnsignedLeNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMCompareNode$LLVMUnsignedLtNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMCompareNodeFactory$LLVMEqNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"child1_", "allowUnsafeAccess":true}, 
+    {"name":"eqPointer_equals_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMCompareNodeFactory$LLVMNeNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"child1_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"nqPointer_equals_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMCompareNodeFactory$LLVMOrderedGtNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"child1_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMCompareNodeFactory$LLVMSignedLeNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"child1_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMCompareNodeFactory$LLVMSignedLtNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"child1_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMCompareNodeFactory$LLVMUnsignedLeNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"child1_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMCompareNodeFactory$LLVMUnsignedLtNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"child1_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMPointerCompareNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"op", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMPointerCompareNode$LLVMNegateNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"booleanExpression", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMPointerCompareNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"child1_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"other0_cache", "allowUnsafeAccess":true}, 
+    {"name":"other1_managedCompare_", "allowUnsafeAccess":true}, 
+    {"name":"pointerPointer0_cache", "allowUnsafeAccess":true}, 
+    {"name":"pointerPointerException0_cache", "allowUnsafeAccess":true}, 
+    {"name":"pointerPointerException1_managedCompare_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMPointerCompareNodeGen$LLVMNegateNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMVectorArithmeticNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"arithmeticNode", "allowUnsafeAccess":true}, 
+    {"name":"vectorLength", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.op.LLVMVectorArithmeticNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"leftNode_", "allowUnsafeAccess":true}, 
+    {"name":"rightNode_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMAccessSymbolNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"descriptor", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMAccessSymbolNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"lLVMLanguageContextReference_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMCheckSymbolNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMCheckSymbolNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"lLVMLanguageContextReference_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMSelectNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"conditionProfile", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMSelectNode$LLVMDoubleSelectNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMSelectNode$LLVMGenericSelectNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMSelectNode$LLVMI16SelectNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMSelectNode$LLVMI32SelectNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMSelectNode$LLVMI64SelectNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMSelectNode$LLVMI8SelectNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMSelectNodeFactory$LLVMDoubleSelectNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"child1_", "allowUnsafeAccess":true}, 
+    {"name":"child2_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMSelectNodeFactory$LLVMGenericSelectNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"child1_", "allowUnsafeAccess":true}, 
+    {"name":"child2_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMSelectNodeFactory$LLVMI16SelectNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"child1_", "allowUnsafeAccess":true}, 
+    {"name":"child2_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMSelectNodeFactory$LLVMI32SelectNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"child1_", "allowUnsafeAccess":true}, 
+    {"name":"child2_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMSelectNodeFactory$LLVMI64SelectNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"child1_", "allowUnsafeAccess":true}, 
+    {"name":"child2_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMSelectNodeFactory$LLVMI8SelectNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"child1_", "allowUnsafeAccess":true}, 
+    {"name":"child2_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMUnreachableNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMUnreachableNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMValueProfilingNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMValueProfilingNode$LLVMI1ProfiledValueNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"profile", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMValueProfilingNode$LLVMI32ProfiledValueNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"profile", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMValueProfilingNode$LLVMI64ProfiledValueNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"cachedLong", "allowUnsafeAccess":true}, 
+    {"name":"cachedPointer", "allowUnsafeAccess":true}, 
+    {"name":"state", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMValueProfilingNode$LLVMI8ProfiledValueNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"profile", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMValueProfilingNodeFactory$LLVMI1ProfiledValueNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMValueProfilingNodeFactory$LLVMI32ProfiledValueNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMValueProfilingNodeFactory$LLVMI64ProfiledValueNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMValueProfilingNodeFactory$LLVMI8ProfiledValueNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMWriteSymbolNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.others.LLVMWriteSymbolNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"lLVMLanguageContextReference_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMReadNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"slot", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMReadNode$LLVMAddressReadNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMReadNode$LLVMDoubleReadNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMReadNode$LLVMI16ReadNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMReadNode$LLVMI1ReadNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMReadNode$LLVMI32ReadNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMReadNode$LLVMI64ReadNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMReadNode$LLVMI8ReadNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMReadNodeFactory$LLVMAddressReadNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMReadNodeFactory$LLVMDoubleReadNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMReadNodeFactory$LLVMI16ReadNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMReadNodeFactory$LLVMI1ReadNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMReadNodeFactory$LLVMI32ReadNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMReadNodeFactory$LLVMI64ReadNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMReadNodeFactory$LLVMI8ReadNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMReadVectorNode$LLVMDoubleVectorReadNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMReadVectorNodeFactory$LLVMDoubleVectorReadNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"slot", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMWriteNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"slot", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMWriteNode$LLVMWriteDoubleNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMWriteNode$LLVMWriteI16Node",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMWriteNode$LLVMWriteI1Node",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMWriteNode$LLVMWriteI32Node",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMWriteNode$LLVMWriteI64Node",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMWriteNode$LLVMWriteI8Node",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMWriteNode$LLVMWritePointerNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMWriteNode$LLVMWriteVectorNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMWriteNodeFactory$LLVMWriteDoubleNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"valueNode_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMWriteNodeFactory$LLVMWriteI16NodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"valueNode_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMWriteNodeFactory$LLVMWriteI1NodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"valueNode_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMWriteNodeFactory$LLVMWriteI32NodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"valueNode_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMWriteNodeFactory$LLVMWriteI64NodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"valueNode_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMWriteNodeFactory$LLVMWriteI8NodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"valueNode_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMWriteNodeFactory$LLVMWritePointerNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"valueNode_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.LLVMWriteNodeFactory$LLVMWriteVectorNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"valueNode_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.StructLiteralNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"elementWriteNodes", "allowUnsafeAccess":true}, 
+    {"name":"offsets", "allowUnsafeAccess":true}, 
+    {"name":"values", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vars.StructLiteralNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vector.LLVMInsertElementNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vector.LLVMInsertElementNode$LLVMDoubleInsertElementNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.nodes.vector.LLVMInsertElementNodeFactory$LLVMDoubleInsertElementNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"child0_", "allowUnsafeAccess":true}, 
+    {"name":"element_", "allowUnsafeAccess":true}, 
+    {"name":"index_", "allowUnsafeAccess":true}, 
+    {"name":"sourceLocation", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"statement", "allowUnsafeAccess":true}, 
+    {"name":"vectorLength", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.pointer.CommonPointerLibrariesGen"
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.pointer.LLVMPointerImplGen"
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.pointer.LLVMPointerImplGen$DynamicDispatchLibraryExports$Cached",
+  "allDeclaredFields":true,
+  "fields":[{"name":"receiverClass_", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.pointer.ManagedPointerLibrariesGen"
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.pointer.ManagedPointerLibrariesGen$LLVMAsForeignLibraryExports$Cached",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"asForeignNode__foreigns_", "allowUnsafeAccess":true}, 
+    {"name":"dynamicDispatch_", "allowUnsafeAccess":true}, 
+    {"name":"isForeignNode__foreigns_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.pointer.ManagedPointerLibrariesGen$LLVMNativeLibraryExports$Cached",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"dynamicDispatch_", "allowUnsafeAccess":true}, 
+    {"name":"receiverObjectLLVMNativeLibrary_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.pointer.NativePointerLibrariesGen"
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.pointer.NativePointerLibrariesGen$InteropLibraryExports$Cached",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"dynamicDispatch_", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"execute_nativeCached_cache", "allowUnsafeAccess":true}, 
+    {"name":"execute_native_interop_", "allowUnsafeAccess":true}, 
+    {"name":"getIndex", "allowUnsafeAccess":true}, 
+    {"name":"getMember", "allowUnsafeAccess":true}, 
+    {"name":"isArray", "allowUnsafeAccess":true}, 
+    {"name":"isIdenticalOrUndefined_pointer_equals_", "allowUnsafeAccess":true}, 
+    {"name":"isObject", "allowUnsafeAccess":true}, 
+    {"name":"lLVMLanguageContextReference_", "allowUnsafeAccess":true}, 
+    {"name":"readArrayElementNode__read_", "allowUnsafeAccess":true}, 
+    {"name":"readMemberNode__read_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}, 
+    {"name":"writeArrayElementNode__write_", "allowUnsafeAccess":true}, 
+    {"name":"writeMemberNode__write_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.pointer.NativePointerLibrariesGen$LLVMAsForeignLibraryExports$Cached",
+  "allDeclaredFields":true,
+  "fields":[{"name":"dynamicDispatch_", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.runtime.pointer.NativePointerLibrariesGen$LLVMNativeLibraryExports$Cached",
+  "allDeclaredFields":true,
+  "fields":[{"name":"dynamicDispatch_", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.spi.NativeTypeLibrary",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.llvm.spi.NativeTypeLibraryGen"
+},
+{
+  "name":"com.oracle.truffle.llvm.spi.NativeTypeLibraryGen$CachedDispatch",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"library", "allowUnsafeAccess":true}, 
+    {"name":"next", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.llvm.spi.NativeTypeLibraryGen$CachedDispatchFirst",
+  "allDeclaredFields":true,
+  "fields":[{"name":"limit_", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.llvm.spi.NativeTypeLibraryGen$Default$Cached",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"dynamicDispatchTarget_", "allowUnsafeAccess":true}, 
+    {"name":"dynamicDispatch_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.nfi.NFIRootNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"loadLibrary", "allowUnsafeAccess":true}, 
+    {"name":"lookupAndBind", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.nfi.NFISymbolGen"
+},
+{
+  "name":"com.oracle.truffle.nfi.NFISymbolGen$InteropLibraryExports$Cached",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"executeNode__exception_", "allowUnsafeAccess":true}, 
+    {"name":"invokeMemberNode__bind_", "allowUnsafeAccess":true}, 
+    {"name":"invokeMemberNode__exception_", "allowUnsafeAccess":true}, 
+    {"name":"invokeMemberNode__isCallable_", "allowUnsafeAccess":true}, 
+    {"name":"receiverNativeSymbolInteropLibrary_", "allowUnsafeAccess":true}, 
+    {"name":"receiverNativeSymbolNativeSymbolLibrary_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.BasicTypeGen"
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.BasicTypeGen$NativeArgumentLibraryExports$Cached",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"cachedType", "allowUnsafeAccess":true}, 
+    {"name":"nFILanguageImplReference_", "allowUnsafeAccess":true}, 
+    {"name":"receiverClass_", "allowUnsafeAccess":true}, 
+    {"name":"serializeNode__interop_", "allowUnsafeAccess":true}, 
+    {"name":"serializeNode__serialize_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.BooleanArrayConversionGen"
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.ByteArrayConversionGen"
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.CharArrayConversionGen"
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.ClosureArgumentNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.ClosureArgumentNode$BufferClosureArgumentNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"nativeArguments", "allowUnsafeAccess":true}, 
+    {"name":"type", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.ClosureTypeGen"
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.DefaultConversionGen"
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.DefaultConversionGen$SerializeArgumentLibraryExports$Cached",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"dynamicDispatchTarget_", "allowUnsafeAccess":true}, 
+    {"name":"dynamicDispatch_", "allowUnsafeAccess":true}, 
+    {"name":"exception", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"receiverInteropLibrary_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.DoubleArrayConversionGen"
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.EnvTypeGen"
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.FloatArrayConversionGen"
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.FunctionExecuteNode",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.FunctionExecuteNode$SignatureExecuteNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"argLibs", "allowUnsafeAccess":true}, 
+    {"name":"ctxRef", "allowUnsafeAccess":true}, 
+    {"name":"signature", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.FunctionExecuteNode$SlowPathExecuteNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"ctxRef", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.FunctionExecuteNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"cachedArgCount_cache", "allowUnsafeAccess":true}, 
+    {"name":"cachedSignature_cache", "allowUnsafeAccess":true}, 
+    {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"genericExecute_nativeArguments_", "allowUnsafeAccess":true}, 
+    {"name":"nFILanguageImplReference_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.FunctionExecuteNodeGen$CachedSignatureData",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"cachedSignature_", "allowUnsafeAccess":true}, 
+    {"name":"execute_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.IntArrayConversionGen"
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.LibFFIClosure$BufferRetClosureRootNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"callClosure", "allowUnsafeAccess":true}, 
+    {"name":"encodeRet", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.LibFFIClosure$CallClosureNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"argNodes", "allowUnsafeAccess":true}, 
+    {"name":"interop", "allowUnsafeAccess":true}, 
+    {"name":"receiver", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.LibFFIClosure$EncodeRetNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"nativeArguments", "allowUnsafeAccess":true}, 
+    {"name":"retType", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.LibFFIClosure$ObjectRetClosureRootNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"callClosure", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.LibFFIClosureGen"
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.LibFFILibraryGen"
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.LongArrayConversionGen"
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.NFILanguageImpl$GetDefaultLibraryNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"ctxRef", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.NFILanguageImpl$LoadLibraryNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"cached", "allowUnsafeAccess":true}, 
+    {"name":"ctxRef", "allowUnsafeAccess":true}, 
+    {"name":"flags", "allowUnsafeAccess":true}, 
+    {"name":"name", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.NativeArgumentLibrary",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.NativeArgumentLibraryGen"
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.NativePointerGen"
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.NativePointerGen$InteropLibraryExports$Cached",
+  "allDeclaredFields":true,
+  "fields":[{"name":"receiverClass_", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.NativePointerGen$NativeSymbolLibraryExports$Cached",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"callNode__execute_", "allowUnsafeAccess":true}, 
+    {"name":"nFILanguageImplContextReference_", "allowUnsafeAccess":true}, 
+    {"name":"receiverClass_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.SerializeArgumentLibrary",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.SerializeArgumentLibraryGen"
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.SerializeArgumentLibraryGen$CachedDispatch",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"library", "allowUnsafeAccess":true}, 
+    {"name":"next", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.SerializeArgumentLibraryGen$CachedDispatchFirst",
+  "allDeclaredFields":true,
+  "fields":[{"name":"limit_", "allowUnsafeAccess":true}]
+},
+{
+  "name":"com.oracle.truffle.nfi.impl.ShortArrayConversionGen"
+},
+{
+  "name":"com.oracle.truffle.nfi.spi.NativeSymbolLibrary",
+  "allDeclaredFields":true
+},
+{
+  "name":"com.oracle.truffle.nfi.spi.NativeSymbolLibraryGen"
+},
+{
   "name":"com.oracle.truffle.polyglot.EngineAccessor$EngineImpl",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -216,10 +4019,6 @@
 },
 {
   "name":"com.oracle.truffle.polyglot.HostExecuteNode",
-  "allDeclaredFields":true
-},
-{
-  "name":"com.oracle.truffle.polyglot.HostExecuteNode$HostMethodProfileNode",
   "allDeclaredFields":true
 },
 {
@@ -251,34 +4050,11 @@
   ]
 },
 {
-  "name":"com.oracle.truffle.polyglot.HostExecuteNodeGen$HostMethodProfileNodeGen",
-  "allDeclaredFields":true,
-  "fields":[
-    {"name":"exclude_", "allowUnsafeAccess":true}, 
-    {"name":"state_", "allowUnsafeAccess":true}
-  ]
-},
-{
-  "name":"com.oracle.truffle.polyglot.HostFunctionGen"
-},
-{
-  "name":"com.oracle.truffle.polyglot.HostFunctionGen$InteropLibraryExports$Cached",
-  "allDeclaredFields":true,
-  "fields":[
-    {"name":"executeNode__execute_", "allowUnsafeAccess":true}, 
-    {"name":"state_", "allowUnsafeAccess":true}
-  ]
-},
-{
   "name":"com.oracle.truffle.polyglot.HostMethodDesc$SingleMethod$MHBase$1",
   "allDeclaredFields":true
 },
 {
   "name":"com.oracle.truffle.polyglot.HostObject$LookupFieldNode",
-  "allDeclaredFields":true
-},
-{
-  "name":"com.oracle.truffle.polyglot.HostObject$LookupInnerClassNode",
   "allDeclaredFields":true
 },
 {
@@ -291,15 +4067,6 @@
 },
 {
   "name":"com.oracle.truffle.polyglot.HostObjectFactory$LookupFieldNodeGen",
-  "allDeclaredFields":true,
-  "fields":[
-    {"name":"cached_cache", "allowUnsafeAccess":true}, 
-    {"name":"exclude_", "allowUnsafeAccess":true}, 
-    {"name":"state_", "allowUnsafeAccess":true}
-  ]
-},
-{
-  "name":"com.oracle.truffle.polyglot.HostObjectFactory$LookupInnerClassNodeGen",
   "allDeclaredFields":true,
   "fields":[
     {"name":"cached_cache", "allowUnsafeAccess":true}, 
@@ -726,14 +4493,6 @@
   ]
 },
 {
-  "name":"com.oracle.truffle.polyglot.PolyglotValueFactory$InteropCodeCacheFactory$CanExecuteNodeGen$Cached0Data",
-  "allDeclaredFields":true,
-  "fields":[
-    {"name":"executables_", "allowUnsafeAccess":true}, 
-    {"name":"next_", "allowUnsafeAccess":true}
-  ]
-},
-{
   "name":"com.oracle.truffle.polyglot.PolyglotValueFactory$InteropCodeCacheFactory$CanInstantiateNodeGen",
   "allDeclaredFields":true,
   "fields":[
@@ -762,6 +4521,17 @@
   ]
 },
 {
+  "name":"com.oracle.truffle.polyglot.PolyglotValueFactory$InteropCodeCacheFactory$GetArrayElementNodeGen$Cached0Data",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"arrays_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}, 
+    {"name":"toHost_", "allowUnsafeAccess":true}, 
+    {"name":"unknown_", "allowUnsafeAccess":true}, 
+    {"name":"unsupported_", "allowUnsafeAccess":true}
+  ]
+},
+{
   "name":"com.oracle.truffle.polyglot.PolyglotValueFactory$InteropCodeCacheFactory$GetArraySizeNodeGen",
   "allDeclaredFields":true,
   "fields":[
@@ -769,6 +4539,15 @@
     {"name":"cached1_unsupported_", "allowUnsafeAccess":true}, 
     {"name":"exclude_", "allowUnsafeAccess":true}, 
     {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.oracle.truffle.polyglot.PolyglotValueFactory$InteropCodeCacheFactory$GetArraySizeNodeGen$Cached0Data",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"arrays_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}, 
+    {"name":"unsupported_", "allowUnsafeAccess":true}
   ]
 },
 {
@@ -790,17 +4569,6 @@
     {"name":"cached1_cache", "allowUnsafeAccess":true}, 
     {"name":"exclude_", "allowUnsafeAccess":true}, 
     {"name":"state_", "allowUnsafeAccess":true}
-  ]
-},
-{
-  "name":"com.oracle.truffle.polyglot.PolyglotValueFactory$InteropCodeCacheFactory$GetMemberNodeGen$Cached0Data",
-  "allDeclaredFields":true,
-  "fields":[
-    {"name":"next_", "allowUnsafeAccess":true}, 
-    {"name":"objects_", "allowUnsafeAccess":true}, 
-    {"name":"toHost_", "allowUnsafeAccess":true}, 
-    {"name":"unknown_", "allowUnsafeAccess":true}, 
-    {"name":"unsupported_", "allowUnsafeAccess":true}
   ]
 },
 {
@@ -996,27 +4764,6 @@
   ]
 },
 {
-  "name":"com.oracle.truffle.polyglot.TargetMappingNode",
-  "allDeclaredFields":true
-},
-{
-  "name":"com.oracle.truffle.polyglot.TargetMappingNodeGen",
-  "allDeclaredFields":true,
-  "fields":[
-    {"name":"cached_cache", "allowUnsafeAccess":true}, 
-    {"name":"exclude_", "allowUnsafeAccess":true}, 
-    {"name":"state_", "allowUnsafeAccess":true}
-  ]
-},
-{
-  "name":"com.oracle.truffle.polyglot.TargetMappingNodeGen$CachedData",
-  "allDeclaredFields":true,
-  "fields":[
-    {"name":"mappingNodes_", "allowUnsafeAccess":true}, 
-    {"name":"mappings_", "allowUnsafeAccess":true}
-  ]
-},
-{
   "name":"com.oracle.truffle.polyglot.ToHostNode",
   "allDeclaredFields":true
 },
@@ -1027,19 +4774,6 @@
     {"name":"cached_cache", "allowUnsafeAccess":true}, 
     {"name":"exclude_", "allowUnsafeAccess":true}, 
     {"name":"state_", "allowUnsafeAccess":true}
-  ]
-},
-{
-  "name":"com.oracle.truffle.polyglot.ToHostNodeGen$CachedData",
-  "allDeclaredFields":true,
-  "fields":[
-    {"name":"allowsImplementation_", "allowUnsafeAccess":true}, 
-    {"name":"cachedTargetType_", "allowUnsafeAccess":true}, 
-    {"name":"error_", "allowUnsafeAccess":true}, 
-    {"name":"interop_", "allowUnsafeAccess":true}, 
-    {"name":"next_", "allowUnsafeAccess":true}, 
-    {"name":"primitiveTarget_", "allowUnsafeAccess":true}, 
-    {"name":"targetMapping_", "allowUnsafeAccess":true}
   ]
 },
 {
@@ -1443,6 +5177,23 @@
   "name":"fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode[]"
 },
 {
+  "name":"fr.cea.nabla.interpreter.nodes.expression.NablaExternalASTNode",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"args", "allowUnsafeAccess":true}, 
+    {"name":"member", "allowUnsafeAccess":true}, 
+    {"name":"receiver", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"fr.cea.nabla.interpreter.nodes.expression.NablaExternalASTNodeGen",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"function_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
   "name":"fr.cea.nabla.interpreter.nodes.expression.NablaFunctionCallNode",
   "allDeclaredFields":true,
   "fields":[
@@ -1460,31 +5211,10 @@
   "allDeclaredFields":true,
   "fields":[
     {"name":"exclude_", "allowUnsafeAccess":true}, 
+    {"name":"initialize12_cache", "allowUnsafeAccess":true}, 
     {"name":"initialize6_cache", "allowUnsafeAccess":true}, 
     {"name":"state_", "allowUnsafeAccess":true}, 
     {"name":"value_", "allowUnsafeAccess":true}
-  ]
-},
-{
-  "name":"fr.cea.nabla.interpreter.nodes.expression.NablaMeshCallNode",
-  "allDeclaredFields":true,
-  "fields":[
-    {"name":"boxNode", "allowUnsafeAccess":true}, 
-    {"name":"connectivityName", "allowUnsafeAccess":true}, 
-    {"name":"createNablaValueNode", "allowUnsafeAccess":true}, 
-    {"name":"invokeNode", "allowUnsafeAccess":true}, 
-    {"name":"isStatic", "allowUnsafeAccess":true}, 
-    {"name":"unboxArgNodes", "allowUnsafeAccess":true}
-  ]
-},
-{
-  "name":"fr.cea.nabla.interpreter.nodes.expression.NablaMeshCallNodeGen",
-  "allDeclaredFields":true,
-  "fields":[
-    {"name":"call0_mesh_", "allowUnsafeAccess":true}, 
-    {"name":"call0_value_", "allowUnsafeAccess":true}, 
-    {"name":"call1_value_", "allowUnsafeAccess":true}, 
-    {"name":"state_", "allowUnsafeAccess":true}
   ]
 },
 {
@@ -1537,11 +5267,20 @@
     {"name":"arrayNode_", "allowUnsafeAccess":true}, 
     {"name":"exclude_", "allowUnsafeAccess":true}, 
     {"name":"readNV1Int1Index0_cache", "allowUnsafeAccess":true}, 
+    {"name":"readNV1Real1Index0_cache", "allowUnsafeAccess":true}, 
     {"name":"state_", "allowUnsafeAccess":true}
   ]
 },
 {
   "name":"fr.cea.nabla.interpreter.nodes.expression.NablaReadArrayNodeGen$ReadNV1Int1Index0Data",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"arrays_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"fr.cea.nabla.interpreter.nodes.expression.NablaReadArrayNodeGen$ReadNV1Real1Index0Data",
   "allDeclaredFields":true,
   "fields":[
     {"name":"arrays_", "allowUnsafeAccess":true}, 
@@ -1566,29 +5305,6 @@
   ]
 },
 {
-  "name":"fr.cea.nabla.interpreter.nodes.expression.binary.NablaAddNode",
-  "allDeclaredFields":true
-},
-{
-  "name":"fr.cea.nabla.interpreter.nodes.expression.binary.NablaAddNodeGen",
-  "allDeclaredFields":true,
-  "fields":[
-    {"name":"add14_cache", "allowUnsafeAccess":true}, 
-    {"name":"add16_cache", "allowUnsafeAccess":true}, 
-    {"name":"add18_cache", "allowUnsafeAccess":true}, 
-    {"name":"add20_cache", "allowUnsafeAccess":true}, 
-    {"name":"add24_cache", "allowUnsafeAccess":true}, 
-    {"name":"add26_cache", "allowUnsafeAccess":true}, 
-    {"name":"add2_cache", "allowUnsafeAccess":true}, 
-    {"name":"add33_cache", "allowUnsafeAccess":true}, 
-    {"name":"add9_cache", "allowUnsafeAccess":true}, 
-    {"name":"exclude_", "allowUnsafeAccess":true}, 
-    {"name":"leftNode_", "allowUnsafeAccess":true}, 
-    {"name":"rightNode_", "allowUnsafeAccess":true}, 
-    {"name":"state_", "allowUnsafeAccess":true}
-  ]
-},
-{
   "name":"fr.cea.nabla.interpreter.nodes.expression.binary.NablaAndNode",
   "allDeclaredFields":true
 },
@@ -1602,31 +5318,52 @@
   ]
 },
 {
-  "name":"fr.cea.nabla.interpreter.nodes.expression.binary.NablaBinaryExpressionNode",
-  "allDeclaredFields":true
+  "name":"fr.cea.nabla.interpreter.nodes.expression.binary.NablaArithmeticNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"op", "allowUnsafeAccess":true}]
 },
 {
-  "name":"fr.cea.nabla.interpreter.nodes.expression.binary.NablaDivNode",
-  "allDeclaredFields":true
-},
-{
-  "name":"fr.cea.nabla.interpreter.nodes.expression.binary.NablaDivNodeGen",
+  "name":"fr.cea.nabla.interpreter.nodes.expression.binary.NablaArithmeticNodeGen",
   "allDeclaredFields":true,
   "fields":[
-    {"name":"div14_cache", "allowUnsafeAccess":true}, 
-    {"name":"div16_cache", "allowUnsafeAccess":true}, 
-    {"name":"div18_cache", "allowUnsafeAccess":true}, 
-    {"name":"div20_cache", "allowUnsafeAccess":true}, 
-    {"name":"div24_cache", "allowUnsafeAccess":true}, 
-    {"name":"div26_cache", "allowUnsafeAccess":true}, 
-    {"name":"div2_cache", "allowUnsafeAccess":true}, 
-    {"name":"div33_cache", "allowUnsafeAccess":true}, 
-    {"name":"div9_cache", "allowUnsafeAccess":true}, 
+    {"name":"add10_cache", "allowUnsafeAccess":true}, 
+    {"name":"add12_cache", "allowUnsafeAccess":true}, 
+    {"name":"add16_cache", "allowUnsafeAccess":true}, 
+    {"name":"add18_cache", "allowUnsafeAccess":true}, 
+    {"name":"add20_cache", "allowUnsafeAccess":true}, 
+    {"name":"add22_cache", "allowUnsafeAccess":true}, 
+    {"name":"add26_cache", "allowUnsafeAccess":true}, 
+    {"name":"add28_cache", "allowUnsafeAccess":true}, 
+    {"name":"add2_cache", "allowUnsafeAccess":true}, 
+    {"name":"add4_cache", "allowUnsafeAccess":true}, 
     {"name":"exclude_", "allowUnsafeAccess":true}, 
     {"name":"leftNode_", "allowUnsafeAccess":true}, 
+    {"name":"nV1NV1Cached_cache", "allowUnsafeAccess":true}, 
     {"name":"rightNode_", "allowUnsafeAccess":true}, 
     {"name":"state_", "allowUnsafeAccess":true}
   ]
+},
+{
+  "name":"fr.cea.nabla.interpreter.nodes.expression.binary.NablaArithmeticNodeGen$Add12Data",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"arrays_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"fr.cea.nabla.interpreter.nodes.expression.binary.NablaArithmeticNodeGen$NV1NV1CachedData",
+  "allDeclaredFields":true,
+  "fields":[
+    {"name":"arraysLeft_", "allowUnsafeAccess":true}, 
+    {"name":"arraysRight_", "allowUnsafeAccess":true}, 
+    {"name":"length_", "allowUnsafeAccess":true}, 
+    {"name":"next_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"fr.cea.nabla.interpreter.nodes.expression.binary.NablaBinaryExpressionNode",
+  "allDeclaredFields":true
 },
 {
   "name":"fr.cea.nabla.interpreter.nodes.expression.binary.NablaGtNode",
@@ -1688,52 +5425,6 @@
   "name":"fr.cea.nabla.interpreter.nodes.expression.binary.NablaModNodeGen",
   "allDeclaredFields":true,
   "fields":[
-    {"name":"leftNode_", "allowUnsafeAccess":true}, 
-    {"name":"rightNode_", "allowUnsafeAccess":true}, 
-    {"name":"state_", "allowUnsafeAccess":true}
-  ]
-},
-{
-  "name":"fr.cea.nabla.interpreter.nodes.expression.binary.NablaMulNode",
-  "allDeclaredFields":true
-},
-{
-  "name":"fr.cea.nabla.interpreter.nodes.expression.binary.NablaMulNodeGen",
-  "allDeclaredFields":true,
-  "fields":[
-    {"name":"exclude_", "allowUnsafeAccess":true}, 
-    {"name":"leftNode_", "allowUnsafeAccess":true}, 
-    {"name":"mul14_cache", "allowUnsafeAccess":true}, 
-    {"name":"mul16_cache", "allowUnsafeAccess":true}, 
-    {"name":"mul18_cache", "allowUnsafeAccess":true}, 
-    {"name":"mul20_cache", "allowUnsafeAccess":true}, 
-    {"name":"mul24_cache", "allowUnsafeAccess":true}, 
-    {"name":"mul26_cache", "allowUnsafeAccess":true}, 
-    {"name":"mul2_cache", "allowUnsafeAccess":true}, 
-    {"name":"mul33_cache", "allowUnsafeAccess":true}, 
-    {"name":"mul9_cache", "allowUnsafeAccess":true}, 
-    {"name":"rightNode_", "allowUnsafeAccess":true}, 
-    {"name":"state_", "allowUnsafeAccess":true}
-  ]
-},
-{
-  "name":"fr.cea.nabla.interpreter.nodes.expression.binary.NablaSubNode",
-  "allDeclaredFields":true
-},
-{
-  "name":"fr.cea.nabla.interpreter.nodes.expression.binary.NablaSubNodeGen",
-  "allDeclaredFields":true,
-  "fields":[
-    {"name":"add14_cache", "allowUnsafeAccess":true}, 
-    {"name":"add16_cache", "allowUnsafeAccess":true}, 
-    {"name":"add18_cache", "allowUnsafeAccess":true}, 
-    {"name":"add20_cache", "allowUnsafeAccess":true}, 
-    {"name":"add24_cache", "allowUnsafeAccess":true}, 
-    {"name":"add26_cache", "allowUnsafeAccess":true}, 
-    {"name":"add2_cache", "allowUnsafeAccess":true}, 
-    {"name":"add33_cache", "allowUnsafeAccess":true}, 
-    {"name":"add9_cache", "allowUnsafeAccess":true}, 
-    {"name":"exclude_", "allowUnsafeAccess":true}, 
     {"name":"leftNode_", "allowUnsafeAccess":true}, 
     {"name":"rightNode_", "allowUnsafeAccess":true}, 
     {"name":"state_", "allowUnsafeAccess":true}
@@ -1803,6 +5494,7 @@
   "allDeclaredFields":true,
   "fields":[
     {"name":"abs2_cache", "allowUnsafeAccess":true}, 
+    {"name":"abs4_cache", "allowUnsafeAccess":true}, 
     {"name":"exclude_", "allowUnsafeAccess":true}, 
     {"name":"state_", "allowUnsafeAccess":true}, 
     {"name":"valueNode_", "allowUnsafeAccess":true}
@@ -1818,6 +5510,7 @@
   "fields":[
     {"name":"exclude_", "allowUnsafeAccess":true}, 
     {"name":"minus2_cache", "allowUnsafeAccess":true}, 
+    {"name":"minus4_cache", "allowUnsafeAccess":true}, 
     {"name":"state_", "allowUnsafeAccess":true}, 
     {"name":"valueNode_", "allowUnsafeAccess":true}
   ]
@@ -1832,6 +5525,7 @@
   "fields":[
     {"name":"exclude_", "allowUnsafeAccess":true}, 
     {"name":"sqrt2_cache", "allowUnsafeAccess":true}, 
+    {"name":"sqrt4_cache", "allowUnsafeAccess":true}, 
     {"name":"state_", "allowUnsafeAccess":true}, 
     {"name":"valueNode_", "allowUnsafeAccess":true}
   ]
@@ -1964,12 +5658,8 @@
 },
 {
   "name":"fr.cea.nabla.interpreter.nodes.job.NablaInstructionJobNode",
-  "allDeclaredFields":true
-},
-{
-  "name":"fr.cea.nabla.interpreter.nodes.job.NablaInstructionJobNodeGen",
   "allDeclaredFields":true,
-  "fields":[{"name":"instructionBlock_", "allowUnsafeAccess":true}]
+  "fields":[{"name":"instructionBlock", "allowUnsafeAccess":true}]
 },
 {
   "name":"fr.cea.nabla.interpreter.nodes.job.NablaJobBlockNode",
@@ -1991,15 +5681,10 @@
 },
 {
   "name":"fr.cea.nabla.interpreter.nodes.job.NablaTimeLoopJobNode",
-  "allDeclaredFields":true
-},
-{
-  "name":"fr.cea.nabla.interpreter.nodes.job.NablaTimeLoopJobNodeGen",
   "allDeclaredFields":true,
   "fields":[
-    {"name":"indexInitializer_", "allowUnsafeAccess":true}, 
-    {"name":"loopNode_", "allowUnsafeAccess":true}, 
-    {"name":"state_", "allowUnsafeAccess":true}
+    {"name":"indexInitializer", "allowUnsafeAccess":true}, 
+    {"name":"loopNode", "allowUnsafeAccess":true}
   ]
 },
 {
@@ -2029,23 +5714,9 @@
   "allPublicMethods":true
 },
 {
-  "name":"fr.cea.nabla.interpreter.runtime.NablaInvokeNode",
-  "allDeclaredFields":true
-},
-{
-  "name":"fr.cea.nabla.interpreter.runtime.NablaInvokeNodeGen",
-  "allDeclaredFields":true,
-  "fields":[
-    {"name":"default0_cache", "allowUnsafeAccess":true}, 
-    {"name":"exclude_", "allowUnsafeAccess":true}, 
-    {"name":"state_", "allowUnsafeAccess":true}
-  ]
-},
-{
   "name":"fr.cea.nabla.interpreter.utils.GetFrameNode",
   "allDeclaredFields":true,
   "fields":[
-    {"name":"initializationRequired", "allowUnsafeAccess":true}, 
     {"name":"isLocal", "allowUnsafeAccess":true}, 
     {"name":"slotName", "allowUnsafeAccess":true}
   ]
@@ -2060,33 +5731,31 @@
   ]
 },
 {
-  "name":"fr.cea.nabla.interpreter.values.BoxMeshCallResultNode",
-  "allDeclaredFields":true,
-  "fields":[{"name":"nbDimensions", "allowUnsafeAccess":true}]
-},
-{
-  "name":"fr.cea.nabla.interpreter.values.BoxMeshCallResultNodeGen",
-  "allDeclaredFields":true,
-  "fields":[{"name":"state_", "allowUnsafeAccess":true}]
-},
-{
   "name":"fr.cea.nabla.interpreter.values.CreateNablaValueNode",
-  "allDeclaredFields":true
+  "allDeclaredFields":true,
+  "fields":[{"name":"expectedType", "allowUnsafeAccess":true}]
 },
 {
   "name":"fr.cea.nabla.interpreter.values.CreateNablaValueNodeGen",
   "allDeclaredFields":true,
-  "fields":[{"name":"state_", "allowUnsafeAccess":true}]
+  "fields":[
+    {"name":"createNablaValueDouble11_pointers_", "allowUnsafeAccess":true}, 
+    {"name":"createNablaValueInt11_pointers_", "allowUnsafeAccess":true}, 
+    {"name":"expression_", "allowUnsafeAccess":true}, 
+    {"name":"hostObject_cache", "allowUnsafeAccess":true}, 
+    {"name":"nablaLanguageContextReference_", "allowUnsafeAccess":true}, 
+    {"name":"state_", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"fr.cea.nabla.interpreter.values.NV0IntGen"
+},
+{
+  "name":"fr.cea.nabla.interpreter.values.NV0IntGen$InteropLibraryExports$Cached",
+  "allDeclaredFields":true
 },
 {
   "name":"fr.cea.nabla.interpreter.values.NV0RealGen"
-},
-{
-  "name":"fr.cea.nabla.interpreter.values.NV1IntJavaGen"
-},
-{
-  "name":"fr.cea.nabla.interpreter.values.NV1IntJavaGen$NV1IntLibraryExports$Cached",
-  "allDeclaredFields":true
 },
 {
   "name":"fr.cea.nabla.interpreter.values.NV1IntLibrary",
@@ -2104,25 +5773,36 @@
   ]
 },
 {
-  "name":"fr.cea.nabla.interpreter.values.NV1RealGen"
+  "name":"fr.cea.nabla.interpreter.values.NV1IntNativeGen"
 },
 {
-  "name":"fr.cea.nabla.interpreter.values.NV2RealGen"
-},
-{
-  "name":"fr.cea.nabla.interpreter.values.UnboxValueNode",
+  "name":"fr.cea.nabla.interpreter.values.NV1IntNativeGen$NV1IntLibraryExports$Cached",
   "allDeclaredFields":true
 },
 {
-  "name":"fr.cea.nabla.interpreter.values.UnboxValueNodeGen",
+  "name":"fr.cea.nabla.interpreter.values.NV1RealJavaGen"
+},
+{
+  "name":"fr.cea.nabla.interpreter.values.NV1RealJavaGen$NV1RealLibraryExports$Cached",
+  "allDeclaredFields":true
+},
+{
+  "name":"fr.cea.nabla.interpreter.values.NV1RealLibrary",
+  "allDeclaredFields":true
+},
+{
+  "name":"fr.cea.nabla.interpreter.values.NV1RealLibraryGen"
+},
+{
+  "name":"fr.cea.nabla.interpreter.values.NV1RealLibraryGen$Default$Cached",
   "allDeclaredFields":true,
   "fields":[
-    {"name":"state_", "allowUnsafeAccess":true}, 
-    {"name":"value_", "allowUnsafeAccess":true}
+    {"name":"dynamicDispatchTarget_", "allowUnsafeAccess":true}, 
+    {"name":"dynamicDispatch_", "allowUnsafeAccess":true}
   ]
 },
 {
-  "name":"fr.cea.nabla.interpreter.values.UnboxValueNode[]"
+  "name":"fr.cea.nabla.interpreter.values.NV2RealGen"
 },
 {
   "name":"fr.cea.nabla.ir.ir.Arg[]"
@@ -2597,9 +6277,16 @@
   "methods":[{"name":"getContextClassLoader","parameterTypes":[] }]
 },
 {
+  "name":"java.lang.Throwable",
+  "fields":[{"name":"cause", "allowUnsafeAccess":true}]
+},
+{
   "name":"java.net.URLClassLoader",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
+},
+{
+  "name":"java.security.MessageDigestSpi"
 },
 {
   "name":"java.security.ProtectionDomain"
@@ -2608,6 +6295,9 @@
   "name":"java.security.SecureClassLoader",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
+},
+{
+  "name":"java.security.SecureRandomParameters"
 },
 {
   "name":"java.util.AbstractMap",
@@ -4657,6 +8347,11 @@
   ]
 },
 {
+  "name":"org.graalvm.compiler.truffle.runtime.OptimizedIndirectCallNode",
+  "allDeclaredFields":true,
+  "fields":[{"name":"exceptionProfile", "allowUnsafeAccess":true}]
+},
+{
   "name":"org.graalvm.compiler.truffle.runtime.OptimizedOSRLoopNode",
   "allDeclaredFields":true,
   "fields":[
@@ -4678,5 +8373,13 @@
 {
   "name":"sun.misc.Unsafe",
   "fields":[{"name":"theUnsafe"}]
+},
+{
+  "name":"sun.security.provider.NativePRNG",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.provider.SHA",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 }
 ]

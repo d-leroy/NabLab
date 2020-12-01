@@ -7,8 +7,6 @@ import com.oracle.truffle.api.instrumentation.ProbeNode;
 import com.oracle.truffle.api.instrumentation.InstrumentableNode.WrapperNode;
 import com.oracle.truffle.api.nodes.NodeCost;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
-import fr.cea.nabla.interpreter.nodes.instruction.NablaInstructionBlockNode;
-import fr.cea.nabla.interpreter.nodes.instruction.NablaInstructionNode;
 
 @GeneratedBy(NablaInstructionBlockNode.class)
 final class NablaInstructionBlockNodeWrapper extends NablaInstructionBlockNode implements WrapperNode {

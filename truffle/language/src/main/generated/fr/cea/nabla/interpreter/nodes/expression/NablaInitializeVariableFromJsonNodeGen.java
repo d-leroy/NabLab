@@ -4,6 +4,7 @@ package fr.cea.nabla.interpreter.nodes.expression;
 import com.google.gson.JsonElement;
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.frame.VirtualFrame;
@@ -12,8 +13,6 @@ import com.oracle.truffle.api.nodes.EncapsulatingNodeReference;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
-import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
-import fr.cea.nabla.interpreter.nodes.expression.NablaInitializeVariableFromJsonNode;
 import fr.cea.nabla.interpreter.values.NV0Bool;
 import fr.cea.nabla.interpreter.values.NV0Int;
 import fr.cea.nabla.interpreter.values.NV0Real;
@@ -32,6 +31,7 @@ import fr.cea.nabla.interpreter.values.NV4Real;
 import java.util.concurrent.locks.Lock;
 
 @GeneratedBy(NablaInitializeVariableFromJsonNode.class)
+@SuppressWarnings("unused")
 public final class NablaInitializeVariableFromJsonNodeGen extends NablaInitializeVariableFromJsonNode {
 
     private static final LibraryFactory<NV1IntLibrary> N_V1_INT_LIBRARY_ = LibraryFactory.resolve(NV1IntLibrary.class);
@@ -96,9 +96,9 @@ public final class NablaInitializeVariableFromJsonNodeGen extends NablaInitializ
                 Node prev_ = encapsulating_.set(this);
                 try {
                     {
-                        NV1IntLibrary initialize7_arrays__ = (N_V1_INT_LIBRARY_.getUncached(valueValue_));
+                        NV1IntLibrary initialize7_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                         if ((initialize7_arrays__.isArray(valueValue_))) {
-                            return doInitialize(valueValue_, initialize7_arrays__);
+                            return this.initialize7Boundary(state, valueValue_);
                         }
                     }
                 } finally {
@@ -137,9 +137,9 @@ public final class NablaInitializeVariableFromJsonNodeGen extends NablaInitializ
                 Node prev_ = encapsulating_.set(this);
                 try {
                     {
-                        NV1RealLibrary initialize13_arrays__ = (N_V1_REAL_LIBRARY_.getUncached(valueValue_));
+                        NV1RealLibrary initialize13_arrays__ = (N_V1_REAL_LIBRARY_.getUncached());
                         if ((initialize13_arrays__.isArray(valueValue_))) {
-                            return doInitialize(valueValue_, initialize13_arrays__);
+                            return this.initialize13Boundary(state, valueValue_);
                         }
                     }
                 } finally {
@@ -161,6 +161,24 @@ public final class NablaInitializeVariableFromJsonNodeGen extends NablaInitializ
         }
         CompilerDirectives.transferToInterpreterAndInvalidate();
         return executeAndSpecialize(valueValue_);
+    }
+
+    @SuppressWarnings("static-method")
+    @TruffleBoundary
+    private Object initialize7Boundary(int state, Object valueValue_) {
+        {
+            NV1IntLibrary initialize7_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
+            return doInitialize(valueValue_, initialize7_arrays__);
+        }
+    }
+
+    @SuppressWarnings("static-method")
+    @TruffleBoundary
+    private Object initialize13Boundary(int state, Object valueValue_) {
+        {
+            NV1RealLibrary initialize13_arrays__ = (N_V1_REAL_LIBRARY_.getUncached());
+            return doInitialize(valueValue_, initialize13_arrays__);
+        }
     }
 
     private Object executeAndSpecialize(Object valueValue) {
@@ -249,7 +267,7 @@ public final class NablaInitializeVariableFromJsonNodeGen extends NablaInitializ
                     Node prev_ = encapsulating_.set(this);
                     try {
                         {
-                            initialize7_arrays__ = (N_V1_INT_LIBRARY_.getUncached(valueValue));
+                            initialize7_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                             if ((initialize7_arrays__.isArray(valueValue))) {
                                 this.exclude_ = exclude = exclude | 0b1 /* add-excluded doInitialize(Object, NV1IntLibrary) */;
                                 this.initialize6_cache = null;
@@ -330,7 +348,7 @@ public final class NablaInitializeVariableFromJsonNodeGen extends NablaInitializ
                     Node prev_ = encapsulating_.set(this);
                     try {
                         {
-                            initialize13_arrays__ = (N_V1_REAL_LIBRARY_.getUncached(valueValue));
+                            initialize13_arrays__ = (N_V1_REAL_LIBRARY_.getUncached());
                             if ((initialize13_arrays__.isArray(valueValue))) {
                                 this.exclude_ = exclude = exclude | 0b10 /* add-excluded doInitialize(Object, NV1RealLibrary) */;
                                 this.initialize12_cache = null;

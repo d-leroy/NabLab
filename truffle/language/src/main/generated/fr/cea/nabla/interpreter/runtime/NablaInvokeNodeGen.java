@@ -3,6 +3,7 @@ package fr.cea.nabla.interpreter.runtime;
 
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.interop.InteropLibrary;
@@ -11,10 +12,10 @@ import com.oracle.truffle.api.nodes.EncapsulatingNodeReference;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
-import fr.cea.nabla.interpreter.runtime.NablaInvokeNode;
 import java.util.concurrent.locks.Lock;
 
 @GeneratedBy(NablaInvokeNode.class)
+@SuppressWarnings("unused")
 public final class NablaInvokeNodeGen extends NablaInvokeNode {
 
     private static final LibraryFactory<InteropLibrary> INTEROP_LIBRARY_ = LibraryFactory.resolve(InteropLibrary.class);
@@ -45,9 +46,9 @@ public final class NablaInvokeNodeGen extends NablaInvokeNode {
                 Node prev_ = encapsulating_.set(this);
                 try {
                     {
-                        InteropLibrary default1_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                        InteropLibrary default1_objLibrary__ = (INTEROP_LIBRARY_.getUncached());
                         if ((default1_objLibrary__.isMemberInvocable(arg0Value, arg1Value))) {
-                            return doDefault(arg0Value, arg1Value, arg2Value, default1_objLibrary__);
+                            return this.default1Boundary(state, arg0Value, arg1Value, arg2Value);
                         }
                     }
                 } finally {
@@ -57,6 +58,15 @@ public final class NablaInvokeNodeGen extends NablaInvokeNode {
         }
         CompilerDirectives.transferToInterpreterAndInvalidate();
         return executeAndSpecialize(arg0Value, arg1Value, arg2Value);
+    }
+
+    @SuppressWarnings("static-method")
+    @TruffleBoundary
+    private Object default1Boundary(int state, Object arg0Value, String arg1Value, Object[] arg2Value) {
+        {
+            InteropLibrary default1_objLibrary__ = (INTEROP_LIBRARY_.getUncached());
+            return doDefault(arg0Value, arg1Value, arg2Value, default1_objLibrary__);
+        }
     }
 
     private Object executeAndSpecialize(Object arg0Value, String arg1Value, Object[] arg2Value) {
@@ -103,7 +113,7 @@ public final class NablaInvokeNodeGen extends NablaInvokeNode {
                     Node prev_ = encapsulating_.set(this);
                     try {
                         {
-                            default1_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
+                            default1_objLibrary__ = (INTEROP_LIBRARY_.getUncached());
                             if ((default1_objLibrary__.isMemberInvocable(arg0Value, arg1Value))) {
                                 this.exclude_ = exclude = exclude | 0b1 /* add-excluded doDefault(Object, String, Object[], InteropLibrary) */;
                                 this.default0_cache = null;
