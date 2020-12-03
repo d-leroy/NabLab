@@ -11,9 +11,6 @@ package fr.cea.nabla.interpreter.values;
 
 import java.util.Arrays;
 
-import org.apache.commons.math3.linear.ArrayRealVector;
-import org.apache.commons.math3.linear.RealVector;
-
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.interop.InteropLibrary;
@@ -31,10 +28,6 @@ public final class NV1RealJava implements NV1Real {
 	public NV1RealJava(final double[] data) {
 		this.data = data;
 	}
-	
-	public RealVector asVector() {
-		return new ArrayRealVector(data);
-	}
 
 	@ExportMessage
 	boolean isArray() {
@@ -45,7 +38,7 @@ public final class NV1RealJava implements NV1Real {
 	double read(int index) {
 		return data[index];
 	}
-	
+
 	@ExportMessage
 	int length() {
 		return data.length;

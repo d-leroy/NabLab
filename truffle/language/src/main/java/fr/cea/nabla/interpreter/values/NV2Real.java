@@ -11,9 +11,6 @@ package fr.cea.nabla.interpreter.values;
 
 import java.util.Arrays;
 
-import org.apache.commons.math3.linear.AbstractRealMatrix;
-import org.apache.commons.math3.linear.Array2DRowRealMatrix;
-
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.interop.InteropLibrary;
@@ -31,10 +28,6 @@ public class NV2Real implements NablaValue {
 		this.data = data;
 	}
 
-	public AbstractRealMatrix asMatrix() {
-		return new Array2DRowRealMatrix(data);
-	}
-	
 	@ExportMessage
 	boolean hasArrayElements() {
 		return true;
@@ -85,40 +78,43 @@ public class NV2Real implements NablaValue {
 	public double[][] getData() {
 		return this.data;
 	}
-	
+
 	@Override
 	public int getDimension(int dimension) {
 		assert (dimension <= 2);
 		switch (dimension) {
-		case 1: return data.length;
-		case 2: return data[0].length;
-		default: throw new UnsupportedOperationException();
+		case 1:
+			return data.length;
+		case 2:
+			return data[0].length;
+		default:
+			throw new UnsupportedOperationException();
 		}
 	}
-	
+
 	@ExportMessage
-    boolean hasLanguage() {
-        return true;
-    }
+	boolean hasLanguage() {
+		return true;
+	}
 
-    @ExportMessage
-    Class<? extends TruffleLanguage<?>> getLanguage() {
-        return NablaLanguage.class;
-    }
+	@ExportMessage
+	Class<? extends TruffleLanguage<?>> getLanguage() {
+		return NablaLanguage.class;
+	}
 
-    @ExportMessage
-    boolean hasMetaObject() {
-        return true;
-    }
+	@ExportMessage
+	boolean hasMetaObject() {
+		return true;
+	}
 
-    @ExportMessage
-    Object getMetaObject() {
-        return NablaType.ARRAY;
-    }
+	@ExportMessage
+	Object getMetaObject() {
+		return NablaType.ARRAY;
+	}
 
-    @ExportMessage
-    @TruffleBoundary
-    Object toDisplayString(@SuppressWarnings("unused") boolean allowSideEffects) {
-        return data;
-    }
+	@ExportMessage
+	@TruffleBoundary
+	Object toDisplayString(@SuppressWarnings("unused") boolean allowSideEffects) {
+		return data;
+	}
 }

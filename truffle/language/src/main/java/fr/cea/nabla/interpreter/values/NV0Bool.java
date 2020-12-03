@@ -63,10 +63,6 @@ public class NV0Bool implements NablaValue {
 		return this.data;
 	}
 
-	public void setData(final boolean data) {
-		this.data = data;
-	}
-
 	@Override
 	public int getDimension(int dimension) {
 		throw new UnsupportedOperationException();

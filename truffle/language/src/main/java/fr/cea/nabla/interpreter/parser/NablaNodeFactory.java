@@ -38,7 +38,6 @@ import fr.cea.nabla.interpreter.nodes.expression.NablaInitializeVariableFromJson
 import fr.cea.nabla.interpreter.nodes.expression.NablaInitializeVariableFromJsonNodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.NablaInt1NodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.NablaInt2NodeGen;
-import fr.cea.nabla.interpreter.nodes.expression.NablaLinearSolverCallNodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.NablaMeshCallNodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.NablaParenthesisNodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.NablaReadArgumentNode;
@@ -165,7 +164,6 @@ import fr.cea.nabla.ir.ir.UnaryExpression;
 import fr.cea.nabla.ir.ir.Variable;
 import fr.cea.nabla.ir.ir.VariableDeclaration;
 import fr.cea.nabla.ir.ir.VectorConstant;
-import fr.cea.nabla.javalib.types.LinearAlgebraFunctions;
 
 public class NablaNodeFactory {
 
@@ -780,8 +778,6 @@ public class NablaNodeFactory {
 				NablaMeshCallNodeGen.create("CartesianMesh2D", getterName, args));
 	}
 
-	private LinearAlgebraFunctions solver;
-
 	private NablaExpressionNode createNablaBuiltinOrExternalFunctionCallNode(FunctionCall functionCall) {
 		final Function function = functionCall.getFunction();
 		final String methodName = function.getName();
@@ -802,17 +798,6 @@ public class NablaNodeFactory {
 				final String receiverClassName = "java.lang.Math";
 				return createNablaExternalFunctionCallNode(functionCall, receiverClassName);
 			}
-		} else if (provider.equals("LinearAlgebra") && !providerToFilepath.containsKey("linearAlgebra")) {
-			if (solver == null) {
-				solver = new LinearAlgebraFunctions();
-			}
-			return NablaLinearSolverCallNodeGen.create(solver, createNablaExpressionNode(functionCall.getArgs().get(0)),
-					createNablaExpressionNode(functionCall.getArgs().get(1)));
-//		} else {
-//			final IrModule module = (IrModule) function.eContainer();
-//			final String receiverClassName = module.getName().toLowerCase() + '.' + provider
-//					+ Utils.FunctionReductionPrefix;
-//			return createNablaExternalFunctionCallNode(functionCall, receiverClassName);
 		} else {
 			return createNablaExternalCallNode(functionCall);
 		}

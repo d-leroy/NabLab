@@ -34,18 +34,18 @@ final class NablaWriteArrayNodeWrapper extends NablaWriteArrayNode implements Wr
     }
 
     @Override
-    public Object executeGeneric(VirtualFrame frame) {
+    public Object executeGeneric(VirtualFrame arg0) {
         Object returnValue;
         for (;;) {
             boolean wasOnReturnExecuted = false;
             try {
-                probeNode.onEnter(frame);
-                returnValue = delegateNode.executeGeneric(frame);
+                probeNode.onEnter(arg0);
+                returnValue = delegateNode.executeGeneric(arg0);
                 wasOnReturnExecuted = true;
-                probeNode.onReturnValue(frame, returnValue);
+                probeNode.onReturnValue(arg0, returnValue);
                 break;
             } catch (Throwable t) {
-                Object result = probeNode.onReturnExceptionalOrUnwind(frame, t, wasOnReturnExecuted);
+                Object result = probeNode.onReturnExceptionalOrUnwind(arg0, t, wasOnReturnExecuted);
                 if (result == ProbeNode.UNWIND_ACTION_REENTER) {
                     continue;
                 } else if (result != null) {

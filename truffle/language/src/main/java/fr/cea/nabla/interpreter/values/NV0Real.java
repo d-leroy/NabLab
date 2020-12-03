@@ -26,7 +26,7 @@ public class NV0Real implements NablaValue {
 	public NV0Real(final double data) {
 		this.data = data;
 	}
-	
+
 	@ExportMessage
 	boolean isNumber() {
 		return fitsInDouble();
@@ -118,37 +118,33 @@ public class NV0Real implements NablaValue {
 		return this.data;
 	}
 
-	public void setData(final double data) {
-		this.data = data;
-	}
-	
 	@Override
 	public int getDimension(int dimension) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	@ExportMessage
-    boolean hasLanguage() {
-        return true;
-    }
+	boolean hasLanguage() {
+		return true;
+	}
 
-    @ExportMessage
-    Class<? extends TruffleLanguage<?>> getLanguage() {
-        return NablaLanguage.class;
-    }
+	@ExportMessage
+	Class<? extends TruffleLanguage<?>> getLanguage() {
+		return NablaLanguage.class;
+	}
 
-    @ExportMessage
-    boolean hasMetaObject() {
-        return true;
-    }
+	@ExportMessage
+	boolean hasMetaObject() {
+		return true;
+	}
 
-    @ExportMessage
-    Object getMetaObject() {
-        return NablaType.NUMBER;
-    }
+	@ExportMessage
+	Object getMetaObject() {
+		return NablaType.NUMBER;
+	}
 
-    @ExportMessage
-    Object toDisplayString(@SuppressWarnings("unused") boolean allowSideEffects) {
-        return data;
-    }
+	@ExportMessage
+	Object toDisplayString(@SuppressWarnings("unused") boolean allowSideEffects) {
+		return data;
+	}
 }
