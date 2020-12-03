@@ -31,6 +31,15 @@ public interface IrFactory extends EFactory {
 	IrAnnotation createIrAnnotation();
 
 	/**
+	 * Returns a new object of class '<em>Root</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Root</em>'.
+	 * @generated
+	 */
+	IrRoot createIrRoot();
+
+	/**
 	 * Returns a new object of class '<em>Module</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -40,31 +49,13 @@ public interface IrFactory extends EFactory {
 	IrModule createIrModule();
 
 	/**
-	 * Returns a new object of class '<em>Import</em>'.
+	 * Returns a new object of class '<em>Post Processing</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Import</em>'.
+	 * @return a new object of class '<em>Post Processing</em>'.
 	 * @generated
 	 */
-	Import createImport();
-
-	/**
-	 * Returns a new object of class '<em>Post Processing Info</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Post Processing Info</em>'.
-	 * @generated
-	 */
-	PostProcessingInfo createPostProcessingInfo();
-
-	/**
-	 * Returns a new object of class '<em>Time Loop</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Time Loop</em>'.
-	 * @generated
-	 */
-	TimeLoop createTimeLoop();
+	PostProcessing createPostProcessing();
 
 	/**
 	 * Returns a new object of class '<em>Arg</em>'.
@@ -112,6 +103,15 @@ public interface IrFactory extends EFactory {
 	Connectivity createConnectivity();
 
 	/**
+	 * Returns a new object of class '<em>Job Caller</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Job Caller</em>'.
+	 * @generated
+	 */
+	JobCaller createJobCaller();
+
+	/**
 	 * Returns a new object of class '<em>Instruction Job</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -121,31 +121,31 @@ public interface IrFactory extends EFactory {
 	InstructionJob createInstructionJob();
 
 	/**
-	 * Returns a new object of class '<em>Time Loop Job</em>'.
+	 * Returns a new object of class '<em>Execute Time Loop Job</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Time Loop Job</em>'.
+	 * @return a new object of class '<em>Execute Time Loop Job</em>'.
 	 * @generated
 	 */
-	TimeLoopJob createTimeLoopJob();
+	ExecuteTimeLoopJob createExecuteTimeLoopJob();
 
 	/**
-	 * Returns a new object of class '<em>Before Time Loop Job</em>'.
+	 * Returns a new object of class '<em>Set Up Time Loop Job</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Before Time Loop Job</em>'.
+	 * @return a new object of class '<em>Set Up Time Loop Job</em>'.
 	 * @generated
 	 */
-	BeforeTimeLoopJob createBeforeTimeLoopJob();
+	SetUpTimeLoopJob createSetUpTimeLoopJob();
 
 	/**
-	 * Returns a new object of class '<em>After Time Loop Job</em>'.
+	 * Returns a new object of class '<em>Tear Down Time Loop Job</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>After Time Loop Job</em>'.
+	 * @return a new object of class '<em>Tear Down Time Loop Job</em>'.
 	 * @generated
 	 */
-	AfterTimeLoopJob createAfterTimeLoopJob();
+	TearDownTimeLoopJob createTearDownTimeLoopJob();
 
 	/**
 	 * Returns a new object of class '<em>Time Loop Copy</em>'.
@@ -443,15 +443,6 @@ public interface IrFactory extends EFactory {
 	 * @generated
 	 */
 	ConnectivityType createConnectivityType();
-
-	/**
-	 * Returns a new object of class '<em>Time Loop Variable</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Time Loop Variable</em>'.
-	 * @generated
-	 */
-	TimeLoopVariable createTimeLoopVariable();
 
 	/**
 	 * Returns a new object of class '<em>Connectivity Call</em>'.

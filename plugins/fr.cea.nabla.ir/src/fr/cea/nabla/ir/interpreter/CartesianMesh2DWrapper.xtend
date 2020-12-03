@@ -10,7 +10,6 @@
 package fr.cea.nabla.ir.interpreter
 
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import fr.cea.nabla.ir.ir.Connectivity
 import fr.cea.nabla.ir.ir.Iterator
 import fr.cea.nabla.javalib.mesh.CartesianMesh2D
@@ -26,9 +25,10 @@ class CartesianMesh2DWrapper
 	val HashMap<Connectivity, Method> connectivityToMethod
 	@Accessors val HashMap<Connectivity, Integer> connectivitySizes
 
-	new(Gson gson, JsonObject jsonMesh)
+	new(Gson gson, String jsonMeshContent)
 	{
-		val f = gson.fromJson(jsonMesh, CartesianMesh2DFactory)
+		val f = new CartesianMesh2DFactory()
+		f.jsonInit(jsonMeshContent)
 		mesh = f.create
 
 		val tccl = Thread.currentThread().getContextClassLoader()

@@ -12,7 +12,7 @@ package fr.cea.nabla.generator
 import com.google.common.base.Function
 import com.google.inject.Inject
 import com.google.inject.Provider
-import fr.cea.nabla.generator.ir.Nabla2Ir
+import fr.cea.nabla.generator.ir.Nablagen2Ir
 import fr.cea.nabla.ir.generator.cpp.Ir2Cpp
 import fr.cea.nabla.ir.generator.cpp.KokkosBackend
 import fr.cea.nabla.ir.generator.cpp.KokkosTeamThreadBackend
@@ -21,15 +21,14 @@ import fr.cea.nabla.ir.generator.cpp.SequentialBackend
 import fr.cea.nabla.ir.generator.cpp.StlThreadBackend
 import fr.cea.nabla.ir.generator.java.Ir2Java
 import fr.cea.nabla.ir.generator.json.Ir2Json
-import fr.cea.nabla.ir.ir.IrModule
+import fr.cea.nabla.ir.ir.IrRoot
 import fr.cea.nabla.ir.transformers.CompositeTransformationStep
 import fr.cea.nabla.ir.transformers.FillJobHLTs
 import fr.cea.nabla.ir.transformers.IrTransformationStep
 import fr.cea.nabla.ir.transformers.OptimizeConnectivities
 import fr.cea.nabla.ir.transformers.ReplaceReductions
 import fr.cea.nabla.ir.transformers.ReplaceUtf8Chars
-import fr.cea.nabla.ir.transformers.SetSimulationVariables
-import fr.cea.nabla.ir.transformers.TagOutputVariables
+import fr.cea.nabla.nabla.NablaModule
 import fr.cea.nabla.nablagen.Cpp
 import fr.cea.nabla.nablagen.CppKokkos
 import fr.cea.nabla.nablagen.CppKokkosTeamThread
@@ -38,7 +37,7 @@ import fr.cea.nabla.nablagen.CppSequential
 import fr.cea.nabla.nablagen.CppStlThread
 import fr.cea.nabla.nablagen.Java
 import fr.cea.nabla.nablagen.LevelDB
-import fr.cea.nabla.nablagen.NablagenConfig
+import fr.cea.nabla.nablagen.NablagenRoot
 import fr.cea.nabla.nablagen.Target
 import java.io.File
 import java.util.ArrayList
@@ -53,34 +52,45 @@ import org.eclipse.xtext.generator.OutputConfiguration
 
 import static com.google.common.collect.Maps.uniqueIndex
 
+import static extension fr.cea.nabla.LatexLabelServices.*
+
 class NablagenInterpreter
 {
 	@Inject Provider<JavaIoFileSystemAccess> fsaProvider
-	@Inject Nabla2Ir nabla2Ir
+	@Inject Nablagen2Ir nablagen2Ir
 	@Inject IOutputConfigurationProvider outputConfigurationProvider
-	@Inject IrModuleTransformer transformer
 	@Inject NablaIrWriter irWriter
 
 	@Accessors val traceListeners = new ArrayList<(String)=>void>
 
-	def IrModule buildIrModule(NablagenConfig nablagenConfig, String projectDir)
+	def IrRoot buildIr(NablagenRoot ngen, String projectDir)
 	{
 		try
 		{
 			// Nabla -> IR
 			trace('Nabla -> IR')
-			val irModule = nabla2Ir.toIrModule(nablagenConfig.nablaModule)
+			val ir = nablagen2Ir.toIrRoot(ngen)
 
 			// IR -> IR
-			transformer.transformIr(getCommonIrTransformation(nablagenConfig), irModule, [msg | trace(msg)])
+			commonIrTransformation.transformIr(ir, [msg | trace(msg)])
 
-			if (nablagenConfig.writeIR)
+			trace('Nabla -> Latex')
+			val texContentsByName = new HashMap<String, CharSequence>
+			if (ngen.mainModule !== null && ngen.mainModule.type !== null)
+				texContentsByName.put(ngen.mainModule.type.name + ".tex", ngen.mainModule.type.latexContent)
+			for (adModule : ngen.additionalModules)
+				if (adModule.type !== null)
+					texContentsByName.put(adModule.type.name + ".tex", adModule.type.latexContent)
+			var fsa = getConfiguredFileSystemAccess(projectDir, true)
+			generate(fsa, texContentsByName, ir)
+
+			if (ngen.writeIR)
 			{
-				val fileName = irWriter.createAndSaveResource(getConfiguredFileSystemAccess(projectDir, true), irModule)
+				val fileName = irWriter.createAndSaveResource(getConfiguredFileSystemAccess(projectDir, true), ir)
 				trace('Resource saved: ' + fileName)
 			}
 
-			return irModule
+			return ir
 		}
 		catch(Exception e)
 		{
@@ -98,15 +108,15 @@ class NablagenInterpreter
 		}
 	}
 
-	def void generateCode(IrModule irModule, List<Target> targets, String iterationMaxVarName, String timeMaxVarName, String projectDir, LevelDB levelDB)
+	def void generateCode(IrRoot ir, List<Target> targets, String iterationMaxVarName, String timeMaxVarName, String projectDir, LevelDB levelDB)
 	{
 		try
 		{
 			trace("Starting Json code generator")
 			val ir2Json = new Ir2Json(levelDB!==null)
-			val jsonFileContentsByName = ir2Json.getFileContentsByName(irModule)
+			val jsonFileContentsByName = ir2Json.getFileContentsByName(ir)
 			var fsa = getConfiguredFileSystemAccess(projectDir, true)
-			generate(fsa, jsonFileContentsByName, irModule)
+			generate(fsa, jsonFileContentsByName, ir)
 
 			val baseDir =  projectDir + "/.."
 			for (target : targets)
@@ -119,13 +129,13 @@ class NablagenInterpreter
 				fsa = getConfiguredFileSystemAccess(outputFolderName, false)
 				if (g.needIrTransformation)
 				{
-					val duplicatedIrModule = EcoreUtil::copy(irModule)
-					transformer.transformIr(g.irTransformationStep, duplicatedIrModule, [msg | trace(msg)])
-					generate(fsa, g.getFileContentsByName(duplicatedIrModule), irModule)
+					val duplicatedIr = EcoreUtil::copy(ir)
+					g.irTransformationStep.transformIr(duplicatedIr, [msg | trace(msg)])
+					generate(fsa, g.getFileContentsByName(duplicatedIr), ir)
 				}
 				else
 				{
-					generate(fsa, g.getFileContentsByName(irModule), irModule)
+					generate(fsa, g.getFileContentsByName(ir), ir)
 				}
 			}
 		}
@@ -141,11 +151,11 @@ class NablagenInterpreter
 		}
 	}
 
-	private def generate(JavaIoFileSystemAccess fsa, Map<String, CharSequence> fileContentsByName, IrModule irModule)
+	private def generate(JavaIoFileSystemAccess fsa, Map<String, CharSequence> fileContentsByName, IrRoot ir)
 	{
 		for (fileName : fileContentsByName.keySet)
 		{
-			val fullFileName = irModule.name.toLowerCase + '/' + fileName
+			val fullFileName = ir.name.toLowerCase + '/' + fileName
 			val fileContent = fileContentsByName.get(fileName)
 			trace("    Generating: " + fullFileName)
 			fsa.generateFile(fullFileName, fileContent)
@@ -208,7 +218,7 @@ class NablagenInterpreter
 		}
 	}
 
-	private def getCommonIrTransformation(NablagenConfig it)
+	private def getCommonIrTransformation()
 	{
 		val description = 'IR->IR transformations shared by all generators'
 		val transformations = new ArrayList<IrTransformationStep>
@@ -216,16 +226,33 @@ class NablagenInterpreter
 		transformations += new OptimizeConnectivities(#['cells', 'nodes', 'faces'])
 		transformations += new ReplaceReductions(false)
 		transformations += new FillJobHLTs
-		transformations += new SetSimulationVariables(simulation.meshClassName, simulation.time.name, simulation.timeStep.name, simulation.nodeCoord.name)
-
-		if (vtkOutput !== null && !vtkOutput.vars.empty)
-		{
-			val outVars = new HashMap<String, String>
-			vtkOutput.vars.forEach[x | outVars.put(x.varRef.name, x.varName)]
-			transformations += new TagOutputVariables(outVars, vtkOutput.periodReference.name)
-		}
-
 		new CompositeTransformationStep(description, transformations)
 	}
+
+	private def getLatexContent(NablaModule m)
+	'''
+		\documentclass[11pt]{article}
+
+		\usepackage{fontspec}
+		\usepackage{geometry}
+		\geometry{landscape}
+
+		\title{Nabla Module «m.name»}
+		\author{Generated by the NabLab environment}
+
+		\begin{document}
+		\maketitle
+
+		«FOR j : m.jobs»
+		«val latexContent = j.latex»
+		«IF !latexContent.nullOrEmpty»
+
+		\section{«j.name»}
+		$«latexContent»$
+
+		«ENDIF»
+		«ENDFOR»
+		\end{document}
+	'''
 }
 

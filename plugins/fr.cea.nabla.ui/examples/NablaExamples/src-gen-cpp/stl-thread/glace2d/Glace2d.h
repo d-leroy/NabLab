@@ -1,11 +1,12 @@
+#ifndef GLACE2D_H_
+#define GLACE2D_H_
+
 #include <fstream>
 #include <iomanip>
 #include <type_traits>
 #include <limits>
 #include <utility>
 #include <cmath>
-#include <rapidjson/document.h>
-#include <rapidjson/istreamwrapper.h>
 #include "mesh/CartesianMesh2DFactory.h"
 #include "mesh/CartesianMesh2D.h"
 #include "utils/Utils.h"
@@ -38,7 +39,6 @@ template<size_t x>
 RealArray2D<x,x> sumR2(RealArray2D<x,x> a, RealArray2D<x,x> b);
 double minR0(double a, double b);
 
-
 /******************** Module declaration ********************/
 
 class Glace2d
@@ -59,28 +59,67 @@ public:
 		double pIniZg;
 		double pIniZd;
 
-		void jsonInit(const rapidjson::Value::ConstObject& d);
+		void jsonInit(const char* jsonContent);
 	};
 
-	Glace2d(CartesianMesh2D* aMesh, const Options& aOptions);
+	Glace2d(CartesianMesh2D* aMesh, Options& aOptions);
 	~Glace2d();
 
+	void simulate();
+	void computeCjr() noexcept;
+	void computeInternalEnergy() noexcept;
+	void iniCjrIc() noexcept;
+	void iniTime() noexcept;
+	void iniTimeStep() noexcept;
+	void computeLjr() noexcept;
+	void computeV() noexcept;
+	void initialize() noexcept;
+	void setUpTimeLoopN() noexcept;
+	void computeDensity() noexcept;
+	void executeTimeLoopN() noexcept;
+	void computeEOSp() noexcept;
+	void computeEOSc() noexcept;
+	void computeAjr() noexcept;
+	void computedeltatj() noexcept;
+	void computeAr() noexcept;
+	void computeBr() noexcept;
+	void computeDt() noexcept;
+	void computeBoundaryConditions() noexcept;
+	void computeBt() noexcept;
+	void computeMt() noexcept;
+	void computeTn() noexcept;
+	void computeU() noexcept;
+	void computeFjr() noexcept;
+	void computeXn() noexcept;
+	void computeEn() noexcept;
+	void computeUn() noexcept;
+
 private:
+	void dumpVariables(int iteration, bool useTimer=true);
+
 	// Mesh and mesh variables
 	CartesianMesh2D* mesh;
 	size_t nbNodes, nbCells, nbInnerNodes, nbTopNodes, nbBottomNodes, nbLeftNodes, nbRightNodes, nbNodesOfCell, nbCellsOfNode;
-	
-	// User options and external classes
-	const Options& options;
+
+	// User options
+	Options& options;
 	PvdFileWriter2D writer;
-	
+
+	// Timers
+	utils::Timer globalTimer;
+	utils::Timer cpuTimer;
+	utils::Timer ioTimer;
+
+public:
 	// Global variables
 	int lastDump;
 	int n;
 	double t_n;
 	double t_nplus1;
+	double t_n0;
 	double deltat_n;
 	double deltat_nplus1;
+	double deltat_n0;
 	std::vector<RealArray1D<2>> X_n;
 	std::vector<RealArray1D<2>> X_nplus1;
 	std::vector<RealArray1D<2>> X_n0;
@@ -105,63 +144,6 @@ private:
 	std::vector<std::vector<RealArray1D<2>>> C;
 	std::vector<std::vector<RealArray1D<2>>> F;
 	std::vector<std::vector<RealArray2D<2,2>>> Ajr;
-	
-	utils::Timer globalTimer;
-	utils::Timer cpuTimer;
-	utils::Timer ioTimer;
-
-	void computeCjr() noexcept;
-	
-	void computeInternalEnergy() noexcept;
-	
-	void iniCjrIc() noexcept;
-	
-	void setUpTimeLoopN() noexcept;
-	
-	void computeLjr() noexcept;
-	
-	void computeV() noexcept;
-	
-	void initialize() noexcept;
-	
-	void computeDensity() noexcept;
-	
-	void executeTimeLoopN() noexcept;
-	
-	void computeEOSp() noexcept;
-	
-	void computeEOSc() noexcept;
-	
-	void computeAjr() noexcept;
-	
-	void computedeltatj() noexcept;
-	
-	void computeAr() noexcept;
-	
-	void computeBr() noexcept;
-	
-	void computeDt() noexcept;
-	
-	void computeBoundaryConditions() noexcept;
-	
-	void computeBt() noexcept;
-	
-	void computeMt() noexcept;
-	
-	void computeTn() noexcept;
-	
-	void computeU() noexcept;
-	
-	void computeFjr() noexcept;
-	
-	void computeXn() noexcept;
-	
-	void computeEn() noexcept;
-	
-	void computeUn() noexcept;
-
-	void dumpVariables(int iteration, bool useTimer=true);
-
-public:
-	void simulate();
 };
+
+#endif

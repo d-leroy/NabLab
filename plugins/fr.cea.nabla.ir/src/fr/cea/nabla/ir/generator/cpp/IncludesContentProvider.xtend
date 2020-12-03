@@ -16,6 +16,8 @@ import org.eclipse.xtend.lib.annotations.Accessors
 import static fr.cea.nabla.ir.Utils.FunctionReductionPrefix
 
 import static extension fr.cea.nabla.ir.IrModuleExtensions.*
+import static extension fr.cea.nabla.ir.IrRootExtensions.*
+import static extension fr.cea.nabla.ir.generator.Utils.*
 
 abstract class IncludesContentProvider
 {
@@ -48,12 +50,10 @@ abstract class IncludesContentProvider
 		systemIncludes += "limits"
 		systemIncludes += "utility"
 		systemIncludes += "cmath"
-		systemIncludes += "rapidjson/document.h"
-		systemIncludes += "rapidjson/istreamwrapper.h"
 		if (!levelDBPath.nullOrEmpty)
 		{
 			systemIncludes += "leveldb/db.h"
-			systemIncludes += "leveldb/write_batch.h"			
+			systemIncludes += "leveldb/write_batch.h"
 		}
 		systemIncludes += m.additionalSystemIncludes
 
@@ -69,8 +69,11 @@ abstract class IncludesContentProvider
 		userIncludes +=  "utils/Timer.h"
 		userIncludes +=  "types/Types.h"
 
-		if (m.functions.exists[f | f.body === null && f.provider == m.name]) 
-			userIncludes += m.name.toLowerCase + "/" + m.name + FunctionReductionPrefix + ".h"
+		if (m.functions.exists[f | f.body === null && f.provider == m.className])
+			userIncludes += m.irRoot.name.toLowerCase + "/" + m.className + FunctionReductionPrefix + ".h"
+
+		if (!m.main)
+			userIncludes += m.irRoot.name.toLowerCase + "/" + m.irRoot.mainModule.className + ".h"
 
 		userIncludes += m.additionalUserIncludes
 		return userIncludes
@@ -87,7 +90,7 @@ class StlThreadIncludesContentProvider extends IncludesContentProvider
 	override getAdditionalUserIncludes(IrModule m)
 	{
 		val includes = new LinkedHashSet<String>
-		if (m.postProcessingInfo !== null) includes += "mesh/stl/PvdFileWriter2D.h"
+		if (m.irRoot.postProcessing !== null) includes += "mesh/stl/PvdFileWriter2D.h"
 		includes += "utils/stl/Parallel.h"
 		if (m.linearAlgebra) includes += "linearalgebra/stl/LinearAlgebraFunctions.h"
 		if (!levelDBPath.nullOrEmpty) includes += "utils/stl/Serializer.h"
@@ -110,7 +113,7 @@ class KokkosIncludesContentProvider extends IncludesContentProvider
 	override getAdditionalUserIncludes(IrModule m)
 	{
 		val includes = new LinkedHashSet<String>
-		if (m.postProcessingInfo !== null) includes += "mesh/kokkos/PvdFileWriter2D.h"
+		if (m.irRoot.postProcessing !== null) includes += "mesh/kokkos/PvdFileWriter2D.h"
 		includes += "utils/kokkos/Parallel.h"
 		if (m.linearAlgebra) includes += "linearalgebra/kokkos/LinearAlgebraFunctions.h"
 		if (!levelDBPath.nullOrEmpty) includes += "utils/kokkos/Serializer.h"
@@ -128,7 +131,7 @@ class SequentialIncludesContentProvider extends IncludesContentProvider
 	override getAdditionalUserIncludes(IrModule m)
 	{
 		val includes = new LinkedHashSet<String>
-		if (m.postProcessingInfo !== null) includes += "mesh/stl/PvdFileWriter2D.h"
+		if (m.irRoot.postProcessing !== null) includes += "mesh/stl/PvdFileWriter2D.h"
 		if (m.linearAlgebra) includes += "linearalgebra/stl/LinearAlgebraFunctions.h"
 		if (!levelDBPath.nullOrEmpty) includes += "utils/stl/Serializer.h"
 		return includes
@@ -150,7 +153,7 @@ class OpenMpIncludesContentProvider extends IncludesContentProvider
 	override getAdditionalUserIncludes(IrModule m)
 	{
 		val includes = new LinkedHashSet<String>
-		if (m.postProcessingInfo !== null) includes += "mesh/stl/PvdFileWriter2D.h"
+		if (m.irRoot.postProcessing !== null) includes += "mesh/stl/PvdFileWriter2D.h"
 		if (m.linearAlgebra) includes += "linearalgebra/stl/LinearAlgebraFunctions.h"
 		if (!levelDBPath.nullOrEmpty) includes += "utils/stl/Serializer.h"
 		return includes

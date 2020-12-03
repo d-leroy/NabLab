@@ -6,19 +6,13 @@ import static org.iq80.leveldb.impl.Iq80DBFactory.factory;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.stream.IntStream;
 
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.WriteBatch;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
 import fr.cea.nabla.javalib.types.*;
@@ -30,44 +24,50 @@ public final class Test
 {
 	public final static class Options
 	{
-		public String nonRegression;
 		public double maxTime;
 		public int maxIter;
 		public double deltat;
-	}
+		public String nonRegression;
 
-	public final static class OptionsDeserializer implements JsonDeserializer<Options>
-	{
-		@Override
-		public Options deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+		public void jsonInit(final String jsonContent)
 		{
-			final JsonObject d = json.getAsJsonObject();
-			Options options = new Options();
+			final JsonParser parser = new JsonParser();
+			final JsonElement json = parser.parse(jsonContent);
+			assert(json.isJsonObject());
+			final JsonObject o = json.getAsJsonObject();
 			// maxTime
-			if (d.has("maxTime"))
+			if (o.has("maxTime"))
 			{
-				final JsonElement valueof_maxTime = d.get("maxTime");
-				options.maxTime = valueof_maxTime.getAsJsonPrimitive().getAsDouble();
+				final JsonElement valueof_maxTime = o.get("maxTime");
+				assert(valueof_maxTime.isJsonPrimitive());
+				maxTime = valueof_maxTime.getAsJsonPrimitive().getAsDouble();
 			}
 			else
-				options.maxTime = 0.1;
+				maxTime = 0.1;
 			// maxIter
-			if (d.has("maxIter"))
+			if (o.has("maxIter"))
 			{
-				final JsonElement valueof_maxIter = d.get("maxIter");
-				options.maxIter = valueof_maxIter.getAsJsonPrimitive().getAsInt();
+				final JsonElement valueof_maxIter = o.get("maxIter");
+				assert(valueof_maxIter.isJsonPrimitive());
+				maxIter = valueof_maxIter.getAsJsonPrimitive().getAsInt();
 			}
 			else
-				options.maxIter = 500;
+				maxIter = 500;
 			// deltat
-			if (d.has("deltat"))
+			if (o.has("deltat"))
 			{
-				final JsonElement valueof_deltat = d.get("deltat");
-				options.deltat = valueof_deltat.getAsJsonPrimitive().getAsDouble();
+				final JsonElement valueof_deltat = o.get("deltat");
+				assert(valueof_deltat.isJsonPrimitive());
+				deltat = valueof_deltat.getAsJsonPrimitive().getAsDouble();
 			}
 			else
-				options.deltat = 1.0;
-			return options;
+				deltat = 1.0;
+			// Non regression
+			if (o.has("nonRegression"))
+			{
+				final JsonElement valueof_nonRegression = o.get("nonRegression");
+				nonRegression = valueof_nonRegression.getAsJsonPrimitive().getAsString();
+			}
 		}
 	}
 
@@ -75,24 +75,25 @@ public final class Test
 	private final CartesianMesh2D mesh;
 	private final int nbNodes, nbCells;
 
-	// User options and external classes
+	// User options
 	private final Options options;
 
 	// Global variables
-	private int n;
-	private int k;
-	private double t_n;
-	private double t_nplus1;
-	private double[][] X;
-	private double[] e1;
-	private double[] e2_n;
-	private double[] e2_nplus1;
-	private double[] e2_nplus1_k;
-	private double[] e2_nplus1_kplus1;
-	private double[] e2_nplus1_k0;
-	private double[] e_n;
-	private double[] e_nplus1;
-	private double[] e_n0;
+	protected int n;
+	protected int k;
+	protected double t_n;
+	protected double t_nplus1;
+	protected double t_n0;
+	protected double[][] X;
+	protected double[] e1;
+	protected double[] e2_n;
+	protected double[] e2_nplus1;
+	protected double[] e2_nplus1_k;
+	protected double[] e2_nplus1_kplus1;
+	protected double[] e2_nplus1_k0;
+	protected double[] e_n;
+	protected double[] e_nplus1;
+	protected double[] e_n0;
 
 	public Test(CartesianMesh2D aMesh, Options aOptions)
 	{
@@ -101,12 +102,10 @@ public final class Test
 		nbNodes = mesh.getNbNodes();
 		nbCells = mesh.getNbCells();
 
-		// User options and external classes initialization
+		// User options
 		options = aOptions;
 
 		// Initialize variables with default values
-		t_n = 0.0;
-		t_nplus1 = 0.0;
 
 		// Allocate arrays
 		X = new double[nbNodes][2];
@@ -129,58 +128,12 @@ public final class Test
 		});
 	}
 
-	public void simulate()
-	{
-		System.out.println("Start execution of module Test");
-		initE(); // @1.0
-		setUpTimeLoopN(); // @2.0
-		executeTimeLoopN(); // @3.0
-		System.out.println("End of execution of module Test");
-	}
-
-	public static void main(String[] args) throws IOException
-	{
-		if (args.length == 1)
-		{
-			String dataFileName = args[0];
-			JsonParser parser = new JsonParser();
-			JsonObject o = parser.parse(new FileReader(dataFileName)).getAsJsonObject();
-			GsonBuilder gsonBuilder = new GsonBuilder();
-			gsonBuilder.registerTypeAdapter(Options.class, new Test.OptionsDeserializer());
-			Gson gson = gsonBuilder.create();
-
-			assert(o.has("mesh"));
-			CartesianMesh2DFactory meshFactory = gson.fromJson(o.get("mesh"), CartesianMesh2DFactory.class);
-			CartesianMesh2D mesh = meshFactory.create();
-			assert(o.has("options"));
-			Test.Options options = gson.fromJson(o.get("options"), Test.Options.class);
-
-			Test simulator = new Test(mesh, options);
-			simulator.simulate();
-
-			// Non regression testing
-			if (options.nonRegression!=null &&  options.nonRegression.equals("CreateReference"))
-				simulator.createDB("TestDB.ref");
-			if (options.nonRegression!=null &&  options.nonRegression.equals("CompareToReference"))
-			{
-				simulator.createDB("TestDB.current");
-				LevelDBUtils.compareDB("TestDB.current", "TestDB.ref");
-				LevelDBUtils.destroyDB("TestDB.current");
-			}
-		}
-		else
-		{
-			System.out.println("[ERROR] Wrong number of arguments: expected 1, actual " + args.length);
-			System.out.println("        Expecting user data file name, for example TestDefault.json");
-		}
-	}
-
 	/**
-	 * Job computeE1 called @1.0 in executeTimeLoopN method.
+	 * Job ComputeE1 called @1.0 in executeTimeLoopN method.
 	 * In variables: e_n
 	 * Out variables: e1
 	 */
-	private void computeE1()
+	protected void computeE1()
 	{
 		IntStream.range(0, nbCells).parallel().forEach(cCells -> 
 		{
@@ -189,11 +142,11 @@ public final class Test
 	}
 
 	/**
-	 * Job computeE2 called @1.0 in executeTimeLoopK method.
+	 * Job ComputeE2 called @1.0 in executeTimeLoopK method.
 	 * In variables: e2_nplus1_k
 	 * Out variables: e2_nplus1_kplus1
 	 */
-	private void computeE2()
+	protected void computeE2()
 	{
 		IntStream.range(0, nbCells).parallel().forEach(cCells -> 
 		{
@@ -202,11 +155,11 @@ public final class Test
 	}
 
 	/**
-	 * Job initE called @1.0 in simulate method.
+	 * Job InitE called @1.0 in simulate method.
 	 * In variables: 
 	 * Out variables: e_n0
 	 */
-	private void initE()
+	protected void initE()
 	{
 		IntStream.range(0, nbCells).parallel().forEach(cCells -> 
 		{
@@ -215,11 +168,21 @@ public final class Test
 	}
 
 	/**
-	 * Job updateT called @1.0 in executeTimeLoopN method.
+	 * Job InitTime called @1.0 in simulate method.
+	 * In variables: 
+	 * Out variables: t_n0
+	 */
+	protected void initTime()
+	{
+		t_n0 = 0.0;
+	}
+
+	/**
+	 * Job UpdateT called @1.0 in executeTimeLoopN method.
 	 * In variables: deltat, t_n
 	 * Out variables: t_nplus1
 	 */
-	private void updateT()
+	protected void updateT()
 	{
 		t_nplus1 = t_n + options.deltat;
 	}
@@ -229,7 +192,7 @@ public final class Test
 	 * In variables: e1
 	 * Out variables: e2_nplus1_k0
 	 */
-	private void initE2()
+	protected void initE2()
 	{
 		IntStream.range(0, nbCells).parallel().forEach(cCells -> 
 		{
@@ -239,11 +202,12 @@ public final class Test
 
 	/**
 	 * Job SetUpTimeLoopN called @2.0 in simulate method.
-	 * In variables: e_n0
-	 * Out variables: e_n
+	 * In variables: e_n0, t_n0
+	 * Out variables: e_n, t_n
 	 */
-	private void setUpTimeLoopN()
+	protected void setUpTimeLoopN()
 	{
+		t_n = t_n0;
 		IntStream.range(0, e_n.length).parallel().forEach(i1 -> 
 		{
 			e_n[i1] = e_n0[i1];
@@ -252,17 +216,17 @@ public final class Test
 
 	/**
 	 * Job ExecuteTimeLoopN called @3.0 in simulate method.
-	 * In variables: deltat, e1, e2_nplus1, e2_nplus1_k, e2_nplus1_k0, e2_nplus1_kplus1, e_n, t_n
+	 * In variables: deltat, e1, e2_n, e2_nplus1, e2_nplus1_k, e2_nplus1_k0, e2_nplus1_kplus1, e_n, t_n
 	 * Out variables: e1, e2_nplus1, e2_nplus1_k, e2_nplus1_k0, e2_nplus1_kplus1, e_nplus1, t_nplus1
 	 */
-	private void executeTimeLoopN()
+	protected void executeTimeLoopN()
 	{
 		n = 0;
 		boolean continueLoop = true;
 		do
 		{
 			n++;
-			System.out.printf("	[%5d] t: %5.5f - deltat: %5.5f\n", n, t_n, options.deltat);
+			System.out.printf("[%5d] t: %5.5f - deltat: %5.5f\n", n, t_n, options.deltat);
 			computeE1(); // @1.0
 			updateT(); // @1.0
 			initE2(); // @2.0
@@ -292,14 +256,18 @@ public final class Test
 
 	/**
 	 * Job SetUpTimeLoopK called @3.0 in executeTimeLoopN method.
-	 * In variables: e2_nplus1_k0
-	 * Out variables: e2_nplus1_k
+	 * In variables: e2_n, e2_nplus1_k0
+	 * Out variables: e2_nplus1_k, e2_nplus1_k
 	 */
-	private void setUpTimeLoopK()
+	protected void setUpTimeLoopK()
 	{
 		IntStream.range(0, e2_nplus1_k.length).parallel().forEach(i1 -> 
 		{
 			e2_nplus1_k[i1] = e2_nplus1_k0[i1];
+		});
+		IntStream.range(0, e2_nplus1_k.length).parallel().forEach(i1 -> 
+		{
+			e2_nplus1_k[i1] = e2_n[i1];
 		});
 	}
 
@@ -308,14 +276,14 @@ public final class Test
 	 * In variables: e2_nplus1_k
 	 * Out variables: e2_nplus1_kplus1
 	 */
-	private void executeTimeLoopK()
+	protected void executeTimeLoopK()
 	{
 		k = 0;
 		boolean continueLoop = true;
 		do
 		{
 			k++;
-			System.out.printf("		[%5d] t: %5.5f - deltat: %5.5f\n", k, t_n, options.deltat);
+			System.out.printf("	[%5d] t: %5.5f - deltat: %5.5f\n", k, t_n, options.deltat);
 			computeE2(); // @1.0
 		
 			// Evaluate loop condition with variables at time n
@@ -336,7 +304,7 @@ public final class Test
 	 * In variables: e2_nplus1_kplus1
 	 * Out variables: e2_nplus1
 	 */
-	private void tearDownTimeLoopK()
+	protected void tearDownTimeLoopK()
 	{
 		IntStream.range(0, e2_nplus1.length).parallel().forEach(i1 -> 
 		{
@@ -345,16 +313,69 @@ public final class Test
 	}
 
 	/**
-	 * Job updateE called @6.0 in executeTimeLoopN method.
+	 * Job UpdateE called @6.0 in executeTimeLoopN method.
 	 * In variables: e2_nplus1
 	 * Out variables: e_nplus1
 	 */
-	private void updateE()
+	protected void updateE()
 	{
 		IntStream.range(0, nbCells).parallel().forEach(cCells -> 
 		{
 			e_nplus1[cCells] = e2_nplus1[cCells] - 3;
 		});
+	}
+
+	public void simulate()
+	{
+		System.out.println("Start execution of test");
+		initE(); // @1.0
+		initTime(); // @1.0
+		setUpTimeLoopN(); // @2.0
+		executeTimeLoopN(); // @3.0
+		System.out.println("End of execution of test");
+	}
+
+	public static void main(String[] args) throws IOException
+	{
+		if (args.length == 1)
+		{
+			String dataFileName = args[0];
+			JsonParser parser = new JsonParser();
+			JsonObject o = parser.parse(new FileReader(dataFileName)).getAsJsonObject();
+			int ret = 0;
+
+			// Mesh instanciation
+			assert(o.has("mesh"));
+			CartesianMesh2DFactory meshFactory = new CartesianMesh2DFactory();
+			meshFactory.jsonInit(o.get("mesh").toString());
+			CartesianMesh2D mesh = meshFactory.create();
+
+			// Module instanciation(s)
+			Test.Options testOptions = new Test.Options();
+			if (o.has("test")) testOptions.jsonInit(o.get("test").toString());
+			Test test = new Test(mesh, testOptions);
+
+			// Start simulation
+			test.simulate();
+
+			// Non regression testing
+			if (testOptions.nonRegression != null && testOptions.nonRegression.equals("CreateReference"))
+				test.createDB("TestDB.ref");
+			if (testOptions.nonRegression != null && testOptions.nonRegression.equals("CompareToReference"))
+			{
+				test.createDB("TestDB.current");
+				if (!LevelDBUtils.compareDB("TestDB.current", "TestDB.ref"))
+					ret = 1;
+				LevelDBUtils.destroyDB("TestDB.current");
+				System.exit(ret);
+			}
+		}
+		else
+		{
+			System.err.println("[ERROR] Wrong number of arguments: expected 1, actual " + args.length);
+			System.err.println("        Expecting user data file name, for example Test.json");
+			System.exit(1);
+		}
 	}
 
 	private void createDB(String db_name) throws IOException
@@ -375,6 +396,7 @@ public final class Test
 			batch.put(bytes("k"), LevelDBUtils.serialize(k));
 			batch.put(bytes("t_n"), LevelDBUtils.serialize(t_n));
 			batch.put(bytes("t_nplus1"), LevelDBUtils.serialize(t_nplus1));
+			batch.put(bytes("t_n0"), LevelDBUtils.serialize(t_n0));
 			batch.put(bytes("X"), LevelDBUtils.serialize(X));
 			batch.put(bytes("e1"), LevelDBUtils.serialize(e1));
 			batch.put(bytes("e2_n"), LevelDBUtils.serialize(e2_n));

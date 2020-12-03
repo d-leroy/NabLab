@@ -11,9 +11,9 @@ package fr.cea.nabla.ir.transformers
 
 import fr.cea.nabla.ir.JobDependencies
 import fr.cea.nabla.ir.ir.IrFactory
-import fr.cea.nabla.ir.ir.IrModule
+import fr.cea.nabla.ir.ir.IrRoot
 import fr.cea.nabla.ir.ir.Job
-import fr.cea.nabla.ir.ir.JobContainer
+import fr.cea.nabla.ir.ir.JobCaller
 import fr.cea.nabla.ir.ir.TimeLoopJob
 import org.eclipse.emf.common.util.ECollections
 import org.eclipse.emf.common.util.EList
@@ -39,32 +39,33 @@ class FillJobHLTs extends IrTransformationStep
 	 * Return false if the graph contains cycle (computing 'at' values is then impossible), true otherwise.
 	 * If the graph contains cycles, nodes on cycle have their 'onCyle' attribute set to true.
 	 */
-	override transform(IrModule m)
+	override transform(IrRoot ir)
 	{
 		trace('IR -> IR: ' + description)
-		if (m.jobs.empty) return true
+		if (ir.jobs.empty) return true
 
 		// check that IrModule has no job cycles (except timestep cycles)
-		if (m.hasCycles) 
+		if (ir.hasCycles) 
 		{
 			// All jobs belongs to the module. No dispatch possible.
 			// Jobs are put in module inner jobs for graph display...
-			m.innerJobs.addAll(m.jobs)
+			ir.main.calls.addAll(ir.jobs)
 			return false
 		}
 
 		// No cycles => create subgraphs (i.e. JobContainer instances) corresponding to time loops
-		jobDispatcher.dispatchJobsInTimeLoops(m)
+		jobDispatcher.dispatchJobsInTimeLoops(ir)
 
 		// compute at for each subGraph
-		val subGraphs = m.jobs.groupBy[jobContainer]
+		val subGraphs = ir.jobs.groupBy[x | x.caller]
 		for (subGraph : subGraphs.values)
 			subGraph.fillAt
 
 		// sort jobs by @at in IR
-		m.jobs.sortByAtAndName
-		m.innerJobs.sortByAtAndName
-		m.jobs.filter(JobContainer).forEach[x | x.innerJobs.sortByAtAndName]
+		ir.jobs.sortByAtAndName
+		ir.modules.forEach[x | x.jobs.sortByAtAndName]
+		ir.main.calls.sortByAtAndName
+		ir.jobs.filter(JobCaller).forEach[x | x.calls.sortByAtAndName]
 		return true
 	}
 
@@ -77,9 +78,9 @@ class FillJobHLTs extends IrTransformationStep
 //	}
 
 	/** Build the jgrapht graph corresponding to IrModule and check if it has cycles */
-	private def hasCycles(IrModule it)
+	private def hasCycles(IrRoot ir)
 	{
-		val g = createGraph(jobs.reject(TimeLoopJob))
+		val g = createGraph(ir.jobs.reject(TimeLoopJob))
 
 		val cycles = g.findCycle
 		val hasCycles = (cycles !== null)

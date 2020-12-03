@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2020 CEA
+ * This program and the accompanying materials are made available under the 
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ * Contributors: see AUTHORS file
+ *******************************************************************************/
 package fr.cea.nabla.ir
 
 import fr.cea.nabla.ir.ir.IrAnnotable
@@ -11,9 +20,9 @@ class IrAnnotableExtensions
 
 	static def getUriDetail(IrAnnotable it)
 	{
-		val irFile = Utils::getIrModule(it)
-		if (irFile === null) null
-		else irFile.annotations.head.details.get(ANNOTATION_URI_DETAIL)
+		val irRoot = Utils::getIrModule(it)
+		if (irRoot === null) null
+		else irRoot.annotations.head.details.get(ANNOTATION_URI_DETAIL)
 	}
 
 	static def int getOffset(IrAnnotable it)

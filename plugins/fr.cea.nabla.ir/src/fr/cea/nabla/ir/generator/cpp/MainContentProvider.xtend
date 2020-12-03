@@ -14,12 +14,15 @@ import fr.cea.nabla.ir.ir.IrModule
 import org.eclipse.xtend.lib.annotations.Data
 
 import static extension fr.cea.nabla.ir.IrModuleExtensions.*
+import static extension fr.cea.nabla.ir.IrRootExtensions.*
+import static extension fr.cea.nabla.ir.generator.Utils.*
 
 @Data
-class MainContentProvider 
+class MainContentProvider
 {
 	val String levelDBPath
-	
+	val extension JsonContentProvider jsonContentProvider
+
 	def getContentFor(IrModule it)
 	'''
 		string dataFile;
@@ -32,7 +35,7 @@ class MainContentProvider
 		else
 		{
 			std::cerr << "[ERROR] Wrong number of arguments. Expecting 1 arg: dataFile." << std::endl;
-			std::cerr << "(«name»Default.json)" << std::endl;
+			std::cerr << "(«irRoot.name».json)" << std::endl;
 			return -1;
 		}
 
@@ -43,52 +46,58 @@ class MainContentProvider
 		d.ParseStream(isw);
 		assert(d.IsObject());
 
-		// mesh
-		assert(d.HasMember("mesh"));
-		const rapidjson::Value& valueof_mesh = d["mesh"];
-		assert(valueof_mesh.IsObject());
+		// Mesh instanciation
 		«meshClassName»Factory meshFactory;
-		meshFactory.jsonInit(valueof_mesh.GetObject());
+		if (d.HasMember("mesh"))
+		{
+			rapidjson::StringBuffer strbuf;
+			rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+			d["mesh"].Accept(writer);
+			meshFactory.jsonInit(strbuf.GetString());
+		}
 		«meshClassName»* mesh = meshFactory.create();
 
-		// options
-		«name»::Options options;
-		assert(d.HasMember("options"));
-		const rapidjson::Value& valueof_options = d["options"];
-		assert(valueof_options.IsObject());
-		options.jsonInit(valueof_options.GetObject());
-		«FOR s : allProviders»
-
-		// «s.toFirstLower»
-		«s» «s.toFirstLower»;
-		if (d.HasMember("«s.toFirstLower»"))
-		{
-			const rapidjson::Value& valueof_«s.toFirstLower» = d["«s.toFirstLower»"];
-			assert(valueof_«s.toFirstLower».IsObject());
-			«s.toFirstLower».jsonInit(valueof_«s.toFirstLower».GetObject());
-		}
+		// Module instanciation(s)
+		«FOR m : irRoot.modules»
+			«m.instanciation»
 		«ENDFOR»
 
-		// simulator must be a pointer if there is a finalize at the end (Kokkos, omp...)
-		auto simulator = new «name»(mesh, options«FOR s : allProviders BEFORE ', ' SEPARATOR ', '»«s.toFirstLower»«ENDFOR»);
-		simulator->simulate();
-
+		// Start simulation
+		// Simulator must be a pointer when a finalize is needed at the end (Kokkos, omp...)
+		«name»->simulate();
 		«IF !levelDBPath.nullOrEmpty»
-		«val nrName = Utils.NonRegressionNameAndValue.key»
-		// Non regression testing
-		if (options.«nrName» == "«Utils.NonRegressionValues.CreateReference.toString»")
-			simulator->createDB("«name»DB.ref");
-		if (options.«nrName» == "«Utils.NonRegressionValues.CompareToReference.toString»") {
-			simulator->createDB("«name»DB.current");
-			if (!compareDB("«name»DB.current", "«name»DB.ref"))
-				ret = 1;
-			leveldb::DestroyDB("«name»DB.current", leveldb::Options());
-		}
 
+		«val nrName = Utils.NonRegressionNameAndValue.key»
+		«val dbName = irRoot.name + "DB"»
+		// Non regression testing
+		if («name»Options.«nrName» == "«Utils.NonRegressionValues.CreateReference.toString»")
+			«name»->createDB("«dbName».ref");
+		if («name»Options.«nrName» == "«Utils.NonRegressionValues.CompareToReference.toString»") {
+			«name»->createDB("«dbName».current");
+			if (!compareDB("«dbName».current", "«dbName».ref"))
+				ret = 1;
+			leveldb::DestroyDB("«dbName».current", leveldb::Options());
+		}
 		«ENDIF»
-		// simulator must be deleted before calling finalize
-		delete simulator;
+
+		«FOR m : irRoot.modules.reverseView»
+		delete «m.name»;
+		«ENDFOR»
 		delete mesh;
+	'''
+
+	private def getInstanciation(IrModule it)
+	'''
+		«className»::Options «name»Options;
+		if (d.HasMember("«name»"))
+		{
+			rapidjson::StringBuffer strbuf;
+			rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+			d["«name»"].Accept(writer);
+			«name»Options.jsonInit(strbuf.GetString());
+		}
+		«className»* «name» = new «className»(mesh, «name»Options);
+		«IF !main»«name»->setMainModule(«irRoot.mainModule.name»);«ENDIF»
 	'''
 }
 
@@ -99,6 +108,7 @@ class KokkosMainContentProvider extends MainContentProvider
 	'''
 		Kokkos::initialize(argc, argv);
 		«super.getContentFor(it)»
+		// simulator must be deleted before calling finalize
 		Kokkos::finalize();
 	'''
 }

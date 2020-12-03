@@ -11,9 +11,9 @@ package fr.cea.nabla.ir
 
 import fr.cea.nabla.ir.ir.Affectation
 import fr.cea.nabla.ir.ir.ArgOrVarRef
+import fr.cea.nabla.ir.ir.ExecuteTimeLoopJob
 import fr.cea.nabla.ir.ir.IrPackage
 import fr.cea.nabla.ir.ir.Job
-import fr.cea.nabla.ir.ir.TimeLoopCopyJob
 import fr.cea.nabla.ir.ir.TimeLoopJob
 import fr.cea.nabla.ir.ir.Variable
 import java.util.HashSet
@@ -22,26 +22,26 @@ import static extension fr.cea.nabla.ir.ArgOrVarExtensions.*
 
 abstract class VarDependencies
 {
-	abstract def Iterable<Variable> getTimeLoopJobOutVars(TimeLoopJob it)
-	abstract def Iterable<Variable> getTimeLoopJobInVars(TimeLoopJob it)
+	abstract def Iterable<Variable> getExecuteTimeLoopJobOutVars(ExecuteTimeLoopJob it)
+	abstract def Iterable<Variable> getExecuteTimeLoopJobInVars(ExecuteTimeLoopJob it)
 
 	def Iterable<Variable> getOutVars(Job it)
 	{
 		switch it
 		{
-			TimeLoopJob: timeLoopJobOutVars
-			TimeLoopCopyJob: copies.map[destination]
+			ExecuteTimeLoopJob: executeTimeLoopJobOutVars
+			TimeLoopJob: copies.map[destination]
 			default: eAllContents.filter(Affectation).map[left.target].filter(Variable).filter[global].toSet
 		}
 	}
 
-	/** For TimeLoopJob, copies are ignored to avoid cycles */
+	/** For ExecuteTimeLoopJob, copies are ignored to avoid cycles */
 	def Iterable<Variable> getInVars(Job it)
 	{
 		switch it
 		{
-			TimeLoopJob: timeLoopJobInVars
-			TimeLoopCopyJob: copies.map[source]
+			ExecuteTimeLoopJob: executeTimeLoopJobInVars
+			TimeLoopJob: copies.map[source]
 			default:
 			{
 				val allVars = eAllContents.filter(ArgOrVarRef).filter[x|x.eContainingFeature != IrPackage::eINSTANCE.affectation_Left].map[target]
@@ -53,29 +53,29 @@ abstract class VarDependencies
 
 class DefaultVarDependencies extends VarDependencies
 {
-	override Iterable<Variable> getTimeLoopJobOutVars(TimeLoopJob it)
+	override Iterable<Variable> getExecuteTimeLoopJobOutVars(ExecuteTimeLoopJob it)
 	{
 		val outVars = new HashSet<Variable>
-		innerJobs.forEach[x | outVars += x.outVars]
+		calls.forEach[x | outVars += x.outVars]
 		return outVars
 	}
 
-	override Iterable<Variable> getTimeLoopJobInVars(TimeLoopJob it)
+	override Iterable<Variable> getExecuteTimeLoopJobInVars(ExecuteTimeLoopJob it)
 	{
 		val inVars = new HashSet<Variable>
-		innerJobs.forEach[x | inVars += x.inVars]
+		calls.forEach[x | inVars += x.inVars]
 		return inVars
 	}
 }
 
 class JobDispatchVarDependencies extends VarDependencies
 {
-	override Iterable<Variable> getTimeLoopJobOutVars(TimeLoopJob it)
+	override Iterable<Variable> getExecuteTimeLoopJobOutVars(ExecuteTimeLoopJob it)
 	{
 		copies.map[source]
 	}
 
-	override Iterable<Variable> getTimeLoopJobInVars(TimeLoopJob it)
+	override Iterable<Variable> getExecuteTimeLoopJobInVars(ExecuteTimeLoopJob it)
 	{
 		copies.map[destination]
 	}

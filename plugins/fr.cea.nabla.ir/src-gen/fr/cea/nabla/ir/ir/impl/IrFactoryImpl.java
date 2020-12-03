@@ -58,19 +58,19 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case IrPackage.IR_ANNOTATION: return createIrAnnotation();
+			case IrPackage.IR_ROOT: return createIrRoot();
 			case IrPackage.IR_MODULE: return createIrModule();
-			case IrPackage.IMPORT: return createImport();
-			case IrPackage.POST_PROCESSING_INFO: return createPostProcessingInfo();
-			case IrPackage.TIME_LOOP: return createTimeLoop();
+			case IrPackage.POST_PROCESSING: return createPostProcessing();
 			case IrPackage.ARG: return createArg();
 			case IrPackage.SIMPLE_VARIABLE: return createSimpleVariable();
 			case IrPackage.CONNECTIVITY_VARIABLE: return createConnectivityVariable();
 			case IrPackage.FUNCTION: return createFunction();
 			case IrPackage.CONNECTIVITY: return createConnectivity();
+			case IrPackage.JOB_CALLER: return createJobCaller();
 			case IrPackage.INSTRUCTION_JOB: return createInstructionJob();
-			case IrPackage.TIME_LOOP_JOB: return createTimeLoopJob();
-			case IrPackage.BEFORE_TIME_LOOP_JOB: return createBeforeTimeLoopJob();
-			case IrPackage.AFTER_TIME_LOOP_JOB: return createAfterTimeLoopJob();
+			case IrPackage.EXECUTE_TIME_LOOP_JOB: return createExecuteTimeLoopJob();
+			case IrPackage.SET_UP_TIME_LOOP_JOB: return createSetUpTimeLoopJob();
+			case IrPackage.TEAR_DOWN_TIME_LOOP_JOB: return createTearDownTimeLoopJob();
 			case IrPackage.TIME_LOOP_COPY: return createTimeLoopCopy();
 			case IrPackage.INSTRUCTION_BLOCK: return createInstructionBlock();
 			case IrPackage.VARIABLE_DECLARATION: return createVariableDeclaration();
@@ -104,7 +104,6 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 			case IrPackage.IR_TYPE: return createIrType();
 			case IrPackage.BASE_TYPE: return createBaseType();
 			case IrPackage.CONNECTIVITY_TYPE: return createConnectivityType();
-			case IrPackage.TIME_LOOP_VARIABLE: return createTimeLoopVariable();
 			case IrPackage.CONNECTIVITY_CALL: return createConnectivityCall();
 			case IrPackage.SET_REF: return createSetRef();
 			case IrPackage.ITEM_ID: return createItemId();
@@ -164,6 +163,17 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 	 * @generated
 	 */
 	@Override
+	public IrRoot createIrRoot() {
+		IrRootImpl irRoot = new IrRootImpl();
+		return irRoot;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public IrModule createIrModule() {
 		IrModuleImpl irModule = new IrModuleImpl();
 		return irModule;
@@ -175,31 +185,9 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 	 * @generated
 	 */
 	@Override
-	public Import createImport() {
-		ImportImpl import_ = new ImportImpl();
-		return import_;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public PostProcessingInfo createPostProcessingInfo() {
-		PostProcessingInfoImpl postProcessingInfo = new PostProcessingInfoImpl();
-		return postProcessingInfo;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TimeLoop createTimeLoop() {
-		TimeLoopImpl timeLoop = new TimeLoopImpl();
-		return timeLoop;
+	public PostProcessing createPostProcessing() {
+		PostProcessingImpl postProcessing = new PostProcessingImpl();
+		return postProcessing;
 	}
 
 	/**
@@ -263,6 +251,17 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 	 * @generated
 	 */
 	@Override
+	public JobCaller createJobCaller() {
+		JobCallerImpl jobCaller = new JobCallerImpl();
+		return jobCaller;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public InstructionJob createInstructionJob() {
 		InstructionJobImpl instructionJob = new InstructionJobImpl();
 		return instructionJob;
@@ -274,9 +273,9 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 	 * @generated
 	 */
 	@Override
-	public TimeLoopJob createTimeLoopJob() {
-		TimeLoopJobImpl timeLoopJob = new TimeLoopJobImpl();
-		return timeLoopJob;
+	public ExecuteTimeLoopJob createExecuteTimeLoopJob() {
+		ExecuteTimeLoopJobImpl executeTimeLoopJob = new ExecuteTimeLoopJobImpl();
+		return executeTimeLoopJob;
 	}
 
 	/**
@@ -285,9 +284,9 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 	 * @generated
 	 */
 	@Override
-	public BeforeTimeLoopJob createBeforeTimeLoopJob() {
-		BeforeTimeLoopJobImpl beforeTimeLoopJob = new BeforeTimeLoopJobImpl();
-		return beforeTimeLoopJob;
+	public SetUpTimeLoopJob createSetUpTimeLoopJob() {
+		SetUpTimeLoopJobImpl setUpTimeLoopJob = new SetUpTimeLoopJobImpl();
+		return setUpTimeLoopJob;
 	}
 
 	/**
@@ -296,9 +295,9 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 	 * @generated
 	 */
 	@Override
-	public AfterTimeLoopJob createAfterTimeLoopJob() {
-		AfterTimeLoopJobImpl afterTimeLoopJob = new AfterTimeLoopJobImpl();
-		return afterTimeLoopJob;
+	public TearDownTimeLoopJob createTearDownTimeLoopJob() {
+		TearDownTimeLoopJobImpl tearDownTimeLoopJob = new TearDownTimeLoopJobImpl();
+		return tearDownTimeLoopJob;
 	}
 
 	/**
@@ -662,17 +661,6 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 	public ConnectivityType createConnectivityType() {
 		ConnectivityTypeImpl connectivityType = new ConnectivityTypeImpl();
 		return connectivityType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TimeLoopVariable createTimeLoopVariable() {
-		TimeLoopVariableImpl timeLoopVariable = new TimeLoopVariableImpl();
-		return timeLoopVariable;
 	}
 
 	/**

@@ -10,16 +10,18 @@
 package fr.cea.nabla.generator.ir
 
 import com.google.inject.Inject
+import com.google.inject.Singleton
 import fr.cea.nabla.ir.ir.IrFactory
-import fr.cea.nabla.ir.ir.TimeLoop
-import fr.cea.nabla.ir.ir.Variable
 import fr.cea.nabla.nabla.Job
-import org.eclipse.emf.ecore.util.EcoreUtil
+import fr.cea.nabla.nabla.TimeIterator
 
+@Singleton
 class IrJobFactory
 {
 	@Inject extension IrAnnotationHelper
 	@Inject extension IrInstructionFactory
+	@Inject extension IrArgOrVarFactory
+	@Inject extension IrExpressionFactory
 
 	def create IrFactory::eINSTANCE.createInstructionJob toIrInstructionJob(Job j)
 	{
@@ -29,57 +31,27 @@ class IrJobFactory
 		instruction = j.instruction.toIrInstruction
 	}
 
-	def create IrFactory::eINSTANCE.createBeforeTimeLoopJob toIrBeforeTimeLoopJob(TimeLoop tl)
+	def create IrFactory::eINSTANCE.createSetUpTimeLoopJob toIrSetUpTimeLoopJob(TimeIterator ti)
 	{
-		annotations += EcoreUtil::copyAll(tl.annotations)
-		name = "SetUpTimeLoop" + tl.name.toFirstUpper
-		timeLoop = tl
-
-		// if x^{n+1, k=0} exists, x^{n+1, k} = x^{n+1, k=0}
-		// else x^{n+1, k} = x^{n}
-		for (v : tl.variables)
-		{
-			if (v.init !== null)
-				copies += toIrCopy(v.init, v.current)
-			else if (tl.container instanceof TimeLoop) // inner loop
-			{
-				val outerV = (tl.container as TimeLoop).variables.findFirst[name == v.name]
-				copies += toIrCopy(outerV.current, v.current)
-			}
-		}
+		annotations += ti.toIrAnnotation
+		name = ti.setUpTimeLoopJobName
 	}
 
-	def create IrFactory::eINSTANCE.createAfterTimeLoopJob toIrAfterTimeLoopJob(TimeLoop tl)
+	def create IrFactory::eINSTANCE.createTearDownTimeLoopJob toIrTearDownTimeLoopJob(TimeIterator ti)
 	{ 
-		annotations += EcoreUtil::copyAll(tl.annotations)
-		name = "TearDownTimeLoop" + tl.name.toFirstUpper
-		timeLoop = tl
-
-		// x^{n+1} = x^{n+1, k+1}
-		if (tl.container instanceof TimeLoop) // inner loop
-			for (v : tl.variables)
-			{
-				val outerV = (tl.container as TimeLoop).variables.findFirst[name == v.name]
-				if (outerV !== null) copies += toIrCopy(v.next, outerV.next)
-			}
+		annotations += ti.toIrAnnotation
+		name = ti.tearDownTimeLoopJobName
 	}
 
-	def create IrFactory::eINSTANCE.createTimeLoopJob toIrTimeLoopJob(TimeLoop tl)
+	def create IrFactory::eINSTANCE.createExecuteTimeLoopJob toIrExecuteTimeLoopJob(TimeIterator ti)
 	{
-		annotations += EcoreUtil::copyAll(tl.annotations)
-		name = "ExecuteTimeLoop" + tl.name.toFirstUpper
-		timeLoop= tl
-		tl.associatedJob = it
-
-		// variables copy for next iteration
-		// x^{n+1, k} <---> x^{n+1, k+1}
-		for (v : tl.variables)
-			copies += toIrCopy(v.next, v.current)
+		annotations += ti.toIrAnnotation
+		name = ti.executeTimeLoopJobName
+		iterationCounter = ti.toIrIterationCounter
+		whileCondition = ti.condition.toIrExpression
 	}
 
-	private def create IrFactory::eINSTANCE.createTimeLoopCopy toIrCopy(Variable from, Variable to)
-	{
-		source = from
-		destination = to
-	}
+	def getSetUpTimeLoopJobName(TimeIterator ti) { "SetUpTimeLoop" + ti.name.toFirstUpper }
+	def getTearDownTimeLoopJobName(TimeIterator ti) { "TearDownTimeLoop" + ti.name.toFirstUpper }
+	def getExecuteTimeLoopJobName(TimeIterator ti) { "ExecuteTimeLoop" + ti.name.toFirstUpper }
 }

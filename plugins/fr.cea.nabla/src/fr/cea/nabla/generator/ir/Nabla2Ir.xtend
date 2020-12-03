@@ -11,7 +11,9 @@ package fr.cea.nabla.generator.ir
 
 import com.google.inject.Inject
 import fr.cea.nabla.ir.ir.IrFactory
+import fr.cea.nabla.ir.ir.IrModule
 import fr.cea.nabla.ir.ir.SimpleVariable
+import fr.cea.nabla.ir.ir.TimeLoopJob
 import fr.cea.nabla.nabla.FunctionCall
 import fr.cea.nabla.nabla.FunctionOrReduction
 import fr.cea.nabla.nabla.NablaModule
@@ -19,53 +21,71 @@ import fr.cea.nabla.nabla.OptionDeclaration
 import fr.cea.nabla.nabla.ReductionCall
 import fr.cea.nabla.nabla.SimpleVarDeclaration
 import fr.cea.nabla.nabla.VarGroupDeclaration
+import fr.cea.nabla.nablagen.MainModule
+import fr.cea.nabla.nablagen.NablagenModule
 import fr.cea.nabla.overloading.DeclarationProvider
+import java.util.HashMap
 import java.util.LinkedHashSet
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.util.EcoreUtil
 
 class Nabla2Ir
 {
-	@Inject extension Nabla2IrUtils
-	@Inject extension IrTimeLoopFactory
-	@Inject extension IrJobFactory
-	@Inject extension IrFunctionFactory
-	@Inject extension IrConnectivityFactory
 	@Inject extension IrAnnotationHelper
 	@Inject extension DeclarationProvider
+	@Inject extension TimeIteratorExtensions
+	@Inject extension IrArgOrVarFactory
+	@Inject extension IrJobFactory
+	@Inject extension IrFunctionFactory
 
-	def create IrFactory::eINSTANCE.createIrModule toIrModule(NablaModule nablaModule)
+	val irModuleModels = new HashMap<NablaModule, IrModule>
+
+	def createIrModule(NablagenModule ngenModule)
 	{
-		annotations += nablaModule.toIrAnnotation
-		name = nablaModule.name
-		nablaModule.imports.forEach[x | imports += x.toIrImport]
-		nablaModule.itemTypes.forEach[x | itemTypes += x.toIrItemType]
-		nablaModule.connectivities.forEach[x | connectivities += x.toIrConnectivity]
-
-		// Function and reduction
-		nablaModule.allUsedFunctionAndReductions.forEach[x | functions += x.toIrFunction]
-
-		// Time loop creation
-		if (nablaModule.iteration !== null)
+		val nablaModule = ngenModule.type
+		var irModule = irModuleModels.get(nablaModule)
+		if (irModule === null)
 		{
-			val timeIt = nablaModule.iteration.iterator
-			variables += createTimeLoopsAndIterationCounters(it, timeIt)
+			irModule = nablaModule.toIrModule
+			irModuleModels.put(nablaModule, irModule)
+		}
+		else
+		{
+			irModule = EcoreUtil.copy(irModule)
 		}
 
-		// Option and global variables creation
+		irModule.annotations += ngenModule.toIrAnnotation
+		irModule.name = ngenModule.name
+		irModule.main = (ngenModule instanceof MainModule)
+
+		return irModule
+	}
+
+	private def create IrFactory::eINSTANCE.createIrModule toIrModule(NablaModule nablaModule)
+	{
+		nablaModule.allUsedFunctionAndReductions.forEach[x | functions += x.toIrFunction]
+
+		// Time loop jobs creation
+		if (nablaModule.iteration !== null)
+			addJobsAndCountersToModule(nablaModule.iteration.iterator, it)
+
+		// Variables creation: order must be keep to ensure default values validity
+		val tlJobs = jobs.filter(TimeLoopJob)
 		for (d : nablaModule.declarations)
 			switch d
 			{
 				OptionDeclaration:
-					options += createIrVariablesFor(nablaModule, d.variable).filter(SimpleVariable)
+				{
+					val options = createIrVariables(d.variable, tlJobs)
+					options.filter(SimpleVariable).forEach[option = true]
+					variables += options
+				}
 				SimpleVarDeclaration:
-					variables += createIrVariablesFor(nablaModule, d.variable).filter(SimpleVariable)
+					variables += createIrVariables(d.variable, tlJobs)
 				VarGroupDeclaration:
 					for (v : d.variables)
-						variables += createIrVariablesFor(nablaModule, v)
+						variables += createIrVariables(v, tlJobs)
 			}
-
-		// TimeLoop jobs creation
-		jobs += createTimeLoopJobs
 
 		// Job creation
 		nablaModule.jobs.forEach[x | jobs += x.toIrInstructionJob]

@@ -1,11 +1,12 @@
+#ifndef TEST_H_
+#define TEST_H_
+
 #include <fstream>
 #include <iomanip>
 #include <type_traits>
 #include <limits>
 #include <utility>
 #include <cmath>
-#include <rapidjson/document.h>
-#include <rapidjson/istreamwrapper.h>
 #include "mesh/CartesianMesh2DFactory.h"
 #include "mesh/CartesianMesh2D.h"
 #include "utils/Utils.h"
@@ -14,8 +15,6 @@
 #include "utils/stl/Parallel.h"
 
 using namespace nablalib;
-
-
 
 /******************** Module declaration ********************/
 
@@ -28,25 +27,46 @@ public:
 		int maxIter;
 		double deltat;
 
-		void jsonInit(const rapidjson::Value::ConstObject& d);
+		void jsonInit(const char* jsonContent);
 	};
 
-	Test(CartesianMesh2D* aMesh, const Options& aOptions);
+	Test(CartesianMesh2D* aMesh, Options& aOptions);
 	~Test();
+
+	void simulate();
+	void computeE1() noexcept;
+	void computeE2() noexcept;
+	void initE() noexcept;
+	void initTime() noexcept;
+	void updateT() noexcept;
+	void initE2() noexcept;
+	void setUpTimeLoopN() noexcept;
+	void executeTimeLoopN() noexcept;
+	void setUpTimeLoopK() noexcept;
+	void executeTimeLoopK() noexcept;
+	void tearDownTimeLoopK() noexcept;
+	void updateE() noexcept;
 
 private:
 	// Mesh and mesh variables
 	CartesianMesh2D* mesh;
 	size_t nbNodes, nbCells;
-	
-	// User options and external classes
-	const Options& options;
-	
+
+	// User options
+	Options& options;
+
+	// Timers
+	utils::Timer globalTimer;
+	utils::Timer cpuTimer;
+	utils::Timer ioTimer;
+
+public:
 	// Global variables
 	int n;
 	int k;
 	double t_n;
 	double t_nplus1;
+	double t_n0;
 	std::vector<RealArray1D<2>> X;
 	std::vector<double> e1;
 	std::vector<double> e2_n;
@@ -57,33 +77,6 @@ private:
 	std::vector<double> e_n;
 	std::vector<double> e_nplus1;
 	std::vector<double> e_n0;
-	
-	utils::Timer globalTimer;
-	utils::Timer cpuTimer;
-	utils::Timer ioTimer;
-
-	void computeE1() noexcept;
-	
-	void computeE2() noexcept;
-	
-	void initE() noexcept;
-	
-	void updateT() noexcept;
-	
-	void initE2() noexcept;
-	
-	void setUpTimeLoopN() noexcept;
-	
-	void executeTimeLoopN() noexcept;
-	
-	void setUpTimeLoopK() noexcept;
-	
-	void executeTimeLoopK() noexcept;
-	
-	void tearDownTimeLoopK() noexcept;
-	
-	void updateE() noexcept;
-
-public:
-	void simulate();
 };
+
+#endif

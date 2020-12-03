@@ -10,9 +10,9 @@
 package fr.cea.nabla.ir.generator.cpp
 
 import fr.cea.nabla.ir.ir.BaseType
+import fr.cea.nabla.ir.ir.ExecuteTimeLoopJob
 import fr.cea.nabla.ir.ir.InstructionJob
 import fr.cea.nabla.ir.ir.Job
-import fr.cea.nabla.ir.ir.TimeLoopCopyJob
 import fr.cea.nabla.ir.ir.TimeLoopJob
 import fr.cea.nabla.ir.ir.Variable
 import java.util.List
@@ -20,6 +20,7 @@ import org.eclipse.xtend.lib.annotations.Data
 
 import static extension fr.cea.nabla.ir.ArgOrVarExtensions.*
 import static extension fr.cea.nabla.ir.IrTypeExtensions.*
+import static extension fr.cea.nabla.ir.JobCallerExtensions.*
 import static extension fr.cea.nabla.ir.JobExtensions.*
 import static extension fr.cea.nabla.ir.Utils.*
 import static extension fr.cea.nabla.ir.generator.Utils.*
@@ -30,7 +31,7 @@ class JobContentProvider
 	protected val TraceContentProvider traceContentProvider
 	protected val extension ExpressionContentProvider
 	protected val extension InstructionContentProvider
-	protected val extension JobContainerContentProvider
+	protected val extension JobCallerContentProvider
 
 	def getDeclarationContent(Job it)
 	'''
@@ -39,7 +40,7 @@ class JobContentProvider
 	def getDefinitionContent(Job it)
 	'''
 		«comment»
-		void «irModule.name»::«codeName»() noexcept
+		void «irModule.className»::«codeName»() noexcept
 		{
 			«innerContent»
 		}
@@ -55,30 +56,30 @@ class JobContentProvider
 		«instruction.innerContent»
 	'''
 
-	protected def dispatch CharSequence getInnerContent(TimeLoopJob it)
+	protected def dispatch CharSequence getInnerContent(ExecuteTimeLoopJob it)
 	'''
 		«callsHeader»
-		«val itVar = timeLoop.iterationCounter.codeName»
+		«val itVar = iterationCounter.codeName»
 		«itVar» = 0;
 		bool continueLoop = true;
 		do
 		{
-			«IF isTopLevel»
+			«IF caller.main»
 			globalTimer.start();
 			cpuTimer.start();
 			«ENDIF»
 			«itVar»++;
-			«val ppInfo = irModule.postProcessingInfo»
-			«IF topLevel && ppInfo !== null»
+			«val ppInfo = irRoot.postProcessing»
+			«IF caller.main && ppInfo !== null»
 				if (!writer.isDisabled() && «ppInfo.periodReference.codeName» >= «ppInfo.lastDumpVariable.codeName» + «ppInfo.periodValue.codeName»)
 					dumpVariables(«itVar»);
 			«ENDIF»
-			«traceContentProvider.getBeginOfLoopTrace(irModule, itVar, isTopLevel)»
+			«traceContentProvider.getBeginOfLoopTrace(irModule, itVar, caller.main)»
 
 			«callsContent»
 
 			// Evaluate loop condition with variables at time n
-			continueLoop = («timeLoop.whileCondition.content»);
+			continueLoop = («whileCondition.content»);
 
 			if (continueLoop)
 			{
@@ -87,26 +88,26 @@ class JobContentProvider
 					std::swap(«copy.source.name», «copy.destination.name»);
 				«ENDFOR»
 			}
-			«IF isTopLevel»
+			«IF caller.main»
 
 			cpuTimer.stop();
 			globalTimer.stop();
 			«ENDIF»
 
-			«traceContentProvider.getEndOfLoopTrace(irModule, itVar, isTopLevel, (ppInfo !== null))»
+			«traceContentProvider.getEndOfLoopTrace(irModule, itVar, caller.main, (ppInfo !== null))»
 
-			«IF isTopLevel»
+			«IF caller.main»
 			cpuTimer.reset();
 			ioTimer.reset();
 			«ENDIF»
 		} while (continueLoop);
-		«IF topLevel && irModule.postProcessingInfo !== null»
+		«IF caller.main && irRoot.postProcessing !== null»
 			// force a last output at the end
 			dumpVariables(«itVar», false);
 		«ENDIF»
 	'''
 
-	protected def dispatch CharSequence getInnerContent(TimeLoopCopyJob it)
+	protected def dispatch CharSequence getInnerContent(TimeLoopJob it)
 	'''
 		«FOR copy : copies»
 			«copy(copy.source, copy.destination)»
@@ -140,7 +141,7 @@ class KokkosJobContentProvider extends JobContentProvider
 	override getDefinitionContent(Job it)
 	'''
 		«comment»
-		void «irModule.name»::«codeName»(«FOR a : arguments SEPARATOR ', '»«a»«ENDFOR») noexcept
+		void «irModule.className»::«codeName»(«FOR a : arguments SEPARATOR ', '»«a»«ENDFOR») noexcept
 		{
 			«innerContent»
 		}

@@ -18,6 +18,8 @@ import org.apache.commons.math3.linear.RealVector;
 
 public class LinearAlgebraFunctions 
 {
+	public void jsonInit(final String jsonContent) {}
+
 	public Vector solveLinearSystem(Matrix a, Vector b)
 	{
 		final RealVector x = solveLinearSystem(a.getNativeMatrix(), b.getNativeVector());

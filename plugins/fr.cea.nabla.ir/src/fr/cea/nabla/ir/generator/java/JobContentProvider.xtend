@@ -9,16 +9,14 @@
  *******************************************************************************/
 package fr.cea.nabla.ir.generator.java
 
+import fr.cea.nabla.ir.ir.ExecuteTimeLoopJob
 import fr.cea.nabla.ir.ir.InstructionJob
-import fr.cea.nabla.ir.ir.IrModule
 import fr.cea.nabla.ir.ir.Job
-import fr.cea.nabla.ir.ir.TimeLoop
-import fr.cea.nabla.ir.ir.TimeLoopCopyJob
 import fr.cea.nabla.ir.ir.TimeLoopJob
 
 import static extension fr.cea.nabla.ir.ArgOrVarExtensions.*
 import static extension fr.cea.nabla.ir.IrTypeExtensions.*
-import static extension fr.cea.nabla.ir.JobExtensions.*
+import static extension fr.cea.nabla.ir.JobCallerExtensions.*
 import static extension fr.cea.nabla.ir.Utils.*
 import static extension fr.cea.nabla.ir.generator.Utils.*
 import static extension fr.cea.nabla.ir.generator.java.ArgOrVarExtensions.*
@@ -30,7 +28,7 @@ class JobContentProvider
 	static def getContent(Job it)
 	'''
 		«comment»
-		private void «codeName»()
+		protected void «codeName»()
 		{
 			«innerContent»
 		}
@@ -41,26 +39,26 @@ class JobContentProvider
 		«instruction.innerContent»
 	'''
 
-	private static def dispatch CharSequence getInnerContent(TimeLoopJob it)
+	private static def dispatch CharSequence getInnerContent(ExecuteTimeLoopJob it)
 	'''
-		«val itVar = timeLoop.iterationCounter.codeName»
+		«val itVar = iterationCounter.codeName»
 		«itVar» = 0;
 		boolean continueLoop = true;
 		do
 		{
 			«itVar»++;
-			System.out.printf("«timeLoop.indentation»[%5d] t: %5.5f - deltat: %5.5f\n", «itVar», «irModule.timeVariable.codeName», «irModule.deltatVariable.codeName»);
-			«IF topLevel && irModule.postProcessingInfo !== null»
-				«val ppInfo = irModule.postProcessingInfo»
+			System.out.printf("«caller.indentation»[%5d] t: %5.5f - deltat: %5.5f\n", «itVar», «irRoot.timeVariable.codeName», «irRoot.timeStepVariable.codeName»);
+			«IF caller.main && irRoot.postProcessing !== null»
+				«val ppInfo = irRoot.postProcessing»
 				if («ppInfo.periodReference.codeName» >= «ppInfo.lastDumpVariable.codeName» + «ppInfo.periodValue.codeName»)
 					dumpVariables(«itVar»);
 			«ENDIF»
-			«FOR j : innerJobs»
-				«j.codeName»(); // @«j.at»
+			«FOR j : calls»
+				«j.callName»(); // @«j.at»
 			«ENDFOR»
 
 			// Evaluate loop condition with variables at time n
-			continueLoop = («timeLoop.whileCondition.content»);
+			continueLoop = («whileCondition.content»);
 
 			if (continueLoop)
 			{
@@ -72,13 +70,13 @@ class JobContentProvider
 				«ENDFOR»
 			} 
 		} while (continueLoop);
-		«IF topLevel && irModule.postProcessingInfo !== null»
+		«IF caller.main && irRoot.postProcessing !== null»
 			// force a last output at the end
 			dumpVariables(«itVar»);
 		«ENDIF»
 	'''
 
-	private static def dispatch CharSequence getInnerContent(TimeLoopCopyJob it)
+	private static def dispatch CharSequence getInnerContent(TimeLoopJob it)
 	'''
 		«FOR copy : copies»
 			«copy(copy.destination.name, copy.source.name, copy.destination.type.dimension, true)»
@@ -105,11 +103,5 @@ class JobContentProvider
 				«ENDIF»
 			'''
 		}
-	}
-
-	private static def String getIndentation(TimeLoop it)
-	{
-		if (container instanceof IrModule) ''
-		else getIndentation(container as TimeLoop) + '\t'
 	}
 }

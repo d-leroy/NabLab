@@ -1,35 +1,43 @@
 #include "test/Test.h"
+#include <rapidjson/document.h>
+#include <rapidjson/istreamwrapper.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 
 using namespace nablalib;
-
 
 /******************** Options definition ********************/
 
 void
-Test::Options::jsonInit(const rapidjson::Value::ConstObject& d)
+Test::Options::jsonInit(const char* jsonContent)
 {
+	rapidjson::Document document;
+	assert(!document.Parse(jsonContent).HasParseError());
+	assert(document.IsObject());
+	const rapidjson::Value::Object& o = document.GetObject();
+
 	// maxTime
-	if (d.HasMember("maxTime"))
+	if (o.HasMember("maxTime"))
 	{
-		const rapidjson::Value& valueof_maxTime = d["maxTime"];
+		const rapidjson::Value& valueof_maxTime = o["maxTime"];
 		assert(valueof_maxTime.IsDouble());
 		maxTime = valueof_maxTime.GetDouble();
 	}
 	else
 		maxTime = 0.1;
 	// maxIter
-	if (d.HasMember("maxIter"))
+	if (o.HasMember("maxIter"))
 	{
-		const rapidjson::Value& valueof_maxIter = d["maxIter"];
+		const rapidjson::Value& valueof_maxIter = o["maxIter"];
 		assert(valueof_maxIter.IsInt());
 		maxIter = valueof_maxIter.GetInt();
 	}
 	else
 		maxIter = 500;
 	// deltat
-	if (d.HasMember("deltat"))
+	if (o.HasMember("deltat"))
 	{
-		const rapidjson::Value& valueof_deltat = d["deltat"];
+		const rapidjson::Value& valueof_deltat = o["deltat"];
 		assert(valueof_deltat.IsDouble());
 		deltat = valueof_deltat.GetDouble();
 	}
@@ -39,13 +47,11 @@ Test::Options::jsonInit(const rapidjson::Value::ConstObject& d)
 
 /******************** Module definition ********************/
 
-Test::Test(CartesianMesh2D* aMesh, const Options& aOptions)
+Test::Test(CartesianMesh2D* aMesh, Options& aOptions)
 : mesh(aMesh)
 , nbNodes(mesh->getNbNodes())
 , nbCells(mesh->getNbCells())
 , options(aOptions)
-, t_n(0.0)
-, t_nplus1(0.0)
 , X(nbNodes)
 , e1(nbCells)
 , e2_n(nbCells)
@@ -71,7 +77,7 @@ Test::~Test()
 }
 
 /**
- * Job computeE1 called @1.0 in executeTimeLoopN method.
+ * Job ComputeE1 called @1.0 in executeTimeLoopN method.
  * In variables: e_n
  * Out variables: e1
  */
@@ -84,7 +90,7 @@ void Test::computeE1() noexcept
 }
 
 /**
- * Job computeE2 called @1.0 in executeTimeLoopK method.
+ * Job ComputeE2 called @1.0 in executeTimeLoopK method.
  * In variables: e2_nplus1_k
  * Out variables: e2_nplus1_kplus1
  */
@@ -97,7 +103,7 @@ void Test::computeE2() noexcept
 }
 
 /**
- * Job initE called @1.0 in simulate method.
+ * Job InitE called @1.0 in simulate method.
  * In variables: 
  * Out variables: e_n0
  */
@@ -110,7 +116,17 @@ void Test::initE() noexcept
 }
 
 /**
- * Job updateT called @1.0 in executeTimeLoopN method.
+ * Job InitTime called @1.0 in simulate method.
+ * In variables: 
+ * Out variables: t_n0
+ */
+void Test::initTime() noexcept
+{
+	t_n0 = 0.0;
+}
+
+/**
+ * Job UpdateT called @1.0 in executeTimeLoopN method.
  * In variables: deltat, t_n
  * Out variables: t_nplus1
  */
@@ -134,18 +150,19 @@ void Test::initE2() noexcept
 
 /**
  * Job SetUpTimeLoopN called @2.0 in simulate method.
- * In variables: e_n0
- * Out variables: e_n
+ * In variables: e_n0, t_n0
+ * Out variables: e_n, t_n
  */
 void Test::setUpTimeLoopN() noexcept
 {
+	t_n = t_n0;
 	for (size_t i1(0) ; i1<e_n.size() ; i1++)
 		e_n[i1] = e_n0[i1];
 }
 
 /**
  * Job ExecuteTimeLoopN called @3.0 in simulate method.
- * In variables: deltat, e1, e2_nplus1, e2_nplus1_k, e2_nplus1_k0, e2_nplus1_kplus1, e_n, t_n
+ * In variables: deltat, e1, e2_n, e2_nplus1, e2_nplus1_k, e2_nplus1_k0, e2_nplus1_kplus1, e_n, t_n
  * Out variables: e1, e2_nplus1, e2_nplus1_k, e2_nplus1_k0, e2_nplus1_kplus1, e_nplus1, t_nplus1
  */
 void Test::executeTimeLoopN() noexcept
@@ -201,13 +218,15 @@ void Test::executeTimeLoopN() noexcept
 
 /**
  * Job SetUpTimeLoopK called @3.0 in executeTimeLoopN method.
- * In variables: e2_nplus1_k0
- * Out variables: e2_nplus1_k
+ * In variables: e2_n, e2_nplus1_k0
+ * Out variables: e2_nplus1_k, e2_nplus1_k
  */
 void Test::setUpTimeLoopK() noexcept
 {
 	for (size_t i1(0) ; i1<e2_nplus1_k.size() ; i1++)
 		e2_nplus1_k[i1] = e2_nplus1_k0[i1];
+	for (size_t i1(0) ; i1<e2_nplus1_k.size() ; i1++)
+		e2_nplus1_k[i1] = e2_n[i1];
 }
 
 /**
@@ -251,7 +270,7 @@ void Test::tearDownTimeLoopK() noexcept
 }
 
 /**
- * Job updateE called @6.0 in executeTimeLoopN method.
+ * Job UpdateE called @6.0 in executeTimeLoopN method.
  * In variables: e2_nplus1
  * Out variables: e_nplus1
  */
@@ -272,17 +291,17 @@ void Test::simulate()
 	std::cout << "[" << __GREEN__ << "OUTPUT" << __RESET__ << "]    " << __BOLD__ << "Disabled" << __RESET__ << std::endl;
 
 	initE(); // @1.0
+	initTime(); // @1.0
 	setUpTimeLoopN(); // @2.0
 	executeTimeLoopN(); // @3.0
 	
 	std::cout << __YELLOW__ << "\n\tDone ! Took " << __MAGENTA__ << __BOLD__ << globalTimer.print() << __RESET__ << std::endl;
 }
 
-/******************** Module definition ********************/
-
 int main(int argc, char* argv[]) 
 {
 	string dataFile;
+	int ret = 0;
 	
 	if (argc == 2)
 	{
@@ -291,7 +310,7 @@ int main(int argc, char* argv[])
 	else
 	{
 		std::cerr << "[ERROR] Wrong number of arguments. Expecting 1 arg: dataFile." << std::endl;
-		std::cerr << "(TestDefault.json)" << std::endl;
+		std::cerr << "(Test.json)" << std::endl;
 		return -1;
 	}
 	
@@ -302,27 +321,33 @@ int main(int argc, char* argv[])
 	d.ParseStream(isw);
 	assert(d.IsObject());
 	
-	// mesh
-	assert(d.HasMember("mesh"));
-	const rapidjson::Value& valueof_mesh = d["mesh"];
-	assert(valueof_mesh.IsObject());
+	// Mesh instanciation
 	CartesianMesh2DFactory meshFactory;
-	meshFactory.jsonInit(valueof_mesh.GetObject());
+	if (d.HasMember("mesh"))
+	{
+		rapidjson::StringBuffer strbuf;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+		d["mesh"].Accept(writer);
+		meshFactory.jsonInit(strbuf.GetString());
+	}
 	CartesianMesh2D* mesh = meshFactory.create();
 	
-	// options
-	Test::Options options;
-	assert(d.HasMember("options"));
-	const rapidjson::Value& valueof_options = d["options"];
-	assert(valueof_options.IsObject());
-	options.jsonInit(valueof_options.GetObject());
+	// Module instanciation(s)
+	Test::Options testOptions;
+	if (d.HasMember("test"))
+	{
+		rapidjson::StringBuffer strbuf;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+		d["test"].Accept(writer);
+		testOptions.jsonInit(strbuf.GetString());
+	}
+	Test* test = new Test(mesh, testOptions);
 	
-	// simulator must be a pointer if there is a finalize at the end (Kokkos, omp...)
-	auto simulator = new Test(mesh, options);
-	simulator->simulate();
+	// Start simulation
+	// Simulator must be a pointer when a finalize is needed at the end (Kokkos, omp...)
+	test->simulate();
 	
-	// simulator must be deleted before calling finalize
-	delete simulator;
+	delete test;
 	delete mesh;
-	return 0;
+	return ret;
 }

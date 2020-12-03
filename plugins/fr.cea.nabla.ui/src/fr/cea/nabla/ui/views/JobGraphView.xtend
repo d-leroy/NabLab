@@ -10,17 +10,15 @@
 package fr.cea.nabla.ui.views
 
 import com.google.inject.Inject
-import fr.cea.nabla.generator.IrModuleTransformer
 import fr.cea.nabla.generator.NablaGeneratorMessageDispatcher.MessageType
-import fr.cea.nabla.generator.ir.Nabla2Ir
-import fr.cea.nabla.ir.ir.IrModule
+import fr.cea.nabla.generator.ir.Nablagen2Ir
+import fr.cea.nabla.ir.ir.IrRoot
 import fr.cea.nabla.ir.ir.Job
-import fr.cea.nabla.ir.ir.JobContainer
-import fr.cea.nabla.ir.ir.TimeLoopJob
+import fr.cea.nabla.ir.ir.JobCaller
 import fr.cea.nabla.ir.transformers.CompositeTransformationStep
 import fr.cea.nabla.ir.transformers.FillJobHLTs
 import fr.cea.nabla.ir.transformers.ReplaceReductions
-import fr.cea.nabla.nabla.NablaModule
+import fr.cea.nabla.nablagen.NablagenRoot
 import fr.cea.nabla.ui.NabLabConsoleFactory
 import fr.cea.nabla.ui.NablaUiUtils
 import javax.inject.Provider
@@ -37,22 +35,21 @@ import org.eclipse.ui.part.ViewPart
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.zest.core.viewers.IZoomableWorkbenchPart
 
-import static extension fr.cea.nabla.ir.Utils.*
+import static extension fr.cea.nabla.ir.JobCallerExtensions.*
 
 class JobGraphView extends ViewPart implements IZoomableWorkbenchPart
 {
 	@Inject NotifyViewsHandler notifyViewsHandler
 	@Inject NabLabConsoleFactory consoleFactory
-	@Inject IrModuleTransformer transformer
-	@Inject Provider<Nabla2Ir> nabla2IrProvider
+	@Inject Provider<Nablagen2Ir> nablagen2IrProvider
 
 	// F1 key pressed in NablaDslEditor
 	val keyNotificationListener =
-		[EObject selectedNablaObject |
-			if (selectedNablaObject !== null)
+		[EObject selectedNablagenObject |
+			if (selectedNablagenObject !== null)
 			{
-				val nablaModule = EcoreUtil2.getContainerOfType(selectedNablaObject, NablaModule)
-				if (nablaModule !== null) busyExec([displayIrModuleFrom(nablaModule)])
+				val ngen = EcoreUtil2.getContainerOfType(selectedNablagenObject, NablagenRoot)
+				if (ngen !== null) busyExec([displayIrFrom(ngen)])
 			}
 		]
 
@@ -73,12 +70,12 @@ class JobGraphView extends ViewPart implements IZoomableWorkbenchPart
 			{
 				if (selection.firstElement === null)
 				{
-					if (displayedContainer !== null && displayedContainer instanceof Job)
-						busyExec([viewerJobContainer = (displayedContainer as Job).jobContainer])
+					if (displayedCaller !== null && displayedCaller instanceof Job)
+						busyExec([viewerJobCaller = (displayedCaller as Job).caller])
 				}
-				else if (selection.firstElement instanceof JobContainer)
+				else if (selection.firstElement instanceof JobCaller)
 				{
-					busyExec([viewerJobContainer = selection.firstElement as JobContainer])
+					busyExec([viewerJobCaller = selection.firstElement as JobCaller])
 				}
 				else if (selection.firstElement instanceof Job)
 				{
@@ -90,7 +87,7 @@ class JobGraphView extends ViewPart implements IZoomableWorkbenchPart
 		])
 
 	JobGraphViewer viewer
-	JobContainer displayedContainer = null
+	JobCaller displayedCaller = null
 
 	override setFocus() {}
 	override getZoomableViewer() { viewer }
@@ -112,41 +109,37 @@ class JobGraphView extends ViewPart implements IZoomableWorkbenchPart
 		viewer = null
 	}
 
-	private def setViewerJobContainer(JobContainer container)
+	private def setViewerJobCaller(JobCaller jc)
 	{
 		val d = Display::^default
 		d.asyncExec([
-			displayedContainer = container
-			if (container === null) 
+			displayedCaller = jc
+			if (jc === null) 
 				contentDescription = ''
 			else
-				contentDescription = switch (container)
-				{
-					TimeLoopJob: container.irModule.name + '::' + container.name
-					IrModule: container.name
-				}
-			viewer.input = container
+				contentDescription = jc.displayName
+			viewer.input = jc
 		])
 	}
 
-	private def void displayIrModuleFrom(NablaModule nablaModule)
+	private def void displayIrFrom(NablagenRoot ngen)
 	{
-		var IrModule irModule = null
+		var IrRoot ir = null
 		consoleFactory.printConsole(MessageType.Start, "Building IR to initialize job graph view")
 
 		try
 		{
-			val nabla2Ir = nabla2IrProvider.get // force a new instance to ensure a new IR
-			irModule = nabla2Ir.toIrModule(nablaModule)
+			val nablagen2Ir = nablagen2IrProvider.get // force a new instance to ensure a new IR
+			ir = nablagen2Ir.toIrRoot(ngen)
 
 			// buildIrModule can be call several times for the same nablaModule,
 			// for example by a view. Transformations must not be done in this case
-			if (irModule.jobs.forall[at == 0.0])
+			if (ir.jobs.forall[at == 0.0])
 			{
 				// IR -> IR
 				val description = 'Minimal IR->IR transformations to check job cycles'
 				val t = new CompositeTransformationStep(description, #[new ReplaceReductions(false), new FillJobHLTs])
-				transformer.transformIr(t, irModule, [msg | consoleFactory.printConsole(MessageType.Exec, msg)])
+				t.transformIr(ir, [msg | consoleFactory.printConsole(MessageType.Exec, msg)])
 			}
 		}
 		catch (Exception e)
@@ -156,12 +149,16 @@ class JobGraphView extends ViewPart implements IZoomableWorkbenchPart
 			// irModule stays null. Error message printed below.
 		}
 
-		if (irModule === null)
-			consoleFactory.printConsole(MessageType.Error, "IR module can not be built. Try to clean and rebuild all projects and start again.")
+		if (ir === null)
+		{
+			viewerJobCaller = null
+			consoleFactory.printConsole(MessageType.Error, "IR can not be built. Try to clean and rebuild all projects and start again.")
+		}
 		else
 		{
-			viewerJobContainer = irModule
-			consoleFactory.printConsole(MessageType.End, "Job graph view initialized")
+			viewerJobCaller = ir.main
+			val name = (ir.main === null ? 'null' : ir.main.displayName)
+			consoleFactory.printConsole(MessageType.End, "Job graph view initialized with: " + name)
 		}
 	}
 

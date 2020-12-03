@@ -1,5 +1,6 @@
-nablagen for Test;
-SimulationVariables
+Application Test;
+
+MainModule Test test
 {
 	meshClassName = "CartesianMesh2D";
 	nodeCoord = X;

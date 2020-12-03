@@ -11,9 +11,11 @@ package fr.cea.nabla.ir.generator.json
 
 import fr.cea.nabla.ir.Utils
 import fr.cea.nabla.ir.generator.CodeGenerator
-import fr.cea.nabla.ir.interpreter.ModuleInterpreter
+import fr.cea.nabla.ir.interpreter.Context
+import fr.cea.nabla.ir.interpreter.IrInterpreter
 import fr.cea.nabla.ir.ir.IrModule
-import fr.cea.nabla.ir.transformers.TagOutputVariables
+import fr.cea.nabla.ir.ir.IrRoot
+import java.util.ArrayList
 import java.util.logging.ConsoleHandler
 import java.util.logging.Level
 
@@ -30,48 +32,58 @@ class Ir2Json extends CodeGenerator
 		this.levelDB = levelDB
 	}
 
-	override getFileContentsByName(IrModule it)
-	{
-		#{ name + 'Default.json' -> jsonFileContent }
-	}
-
-	private def getJsonFileContent(IrModule it)
+	override getFileContentsByName(IrRoot ir)
 	{
 		// Create the interpreter and interprete option values
-		val context = interpreteDefinitions
-
-		// Create Json
-		'''
-		{
-			"_comment": "Generated file - Do not overwrite",
-			"options":
-			{
-				«IF postProcessingInfo !== null»
-				"_outputPath_comment":"empty outputPath to disable output",
-				"«TagOutputVariables.OutputPathNameAndValue.key»":"«TagOutputVariables.OutputPathNameAndValue.value»"«IF levelDB || !options.empty»,«ENDIF»
-				«ENDIF»
-				«FOR i : 0..<options.length»
-				"«options.get(i).name»":«context.getVariableValue(options.get(i)).content»«IF i<options.length -1 || levelDB»,«ENDIF»
-				«ENDFOR»
-				«IF levelDB»
-				"_nonRegression_comment":"empty value to disable, «Utils.NonRegressionValues.CreateReference.toString» or «Utils.NonRegressionValues.CompareToReference.toString» to take action",
-				"«Utils.NonRegressionNameAndValue.key»":"«Utils.NonRegressionNameAndValue.value»"
-				«ENDIF»
-			},
-			"mesh":{}«IF !allProviders.empty»,«ENDIF»
-			«FOR s : allProviders SEPARATOR ","»
-			"«s.toFirstLower»":{}
-			«ENDFOR»
-		}
-		'''
+		val context = ir.interpreteDefinitions
+		#{ ir.name + 'Default.json' -> getJsonFileContent(context, ir) }
 	}
 
-	private def interpreteDefinitions(IrModule it)
+	private def getJsonFileContent(Context context, IrRoot rootModel)
+	'''
+		{
+			"_comment": "Generated file - Do not overwrite",
+			«FOR irModule : rootModel.modules»
+			"«irModule.name.toFirstLower»":
+			{
+				«FOR jsonValue : getJsonValues(context, irModule) SEPARATOR ","»
+				"«jsonValue.key»":«jsonValue.value»
+				«ENDFOR»
+			},
+			«ENDFOR»
+			"mesh":
+			{
+			}
+		}
+	'''
+
+	private def getJsonValues(Context context, IrModule irModule)
+	{
+		val values = new ArrayList<Pair<String, String>>
+		if (irModule.postProcessing !== null)
+		{
+			values += new Pair('_outputPath_comment', '"empty outputPath to disable output"')
+			values += new Pair(Utils.OutputPathNameAndValue.key, '"' + Utils.OutputPathNameAndValue.value + '"')
+		}
+		for (option : irModule.options)
+			values += new Pair(option.name, context.getVariableValue(option).content)
+		for (providerClass : irModule.functionProviderClasses)
+			values += new Pair(providerClass.toFirstLower, '{}')
+		if (irModule.main && levelDB)
+		{
+			val value = '"empty value to disable, " + Utils.NonRegressionValues.CreateReference.toString + " or " + Utils.NonRegressionValues.CompareToReference.toString + " to take action"'
+			values += new Pair('_nonRegression_comment', value)
+			values += Utils.NonRegressionNameAndValue
+		}
+		return values
+	}
+
+	private def interpreteDefinitions(IrRoot ir)
 	{
 		val handler = new ConsoleHandler
 		handler.level = Level::OFF
-		val moduleInterpreter = new ModuleInterpreter(it, handler)
-		moduleInterpreter.interpreteOptionsDefaultValues
-		return moduleInterpreter.context
+		val irInterpreter = new IrInterpreter(ir, handler)
+		irInterpreter.interpreteOptionsDefaultValues
+		return irInterpreter.context
 	}
 }

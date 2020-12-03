@@ -1,4 +1,8 @@
 #include "depthinit/DepthInit.h"
+#include <rapidjson/document.h>
+#include <rapidjson/istreamwrapper.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 
 using namespace nablalib;
 
@@ -8,45 +12,57 @@ using namespace nablalib;
 /******************** Options definition ********************/
 
 void
-DepthInit::Options::jsonInit(const rapidjson::Value::ConstObject& d)
+DepthInit::Options::jsonInit(const char* jsonContent)
 {
+	rapidjson::Document document;
+	assert(!document.Parse(jsonContent).HasParseError());
+	assert(document.IsObject());
+	const rapidjson::Value::Object& o = document.GetObject();
+
 	// maxTime
-	if (d.HasMember("maxTime"))
+	if (o.HasMember("maxTime"))
 	{
-		const rapidjson::Value& valueof_maxTime = d["maxTime"];
+		const rapidjson::Value& valueof_maxTime = o["maxTime"];
 		assert(valueof_maxTime.IsDouble());
 		maxTime = valueof_maxTime.GetDouble();
 	}
 	else
 		maxTime = 0.1;
 	// maxIter
-	if (d.HasMember("maxIter"))
+	if (o.HasMember("maxIter"))
 	{
-		const rapidjson::Value& valueof_maxIter = d["maxIter"];
+		const rapidjson::Value& valueof_maxIter = o["maxIter"];
 		assert(valueof_maxIter.IsInt());
 		maxIter = valueof_maxIter.GetInt();
 	}
 	else
 		maxIter = 500;
 	// deltat
-	if (d.HasMember("deltat"))
+	if (o.HasMember("deltat"))
 	{
-		const rapidjson::Value& valueof_deltat = d["deltat"];
+		const rapidjson::Value& valueof_deltat = o["deltat"];
 		assert(valueof_deltat.IsDouble());
 		deltat = valueof_deltat.GetDouble();
 	}
 	else
 		deltat = 1.0;
+	// depthInitFunctions
+	if (o.HasMember("depthInitFunctions"))
+	{
+		rapidjson::StringBuffer strbuf;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+		o["depthInitFunctions"].Accept(writer);
+		depthInitFunctions.jsonInit(strbuf.GetString());
+	}
 }
 
 /******************** Module definition ********************/
 
-DepthInit::DepthInit(CartesianMesh2D* aMesh, const Options& aOptions, DepthInitFunctions& aDepthInitFunctions)
+DepthInit::DepthInit(CartesianMesh2D* aMesh, Options& aOptions)
 : mesh(aMesh)
 , nbCells(mesh->getNbCells())
 , nbNodes(mesh->getNbNodes())
 , options(aOptions)
-, depthInitFunctions(aDepthInitFunctions)
 , X(nbNodes)
 , eta(nbCells)
 {
@@ -72,7 +88,7 @@ void DepthInit::initFromFile() noexcept
 {
 	for (size_t jCells=0; jCells<nbCells; jCells++)
 	{
-		eta[jCells] = depthInitFunctions.nextWaveHeight();
+		eta[jCells] = options.depthInitFunctions.nextWaveHeight();
 	}
 }
 
@@ -89,11 +105,10 @@ void DepthInit::simulate()
 	std::cout << __YELLOW__ << "\n\tDone ! Took " << __MAGENTA__ << __BOLD__ << globalTimer.print() << __RESET__ << std::endl;
 }
 
-/******************** Module definition ********************/
-
 int main(int argc, char* argv[]) 
 {
 	string dataFile;
+	int ret = 0;
 	
 	if (argc == 2)
 	{
@@ -102,7 +117,7 @@ int main(int argc, char* argv[])
 	else
 	{
 		std::cerr << "[ERROR] Wrong number of arguments. Expecting 1 arg: dataFile." << std::endl;
-		std::cerr << "(DepthInitDefault.json)" << std::endl;
+		std::cerr << "(DepthInit.json)" << std::endl;
 		return -1;
 	}
 	
@@ -113,36 +128,33 @@ int main(int argc, char* argv[])
 	d.ParseStream(isw);
 	assert(d.IsObject());
 	
-	// mesh
-	assert(d.HasMember("mesh"));
-	const rapidjson::Value& valueof_mesh = d["mesh"];
-	assert(valueof_mesh.IsObject());
+	// Mesh instanciation
 	CartesianMesh2DFactory meshFactory;
-	meshFactory.jsonInit(valueof_mesh.GetObject());
+	if (d.HasMember("mesh"))
+	{
+		rapidjson::StringBuffer strbuf;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+		d["mesh"].Accept(writer);
+		meshFactory.jsonInit(strbuf.GetString());
+	}
 	CartesianMesh2D* mesh = meshFactory.create();
 	
-	// options
-	DepthInit::Options options;
-	assert(d.HasMember("options"));
-	const rapidjson::Value& valueof_options = d["options"];
-	assert(valueof_options.IsObject());
-	options.jsonInit(valueof_options.GetObject());
-	
-	// depthInitFunctions
-	DepthInitFunctions depthInitFunctions;
-	if (d.HasMember("depthInitFunctions"))
+	// Module instanciation(s)
+	DepthInit::Options depthInitOptions;
+	if (d.HasMember("depthInit"))
 	{
-		const rapidjson::Value& valueof_depthInitFunctions = d["depthInitFunctions"];
-		assert(valueof_depthInitFunctions.IsObject());
-		depthInitFunctions.jsonInit(valueof_depthInitFunctions.GetObject());
+		rapidjson::StringBuffer strbuf;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+		d["depthInit"].Accept(writer);
+		depthInitOptions.jsonInit(strbuf.GetString());
 	}
+	DepthInit* depthInit = new DepthInit(mesh, depthInitOptions);
 	
-	// simulator must be a pointer if there is a finalize at the end (Kokkos, omp...)
-	auto simulator = new DepthInit(mesh, options, depthInitFunctions);
-	simulator->simulate();
+	// Start simulation
+	// Simulator must be a pointer when a finalize is needed at the end (Kokkos, omp...)
+	depthInit->simulate();
 	
-	// simulator must be deleted before calling finalize
-	delete simulator;
+	delete depthInit;
 	delete mesh;
-	return 0;
+	return ret;
 }

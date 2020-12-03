@@ -78,48 +78,24 @@ public class IrSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case IrPackage.JOB_CONTAINER: {
-				JobContainer jobContainer = (JobContainer)theEObject;
-				T result = caseJobContainer(jobContainer);
-				if (result == null) result = caseIrAnnotable(jobContainer);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case IrPackage.TIME_LOOP_CONTAINER: {
-				TimeLoopContainer timeLoopContainer = (TimeLoopContainer)theEObject;
-				T result = caseTimeLoopContainer(timeLoopContainer);
-				if (result == null) result = caseIrAnnotable(timeLoopContainer);
+			case IrPackage.IR_ROOT: {
+				IrRoot irRoot = (IrRoot)theEObject;
+				T result = caseIrRoot(irRoot);
+				if (result == null) result = caseIrAnnotable(irRoot);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case IrPackage.IR_MODULE: {
 				IrModule irModule = (IrModule)theEObject;
 				T result = caseIrModule(irModule);
-				if (result == null) result = caseJobContainer(irModule);
-				if (result == null) result = caseTimeLoopContainer(irModule);
 				if (result == null) result = caseIrAnnotable(irModule);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case IrPackage.IMPORT: {
-				Import import_ = (Import)theEObject;
-				T result = caseImport(import_);
-				if (result == null) result = caseIrAnnotable(import_);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case IrPackage.POST_PROCESSING_INFO: {
-				PostProcessingInfo postProcessingInfo = (PostProcessingInfo)theEObject;
-				T result = casePostProcessingInfo(postProcessingInfo);
-				if (result == null) result = caseIrAnnotable(postProcessingInfo);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case IrPackage.TIME_LOOP: {
-				TimeLoop timeLoop = (TimeLoop)theEObject;
-				T result = caseTimeLoop(timeLoop);
-				if (result == null) result = caseTimeLoopContainer(timeLoop);
-				if (result == null) result = caseIrAnnotable(timeLoop);
+			case IrPackage.POST_PROCESSING: {
+				PostProcessing postProcessing = (PostProcessing)theEObject;
+				T result = casePostProcessing(postProcessing);
+				if (result == null) result = caseIrAnnotable(postProcessing);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -178,6 +154,13 @@ public class IrSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case IrPackage.JOB_CALLER: {
+				JobCaller jobCaller = (JobCaller)theEObject;
+				T result = caseJobCaller(jobCaller);
+				if (result == null) result = caseIrAnnotable(jobCaller);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case IrPackage.JOB: {
 				Job job = (Job)theEObject;
 				T result = caseJob(job);
@@ -196,36 +179,36 @@ public class IrSwitch<T> extends Switch<T> {
 			case IrPackage.TIME_LOOP_JOB: {
 				TimeLoopJob timeLoopJob = (TimeLoopJob)theEObject;
 				T result = caseTimeLoopJob(timeLoopJob);
-				if (result == null) result = caseTimeLoopCopyJob(timeLoopJob);
-				if (result == null) result = caseJobContainer(timeLoopJob);
 				if (result == null) result = caseJob(timeLoopJob);
 				if (result == null) result = caseIrAnnotable(timeLoopJob);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case IrPackage.TIME_LOOP_COPY_JOB: {
-				TimeLoopCopyJob timeLoopCopyJob = (TimeLoopCopyJob)theEObject;
-				T result = caseTimeLoopCopyJob(timeLoopCopyJob);
-				if (result == null) result = caseJob(timeLoopCopyJob);
-				if (result == null) result = caseIrAnnotable(timeLoopCopyJob);
+			case IrPackage.EXECUTE_TIME_LOOP_JOB: {
+				ExecuteTimeLoopJob executeTimeLoopJob = (ExecuteTimeLoopJob)theEObject;
+				T result = caseExecuteTimeLoopJob(executeTimeLoopJob);
+				if (result == null) result = caseTimeLoopJob(executeTimeLoopJob);
+				if (result == null) result = caseJobCaller(executeTimeLoopJob);
+				if (result == null) result = caseJob(executeTimeLoopJob);
+				if (result == null) result = caseIrAnnotable(executeTimeLoopJob);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case IrPackage.BEFORE_TIME_LOOP_JOB: {
-				BeforeTimeLoopJob beforeTimeLoopJob = (BeforeTimeLoopJob)theEObject;
-				T result = caseBeforeTimeLoopJob(beforeTimeLoopJob);
-				if (result == null) result = caseTimeLoopCopyJob(beforeTimeLoopJob);
-				if (result == null) result = caseJob(beforeTimeLoopJob);
-				if (result == null) result = caseIrAnnotable(beforeTimeLoopJob);
+			case IrPackage.SET_UP_TIME_LOOP_JOB: {
+				SetUpTimeLoopJob setUpTimeLoopJob = (SetUpTimeLoopJob)theEObject;
+				T result = caseSetUpTimeLoopJob(setUpTimeLoopJob);
+				if (result == null) result = caseTimeLoopJob(setUpTimeLoopJob);
+				if (result == null) result = caseJob(setUpTimeLoopJob);
+				if (result == null) result = caseIrAnnotable(setUpTimeLoopJob);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case IrPackage.AFTER_TIME_LOOP_JOB: {
-				AfterTimeLoopJob afterTimeLoopJob = (AfterTimeLoopJob)theEObject;
-				T result = caseAfterTimeLoopJob(afterTimeLoopJob);
-				if (result == null) result = caseTimeLoopCopyJob(afterTimeLoopJob);
-				if (result == null) result = caseJob(afterTimeLoopJob);
-				if (result == null) result = caseIrAnnotable(afterTimeLoopJob);
+			case IrPackage.TEAR_DOWN_TIME_LOOP_JOB: {
+				TearDownTimeLoopJob tearDownTimeLoopJob = (TearDownTimeLoopJob)theEObject;
+				T result = caseTearDownTimeLoopJob(tearDownTimeLoopJob);
+				if (result == null) result = caseTimeLoopJob(tearDownTimeLoopJob);
+				if (result == null) result = caseJob(tearDownTimeLoopJob);
+				if (result == null) result = caseIrAnnotable(tearDownTimeLoopJob);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -521,13 +504,6 @@ public class IrSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case IrPackage.TIME_LOOP_VARIABLE: {
-				TimeLoopVariable timeLoopVariable = (TimeLoopVariable)theEObject;
-				T result = caseTimeLoopVariable(timeLoopVariable);
-				if (result == null) result = caseIrAnnotable(timeLoopVariable);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case IrPackage.CONTAINER: {
 				Container container = (Container)theEObject;
 				T result = caseContainer(container);
@@ -630,32 +606,17 @@ public class IrSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Job Container</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Root</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Job Container</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Root</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseJobContainer(JobContainer object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Time Loop Container</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Time Loop Container</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseTimeLoopContainer(TimeLoopContainer object) {
+	public T caseIrRoot(IrRoot object) {
 		return null;
 	}
 
@@ -675,47 +636,17 @@ public class IrSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Import</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Post Processing</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Import</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Post Processing</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseImport(Import object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Post Processing Info</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Post Processing Info</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T casePostProcessingInfo(PostProcessingInfo object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Time Loop</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Time Loop</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseTimeLoop(TimeLoop object) {
+	public T casePostProcessing(PostProcessing object) {
 		return null;
 	}
 
@@ -825,6 +756,21 @@ public class IrSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Job Caller</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Job Caller</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJobCaller(JobCaller object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Job</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -855,6 +801,21 @@ public class IrSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Execute Time Loop Job</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Execute Time Loop Job</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseExecuteTimeLoopJob(ExecuteTimeLoopJob object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Time Loop Job</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -870,47 +831,32 @@ public class IrSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Time Loop Copy Job</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Set Up Time Loop Job</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Time Loop Copy Job</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Set Up Time Loop Job</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTimeLoopCopyJob(TimeLoopCopyJob object) {
+	public T caseSetUpTimeLoopJob(SetUpTimeLoopJob object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Before Time Loop Job</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Tear Down Time Loop Job</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Before Time Loop Job</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Tear Down Time Loop Job</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseBeforeTimeLoopJob(BeforeTimeLoopJob object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>After Time Loop Job</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>After Time Loop Job</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseAfterTimeLoopJob(AfterTimeLoopJob object) {
+	public T caseTearDownTimeLoopJob(TearDownTimeLoopJob object) {
 		return null;
 	}
 
@@ -1466,21 +1412,6 @@ public class IrSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseConnectivityType(ConnectivityType object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Time Loop Variable</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Time Loop Variable</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseTimeLoopVariable(TimeLoopVariable object) {
 		return null;
 	}
 

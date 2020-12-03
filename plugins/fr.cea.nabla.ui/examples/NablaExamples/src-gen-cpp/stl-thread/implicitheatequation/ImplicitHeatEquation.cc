@@ -1,4 +1,8 @@
 #include "implicitheatequation/ImplicitHeatEquation.h"
+#include <rapidjson/document.h>
+#include <rapidjson/istreamwrapper.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 
 using namespace nablalib;
 
@@ -47,54 +51,66 @@ double prodR0(double a, double b)
 	return a * b;
 }
 
-
 /******************** Options definition ********************/
 
 void
-ImplicitHeatEquation::Options::jsonInit(const rapidjson::Value::ConstObject& d)
+ImplicitHeatEquation::Options::jsonInit(const char* jsonContent)
 {
+	rapidjson::Document document;
+	assert(!document.Parse(jsonContent).HasParseError());
+	assert(document.IsObject());
+	const rapidjson::Value::Object& o = document.GetObject();
+
 	// outputPath
-	assert(d.HasMember("outputPath"));
-	const rapidjson::Value& valueof_outputPath = d["outputPath"];
+	assert(o.HasMember("outputPath"));
+	const rapidjson::Value& valueof_outputPath = o["outputPath"];
 	assert(valueof_outputPath.IsString());
 	outputPath = valueof_outputPath.GetString();
 	// outputPeriod
-	assert(d.HasMember("outputPeriod"));
-	const rapidjson::Value& valueof_outputPeriod = d["outputPeriod"];
+	assert(o.HasMember("outputPeriod"));
+	const rapidjson::Value& valueof_outputPeriod = o["outputPeriod"];
 	assert(valueof_outputPeriod.IsInt());
 	outputPeriod = valueof_outputPeriod.GetInt();
 	// u0
-	if (d.HasMember("u0"))
+	if (o.HasMember("u0"))
 	{
-		const rapidjson::Value& valueof_u0 = d["u0"];
+		const rapidjson::Value& valueof_u0 = o["u0"];
 		assert(valueof_u0.IsDouble());
 		u0 = valueof_u0.GetDouble();
 	}
 	else
 		u0 = 1.0;
 	// stopTime
-	if (d.HasMember("stopTime"))
+	if (o.HasMember("stopTime"))
 	{
-		const rapidjson::Value& valueof_stopTime = d["stopTime"];
+		const rapidjson::Value& valueof_stopTime = o["stopTime"];
 		assert(valueof_stopTime.IsDouble());
 		stopTime = valueof_stopTime.GetDouble();
 	}
 	else
 		stopTime = 1.0;
 	// maxIterations
-	if (d.HasMember("maxIterations"))
+	if (o.HasMember("maxIterations"))
 	{
-		const rapidjson::Value& valueof_maxIterations = d["maxIterations"];
+		const rapidjson::Value& valueof_maxIterations = o["maxIterations"];
 		assert(valueof_maxIterations.IsInt());
 		maxIterations = valueof_maxIterations.GetInt();
 	}
 	else
 		maxIterations = 500000000;
+	// linearAlgebraFunctions
+	if (o.HasMember("linearAlgebraFunctions"))
+	{
+		rapidjson::StringBuffer strbuf;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+		o["linearAlgebraFunctions"].Accept(writer);
+		linearAlgebraFunctions.jsonInit(strbuf.GetString());
+	}
 }
 
 /******************** Module definition ********************/
 
-ImplicitHeatEquation::ImplicitHeatEquation(CartesianMesh2D* aMesh, const Options& aOptions, LinearAlgebraFunctions& aLinearAlgebraFunctions)
+ImplicitHeatEquation::ImplicitHeatEquation(CartesianMesh2D* aMesh, Options& aOptions)
 : mesh(aMesh)
 , nbNodes(mesh->getNbNodes())
 , nbCells(mesh->getNbCells())
@@ -104,11 +120,8 @@ ImplicitHeatEquation::ImplicitHeatEquation(CartesianMesh2D* aMesh, const Options
 , nbCellsOfFace(CartesianMesh2D::MaxNbCellsOfFace)
 , nbNodesOfCell(CartesianMesh2D::MaxNbNodesOfCell)
 , options(aOptions)
-, linearAlgebraFunctions(aLinearAlgebraFunctions)
 , writer("ImplicitHeatEquation", options.outputPath)
 , lastDump(numeric_limits<int>::min())
-, t_n(0.0)
-, t_nplus1(0.0)
 , deltat(0.001)
 , X(nbNodes)
 , Xc(nbCells)
@@ -211,6 +224,16 @@ void ImplicitHeatEquation::initD() noexcept
 }
 
 /**
+ * Job InitTime called @1.0 in simulate method.
+ * In variables: 
+ * Out variables: t_n0
+ */
+void ImplicitHeatEquation::initTime() noexcept
+{
+	t_n0 = 0.0;
+}
+
+/**
  * Job InitXc called @1.0 in simulate method.
  * In variables: X
  * Out variables: Xc
@@ -242,7 +265,7 @@ void ImplicitHeatEquation::initXc() noexcept
  */
 void ImplicitHeatEquation::updateU() noexcept
 {
-	u_nplus1 = linearAlgebraFunctions.solveLinearSystem(alpha, u_n);
+	u_nplus1 = options.linearAlgebraFunctions.solveLinearSystem(alpha, u_n);
 }
 
 /**
@@ -311,6 +334,16 @@ void ImplicitHeatEquation::initU() noexcept
 		else
 			u_n[cCells] = 0.0;
 	});
+}
+
+/**
+ * Job SetUpTimeLoopN called @2.0 in simulate method.
+ * In variables: t_n0
+ * Out variables: t_n
+ */
+void ImplicitHeatEquation::setUpTimeLoopN() noexcept
+{
+	t_n = t_n0;
 }
 
 /**
@@ -439,18 +472,18 @@ void ImplicitHeatEquation::simulate()
 	computeFaceLength(); // @1.0
 	computeV(); // @1.0
 	initD(); // @1.0
+	initTime(); // @1.0
 	initXc(); // @1.0
 	computeDeltaTn(); // @2.0
 	computeFaceConductivity(); // @2.0
 	initU(); // @2.0
+	setUpTimeLoopN(); // @2.0
 	computeAlphaCoeff(); // @3.0
 	executeTimeLoopN(); // @4.0
 	
 	std::cout << __YELLOW__ << "\n\tDone ! Took " << __MAGENTA__ << __BOLD__ << globalTimer.print() << __RESET__ << std::endl;
-	std::cout << "[CG] average iteration: " << linearAlgebraFunctions.m_info.m_nb_it / linearAlgebraFunctions.m_info.m_nb_call << std::endl;
+	std::cout << "[CG] average iteration: " << options.linearAlgebraFunctions.m_info.m_nb_it / options.linearAlgebraFunctions.m_info.m_nb_call << std::endl;
 }
-
-/******************** Module definition ********************/
 
 int main(int argc, char* argv[]) 
 {
@@ -464,7 +497,7 @@ int main(int argc, char* argv[])
 	else
 	{
 		std::cerr << "[ERROR] Wrong number of arguments. Expecting 1 arg: dataFile." << std::endl;
-		std::cerr << "(ImplicitHeatEquationDefault.json)" << std::endl;
+		std::cerr << "(ImplicitHeatEquation.json)" << std::endl;
 		return -1;
 	}
 	
@@ -475,36 +508,33 @@ int main(int argc, char* argv[])
 	d.ParseStream(isw);
 	assert(d.IsObject());
 	
-	// mesh
-	assert(d.HasMember("mesh"));
-	const rapidjson::Value& valueof_mesh = d["mesh"];
-	assert(valueof_mesh.IsObject());
+	// Mesh instanciation
 	CartesianMesh2DFactory meshFactory;
-	meshFactory.jsonInit(valueof_mesh.GetObject());
+	if (d.HasMember("mesh"))
+	{
+		rapidjson::StringBuffer strbuf;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+		d["mesh"].Accept(writer);
+		meshFactory.jsonInit(strbuf.GetString());
+	}
 	CartesianMesh2D* mesh = meshFactory.create();
 	
-	// options
-	ImplicitHeatEquation::Options options;
-	assert(d.HasMember("options"));
-	const rapidjson::Value& valueof_options = d["options"];
-	assert(valueof_options.IsObject());
-	options.jsonInit(valueof_options.GetObject());
-	
-	// linearAlgebraFunctions
-	LinearAlgebraFunctions linearAlgebraFunctions;
-	if (d.HasMember("linearAlgebraFunctions"))
+	// Module instanciation(s)
+	ImplicitHeatEquation::Options implicitHeatEquationOptions;
+	if (d.HasMember("implicitHeatEquation"))
 	{
-		const rapidjson::Value& valueof_linearAlgebraFunctions = d["linearAlgebraFunctions"];
-		assert(valueof_linearAlgebraFunctions.IsObject());
-		linearAlgebraFunctions.jsonInit(valueof_linearAlgebraFunctions.GetObject());
+		rapidjson::StringBuffer strbuf;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+		d["implicitHeatEquation"].Accept(writer);
+		implicitHeatEquationOptions.jsonInit(strbuf.GetString());
 	}
+	ImplicitHeatEquation* implicitHeatEquation = new ImplicitHeatEquation(mesh, implicitHeatEquationOptions);
 	
-	// simulator must be a pointer if there is a finalize at the end (Kokkos, omp...)
-	auto simulator = new ImplicitHeatEquation(mesh, options, linearAlgebraFunctions);
-	simulator->simulate();
+	// Start simulation
+	// Simulator must be a pointer when a finalize is needed at the end (Kokkos, omp...)
+	implicitHeatEquation->simulate();
 	
-	// simulator must be deleted before calling finalize
-	delete simulator;
+	delete implicitHeatEquation;
 	delete mesh;
 	return ret;
 }

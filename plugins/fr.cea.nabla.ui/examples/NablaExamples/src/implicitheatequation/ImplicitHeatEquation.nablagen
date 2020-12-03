@@ -7,9 +7,9 @@
  * SPDX-License-Identifier: EPL-2.0
  * Contributors: see AUTHORS file
  *******************************************************************************/
-nablagen for ImplicitHeatEquation;
+Application ImplicitHeatEquation;
 
-SimulationVariables
+MainModule ImplicitHeatEquation implicitHeatEquation
 {
 	meshClassName = "CartesianMesh2D";
 	nodeCoord = X;
@@ -21,8 +21,8 @@ SimulationVariables
 
 VtkOutput
 {
-	periodReferenceVariable = n;
-	outputVariables = u as "Temperature";
+	periodReferenceVariable = implicitHeatEquation.n;
+	outputVariables = implicitHeatEquation.u as "Temperature";
 }
 
 //LevelDB

@@ -1,53 +1,61 @@
 #include "bugiter/BugIter.h"
+#include <rapidjson/document.h>
+#include <rapidjson/istreamwrapper.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 
 using namespace nablalib;
-
 
 /******************** Options definition ********************/
 
 void
-BugIter::Options::jsonInit(const rapidjson::Value::ConstObject& d)
+BugIter::Options::jsonInit(const char* jsonContent)
 {
+	rapidjson::Document document;
+	assert(!document.Parse(jsonContent).HasParseError());
+	assert(document.IsObject());
+	const rapidjson::Value::Object& o = document.GetObject();
+
 	// maxTime
-	if (d.HasMember("maxTime"))
+	if (o.HasMember("maxTime"))
 	{
-		const rapidjson::Value& valueof_maxTime = d["maxTime"];
+		const rapidjson::Value& valueof_maxTime = o["maxTime"];
 		assert(valueof_maxTime.IsDouble());
 		maxTime = valueof_maxTime.GetDouble();
 	}
 	else
 		maxTime = 0.1;
 	// maxIter
-	if (d.HasMember("maxIter"))
+	if (o.HasMember("maxIter"))
 	{
-		const rapidjson::Value& valueof_maxIter = d["maxIter"];
+		const rapidjson::Value& valueof_maxIter = o["maxIter"];
 		assert(valueof_maxIter.IsInt());
 		maxIter = valueof_maxIter.GetInt();
 	}
 	else
 		maxIter = 500;
 	// maxIterK
-	if (d.HasMember("maxIterK"))
+	if (o.HasMember("maxIterK"))
 	{
-		const rapidjson::Value& valueof_maxIterK = d["maxIterK"];
+		const rapidjson::Value& valueof_maxIterK = o["maxIterK"];
 		assert(valueof_maxIterK.IsInt());
 		maxIterK = valueof_maxIterK.GetInt();
 	}
 	else
 		maxIterK = 500;
 	// maxIterL
-	if (d.HasMember("maxIterL"))
+	if (o.HasMember("maxIterL"))
 	{
-		const rapidjson::Value& valueof_maxIterL = d["maxIterL"];
+		const rapidjson::Value& valueof_maxIterL = o["maxIterL"];
 		assert(valueof_maxIterL.IsInt());
 		maxIterL = valueof_maxIterL.GetInt();
 	}
 	else
 		maxIterL = 500;
 	// deltat
-	if (d.HasMember("deltat"))
+	if (o.HasMember("deltat"))
 	{
-		const rapidjson::Value& valueof_deltat = d["deltat"];
+		const rapidjson::Value& valueof_deltat = o["deltat"];
 		assert(valueof_deltat.IsDouble());
 		deltat = valueof_deltat.GetDouble();
 	}
@@ -57,13 +65,11 @@ BugIter::Options::jsonInit(const rapidjson::Value::ConstObject& d)
 
 /******************** Module definition ********************/
 
-BugIter::BugIter(CartesianMesh2D* aMesh, const Options& aOptions)
+BugIter::BugIter(CartesianMesh2D* aMesh, Options& aOptions)
 : mesh(aMesh)
 , nbCells(mesh->getNbCells())
 , nbNodes(mesh->getNbNodes())
 , options(aOptions)
-, t_n(0.0)
-, t_nplus1(0.0)
 , X(nbNodes)
 , u_n(nbCells)
 , u_nplus1(nbCells)
@@ -102,6 +108,29 @@ void BugIter::computeTn() noexcept
 }
 
 /**
+ * Job IniTime called @1.0 in simulate method.
+ * In variables: 
+ * Out variables: t_n0
+ */
+void BugIter::iniTime() noexcept
+{
+	t_n0 = 0.0;
+}
+
+/**
+ * Job IniU called @1.0 in simulate method.
+ * In variables: 
+ * Out variables: u_n
+ */
+void BugIter::iniU() noexcept
+{
+	parallel::parallel_exec(nbCells, [&](const size_t& cCells)
+	{
+		u_n[cCells] = 0.0;
+	});
+}
+
+/**
  * Job IniV called @1.0 in executeTimeLoopN method.
  * In variables: u_n
  * Out variables: v_nplus1_k0
@@ -111,19 +140,6 @@ void BugIter::iniV() noexcept
 	parallel::parallel_exec(nbCells, [&](const size_t& cCells)
 	{
 		v_nplus1_k0[cCells] = u_n[cCells] + 1;
-	});
-}
-
-/**
- * Job InitU called @1.0 in simulate method.
- * In variables: 
- * Out variables: u_n
- */
-void BugIter::initU() noexcept
-{
-	parallel::parallel_exec(nbCells, [&](const size_t& cCells)
-	{
-		u_n[cCells] = 0.0;
 	});
 }
 
@@ -154,8 +170,60 @@ void BugIter::updateW() noexcept
 }
 
 /**
- * Job ExecuteTimeLoopN called @2.0 in simulate method.
- * In variables: deltat, t_n, u_n, v_nplus1, v_nplus1_k, v_nplus1_k0, v_nplus1_kplus1, w_nplus1, w_nplus1_l, w_nplus1_l0, w_nplus1_lplus1
+ * Job SetUpTimeLoopK called @2.0 in executeTimeLoopN method.
+ * In variables: v_n, v_nplus1_k0
+ * Out variables: v_nplus1_k, v_nplus1_k
+ */
+void BugIter::setUpTimeLoopK() noexcept
+{
+	for (size_t i1(0) ; i1<v_nplus1_k.size() ; i1++)
+		v_nplus1_k[i1] = v_nplus1_k0[i1];
+	for (size_t i1(0) ; i1<v_nplus1_k.size() ; i1++)
+		v_nplus1_k[i1] = v_n[i1];
+}
+
+/**
+ * Job SetUpTimeLoopN called @2.0 in simulate method.
+ * In variables: t_n0
+ * Out variables: t_n
+ */
+void BugIter::setUpTimeLoopN() noexcept
+{
+	t_n = t_n0;
+}
+
+/**
+ * Job ExecuteTimeLoopK called @3.0 in executeTimeLoopN method.
+ * In variables: v_nplus1_k
+ * Out variables: v_nplus1_kplus1
+ */
+void BugIter::executeTimeLoopK() noexcept
+{
+	k = 0;
+	bool continueLoop = true;
+	do
+	{
+		k++;
+	
+		updateV(); // @1.0
+		
+	
+		// Evaluate loop condition with variables at time n
+		continueLoop = (k + 1 < options.maxIterK);
+	
+		if (continueLoop)
+		{
+			// Switch variables to prepare next iteration
+			std::swap(v_nplus1_kplus1, v_nplus1_k);
+		}
+	
+	
+	} while (continueLoop);
+}
+
+/**
+ * Job ExecuteTimeLoopN called @3.0 in simulate method.
+ * In variables: deltat, t_n, u_n, v_n, v_nplus1, v_nplus1_k, v_nplus1_k0, v_nplus1_kplus1, w_n, w_nplus1, w_nplus1_l, w_nplus1_l0, w_nplus1_lplus1
  * Out variables: t_nplus1, u_nplus1, v_nplus1, v_nplus1_k, v_nplus1_k0, v_nplus1_kplus1, w_nplus1, w_nplus1_l, w_nplus1_l0, w_nplus1_lplus1
  */
 void BugIter::executeTimeLoopN() noexcept
@@ -214,46 +282,6 @@ void BugIter::executeTimeLoopN() noexcept
 }
 
 /**
- * Job SetUpTimeLoopK called @2.0 in executeTimeLoopN method.
- * In variables: v_nplus1_k0
- * Out variables: v_nplus1_k
- */
-void BugIter::setUpTimeLoopK() noexcept
-{
-	for (size_t i1(0) ; i1<v_nplus1_k.size() ; i1++)
-		v_nplus1_k[i1] = v_nplus1_k0[i1];
-}
-
-/**
- * Job ExecuteTimeLoopK called @3.0 in executeTimeLoopN method.
- * In variables: v_nplus1_k
- * Out variables: v_nplus1_kplus1
- */
-void BugIter::executeTimeLoopK() noexcept
-{
-	k = 0;
-	bool continueLoop = true;
-	do
-	{
-		k++;
-	
-		updateV(); // @1.0
-		
-	
-		// Evaluate loop condition with variables at time n
-		continueLoop = (k + 1 < options.maxIterK);
-	
-		if (continueLoop)
-		{
-			// Switch variables to prepare next iteration
-			std::swap(v_nplus1_kplus1, v_nplus1_k);
-		}
-	
-	
-	} while (continueLoop);
-}
-
-/**
  * Job TearDownTimeLoopK called @4.0 in executeTimeLoopN method.
  * In variables: v_nplus1_kplus1
  * Out variables: v_nplus1
@@ -279,13 +307,15 @@ void BugIter::iniW() noexcept
 
 /**
  * Job SetUpTimeLoopL called @6.0 in executeTimeLoopN method.
- * In variables: w_nplus1_l0
- * Out variables: w_nplus1_l
+ * In variables: w_n, w_nplus1_l0
+ * Out variables: w_nplus1_l, w_nplus1_l
  */
 void BugIter::setUpTimeLoopL() noexcept
 {
 	for (size_t i1(0) ; i1<w_nplus1_l.size() ; i1++)
 		w_nplus1_l[i1] = w_nplus1_l0[i1];
+	for (size_t i1(0) ; i1<w_nplus1_l.size() ; i1++)
+		w_nplus1_l[i1] = w_n[i1];
 }
 
 /**
@@ -349,17 +379,18 @@ void BugIter::simulate()
 	
 	std::cout << "[" << __GREEN__ << "OUTPUT" << __RESET__ << "]    " << __BOLD__ << "Disabled" << __RESET__ << std::endl;
 
-	initU(); // @1.0
-	executeTimeLoopN(); // @2.0
+	iniTime(); // @1.0
+	iniU(); // @1.0
+	setUpTimeLoopN(); // @2.0
+	executeTimeLoopN(); // @3.0
 	
 	std::cout << __YELLOW__ << "\n\tDone ! Took " << __MAGENTA__ << __BOLD__ << globalTimer.print() << __RESET__ << std::endl;
 }
 
-/******************** Module definition ********************/
-
 int main(int argc, char* argv[]) 
 {
 	string dataFile;
+	int ret = 0;
 	
 	if (argc == 2)
 	{
@@ -368,7 +399,7 @@ int main(int argc, char* argv[])
 	else
 	{
 		std::cerr << "[ERROR] Wrong number of arguments. Expecting 1 arg: dataFile." << std::endl;
-		std::cerr << "(BugIterDefault.json)" << std::endl;
+		std::cerr << "(BugIter.json)" << std::endl;
 		return -1;
 	}
 	
@@ -379,27 +410,33 @@ int main(int argc, char* argv[])
 	d.ParseStream(isw);
 	assert(d.IsObject());
 	
-	// mesh
-	assert(d.HasMember("mesh"));
-	const rapidjson::Value& valueof_mesh = d["mesh"];
-	assert(valueof_mesh.IsObject());
+	// Mesh instanciation
 	CartesianMesh2DFactory meshFactory;
-	meshFactory.jsonInit(valueof_mesh.GetObject());
+	if (d.HasMember("mesh"))
+	{
+		rapidjson::StringBuffer strbuf;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+		d["mesh"].Accept(writer);
+		meshFactory.jsonInit(strbuf.GetString());
+	}
 	CartesianMesh2D* mesh = meshFactory.create();
 	
-	// options
-	BugIter::Options options;
-	assert(d.HasMember("options"));
-	const rapidjson::Value& valueof_options = d["options"];
-	assert(valueof_options.IsObject());
-	options.jsonInit(valueof_options.GetObject());
+	// Module instanciation(s)
+	BugIter::Options bugIterOptions;
+	if (d.HasMember("bugIter"))
+	{
+		rapidjson::StringBuffer strbuf;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+		d["bugIter"].Accept(writer);
+		bugIterOptions.jsonInit(strbuf.GetString());
+	}
+	BugIter* bugIter = new BugIter(mesh, bugIterOptions);
 	
-	// simulator must be a pointer if there is a finalize at the end (Kokkos, omp...)
-	auto simulator = new BugIter(mesh, options);
-	simulator->simulate();
+	// Start simulation
+	// Simulator must be a pointer when a finalize is needed at the end (Kokkos, omp...)
+	bugIter->simulate();
 	
-	// simulator must be deleted before calling finalize
-	delete simulator;
+	delete bugIter;
 	delete mesh;
-	return 0;
+	return ret;
 }

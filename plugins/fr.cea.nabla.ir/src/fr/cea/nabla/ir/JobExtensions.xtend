@@ -9,20 +9,16 @@
  *******************************************************************************/
 package fr.cea.nabla.ir
 
-import fr.cea.nabla.ir.ir.IrModule
 import fr.cea.nabla.ir.ir.IterableInstruction
 import fr.cea.nabla.ir.ir.Iterator
 import fr.cea.nabla.ir.ir.Job
 import fr.cea.nabla.ir.ir.Loop
 import fr.cea.nabla.ir.ir.Variable
 
+import static extension fr.cea.nabla.ir.Utils.*
+
 class JobExtensions
 {
-	static def isTopLevel(Job it)
-	{
-		(jobContainer instanceof IrModule)
-	}
-
 	static def hasIterable(Job it)
 	{
 		!eAllContents.filter(IterableInstruction).empty
@@ -43,5 +39,10 @@ class JobExtensions
 	{
 		var variables = eAllContents.filter(Variable).toList
 		return variables.findFirst[x | x.name == varName]
+	}
+
+	static def getDisplayName(Job it)
+	{
+		irModule.name + "::" + name
 	}
 }

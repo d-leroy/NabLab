@@ -1,4 +1,8 @@
 #include "explicitheatequation/ExplicitHeatEquation.h"
+#include <rapidjson/document.h>
+#include <rapidjson/istreamwrapper.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 
 using namespace nablalib;
 
@@ -54,44 +58,48 @@ double prodR0(double a, double b)
 	return a * b;
 }
 
-
 /******************** Options definition ********************/
 
 void
-ExplicitHeatEquation::Options::jsonInit(const rapidjson::Value::ConstObject& d)
+ExplicitHeatEquation::Options::jsonInit(const char* jsonContent)
 {
+	rapidjson::Document document;
+	assert(!document.Parse(jsonContent).HasParseError());
+	assert(document.IsObject());
+	const rapidjson::Value::Object& o = document.GetObject();
+
 	// outputPath
-	assert(d.HasMember("outputPath"));
-	const rapidjson::Value& valueof_outputPath = d["outputPath"];
+	assert(o.HasMember("outputPath"));
+	const rapidjson::Value& valueof_outputPath = o["outputPath"];
 	assert(valueof_outputPath.IsString());
 	outputPath = valueof_outputPath.GetString();
 	// outputPeriod
-	assert(d.HasMember("outputPeriod"));
-	const rapidjson::Value& valueof_outputPeriod = d["outputPeriod"];
+	assert(o.HasMember("outputPeriod"));
+	const rapidjson::Value& valueof_outputPeriod = o["outputPeriod"];
 	assert(valueof_outputPeriod.IsInt());
 	outputPeriod = valueof_outputPeriod.GetInt();
 	// u0
-	if (d.HasMember("u0"))
+	if (o.HasMember("u0"))
 	{
-		const rapidjson::Value& valueof_u0 = d["u0"];
+		const rapidjson::Value& valueof_u0 = o["u0"];
 		assert(valueof_u0.IsDouble());
 		u0 = valueof_u0.GetDouble();
 	}
 	else
 		u0 = 1.0;
 	// stopTime
-	if (d.HasMember("stopTime"))
+	if (o.HasMember("stopTime"))
 	{
-		const rapidjson::Value& valueof_stopTime = d["stopTime"];
+		const rapidjson::Value& valueof_stopTime = o["stopTime"];
 		assert(valueof_stopTime.IsDouble());
 		stopTime = valueof_stopTime.GetDouble();
 	}
 	else
 		stopTime = 1.0;
 	// maxIterations
-	if (d.HasMember("maxIterations"))
+	if (o.HasMember("maxIterations"))
 	{
-		const rapidjson::Value& valueof_maxIterations = d["maxIterations"];
+		const rapidjson::Value& valueof_maxIterations = o["maxIterations"];
 		assert(valueof_maxIterations.IsInt());
 		maxIterations = valueof_maxIterations.GetInt();
 	}
@@ -101,7 +109,7 @@ ExplicitHeatEquation::Options::jsonInit(const rapidjson::Value::ConstObject& d)
 
 /******************** Module definition ********************/
 
-ExplicitHeatEquation::ExplicitHeatEquation(CartesianMesh2D* aMesh, const Options& aOptions)
+ExplicitHeatEquation::ExplicitHeatEquation(CartesianMesh2D* aMesh, Options& aOptions)
 : mesh(aMesh)
 , nbNodes(mesh->getNbNodes())
 , nbCells(mesh->getNbCells())
@@ -113,8 +121,6 @@ ExplicitHeatEquation::ExplicitHeatEquation(CartesianMesh2D* aMesh, const Options
 , options(aOptions)
 , writer("ExplicitHeatEquation", options.outputPath)
 , lastDump(numeric_limits<int>::min())
-, t_n(0.0)
-, t_nplus1(0.0)
 , deltat(0.001)
 , X("X", nbNodes)
 , Xc("Xc", nbCells)
@@ -214,6 +220,16 @@ void ExplicitHeatEquation::initD() noexcept
 	{
 		D(cCells) = 1.0;
 	});
+}
+
+/**
+ * Job InitTime called @1.0 in simulate method.
+ * In variables: 
+ * Out variables: t_n0
+ */
+void ExplicitHeatEquation::initTime() noexcept
+{
+	t_n0 = 0.0;
 }
 
 /**
@@ -331,6 +347,16 @@ void ExplicitHeatEquation::initU() noexcept
 		else
 			u_n(cCells) = 0.0;
 	});
+}
+
+/**
+ * Job SetUpTimeLoopN called @2.0 in simulate method.
+ * In variables: t_n0
+ * Out variables: t_n
+ */
+void ExplicitHeatEquation::setUpTimeLoopN() noexcept
+{
+	t_n = t_n0;
 }
 
 /**
@@ -470,17 +496,17 @@ void ExplicitHeatEquation::simulate()
 	computeFaceLength(); // @1.0
 	computeV(); // @1.0
 	initD(); // @1.0
+	initTime(); // @1.0
 	initXc(); // @1.0
 	computeDeltaTn(); // @2.0
 	computeFaceConductivity(); // @2.0
 	initU(); // @2.0
+	setUpTimeLoopN(); // @2.0
 	computeAlphaCoeff(); // @3.0
 	executeTimeLoopN(); // @4.0
 	
 	std::cout << __YELLOW__ << "\n\tDone ! Took " << __MAGENTA__ << __BOLD__ << globalTimer.print() << __RESET__ << std::endl;
 }
-
-/******************** Module definition ********************/
 
 int main(int argc, char* argv[]) 
 {
@@ -495,7 +521,7 @@ int main(int argc, char* argv[])
 	else
 	{
 		std::cerr << "[ERROR] Wrong number of arguments. Expecting 1 arg: dataFile." << std::endl;
-		std::cerr << "(ExplicitHeatEquationDefault.json)" << std::endl;
+		std::cerr << "(ExplicitHeatEquation.json)" << std::endl;
 		return -1;
 	}
 	
@@ -506,28 +532,35 @@ int main(int argc, char* argv[])
 	d.ParseStream(isw);
 	assert(d.IsObject());
 	
-	// mesh
-	assert(d.HasMember("mesh"));
-	const rapidjson::Value& valueof_mesh = d["mesh"];
-	assert(valueof_mesh.IsObject());
+	// Mesh instanciation
 	CartesianMesh2DFactory meshFactory;
-	meshFactory.jsonInit(valueof_mesh.GetObject());
+	if (d.HasMember("mesh"))
+	{
+		rapidjson::StringBuffer strbuf;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+		d["mesh"].Accept(writer);
+		meshFactory.jsonInit(strbuf.GetString());
+	}
 	CartesianMesh2D* mesh = meshFactory.create();
 	
-	// options
-	ExplicitHeatEquation::Options options;
-	assert(d.HasMember("options"));
-	const rapidjson::Value& valueof_options = d["options"];
-	assert(valueof_options.IsObject());
-	options.jsonInit(valueof_options.GetObject());
+	// Module instanciation(s)
+	ExplicitHeatEquation::Options explicitHeatEquationOptions;
+	if (d.HasMember("explicitHeatEquation"))
+	{
+		rapidjson::StringBuffer strbuf;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+		d["explicitHeatEquation"].Accept(writer);
+		explicitHeatEquationOptions.jsonInit(strbuf.GetString());
+	}
+	ExplicitHeatEquation* explicitHeatEquation = new ExplicitHeatEquation(mesh, explicitHeatEquationOptions);
 	
-	// simulator must be a pointer if there is a finalize at the end (Kokkos, omp...)
-	auto simulator = new ExplicitHeatEquation(mesh, options);
-	simulator->simulate();
+	// Start simulation
+	// Simulator must be a pointer when a finalize is needed at the end (Kokkos, omp...)
+	explicitHeatEquation->simulate();
 	
-	// simulator must be deleted before calling finalize
-	delete simulator;
+	delete explicitHeatEquation;
 	delete mesh;
+	// simulator must be deleted before calling finalize
 	Kokkos::finalize();
 	return ret;
 }

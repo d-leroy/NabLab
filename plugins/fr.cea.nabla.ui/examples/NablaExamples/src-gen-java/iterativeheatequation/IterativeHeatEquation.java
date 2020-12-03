@@ -6,19 +6,13 @@ import static org.iq80.leveldb.impl.Iq80DBFactory.factory;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.stream.IntStream;
 
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.WriteBatch;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
 import fr.cea.nabla.javalib.types.*;
@@ -31,83 +25,80 @@ public final class IterativeHeatEquation
 	public final static class Options
 	{
 		public String outputPath;
-		public String nonRegression;
 		public int outputPeriod;
 		public double u0;
 		public double stopTime;
 		public int maxIterations;
 		public int maxIterationsK;
 		public double epsilon;
-	}
+		public String nonRegression;
 
-	public final static class OptionsDeserializer implements JsonDeserializer<Options>
-	{
-		@Override
-		public Options deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+		public void jsonInit(final String jsonContent)
 		{
-			final JsonObject d = json.getAsJsonObject();
-			Options options = new Options();
+			final JsonParser parser = new JsonParser();
+			final JsonElement json = parser.parse(jsonContent);
+			assert(json.isJsonObject());
+			final JsonObject o = json.getAsJsonObject();
 			// outputPath
-			assert(d.has("outputPath"));
-			final JsonElement valueof_outputPath = d.get("outputPath");
-			options.outputPath = valueof_outputPath.getAsJsonPrimitive().getAsString();
-			// Non regression
-			if(d.has("nonRegression"))
-			{
-				final JsonElement valueof_nonRegression = d.get("nonRegression");
-				options.nonRegression = valueof_nonRegression.getAsJsonPrimitive().getAsString();
-			}
+			assert(o.has("outputPath"));
+			final JsonElement valueof_outputPath = o.get("outputPath");
+			outputPath = valueof_outputPath.getAsJsonPrimitive().getAsString();
 			// outputPeriod
-			assert(d.has("outputPeriod"));
-			final JsonElement valueof_outputPeriod = d.get("outputPeriod");
+			assert(o.has("outputPeriod"));
+			final JsonElement valueof_outputPeriod = o.get("outputPeriod");
 			assert(valueof_outputPeriod.isJsonPrimitive());
-			options.outputPeriod = valueof_outputPeriod.getAsJsonPrimitive().getAsInt();
+			outputPeriod = valueof_outputPeriod.getAsJsonPrimitive().getAsInt();
 			// u0
-			if (d.has("u0"))
+			if (o.has("u0"))
 			{
-				final JsonElement valueof_u0 = d.get("u0");
+				final JsonElement valueof_u0 = o.get("u0");
 				assert(valueof_u0.isJsonPrimitive());
-				options.u0 = valueof_u0.getAsJsonPrimitive().getAsDouble();
+				u0 = valueof_u0.getAsJsonPrimitive().getAsDouble();
 			}
 			else
-				options.u0 = 1.0;
+				u0 = 1.0;
 			// stopTime
-			if (d.has("stopTime"))
+			if (o.has("stopTime"))
 			{
-				final JsonElement valueof_stopTime = d.get("stopTime");
+				final JsonElement valueof_stopTime = o.get("stopTime");
 				assert(valueof_stopTime.isJsonPrimitive());
-				options.stopTime = valueof_stopTime.getAsJsonPrimitive().getAsDouble();
+				stopTime = valueof_stopTime.getAsJsonPrimitive().getAsDouble();
 			}
 			else
-				options.stopTime = 0.1;
+				stopTime = 0.1;
 			// maxIterations
-			if (d.has("maxIterations"))
+			if (o.has("maxIterations"))
 			{
-				final JsonElement valueof_maxIterations = d.get("maxIterations");
+				final JsonElement valueof_maxIterations = o.get("maxIterations");
 				assert(valueof_maxIterations.isJsonPrimitive());
-				options.maxIterations = valueof_maxIterations.getAsJsonPrimitive().getAsInt();
+				maxIterations = valueof_maxIterations.getAsJsonPrimitive().getAsInt();
 			}
 			else
-				options.maxIterations = 500000000;
+				maxIterations = 500000000;
 			// maxIterationsK
-			if (d.has("maxIterationsK"))
+			if (o.has("maxIterationsK"))
 			{
-				final JsonElement valueof_maxIterationsK = d.get("maxIterationsK");
+				final JsonElement valueof_maxIterationsK = o.get("maxIterationsK");
 				assert(valueof_maxIterationsK.isJsonPrimitive());
-				options.maxIterationsK = valueof_maxIterationsK.getAsJsonPrimitive().getAsInt();
+				maxIterationsK = valueof_maxIterationsK.getAsJsonPrimitive().getAsInt();
 			}
 			else
-				options.maxIterationsK = 1000;
+				maxIterationsK = 1000;
 			// epsilon
-			if (d.has("epsilon"))
+			if (o.has("epsilon"))
 			{
-				final JsonElement valueof_epsilon = d.get("epsilon");
+				final JsonElement valueof_epsilon = o.get("epsilon");
 				assert(valueof_epsilon.isJsonPrimitive());
-				options.epsilon = valueof_epsilon.getAsJsonPrimitive().getAsDouble();
+				epsilon = valueof_epsilon.getAsJsonPrimitive().getAsDouble();
 			}
 			else
-				options.epsilon = 1.0E-8;
-			return options;
+				epsilon = 1.0E-8;
+			// Non regression
+			if (o.has("nonRegression"))
+			{
+				final JsonElement valueof_nonRegression = o.get("nonRegression");
+				nonRegression = valueof_nonRegression.getAsJsonPrimitive().getAsString();
+			}
 		}
 	}
 
@@ -115,30 +106,31 @@ public final class IterativeHeatEquation
 	private final CartesianMesh2D mesh;
 	private final int nbNodes, nbCells, nbFaces, nbNeighbourCells, nbNodesOfFace, nbCellsOfFace, nbNodesOfCell;
 
-	// User options and external classes
+	// User options
 	private final Options options;
 	private final FileWriter writer;
 
 	// Global variables
-	private int lastDump;
-	private int n;
-	private int k;
-	private final double[] vectOne;
-	private double t_n;
-	private double t_nplus1;
-	private double deltat;
-	private double[][] X;
-	private double[][] Xc;
-	private double[] u_n;
-	private double[] u_nplus1;
-	private double[] u_nplus1_k;
-	private double[] u_nplus1_kplus1;
-	private double[] V;
-	private double[] D;
-	private double[] faceLength;
-	private double[] faceConductivity;
-	private double[][] alpha;
-	private double residual;
+	protected int lastDump;
+	protected int n;
+	protected int k;
+	protected final double[] vectOne;
+	protected double deltat;
+	protected double t_n;
+	protected double t_nplus1;
+	protected double t_n0;
+	protected double[][] X;
+	protected double[][] Xc;
+	protected double[] u_n;
+	protected double[] u_nplus1;
+	protected double[] u_nplus1_k;
+	protected double[] u_nplus1_kplus1;
+	protected double[] V;
+	protected double[] D;
+	protected double[] faceLength;
+	protected double[] faceConductivity;
+	protected double[][] alpha;
+	protected double residual;
 
 	public IterativeHeatEquation(CartesianMesh2D aMesh, Options aOptions)
 	{
@@ -152,15 +144,13 @@ public final class IterativeHeatEquation
 		nbCellsOfFace = CartesianMesh2D.MaxNbCellsOfFace;
 		nbNodesOfCell = CartesianMesh2D.MaxNbNodesOfCell;
 
-		// User options and external classes initialization
+		// User options
 		options = aOptions;
 		writer = new PvdFileWriter2D("IterativeHeatEquation", options.outputPath);
 
 		// Initialize variables with default values
 		lastDump = Integer.MIN_VALUE;
 		vectOne = new double[] {1.0, 1.0};
-		t_n = 0.0;
-		t_nplus1 = 0.0;
 		deltat = 0.001;
 
 		// Allocate arrays
@@ -185,68 +175,12 @@ public final class IterativeHeatEquation
 		});
 	}
 
-	public void simulate()
-	{
-		System.out.println("Start execution of module IterativeHeatEquation");
-		computeFaceLength(); // @1.0
-		computeV(); // @1.0
-		initD(); // @1.0
-		initXc(); // @1.0
-		computeDeltaTn(); // @2.0
-		computeFaceConductivity(); // @2.0
-		initU(); // @2.0
-		computeAlphaCoeff(); // @3.0
-		executeTimeLoopN(); // @4.0
-		System.out.println("End of execution of module IterativeHeatEquation");
-	}
-
-	public static void main(String[] args) throws IOException
-	{
-		if (args.length == 1)
-		{
-			String dataFileName = args[0];
-			JsonParser parser = new JsonParser();
-			JsonObject o = parser.parse(new FileReader(dataFileName)).getAsJsonObject();
-			GsonBuilder gsonBuilder = new GsonBuilder();
-			gsonBuilder.registerTypeAdapter(Options.class, new IterativeHeatEquation.OptionsDeserializer());
-			Gson gson = gsonBuilder.create();
-			int ret = 0;
-
-			assert(o.has("mesh"));
-			CartesianMesh2DFactory meshFactory = gson.fromJson(o.get("mesh"), CartesianMesh2DFactory.class);
-			CartesianMesh2D mesh = meshFactory.create();
-			assert(o.has("options"));
-			IterativeHeatEquation.Options options = gson.fromJson(o.get("options"), IterativeHeatEquation.Options.class);
-
-			IterativeHeatEquation simulator = new IterativeHeatEquation(mesh, options);
-			simulator.simulate();
-
-			// Non regression testing
-			if (options.nonRegression!=null &&  options.nonRegression.equals("CreateReference"))
-				simulator.createDB("IterativeHeatEquationDB.ref");
-			if (options.nonRegression!=null &&  options.nonRegression.equals("CompareToReference"))
-			{
-				simulator.createDB("IterativeHeatEquationDB.current");
-				if (!LevelDBUtils.compareDB("IterativeHeatEquationDB.current", "IterativeHeatEquationDB.ref"))
-					ret = 1;
-				LevelDBUtils.destroyDB("IterativeHeatEquationDB.current");
-				System.exit(ret);
-			}
-		}
-		else
-		{
-			System.err.println("[ERROR] Wrong number of arguments: expected 1, actual " + args.length);
-			System.err.println("        Expecting user data file name, for example IterativeHeatEquationDefault.json");
-			System.exit(1);
-		}
-	}
-
 	/**
 	 * Job ComputeFaceLength called @1.0 in simulate method.
 	 * In variables: X
 	 * Out variables: faceLength
 	 */
-	private void computeFaceLength()
+	protected void computeFaceLength()
 	{
 		IntStream.range(0, nbFaces).parallel().forEach(fFaces -> 
 		{
@@ -273,7 +207,7 @@ public final class IterativeHeatEquation
 	 * In variables: deltat, t_n
 	 * Out variables: t_nplus1
 	 */
-	private void computeTn()
+	protected void computeTn()
 	{
 		t_nplus1 = t_n + deltat;
 	}
@@ -283,7 +217,7 @@ public final class IterativeHeatEquation
 	 * In variables: X
 	 * Out variables: V
 	 */
-	private void computeV()
+	protected void computeV()
 	{
 		IntStream.range(0, nbCells).parallel().forEach(jCells -> 
 		{
@@ -310,7 +244,7 @@ public final class IterativeHeatEquation
 	 * In variables: 
 	 * Out variables: D
 	 */
-	private void initD()
+	protected void initD()
 	{
 		IntStream.range(0, nbCells).parallel().forEach(cCells -> 
 		{
@@ -319,11 +253,21 @@ public final class IterativeHeatEquation
 	}
 
 	/**
+	 * Job InitTime called @1.0 in simulate method.
+	 * In variables: 
+	 * Out variables: t_n0
+	 */
+	protected void initTime()
+	{
+		t_n0 = 0.0;
+	}
+
+	/**
 	 * Job InitXc called @1.0 in simulate method.
 	 * In variables: X
 	 * Out variables: Xc
 	 */
-	private void initXc()
+	protected void initXc()
 	{
 		IntStream.range(0, nbCells).parallel().forEach(cCells -> 
 		{
@@ -348,7 +292,7 @@ public final class IterativeHeatEquation
 	 * In variables: u_n
 	 * Out variables: u_nplus1_k
 	 */
-	private void setUpTimeLoopK()
+	protected void setUpTimeLoopK()
 	{
 		IntStream.range(0, u_nplus1_k.length).parallel().forEach(i1 -> 
 		{
@@ -361,7 +305,7 @@ public final class IterativeHeatEquation
 	 * In variables: alpha, u_n, u_nplus1_k
 	 * Out variables: u_nplus1_kplus1
 	 */
-	private void updateU()
+	protected void updateU()
 	{
 		IntStream.range(0, nbCells).parallel().forEach(cCells -> 
 		{
@@ -386,7 +330,7 @@ public final class IterativeHeatEquation
 	 * In variables: D, V
 	 * Out variables: deltat
 	 */
-	private void computeDeltaTn()
+	protected void computeDeltaTn()
 	{
 		double reduction0 = Double.MAX_VALUE;
 		reduction0 = IntStream.range(0, nbCells).boxed().parallel().reduce
@@ -406,7 +350,7 @@ public final class IterativeHeatEquation
 	 * In variables: D
 	 * Out variables: faceConductivity
 	 */
-	private void computeFaceConductivity()
+	protected void computeFaceConductivity()
 	{
 		IntStream.range(0, nbFaces).parallel().forEach(fFaces -> 
 		{
@@ -442,7 +386,7 @@ public final class IterativeHeatEquation
 	 * In variables: u_nplus1_k, u_nplus1_kplus1
 	 * Out variables: residual
 	 */
-	private void computeResidual()
+	protected void computeResidual()
 	{
 		double reduction0 = -Double.MAX_VALUE;
 		reduction0 = IntStream.range(0, nbCells).boxed().parallel().reduce
@@ -462,7 +406,7 @@ public final class IterativeHeatEquation
 	 * In variables: alpha, u_n, u_nplus1_k, u_nplus1_kplus1
 	 * Out variables: residual, u_nplus1_kplus1
 	 */
-	private void executeTimeLoopK()
+	protected void executeTimeLoopK()
 	{
 		k = 0;
 		boolean continueLoop = true;
@@ -491,7 +435,7 @@ public final class IterativeHeatEquation
 	 * In variables: Xc, u0, vectOne
 	 * Out variables: u_n
 	 */
-	private void initU()
+	protected void initU()
 	{
 		IntStream.range(0, nbCells).parallel().forEach(cCells -> 
 		{
@@ -503,11 +447,21 @@ public final class IterativeHeatEquation
 	}
 
 	/**
+	 * Job SetUpTimeLoopN called @2.0 in simulate method.
+	 * In variables: t_n0
+	 * Out variables: t_n
+	 */
+	protected void setUpTimeLoopN()
+	{
+		t_n = t_n0;
+	}
+
+	/**
 	 * Job ComputeAlphaCoeff called @3.0 in simulate method.
 	 * In variables: V, Xc, deltat, faceConductivity, faceLength
 	 * Out variables: alpha
 	 */
-	private void computeAlphaCoeff()
+	protected void computeAlphaCoeff()
 	{
 		IntStream.range(0, nbCells).parallel().forEach(cCells -> 
 		{
@@ -536,7 +490,7 @@ public final class IterativeHeatEquation
 	 * In variables: u_nplus1_kplus1
 	 * Out variables: u_nplus1
 	 */
-	private void tearDownTimeLoopK()
+	protected void tearDownTimeLoopK()
 	{
 		IntStream.range(0, u_nplus1.length).parallel().forEach(i1 -> 
 		{
@@ -549,7 +503,7 @@ public final class IterativeHeatEquation
 	 * In variables: alpha, deltat, t_n, u_n, u_nplus1_k, u_nplus1_kplus1
 	 * Out variables: residual, t_nplus1, u_nplus1, u_nplus1_k, u_nplus1_kplus1
 	 */
-	private void executeTimeLoopN()
+	protected void executeTimeLoopN()
 	{
 		n = 0;
 		boolean continueLoop = true;
@@ -638,6 +592,66 @@ public final class IterativeHeatEquation
 		return Math.max(a, b);
 	}
 
+	public void simulate()
+	{
+		System.out.println("Start execution of iterativeHeatEquation");
+		computeFaceLength(); // @1.0
+		computeV(); // @1.0
+		initD(); // @1.0
+		initTime(); // @1.0
+		initXc(); // @1.0
+		computeDeltaTn(); // @2.0
+		computeFaceConductivity(); // @2.0
+		initU(); // @2.0
+		setUpTimeLoopN(); // @2.0
+		computeAlphaCoeff(); // @3.0
+		executeTimeLoopN(); // @4.0
+		System.out.println("End of execution of iterativeHeatEquation");
+	}
+
+	public static void main(String[] args) throws IOException
+	{
+		if (args.length == 1)
+		{
+			String dataFileName = args[0];
+			JsonParser parser = new JsonParser();
+			JsonObject o = parser.parse(new FileReader(dataFileName)).getAsJsonObject();
+			int ret = 0;
+
+			// Mesh instanciation
+			assert(o.has("mesh"));
+			CartesianMesh2DFactory meshFactory = new CartesianMesh2DFactory();
+			meshFactory.jsonInit(o.get("mesh").toString());
+			CartesianMesh2D mesh = meshFactory.create();
+
+			// Module instanciation(s)
+			IterativeHeatEquation.Options iterativeHeatEquationOptions = new IterativeHeatEquation.Options();
+			if (o.has("iterativeHeatEquation")) iterativeHeatEquationOptions.jsonInit(o.get("iterativeHeatEquation").toString());
+			IterativeHeatEquation iterativeHeatEquation = new IterativeHeatEquation(mesh, iterativeHeatEquationOptions);
+
+			// Start simulation
+			iterativeHeatEquation.simulate();
+
+			// Non regression testing
+			if (iterativeHeatEquationOptions.nonRegression != null && iterativeHeatEquationOptions.nonRegression.equals("CreateReference"))
+				iterativeHeatEquation.createDB("IterativeHeatEquationDB.ref");
+			if (iterativeHeatEquationOptions.nonRegression != null && iterativeHeatEquationOptions.nonRegression.equals("CompareToReference"))
+			{
+				iterativeHeatEquation.createDB("IterativeHeatEquationDB.current");
+				if (!LevelDBUtils.compareDB("IterativeHeatEquationDB.current", "IterativeHeatEquationDB.ref"))
+					ret = 1;
+				LevelDBUtils.destroyDB("IterativeHeatEquationDB.current");
+				System.exit(ret);
+			}
+		}
+		else
+		{
+			System.err.println("[ERROR] Wrong number of arguments: expected 1, actual " + args.length);
+			System.err.println("        Expecting user data file name, for example IterativeHeatEquation.json");
+			System.exit(1);
+		}
+	}
+
 	private void dumpVariables(int iteration)
 	{
 		if (!writer.isDisabled())
@@ -667,9 +681,10 @@ public final class IterativeHeatEquation
 			batch.put(bytes("n"), LevelDBUtils.serialize(n));
 			batch.put(bytes("k"), LevelDBUtils.serialize(k));
 			batch.put(bytes("vectOne"), LevelDBUtils.serialize(vectOne));
+			batch.put(bytes("deltat"), LevelDBUtils.serialize(deltat));
 			batch.put(bytes("t_n"), LevelDBUtils.serialize(t_n));
 			batch.put(bytes("t_nplus1"), LevelDBUtils.serialize(t_nplus1));
-			batch.put(bytes("deltat"), LevelDBUtils.serialize(deltat));
+			batch.put(bytes("t_n0"), LevelDBUtils.serialize(t_n0));
 			batch.put(bytes("X"), LevelDBUtils.serialize(X));
 			batch.put(bytes("Xc"), LevelDBUtils.serialize(Xc));
 			batch.put(bytes("u_n"), LevelDBUtils.serialize(u_n));

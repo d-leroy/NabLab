@@ -1,11 +1,12 @@
+#ifndef EXPLICITHEATEQUATION_H_
+#define EXPLICITHEATEQUATION_H_
+
 #include <fstream>
 #include <iomanip>
 #include <type_traits>
 #include <limits>
 #include <utility>
 #include <cmath>
-#include <rapidjson/document.h>
-#include <rapidjson/istreamwrapper.h>
 #include "mesh/CartesianMesh2DFactory.h"
 #include "mesh/CartesianMesh2D.h"
 #include "utils/Utils.h"
@@ -28,7 +29,6 @@ double minR0(double a, double b);
 double sumR0(double a, double b);
 double prodR0(double a, double b);
 
-
 /******************** Module declaration ********************/
 
 class ExplicitHeatEquation
@@ -42,28 +42,52 @@ public:
 		double stopTime;
 		int maxIterations;
 
-		void jsonInit(const rapidjson::Value::ConstObject& d);
+		void jsonInit(const char* jsonContent);
 	};
 
-	ExplicitHeatEquation(CartesianMesh2D* aMesh, const Options& aOptions);
+	ExplicitHeatEquation(CartesianMesh2D* aMesh, Options& aOptions);
 	~ExplicitHeatEquation();
 
+	void simulate();
+	void computeFaceLength() noexcept;
+	void computeTn() noexcept;
+	void computeV() noexcept;
+	void initD() noexcept;
+	void initTime() noexcept;
+	void initXc() noexcept;
+	void updateU() noexcept;
+	void computeDeltaTn() noexcept;
+	void computeFaceConductivity() noexcept;
+	void initU() noexcept;
+	void setUpTimeLoopN() noexcept;
+	void computeAlphaCoeff() noexcept;
+	void executeTimeLoopN() noexcept;
+
 private:
+	void dumpVariables(int iteration, bool useTimer=true);
+
 	// Mesh and mesh variables
 	CartesianMesh2D* mesh;
 	size_t nbNodes, nbCells, nbFaces, nbNeighbourCells, nbNodesOfFace, nbCellsOfFace, nbNodesOfCell;
-	
-	// User options and external classes
-	const Options& options;
+
+	// User options
+	Options& options;
 	PvdFileWriter2D writer;
-	
+
+	// Timers
+	utils::Timer globalTimer;
+	utils::Timer cpuTimer;
+	utils::Timer ioTimer;
+
+public:
 	// Global variables
 	int lastDump;
 	int n;
 	static constexpr RealArray1D<2> vectOne = {1.0, 1.0};
+	double deltat;
 	double t_n;
 	double t_nplus1;
-	double deltat;
+	double t_n0;
 	std::vector<RealArray1D<2>> X;
 	std::vector<RealArray1D<2>> Xc;
 	std::vector<double> u_n;
@@ -73,35 +97,6 @@ private:
 	std::vector<double> faceLength;
 	std::vector<double> faceConductivity;
 	std::vector<std::vector<double>> alpha;
-	
-	utils::Timer globalTimer;
-	utils::Timer cpuTimer;
-	utils::Timer ioTimer;
-
-	void computeFaceLength() noexcept;
-	
-	void computeTn() noexcept;
-	
-	void computeV() noexcept;
-	
-	void initD() noexcept;
-	
-	void initXc() noexcept;
-	
-	void updateU() noexcept;
-	
-	void computeDeltaTn() noexcept;
-	
-	void computeFaceConductivity() noexcept;
-	
-	void initU() noexcept;
-	
-	void computeAlphaCoeff() noexcept;
-	
-	void executeTimeLoopN() noexcept;
-
-	void dumpVariables(int iteration, bool useTimer=true);
-
-public:
-	void simulate();
 };
+
+#endif

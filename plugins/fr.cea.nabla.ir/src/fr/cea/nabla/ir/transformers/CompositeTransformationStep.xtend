@@ -9,7 +9,7 @@
  *******************************************************************************/
 package fr.cea.nabla.ir.transformers
 
-import fr.cea.nabla.ir.ir.IrModule
+import fr.cea.nabla.ir.ir.IrRoot
 import org.eclipse.xtend.lib.annotations.Data
 
 @Data
@@ -17,12 +17,12 @@ class CompositeTransformationStep extends IrTransformationStep
 {
 	val IrTransformationStep[] steps
 
-	override transform(IrModule m) 
+	override transform(IrRoot ir) 
 	{
 		for (s : steps)
 		{
 			s.traceListeners += traceListeners
-			val ok = s.transform(m)
+			val ok = s.transform(ir)
 			s.traceListeners -= traceListeners
 			if (!ok) return false
 		}

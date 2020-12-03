@@ -73,7 +73,7 @@ class TestUtils
 	def String getJsonContent(int nbXQuads, int nbYQuads)
 	'''
 		{
-			"options":
+			"test":
 			{
 			},
 			"mesh":
@@ -88,8 +88,8 @@ class TestUtils
 
 	def getSimulationVariables()
 	'''
-		let ℝ t = 0.0;
 		let ℝ δt = 0.001;
+		ℝ t;
 	'''
 
 	def getDefaultConnectivities()
@@ -116,9 +116,9 @@ class TestUtils
 
 	def getTestGenModel()
 	'''
-		nablagen for Test;
+		Application Test;
 
-		SimulationVariables
+		MainModule Test test
 		{
 			meshClassName = "CartesianMesh2D";
 			nodeCoord = X;

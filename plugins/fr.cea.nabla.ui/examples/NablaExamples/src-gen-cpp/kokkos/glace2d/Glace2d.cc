@@ -1,4 +1,8 @@
 #include "glace2d/Glace2d.h"
+#include <rapidjson/document.h>
+#include <rapidjson/istreamwrapper.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 
 using namespace nablalib;
 
@@ -112,107 +116,111 @@ double minR0(double a, double b)
 	return std::min(a, b);
 }
 
-
 /******************** Options definition ********************/
 
 void
-Glace2d::Options::jsonInit(const rapidjson::Value::ConstObject& d)
+Glace2d::Options::jsonInit(const char* jsonContent)
 {
+	rapidjson::Document document;
+	assert(!document.Parse(jsonContent).HasParseError());
+	assert(document.IsObject());
+	const rapidjson::Value::Object& o = document.GetObject();
+
 	// outputPath
-	assert(d.HasMember("outputPath"));
-	const rapidjson::Value& valueof_outputPath = d["outputPath"];
+	assert(o.HasMember("outputPath"));
+	const rapidjson::Value& valueof_outputPath = o["outputPath"];
 	assert(valueof_outputPath.IsString());
 	outputPath = valueof_outputPath.GetString();
 	// outputPeriod
-	assert(d.HasMember("outputPeriod"));
-	const rapidjson::Value& valueof_outputPeriod = d["outputPeriod"];
+	assert(o.HasMember("outputPeriod"));
+	const rapidjson::Value& valueof_outputPeriod = o["outputPeriod"];
 	assert(valueof_outputPeriod.IsInt());
 	outputPeriod = valueof_outputPeriod.GetInt();
 	// stopTime
-	if (d.HasMember("stopTime"))
+	if (o.HasMember("stopTime"))
 	{
-		const rapidjson::Value& valueof_stopTime = d["stopTime"];
+		const rapidjson::Value& valueof_stopTime = o["stopTime"];
 		assert(valueof_stopTime.IsDouble());
 		stopTime = valueof_stopTime.GetDouble();
 	}
 	else
 		stopTime = 0.2;
 	// maxIterations
-	if (d.HasMember("maxIterations"))
+	if (o.HasMember("maxIterations"))
 	{
-		const rapidjson::Value& valueof_maxIterations = d["maxIterations"];
+		const rapidjson::Value& valueof_maxIterations = o["maxIterations"];
 		assert(valueof_maxIterations.IsInt());
 		maxIterations = valueof_maxIterations.GetInt();
 	}
 	else
 		maxIterations = 20000;
 	// gamma
-	if (d.HasMember("gamma"))
+	if (o.HasMember("gamma"))
 	{
-		const rapidjson::Value& valueof_gamma = d["gamma"];
+		const rapidjson::Value& valueof_gamma = o["gamma"];
 		assert(valueof_gamma.IsDouble());
 		gamma = valueof_gamma.GetDouble();
 	}
 	else
 		gamma = 1.4;
 	// xInterface
-	if (d.HasMember("xInterface"))
+	if (o.HasMember("xInterface"))
 	{
-		const rapidjson::Value& valueof_xInterface = d["xInterface"];
+		const rapidjson::Value& valueof_xInterface = o["xInterface"];
 		assert(valueof_xInterface.IsDouble());
 		xInterface = valueof_xInterface.GetDouble();
 	}
 	else
 		xInterface = 0.5;
 	// deltatIni
-	if (d.HasMember("deltatIni"))
+	if (o.HasMember("deltatIni"))
 	{
-		const rapidjson::Value& valueof_deltatIni = d["deltatIni"];
+		const rapidjson::Value& valueof_deltatIni = o["deltatIni"];
 		assert(valueof_deltatIni.IsDouble());
 		deltatIni = valueof_deltatIni.GetDouble();
 	}
 	else
 		deltatIni = 1.0E-5;
 	// deltatCfl
-	if (d.HasMember("deltatCfl"))
+	if (o.HasMember("deltatCfl"))
 	{
-		const rapidjson::Value& valueof_deltatCfl = d["deltatCfl"];
+		const rapidjson::Value& valueof_deltatCfl = o["deltatCfl"];
 		assert(valueof_deltatCfl.IsDouble());
 		deltatCfl = valueof_deltatCfl.GetDouble();
 	}
 	else
 		deltatCfl = 0.4;
 	// rhoIniZg
-	if (d.HasMember("rhoIniZg"))
+	if (o.HasMember("rhoIniZg"))
 	{
-		const rapidjson::Value& valueof_rhoIniZg = d["rhoIniZg"];
+		const rapidjson::Value& valueof_rhoIniZg = o["rhoIniZg"];
 		assert(valueof_rhoIniZg.IsDouble());
 		rhoIniZg = valueof_rhoIniZg.GetDouble();
 	}
 	else
 		rhoIniZg = 1.0;
 	// rhoIniZd
-	if (d.HasMember("rhoIniZd"))
+	if (o.HasMember("rhoIniZd"))
 	{
-		const rapidjson::Value& valueof_rhoIniZd = d["rhoIniZd"];
+		const rapidjson::Value& valueof_rhoIniZd = o["rhoIniZd"];
 		assert(valueof_rhoIniZd.IsDouble());
 		rhoIniZd = valueof_rhoIniZd.GetDouble();
 	}
 	else
 		rhoIniZd = 0.125;
 	// pIniZg
-	if (d.HasMember("pIniZg"))
+	if (o.HasMember("pIniZg"))
 	{
-		const rapidjson::Value& valueof_pIniZg = d["pIniZg"];
+		const rapidjson::Value& valueof_pIniZg = o["pIniZg"];
 		assert(valueof_pIniZg.IsDouble());
 		pIniZg = valueof_pIniZg.GetDouble();
 	}
 	else
 		pIniZg = 1.0;
 	// pIniZd
-	if (d.HasMember("pIniZd"))
+	if (o.HasMember("pIniZd"))
 	{
-		const rapidjson::Value& valueof_pIniZd = d["pIniZd"];
+		const rapidjson::Value& valueof_pIniZd = o["pIniZd"];
 		assert(valueof_pIniZd.IsDouble());
 		pIniZd = valueof_pIniZd.GetDouble();
 	}
@@ -222,7 +230,7 @@ Glace2d::Options::jsonInit(const rapidjson::Value::ConstObject& d)
 
 /******************** Module definition ********************/
 
-Glace2d::Glace2d(CartesianMesh2D* aMesh, const Options& aOptions)
+Glace2d::Glace2d(CartesianMesh2D* aMesh, Options& aOptions)
 : mesh(aMesh)
 , nbNodes(mesh->getNbNodes())
 , nbCells(mesh->getNbCells())
@@ -236,10 +244,6 @@ Glace2d::Glace2d(CartesianMesh2D* aMesh, const Options& aOptions)
 , options(aOptions)
 , writer("Glace2d", options.outputPath)
 , lastDump(numeric_limits<int>::min())
-, t_n(0.0)
-, t_nplus1(0.0)
-, deltat_n(options.deltatIni)
-, deltat_nplus1(options.deltatIni)
 , X_n("X_n", nbNodes)
 , X_nplus1("X_nplus1", nbNodes)
 , X_n0("X_n0", nbNodes)
@@ -342,13 +346,23 @@ void Glace2d::iniCjrIc() noexcept
 }
 
 /**
- * Job SetUpTimeLoopN called @1.0 in simulate method.
- * In variables: X_n0
- * Out variables: X_n
+ * Job IniTime called @1.0 in simulate method.
+ * In variables: 
+ * Out variables: t_n0
  */
-void Glace2d::setUpTimeLoopN() noexcept
+void Glace2d::iniTime() noexcept
 {
-	deep_copy(X_n, X_n0);
+	t_n0 = 0.0;
+}
+
+/**
+ * Job IniTimeStep called @1.0 in simulate method.
+ * In variables: deltatIni
+ * Out variables: deltat_n0
+ */
+void Glace2d::iniTimeStep() noexcept
+{
+	deltat_n0 = options.deltatIni;
 }
 
 /**
@@ -449,6 +463,18 @@ void Glace2d::initialize() noexcept
 		E_n(jCells) = p_ic / ((options.gamma - 1.0) * rho_ic);
 		uj_n(jCells) = {0.0, 0.0};
 	});
+}
+
+/**
+ * Job SetUpTimeLoopN called @2.0 in simulate method.
+ * In variables: X_n0, deltat_n0, t_n0
+ * Out variables: X_n, deltat_n, t_n
+ */
+void Glace2d::setUpTimeLoopN() noexcept
+{
+	t_n = t_n0;
+	deltat_n = deltat_n0;
+	deep_copy(X_n, X_n0);
 }
 
 /**
@@ -934,14 +960,14 @@ void Glace2d::simulate()
 		std::cout << "[" << __GREEN__ << "OUTPUT" << __RESET__ << "]    " << __BOLD__ << "Disabled" << __RESET__ << std::endl;
 
 	iniCjrIc(); // @1.0
-	setUpTimeLoopN(); // @1.0
+	iniTime(); // @1.0
+	iniTimeStep(); // @1.0
 	initialize(); // @2.0
+	setUpTimeLoopN(); // @2.0
 	executeTimeLoopN(); // @3.0
 	
 	std::cout << __YELLOW__ << "\n\tDone ! Took " << __MAGENTA__ << __BOLD__ << globalTimer.print() << __RESET__ << std::endl;
 }
-
-/******************** Module definition ********************/
 
 int main(int argc, char* argv[]) 
 {
@@ -956,7 +982,7 @@ int main(int argc, char* argv[])
 	else
 	{
 		std::cerr << "[ERROR] Wrong number of arguments. Expecting 1 arg: dataFile." << std::endl;
-		std::cerr << "(Glace2dDefault.json)" << std::endl;
+		std::cerr << "(Glace2d.json)" << std::endl;
 		return -1;
 	}
 	
@@ -967,28 +993,35 @@ int main(int argc, char* argv[])
 	d.ParseStream(isw);
 	assert(d.IsObject());
 	
-	// mesh
-	assert(d.HasMember("mesh"));
-	const rapidjson::Value& valueof_mesh = d["mesh"];
-	assert(valueof_mesh.IsObject());
+	// Mesh instanciation
 	CartesianMesh2DFactory meshFactory;
-	meshFactory.jsonInit(valueof_mesh.GetObject());
+	if (d.HasMember("mesh"))
+	{
+		rapidjson::StringBuffer strbuf;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+		d["mesh"].Accept(writer);
+		meshFactory.jsonInit(strbuf.GetString());
+	}
 	CartesianMesh2D* mesh = meshFactory.create();
 	
-	// options
-	Glace2d::Options options;
-	assert(d.HasMember("options"));
-	const rapidjson::Value& valueof_options = d["options"];
-	assert(valueof_options.IsObject());
-	options.jsonInit(valueof_options.GetObject());
+	// Module instanciation(s)
+	Glace2d::Options glace2dOptions;
+	if (d.HasMember("glace2d"))
+	{
+		rapidjson::StringBuffer strbuf;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+		d["glace2d"].Accept(writer);
+		glace2dOptions.jsonInit(strbuf.GetString());
+	}
+	Glace2d* glace2d = new Glace2d(mesh, glace2dOptions);
 	
-	// simulator must be a pointer if there is a finalize at the end (Kokkos, omp...)
-	auto simulator = new Glace2d(mesh, options);
-	simulator->simulate();
+	// Start simulation
+	// Simulator must be a pointer when a finalize is needed at the end (Kokkos, omp...)
+	glace2d->simulate();
 	
-	// simulator must be deleted before calling finalize
-	delete simulator;
+	delete glace2d;
 	delete mesh;
+	// simulator must be deleted before calling finalize
 	Kokkos::finalize();
 	return ret;
 }
