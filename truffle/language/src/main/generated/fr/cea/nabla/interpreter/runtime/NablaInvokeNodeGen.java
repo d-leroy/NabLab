@@ -20,7 +20,7 @@ public final class NablaInvokeNodeGen extends NablaInvokeNode {
 
     private static final LibraryFactory<InteropLibrary> INTEROP_LIBRARY_ = LibraryFactory.resolve(InteropLibrary.class);
 
-    @CompilationFinal private volatile int state_;
+    @CompilationFinal private volatile int state_0_;
     @CompilationFinal private volatile int exclude_;
     @Child private Default0Data default0_cache;
 
@@ -30,9 +30,9 @@ public final class NablaInvokeNodeGen extends NablaInvokeNode {
     @ExplodeLoop
     @Override
     public Object execute(Object arg0Value, String arg1Value, Object[] arg2Value) {
-        int state = state_;
-        if (state != 0 /* is-active doDefault(Object, String, Object[], InteropLibrary) || doDefault(Object, String, Object[], InteropLibrary) */) {
-            if ((state & 0b1) != 0 /* is-active doDefault(Object, String, Object[], InteropLibrary) */) {
+        int state_0 = state_0_;
+        if (state_0 != 0 /* is-state_0 doDefault(Object, String, Object[], InteropLibrary) || doDefault(Object, String, Object[], InteropLibrary) */) {
+            if ((state_0 & 0b1) != 0 /* is-state_0 doDefault(Object, String, Object[], InteropLibrary) */) {
                 Default0Data s1_ = this.default0_cache;
                 while (s1_ != null) {
                     if ((s1_.objLibrary_.accepts(arg0Value)) && (s1_.objLibrary_.isMemberInvocable(arg0Value, arg1Value))) {
@@ -41,14 +41,14 @@ public final class NablaInvokeNodeGen extends NablaInvokeNode {
                     s1_ = s1_.next_;
                 }
             }
-            if ((state & 0b10) != 0 /* is-active doDefault(Object, String, Object[], InteropLibrary) */) {
+            if ((state_0 & 0b10) != 0 /* is-state_0 doDefault(Object, String, Object[], InteropLibrary) */) {
                 EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
                 Node prev_ = encapsulating_.set(this);
                 try {
                     {
                         InteropLibrary default1_objLibrary__ = (INTEROP_LIBRARY_.getUncached());
                         if ((default1_objLibrary__.isMemberInvocable(arg0Value, arg1Value))) {
-                            return this.default1Boundary(state, arg0Value, arg1Value, arg2Value);
+                            return this.default1Boundary(state_0, arg0Value, arg1Value, arg2Value);
                         }
                     }
                 } finally {
@@ -62,7 +62,7 @@ public final class NablaInvokeNodeGen extends NablaInvokeNode {
 
     @SuppressWarnings("static-method")
     @TruffleBoundary
-    private Object default1Boundary(int state, Object arg0Value, String arg1Value, Object[] arg2Value) {
+    private Object default1Boundary(int state_0, Object arg0Value, String arg1Value, Object[] arg2Value) {
         {
             InteropLibrary default1_objLibrary__ = (INTEROP_LIBRARY_.getUncached());
             return doDefault(arg0Value, arg1Value, arg2Value, default1_objLibrary__);
@@ -73,13 +73,13 @@ public final class NablaInvokeNodeGen extends NablaInvokeNode {
         Lock lock = getLock();
         boolean hasLock = true;
         lock.lock();
-        int state = state_;
+        int state_0 = state_0_;
         int exclude = exclude_;
         try {
-            if ((exclude) == 0 /* is-not-excluded doDefault(Object, String, Object[], InteropLibrary) */) {
+            if ((exclude) == 0 /* is-not-exclude doDefault(Object, String, Object[], InteropLibrary) */) {
                 int count1_ = 0;
                 Default0Data s1_ = this.default0_cache;
-                if ((state & 0b1) != 0 /* is-active doDefault(Object, String, Object[], InteropLibrary) */) {
+                if ((state_0 & 0b1) != 0 /* is-state_0 doDefault(Object, String, Object[], InteropLibrary) */) {
                     while (s1_ != null) {
                         if ((s1_.objLibrary_.accepts(arg0Value)) && (s1_.objLibrary_.isMemberInvocable(arg0Value, arg1Value))) {
                             break;
@@ -96,7 +96,7 @@ public final class NablaInvokeNodeGen extends NablaInvokeNode {
                             s1_ = super.insert(new Default0Data(default0_cache));
                             s1_.objLibrary_ = s1_.insertAccessor(objLibrary__);
                             this.default0_cache = s1_;
-                            this.state_ = state = state | 0b1 /* add-active doDefault(Object, String, Object[], InteropLibrary) */;
+                            this.state_0_ = state_0 = state_0 | 0b1 /* add-state_0 doDefault(Object, String, Object[], InteropLibrary) */;
                         }
                     }
                 }
@@ -115,10 +115,10 @@ public final class NablaInvokeNodeGen extends NablaInvokeNode {
                         {
                             default1_objLibrary__ = (INTEROP_LIBRARY_.getUncached());
                             if ((default1_objLibrary__.isMemberInvocable(arg0Value, arg1Value))) {
-                                this.exclude_ = exclude = exclude | 0b1 /* add-excluded doDefault(Object, String, Object[], InteropLibrary) */;
+                                this.exclude_ = exclude = exclude | 0b1 /* add-exclude doDefault(Object, String, Object[], InteropLibrary) */;
                                 this.default0_cache = null;
-                                state = state & 0xfffffffe /* remove-active doDefault(Object, String, Object[], InteropLibrary) */;
-                                this.state_ = state = state | 0b10 /* add-active doDefault(Object, String, Object[], InteropLibrary) */;
+                                state_0 = state_0 & 0xfffffffe /* remove-state_0 doDefault(Object, String, Object[], InteropLibrary) */;
+                                this.state_0_ = state_0 = state_0 | 0b10 /* add-state_0 doDefault(Object, String, Object[], InteropLibrary) */;
                                 lock.unlock();
                                 hasLock = false;
                                 return doDefault(arg0Value, arg1Value, arg2Value, default1_objLibrary__);
@@ -139,13 +139,15 @@ public final class NablaInvokeNodeGen extends NablaInvokeNode {
 
     @Override
     public NodeCost getCost() {
-        int state = state_;
-        if (state == 0b0) {
+        int state_0 = state_0_;
+        if (state_0 == 0) {
             return NodeCost.UNINITIALIZED;
-        } else if ((state & (state - 1)) == 0 /* is-single-active  */) {
-            Default0Data s1_ = this.default0_cache;
-            if ((s1_ == null || s1_.next_ == null)) {
-                return NodeCost.MONOMORPHIC;
+        } else {
+            if ((state_0 & (state_0 - 1)) == 0 /* is-single-state_0  */) {
+                Default0Data s1_ = this.default0_cache;
+                if ((s1_ == null || s1_.next_ == null)) {
+                    return NodeCost.MONOMORPHIC;
+                }
             }
         }
         return NodeCost.POLYMORPHIC;

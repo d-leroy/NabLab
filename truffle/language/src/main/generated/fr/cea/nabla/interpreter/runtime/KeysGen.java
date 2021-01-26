@@ -50,7 +50,7 @@ final class KeysGen {
         @GeneratedBy(Keys.class)
         private static final class Cached extends InteropLibrary {
 
-            Cached() {
+            protected Cached() {
             }
 
             @Override
@@ -92,11 +92,11 @@ final class KeysGen {
         @GeneratedBy(Keys.class)
         private static final class Uncached extends InteropLibrary {
 
-            Uncached() {
+            protected Uncached() {
             }
 
-            @TruffleBoundary
             @Override
+            @TruffleBoundary
             public boolean accepts(Object receiver) {
                 assert !(receiver instanceof Keys) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof Keys;
@@ -115,6 +115,7 @@ final class KeysGen {
             @TruffleBoundary
             @Override
             public Object readArrayElement(Object receiver, long index) throws UnsupportedMessageException, InvalidArrayIndexException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((Keys) receiver) .readArrayElement(index);
             }
@@ -122,6 +123,7 @@ final class KeysGen {
             @TruffleBoundary
             @Override
             public boolean hasArrayElements(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((Keys) receiver) .hasArrayElements();
             }
@@ -129,6 +131,7 @@ final class KeysGen {
             @TruffleBoundary
             @Override
             public long getArraySize(Object receiver) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((Keys) receiver) .getArraySize();
             }
@@ -136,6 +139,7 @@ final class KeysGen {
             @TruffleBoundary
             @Override
             public boolean isArrayElementReadable(Object receiver, long index) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((Keys) receiver) .isArrayElementReadable(index);
             }

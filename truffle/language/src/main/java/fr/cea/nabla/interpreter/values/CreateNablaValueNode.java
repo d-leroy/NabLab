@@ -75,8 +75,11 @@ public abstract class CreateNablaValueNode extends NablaExpressionNode {
 		return new NV1IntJava(x);
 	}
 
-	@Specialization(guards = { "expectsInt1()", "v.isNativePointer()", "v.hasArrayElements()" })
-	protected NablaValue createNablaValueInt1(Value v) {
+	@Specialization(guards = { "expectsInt1", "nativePointer", "isArray" })
+	protected NablaValue createNablaValueInt1(Value v, //
+			@Cached("expectsInt1()") boolean expectsInt1, //
+			@Cached("v.isNativePointer()") boolean nativePointer, //
+			@Cached("v.hasArrayElements()") boolean isArray) {
 		return new NV1IntNative(v);
 	}
 

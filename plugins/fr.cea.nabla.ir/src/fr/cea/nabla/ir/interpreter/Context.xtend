@@ -35,7 +35,7 @@ class Context
 	// the pair is composed of [provider instance, method instance]
 	@Accessors(PUBLIC_GETTER, PRIVATE_SETTER) val HashMap<Function, Pair<Object,Method>> functionToMethod 
 	@Accessors(PUBLIC_GETTER, PRIVATE_SETTER) val IrRoot ir
-	@Accessors(PUBLIC_GETTER, PRIVATE_SETTER) CartesianMesh2DMeshWrapper meshWrapper
+	@Accessors(PUBLIC_GETTER, PRIVATE_SETTER) CartesianMesh2DWrapper meshWrapper
 
 	new(IrRoot ir, Logger logger)
 	{
@@ -56,13 +56,13 @@ class Context
 	}
 
 	def HashMap<Connectivity, Integer> getConnectivitySizes()
-	{ 
+	{
 		meshWrapper.connectivitySizes
 	}
 
 	def initMesh(Gson gson, String jsonMeshContent, Connectivity[] connectivities)
 	{
-		meshWrapper = new CartesianMesh2DMeshWrapper(gson, jsonMeshContent)
+		meshWrapper = new CartesianMesh2DWrapper(gson, jsonMeshContent)
 		meshWrapper.init(connectivities)
 	}
 

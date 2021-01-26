@@ -2,10 +2,9 @@ package fr.cea.nabla.interpreter.runtime;
 
 import com.oracle.truffle.api.CompilerAsserts;
 import com.oracle.truffle.api.CompilerDirectives;
-import com.oracle.truffle.api.TruffleException;
-import com.oracle.truffle.api.nodes.Node;
+import com.oracle.truffle.api.exception.AbstractTruffleException;
 
-public final class NablaInternalError extends Error implements TruffleException {
+public final class NablaInternalError extends AbstractTruffleException {
 
 	private static final long serialVersionUID = 80698622974155216L;
 
@@ -17,7 +16,7 @@ public final class NablaInternalError extends Error implements TruffleException 
 	}
 
 	public NablaInternalError(Throwable cause, String message, Object... args) {
-		super(String.format(message, args), cause);
+		super(String.format(message, args));
 		CompilerAsserts.neverPartOfCompilation();
 		verboseStackTrace = createVerboseStackTrace();
 	}
@@ -27,7 +26,7 @@ public final class NablaInternalError extends Error implements TruffleException 
 	 * contain formatting instructions.
 	 */
 	public NablaInternalError(Throwable cause, String message) {
-		super(message, cause);
+		super(message);
 		CompilerAsserts.neverPartOfCompilation();
 		verboseStackTrace = createVerboseStackTrace();
 	}
@@ -72,15 +71,5 @@ public final class NablaInternalError extends Error implements TruffleException 
 
 	static String createVerboseStackTrace() {
 		return "";
-	}
-
-	@Override
-	public Node getLocation() {
-		return null;
-	}
-
-	@Override
-	public boolean isInternalError() {
-		return true;
 	}
 }

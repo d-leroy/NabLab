@@ -13,7 +13,7 @@ import com.oracle.truffle.api.nodes.NodeCost;
 @GeneratedBy(NablaReadArgumentNode.class)
 public final class NablaReadArgumentNodeGen extends NablaReadArgumentNode {
 
-    @CompilationFinal private int state_;
+    @CompilationFinal private int state_0_;
 
     private NablaReadArgumentNodeGen(int index) {
         super(index);
@@ -25,8 +25,8 @@ public final class NablaReadArgumentNodeGen extends NablaReadArgumentNode {
 
     @Override
     public Object executeGeneric(VirtualFrame frameValue) {
-        int state = state_;
-        if (state != 0 /* is-active doBasic(VirtualFrame) */) {
+        int state_0 = state_0_;
+        if (state_0 != 0 /* is-state_0 doBasic(VirtualFrame) */) {
             assert (sizeSlots == null);
             return doBasic(frameValue);
         }
@@ -35,9 +35,9 @@ public final class NablaReadArgumentNodeGen extends NablaReadArgumentNode {
     }
 
     private Object executeAndSpecialize(VirtualFrame frameValue) {
-        int state = state_;
+        int state_0 = state_0_;
         if ((sizeSlots == null)) {
-            this.state_ = state = state | 0b1 /* add-active doBasic(VirtualFrame) */;
+            this.state_0_ = state_0 = state_0 | 0b1 /* add-state_0 doBasic(VirtualFrame) */;
             return doBasic(frameValue);
         }
         throw new UnsupportedSpecializationException(this, new Node[] {});
@@ -45,8 +45,8 @@ public final class NablaReadArgumentNodeGen extends NablaReadArgumentNode {
 
     @Override
     public NodeCost getCost() {
-        int state = state_;
-        if (state == 0b0) {
+        int state_0 = state_0_;
+        if (state_0 == 0) {
             return NodeCost.UNINITIALIZED;
         } else {
             return NodeCost.MONOMORPHIC;

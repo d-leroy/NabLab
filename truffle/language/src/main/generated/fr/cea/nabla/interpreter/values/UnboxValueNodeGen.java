@@ -14,7 +14,7 @@ import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
 public final class UnboxValueNodeGen extends UnboxValueNode {
 
     @Child private NablaExpressionNode value_;
-    @CompilationFinal private int state_;
+    @CompilationFinal private int state_0_;
 
     private UnboxValueNodeGen(NablaExpressionNode value) {
         this.value_ = value;
@@ -22,41 +22,41 @@ public final class UnboxValueNodeGen extends UnboxValueNode {
 
     @Override
     public Object execute(VirtualFrame frameValue) {
-        int state = state_;
+        int state_0 = state_0_;
         Object valueValue_ = this.value_.executeGeneric(frameValue);
-        if ((state & 0b1) != 0 /* is-active unbox(NV0Bool) */ && valueValue_ instanceof NV0Bool) {
+        if ((state_0 & 0b1) != 0 /* is-state_0 unbox(NV0Bool) */ && valueValue_ instanceof NV0Bool) {
             NV0Bool valueValue__ = (NV0Bool) valueValue_;
             return unbox(valueValue__);
         }
-        if ((state & 0b10) != 0 /* is-active unbox(NV1Bool) */ && valueValue_ instanceof NV1Bool) {
+        if ((state_0 & 0b10) != 0 /* is-state_0 unbox(NV1Bool) */ && valueValue_ instanceof NV1Bool) {
             NV1Bool valueValue__ = (NV1Bool) valueValue_;
             return unbox(valueValue__);
         }
-        if ((state & 0b100) != 0 /* is-active unbox(NV2Bool) */ && valueValue_ instanceof NV2Bool) {
+        if ((state_0 & 0b100) != 0 /* is-state_0 unbox(NV2Bool) */ && valueValue_ instanceof NV2Bool) {
             NV2Bool valueValue__ = (NV2Bool) valueValue_;
             return unbox(valueValue__);
         }
-        if ((state & 0b1000) != 0 /* is-active unbox(NV0Int) */ && valueValue_ instanceof NV0Int) {
+        if ((state_0 & 0b1000) != 0 /* is-state_0 unbox(NV0Int) */ && valueValue_ instanceof NV0Int) {
             NV0Int valueValue__ = (NV0Int) valueValue_;
             return unbox(valueValue__);
         }
-        if ((state & 0b10000) != 0 /* is-active unbox(NV1IntJava) */ && valueValue_ instanceof NV1IntJava) {
+        if ((state_0 & 0b10000) != 0 /* is-state_0 unbox(NV1IntJava) */ && valueValue_ instanceof NV1IntJava) {
             NV1IntJava valueValue__ = (NV1IntJava) valueValue_;
             return unbox(valueValue__);
         }
-        if ((state & 0b100000) != 0 /* is-active unbox(NV2Int) */ && valueValue_ instanceof NV2Int) {
+        if ((state_0 & 0b100000) != 0 /* is-state_0 unbox(NV2Int) */ && valueValue_ instanceof NV2Int) {
             NV2Int valueValue__ = (NV2Int) valueValue_;
             return unbox(valueValue__);
         }
-        if ((state & 0b1000000) != 0 /* is-active unbox(NV0Real) */ && valueValue_ instanceof NV0Real) {
+        if ((state_0 & 0b1000000) != 0 /* is-state_0 unbox(NV0Real) */ && valueValue_ instanceof NV0Real) {
             NV0Real valueValue__ = (NV0Real) valueValue_;
             return unbox(valueValue__);
         }
-        if ((state & 0b10000000) != 0 /* is-active unbox(NV1RealJava) */ && valueValue_ instanceof NV1RealJava) {
+        if ((state_0 & 0b10000000) != 0 /* is-state_0 unbox(NV1RealJava) */ && valueValue_ instanceof NV1RealJava) {
             NV1RealJava valueValue__ = (NV1RealJava) valueValue_;
             return unbox(valueValue__);
         }
-        if ((state & 0b100000000) != 0 /* is-active unbox(NV2Real) */ && valueValue_ instanceof NV2Real) {
+        if ((state_0 & 0b100000000) != 0 /* is-state_0 unbox(NV2Real) */ && valueValue_ instanceof NV2Real) {
             NV2Real valueValue__ = (NV2Real) valueValue_;
             return unbox(valueValue__);
         }
@@ -65,50 +65,50 @@ public final class UnboxValueNodeGen extends UnboxValueNode {
     }
 
     private Object executeAndSpecialize(Object valueValue) {
-        int state = state_;
+        int state_0 = state_0_;
         if (valueValue instanceof NV0Bool) {
             NV0Bool valueValue_ = (NV0Bool) valueValue;
-            this.state_ = state = state | 0b1 /* add-active unbox(NV0Bool) */;
+            this.state_0_ = state_0 = state_0 | 0b1 /* add-state_0 unbox(NV0Bool) */;
             return unbox(valueValue_);
         }
         if (valueValue instanceof NV1Bool) {
             NV1Bool valueValue_ = (NV1Bool) valueValue;
-            this.state_ = state = state | 0b10 /* add-active unbox(NV1Bool) */;
+            this.state_0_ = state_0 = state_0 | 0b10 /* add-state_0 unbox(NV1Bool) */;
             return unbox(valueValue_);
         }
         if (valueValue instanceof NV2Bool) {
             NV2Bool valueValue_ = (NV2Bool) valueValue;
-            this.state_ = state = state | 0b100 /* add-active unbox(NV2Bool) */;
+            this.state_0_ = state_0 = state_0 | 0b100 /* add-state_0 unbox(NV2Bool) */;
             return unbox(valueValue_);
         }
         if (valueValue instanceof NV0Int) {
             NV0Int valueValue_ = (NV0Int) valueValue;
-            this.state_ = state = state | 0b1000 /* add-active unbox(NV0Int) */;
+            this.state_0_ = state_0 = state_0 | 0b1000 /* add-state_0 unbox(NV0Int) */;
             return unbox(valueValue_);
         }
         if (valueValue instanceof NV1IntJava) {
             NV1IntJava valueValue_ = (NV1IntJava) valueValue;
-            this.state_ = state = state | 0b10000 /* add-active unbox(NV1IntJava) */;
+            this.state_0_ = state_0 = state_0 | 0b10000 /* add-state_0 unbox(NV1IntJava) */;
             return unbox(valueValue_);
         }
         if (valueValue instanceof NV2Int) {
             NV2Int valueValue_ = (NV2Int) valueValue;
-            this.state_ = state = state | 0b100000 /* add-active unbox(NV2Int) */;
+            this.state_0_ = state_0 = state_0 | 0b100000 /* add-state_0 unbox(NV2Int) */;
             return unbox(valueValue_);
         }
         if (valueValue instanceof NV0Real) {
             NV0Real valueValue_ = (NV0Real) valueValue;
-            this.state_ = state = state | 0b1000000 /* add-active unbox(NV0Real) */;
+            this.state_0_ = state_0 = state_0 | 0b1000000 /* add-state_0 unbox(NV0Real) */;
             return unbox(valueValue_);
         }
         if (valueValue instanceof NV1RealJava) {
             NV1RealJava valueValue_ = (NV1RealJava) valueValue;
-            this.state_ = state = state | 0b10000000 /* add-active unbox(NV1RealJava) */;
+            this.state_0_ = state_0 = state_0 | 0b10000000 /* add-state_0 unbox(NV1RealJava) */;
             return unbox(valueValue_);
         }
         if (valueValue instanceof NV2Real) {
             NV2Real valueValue_ = (NV2Real) valueValue;
-            this.state_ = state = state | 0b100000000 /* add-active unbox(NV2Real) */;
+            this.state_0_ = state_0 = state_0 | 0b100000000 /* add-state_0 unbox(NV2Real) */;
             return unbox(valueValue_);
         }
         throw new UnsupportedSpecializationException(this, new Node[] {this.value_}, valueValue);
@@ -116,11 +116,13 @@ public final class UnboxValueNodeGen extends UnboxValueNode {
 
     @Override
     public NodeCost getCost() {
-        int state = state_;
-        if (state == 0b0) {
+        int state_0 = state_0_;
+        if (state_0 == 0) {
             return NodeCost.UNINITIALIZED;
-        } else if ((state & (state - 1)) == 0 /* is-single-active  */) {
-            return NodeCost.MONOMORPHIC;
+        } else {
+            if ((state_0 & (state_0 - 1)) == 0 /* is-single-state_0  */) {
+                return NodeCost.MONOMORPHIC;
+            }
         }
         return NodeCost.POLYMORPHIC;
     }

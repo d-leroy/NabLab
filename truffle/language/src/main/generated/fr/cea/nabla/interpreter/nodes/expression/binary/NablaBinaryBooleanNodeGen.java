@@ -16,7 +16,7 @@ public final class NablaBinaryBooleanNodeGen extends NablaBinaryBooleanNode {
 
     @Child private NablaExpressionNode leftNode_;
     @Child private NablaExpressionNode rightNode_;
-    @CompilationFinal private int state_;
+    @CompilationFinal private int state_0_;
 
     private NablaBinaryBooleanNodeGen(BooleanOperator operator, NablaExpressionNode leftNode, NablaExpressionNode rightNode) {
         super(operator);
@@ -26,10 +26,10 @@ public final class NablaBinaryBooleanNodeGen extends NablaBinaryBooleanNode {
 
     @Override
     public Object executeGeneric(VirtualFrame frameValue) {
-        int state = state_;
+        int state_0 = state_0_;
         Object leftNodeValue_ = this.leftNode_.executeGeneric(frameValue);
         Object rightNodeValue_ = this.rightNode_.executeGeneric(frameValue);
-        if (state != 0 /* is-active and(NV0Bool, NV0Bool) */ && leftNodeValue_ instanceof NV0Bool) {
+        if (state_0 != 0 /* is-state_0 and(NV0Bool, NV0Bool) */ && leftNodeValue_ instanceof NV0Bool) {
             NV0Bool leftNodeValue__ = (NV0Bool) leftNodeValue_;
             if (rightNodeValue_ instanceof NV0Bool) {
                 NV0Bool rightNodeValue__ = (NV0Bool) rightNodeValue_;
@@ -41,12 +41,12 @@ public final class NablaBinaryBooleanNodeGen extends NablaBinaryBooleanNode {
     }
 
     private NV0Bool executeAndSpecialize(Object leftNodeValue, Object rightNodeValue) {
-        int state = state_;
+        int state_0 = state_0_;
         if (leftNodeValue instanceof NV0Bool) {
             NV0Bool leftNodeValue_ = (NV0Bool) leftNodeValue;
             if (rightNodeValue instanceof NV0Bool) {
                 NV0Bool rightNodeValue_ = (NV0Bool) rightNodeValue;
-                this.state_ = state = state | 0b1 /* add-active and(NV0Bool, NV0Bool) */;
+                this.state_0_ = state_0 = state_0 | 0b1 /* add-state_0 and(NV0Bool, NV0Bool) */;
                 return and(leftNodeValue_, rightNodeValue_);
             }
         }
@@ -55,8 +55,8 @@ public final class NablaBinaryBooleanNodeGen extends NablaBinaryBooleanNode {
 
     @Override
     public NodeCost getCost() {
-        int state = state_;
-        if (state == 0b0) {
+        int state_0 = state_0_;
+        if (state_0 == 0) {
             return NodeCost.UNINITIALIZED;
         } else {
             return NodeCost.MONOMORPHIC;

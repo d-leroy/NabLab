@@ -47,7 +47,7 @@ final class NablaFunctionGen {
         @GeneratedBy(NablaFunction.class)
         private static final class Cached extends InteropLibrary {
 
-            Cached() {
+            protected Cached() {
             }
 
             @Override
@@ -65,11 +65,11 @@ final class NablaFunctionGen {
         @GeneratedBy(NablaFunction.class)
         private static final class Uncached extends InteropLibrary {
 
-            Uncached() {
+            protected Uncached() {
             }
 
-            @TruffleBoundary
             @Override
+            @TruffleBoundary
             public boolean accepts(Object receiver) {
                 assert !(receiver instanceof NablaFunction) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof NablaFunction;

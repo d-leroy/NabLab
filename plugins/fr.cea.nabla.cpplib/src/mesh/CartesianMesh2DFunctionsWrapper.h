@@ -1,40 +1,45 @@
-/*******************************************************************************
- * Copyright (c) 2020 CEA
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0.
- *
- * SPDX-License-Identifier: EPL-2.0
- * Contributors: see AUTHORS file
- *******************************************************************************/
-#ifndef MESH_MESHGEOMETRY_H_
-#define MESH_MESHGEOMETRY_H_
+#include "mesh/CartesianMesh2DFactory.h"
+#include "mesh/CartesianMesh2D.h"
+#include "polyglot/polyglot.h"
 
-#include <vector>
-#include <algorithm>
-
-#include "mesh/NodeIdContainer.h"
-
-using namespace std;
-
-namespace nablalib
-{
-template<size_t N>
-class MeshGeometry
-{
+class CartesianMesh2DFunctionsWrapper {
 public:
-	MeshGeometry(const vector<RealArray1D<N>>& nodes, const vector<Edge>& edges, const vector<Quad>& quads)
-	  : m_nodes(nodes), m_edges(edges), m_quads(quads) { }
 
-	const vector<RealArray1D<N>>& getNodes() noexcept { return m_nodes; }
-	const vector<Edge>& getEdges() noexcept { return m_edges; }
-	const vector<Quad>& getQuads() noexcept { return m_quads; }
+	void* CartesianMesh2D_jsonInit(const void *value);
+
+	nablalib::MeshGeometry<2>* getGeometry(CartesianMesh2DFunctionsWrapper *receiver) noexcept;
+
+	int getMaxNbNodesOfCell(CartesianMesh2DFunctionsWrapper *receiver);
+	int getMaxNbNodesOfFace(CartesianMesh2DFunctionsWrapper *receiver);
+	int getMaxNbCellsOfNode(CartesianMesh2DFunctionsWrapper *receiver);
+	int getMaxNbCellsOfFace(CartesianMesh2DFunctionsWrapper *receiver);
+	int getMaxNbFacesOfCell(CartesianMesh2DFunctionsWrapper *receiver);
+	int getMaxNbNeighbourCells(CartesianMesh2DFunctionsWrapper *receiver);
+
+	size_t getNbNodes(CartesianMesh2DFunctionsWrapper *receiver) noexcept;
+	size_t getNbCells(CartesianMesh2DFunctionsWrapper *receiver) noexcept;
+
+	void* getFaces(CartesianMesh2DFunctionsWrapper *receiver) noexcept;
+	size_t getNbFaces(CartesianMesh2DFunctionsWrapper *receiver) noexcept;
+
+	vector<size_t> getNeighbourCells(CartesianMesh2DFunctionsWrapper *receiver,
+			const size_t &cellId);
+	const array<size_t, 2>& getNodesOfFace(CartesianMesh2DFunctionsWrapper *receiver,
+			const size_t &faceId) noexcept;
+	vector<size_t> getCellsOfFace(CartesianMesh2DFunctionsWrapper *receiver, const size_t &faceId);
+	const array<size_t, 4>& getNodesOfCell(CartesianMesh2DFunctionsWrapper *receiver,
+			const size_t &cellId) noexcept;
+	size_t getCommonFace(CartesianMesh2DFunctionsWrapper *receiver, const size_t &cellId1,
+			const size_t &cellId2);
+
+	nablalib::CartesianMesh2D *cartesianMesh2D;
 
 private:
-	vector<RealArray1D<N>> m_nodes;
-	vector<Edge> m_edges;
-	vector<Quad> m_quads;
+
+	const void* asPolyglotValue(const vector<size_t> v);
+
+	const void* asPolyglotValue(const array<size_t, 2> &v);
+
+	const void* asPolyglotValue(const array<size_t, 4> &v);
 };
 
-}
-#endif /* MESH_MESHGEOMETRY_H_ */

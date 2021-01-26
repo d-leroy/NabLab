@@ -17,7 +17,7 @@ import fr.cea.nabla.interpreter.values.NV0Real;
 public final class NablaBaseTypeConstantNodeGen extends NablaBaseTypeConstantNode {
 
     @Child private NablaExpressionNode value_;
-    @CompilationFinal private int state_;
+    @CompilationFinal private int state_0_;
 
     private NablaBaseTypeConstantNodeGen(NablaExpressionNode value) {
         this.value_ = value;
@@ -25,17 +25,17 @@ public final class NablaBaseTypeConstantNodeGen extends NablaBaseTypeConstantNod
 
     @Override
     public Object executeGeneric(VirtualFrame frameValue) {
-        int state = state_;
+        int state_0 = state_0_;
         Object valueValue_ = this.value_.executeGeneric(frameValue);
-        if ((state & 0b1) != 0 /* is-active get(VirtualFrame, NV0Bool) */ && valueValue_ instanceof NV0Bool) {
+        if ((state_0 & 0b1) != 0 /* is-state_0 get(VirtualFrame, NV0Bool) */ && valueValue_ instanceof NV0Bool) {
             NV0Bool valueValue__ = (NV0Bool) valueValue_;
             return get(frameValue, valueValue__);
         }
-        if ((state & 0b10) != 0 /* is-active get(VirtualFrame, NV0Int) */ && valueValue_ instanceof NV0Int) {
+        if ((state_0 & 0b10) != 0 /* is-state_0 get(VirtualFrame, NV0Int) */ && valueValue_ instanceof NV0Int) {
             NV0Int valueValue__ = (NV0Int) valueValue_;
             return get(frameValue, valueValue__);
         }
-        if ((state & 0b100) != 0 /* is-active get(VirtualFrame, NV0Real) */ && valueValue_ instanceof NV0Real) {
+        if ((state_0 & 0b100) != 0 /* is-state_0 get(VirtualFrame, NV0Real) */ && valueValue_ instanceof NV0Real) {
             NV0Real valueValue__ = (NV0Real) valueValue_;
             return get(frameValue, valueValue__);
         }
@@ -44,20 +44,20 @@ public final class NablaBaseTypeConstantNodeGen extends NablaBaseTypeConstantNod
     }
 
     private Object executeAndSpecialize(VirtualFrame frameValue, Object valueValue) {
-        int state = state_;
+        int state_0 = state_0_;
         if (valueValue instanceof NV0Bool) {
             NV0Bool valueValue_ = (NV0Bool) valueValue;
-            this.state_ = state = state | 0b1 /* add-active get(VirtualFrame, NV0Bool) */;
+            this.state_0_ = state_0 = state_0 | 0b1 /* add-state_0 get(VirtualFrame, NV0Bool) */;
             return get(frameValue, valueValue_);
         }
         if (valueValue instanceof NV0Int) {
             NV0Int valueValue_ = (NV0Int) valueValue;
-            this.state_ = state = state | 0b10 /* add-active get(VirtualFrame, NV0Int) */;
+            this.state_0_ = state_0 = state_0 | 0b10 /* add-state_0 get(VirtualFrame, NV0Int) */;
             return get(frameValue, valueValue_);
         }
         if (valueValue instanceof NV0Real) {
             NV0Real valueValue_ = (NV0Real) valueValue;
-            this.state_ = state = state | 0b100 /* add-active get(VirtualFrame, NV0Real) */;
+            this.state_0_ = state_0 = state_0 | 0b100 /* add-state_0 get(VirtualFrame, NV0Real) */;
             return get(frameValue, valueValue_);
         }
         throw new UnsupportedSpecializationException(this, new Node[] {this.value_}, valueValue);
@@ -65,11 +65,13 @@ public final class NablaBaseTypeConstantNodeGen extends NablaBaseTypeConstantNod
 
     @Override
     public NodeCost getCost() {
-        int state = state_;
-        if (state == 0b0) {
+        int state_0 = state_0_;
+        if (state_0 == 0) {
             return NodeCost.UNINITIALIZED;
-        } else if ((state & (state - 1)) == 0 /* is-single-active  */) {
-            return NodeCost.MONOMORPHIC;
+        } else {
+            if ((state_0 & (state_0 - 1)) == 0 /* is-single-state_0  */) {
+                return NodeCost.MONOMORPHIC;
+            }
         }
         return NodeCost.POLYMORPHIC;
     }

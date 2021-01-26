@@ -50,7 +50,7 @@ final class WriteDescriptorGen {
         @GeneratedBy(WriteDescriptor.class)
         private static final class Cached extends InteropLibrary {
 
-            Cached() {
+            protected Cached() {
             }
 
             @Override
@@ -92,11 +92,11 @@ final class WriteDescriptorGen {
         @GeneratedBy(WriteDescriptor.class)
         private static final class Uncached extends InteropLibrary {
 
-            Uncached() {
+            protected Uncached() {
             }
 
-            @TruffleBoundary
             @Override
+            @TruffleBoundary
             public boolean accepts(Object receiver) {
                 assert !(receiver instanceof WriteDescriptor) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof WriteDescriptor;
@@ -115,6 +115,7 @@ final class WriteDescriptorGen {
             @TruffleBoundary
             @Override
             public boolean hasMembers(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((WriteDescriptor) receiver) .hasMembers();
             }
@@ -122,6 +123,7 @@ final class WriteDescriptorGen {
             @TruffleBoundary
             @Override
             public boolean isMemberReadable(Object receiver, String member) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((WriteDescriptor) receiver) .isMemberReadable(member);
             }
@@ -129,6 +131,7 @@ final class WriteDescriptorGen {
             @TruffleBoundary
             @Override
             public Object getMembers(Object receiver, boolean includeInternal) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((WriteDescriptor) receiver) .getMembers(includeInternal);
             }
@@ -136,6 +139,7 @@ final class WriteDescriptorGen {
             @TruffleBoundary
             @Override
             public Object readMember(Object receiver, String member) throws UnsupportedMessageException, UnknownIdentifierException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((WriteDescriptor) receiver) .readMember(member);
             }

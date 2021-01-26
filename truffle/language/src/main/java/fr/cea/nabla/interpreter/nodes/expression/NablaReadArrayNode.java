@@ -1,5 +1,7 @@
 package fr.cea.nabla.interpreter.nodes.expression;
 
+import org.graalvm.polyglot.Value;
+
 import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
@@ -30,6 +32,14 @@ public abstract class NablaReadArrayNode extends NablaExpressionNode {
 	
 	public NablaReadArrayNode(NablaExpressionNode[] indices) {
 		this.indices = indices;
+	}
+	
+	// TODO handle more dimensions and real arrays
+	@Specialization(guards = { "indices.length == 1", "array.hasArrayElements()" })
+	protected NV0Real readNV1Real1Index(VirtualFrame frame, Value array) {
+		final int idx = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
+		final Value value = array.getArrayElement(idx);
+		return new NV0Real(value.asDouble());
 	}
 	
 	@Specialization(guards = { "indices.length == 1", "arrays.isArray(array)" }, limit = "3")
@@ -139,7 +149,4 @@ public abstract class NablaReadArrayNode extends NablaExpressionNode {
 		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
 		return new NV0Bool(array.getData()[idx1][idx2]);
 	}
-
-	
-	
 }

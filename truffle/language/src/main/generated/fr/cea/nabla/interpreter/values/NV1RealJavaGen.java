@@ -50,7 +50,7 @@ final class NV1RealJavaGen {
         @GeneratedBy(NV1RealJava.class)
         private static final class Cached extends InteropLibrary {
 
-            Cached() {
+            protected Cached() {
             }
 
             @Override
@@ -122,11 +122,11 @@ final class NV1RealJavaGen {
         @GeneratedBy(NV1RealJava.class)
         private static final class Uncached extends InteropLibrary {
 
-            Uncached() {
+            protected Uncached() {
             }
 
-            @TruffleBoundary
             @Override
+            @TruffleBoundary
             public boolean accepts(Object receiver) {
                 assert !(receiver instanceof NV1RealJava) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof NV1RealJava;
@@ -145,6 +145,7 @@ final class NV1RealJavaGen {
             @TruffleBoundary
             @Override
             public boolean hasArrayElements(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV1RealJava) receiver) .hasArrayElements();
             }
@@ -152,6 +153,7 @@ final class NV1RealJavaGen {
             @TruffleBoundary
             @Override
             public long getArraySize(Object receiver) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV1RealJava) receiver) .getArraySize();
             }
@@ -159,6 +161,7 @@ final class NV1RealJavaGen {
             @TruffleBoundary
             @Override
             public boolean isArrayElementReadable(Object receiver, long index) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV1RealJava) receiver) .isArrayElementReadable(index);
             }
@@ -166,6 +169,7 @@ final class NV1RealJavaGen {
             @TruffleBoundary
             @Override
             public Object readArrayElement(Object receiver, long index) throws UnsupportedMessageException, InvalidArrayIndexException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV1RealJava) receiver) .readArrayElement(index);
             }
@@ -173,6 +177,7 @@ final class NV1RealJavaGen {
             @TruffleBoundary
             @Override
             public boolean hasLanguage(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV1RealJava) receiver) .hasLanguage();
             }
@@ -180,6 +185,7 @@ final class NV1RealJavaGen {
             @TruffleBoundary
             @Override
             public Class<? extends TruffleLanguage<?>> getLanguage(Object receiver) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV1RealJava) receiver) .getLanguage();
             }
@@ -187,6 +193,7 @@ final class NV1RealJavaGen {
             @TruffleBoundary
             @Override
             public boolean hasMetaObject(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV1RealJava) receiver) .hasMetaObject();
             }
@@ -194,6 +201,7 @@ final class NV1RealJavaGen {
             @TruffleBoundary
             @Override
             public Object getMetaObject(Object receiver) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV1RealJava) receiver) .getMetaObject();
             }
@@ -201,6 +209,7 @@ final class NV1RealJavaGen {
             @TruffleBoundary
             @Override
             public Object toDisplayString(Object receiver, boolean allowSideEffects) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV1RealJava) receiver) .toDisplayString(allowSideEffects);
             }
@@ -233,7 +242,7 @@ final class NV1RealJavaGen {
         @GeneratedBy(NV1RealJava.class)
         private static final class Cached extends NV1RealLibrary {
 
-            Cached() {
+            protected Cached() {
             }
 
             @Override
@@ -269,11 +278,11 @@ final class NV1RealJavaGen {
         @GeneratedBy(NV1RealJava.class)
         private static final class Uncached extends NV1RealLibrary {
 
-            Uncached() {
+            protected Uncached() {
             }
 
-            @TruffleBoundary
             @Override
+            @TruffleBoundary
             public boolean accepts(Object receiver) {
                 assert !(receiver instanceof NV1RealJava) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof NV1RealJava;
@@ -292,6 +301,7 @@ final class NV1RealJavaGen {
             @TruffleBoundary
             @Override
             public boolean isArray(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV1RealJava) receiver) .isArray();
             }
@@ -299,6 +309,7 @@ final class NV1RealJavaGen {
             @TruffleBoundary
             @Override
             public double read(Object receiver, int index) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV1RealJava) receiver) .read(index);
             }
@@ -306,6 +317,7 @@ final class NV1RealJavaGen {
             @TruffleBoundary
             @Override
             public int length(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV1RealJava) receiver) .length();
             }

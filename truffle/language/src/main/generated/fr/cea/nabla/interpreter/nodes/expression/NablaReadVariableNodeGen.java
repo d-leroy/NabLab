@@ -15,7 +15,7 @@ import java.util.concurrent.locks.Lock;
 public final class NablaReadVariableNodeGen extends NablaReadVariableNode {
 
     @Child private GetFrameNode frameToRead_;
-    @CompilationFinal private int state_;
+    @CompilationFinal private int state_0_;
     @CompilationFinal private int exclude_;
 
     private NablaReadVariableNodeGen(String name, GetFrameNode frameToRead) {
@@ -29,10 +29,10 @@ public final class NablaReadVariableNodeGen extends NablaReadVariableNode {
 
     @Override
     public Object executeGeneric(VirtualFrame frameValue) {
-        int state = state_;
+        int state_0 = state_0_;
         Frame frameToReadValue_ = this.frameToRead_.execute(frameValue);
-        if (state != 0 /* is-active initialize(VirtualFrame, Frame) || doRead(VirtualFrame, Frame) */) {
-            if ((state & 0b1) != 0 /* is-active initialize(VirtualFrame, Frame) */) {
+        if (state_0 != 0 /* is-state_0 initialize(VirtualFrame, Frame) || doRead(VirtualFrame, Frame) */) {
+            if ((state_0 & 0b1) != 0 /* is-state_0 initialize(VirtualFrame, Frame) */) {
                 assert (slot == null);
                 try {
                     return initialize(frameValue, frameToReadValue_);
@@ -41,15 +41,15 @@ public final class NablaReadVariableNodeGen extends NablaReadVariableNode {
                     Lock lock = getLock();
                     lock.lock();
                     try {
-                        this.exclude_ = this.exclude_ | 0b1 /* add-excluded initialize(VirtualFrame, Frame) */;
-                        this.state_ = this.state_ & 0xfffffffe /* remove-active initialize(VirtualFrame, Frame) */;
+                        this.exclude_ = this.exclude_ | 0b1 /* add-exclude initialize(VirtualFrame, Frame) */;
+                        this.state_0_ = this.state_0_ & 0xfffffffe /* remove-state_0 initialize(VirtualFrame, Frame) */;
                     } finally {
                         lock.unlock();
                     }
                     return executeAndSpecialize(frameValue, frameToReadValue_);
                 }
             }
-            if ((state & 0b10) != 0 /* is-active doRead(VirtualFrame, Frame) */) {
+            if ((state_0 & 0b10) != 0 /* is-state_0 doRead(VirtualFrame, Frame) */) {
                 return doRead(frameValue, frameToReadValue_);
             }
         }
@@ -61,12 +61,12 @@ public final class NablaReadVariableNodeGen extends NablaReadVariableNode {
         Lock lock = getLock();
         boolean hasLock = true;
         lock.lock();
-        int state = state_;
+        int state_0 = state_0_;
         int exclude = exclude_;
         try {
-            if ((exclude) == 0 /* is-not-excluded initialize(VirtualFrame, Frame) */) {
+            if ((exclude) == 0 /* is-not-exclude initialize(VirtualFrame, Frame) */) {
                 if ((slot == null)) {
-                    this.state_ = state = state | 0b1 /* add-active initialize(VirtualFrame, Frame) */;
+                    this.state_0_ = state_0 = state_0 | 0b1 /* add-state_0 initialize(VirtualFrame, Frame) */;
                     try {
                         lock.unlock();
                         hasLock = false;
@@ -75,8 +75,8 @@ public final class NablaReadVariableNodeGen extends NablaReadVariableNode {
                         CompilerDirectives.transferToInterpreterAndInvalidate();
                         lock.lock();
                         try {
-                            this.exclude_ = this.exclude_ | 0b1 /* add-excluded initialize(VirtualFrame, Frame) */;
-                            this.state_ = this.state_ & 0xfffffffe /* remove-active initialize(VirtualFrame, Frame) */;
+                            this.exclude_ = this.exclude_ | 0b1 /* add-exclude initialize(VirtualFrame, Frame) */;
+                            this.state_0_ = this.state_0_ & 0xfffffffe /* remove-state_0 initialize(VirtualFrame, Frame) */;
                         } finally {
                             lock.unlock();
                         }
@@ -84,7 +84,7 @@ public final class NablaReadVariableNodeGen extends NablaReadVariableNode {
                     }
                 }
             }
-            this.state_ = state = state | 0b10 /* add-active doRead(VirtualFrame, Frame) */;
+            this.state_0_ = state_0 = state_0 | 0b10 /* add-state_0 doRead(VirtualFrame, Frame) */;
             lock.unlock();
             hasLock = false;
             return doRead(frameValue, frameToReadValue);
@@ -97,11 +97,13 @@ public final class NablaReadVariableNodeGen extends NablaReadVariableNode {
 
     @Override
     public NodeCost getCost() {
-        int state = state_;
-        if (state == 0b0) {
+        int state_0 = state_0_;
+        if (state_0 == 0) {
             return NodeCost.UNINITIALIZED;
-        } else if ((state & (state - 1)) == 0 /* is-single-active  */) {
-            return NodeCost.MONOMORPHIC;
+        } else {
+            if ((state_0 & (state_0 - 1)) == 0 /* is-single-state_0  */) {
+                return NodeCost.MONOMORPHIC;
+            }
         }
         return NodeCost.POLYMORPHIC;
     }

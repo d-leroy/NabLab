@@ -24,7 +24,7 @@ public final class NablaTimeLoopJobRepeatingNodeGen extends NablaTimeLoopJobRepe
     @Child private GetFrameNode frameToWrite_;
     @Child private NablaJobBlockNode innerJobBlock_;
     @Child private NablaExpressionNode conditionNode_;
-    @CompilationFinal private int state_;
+    @CompilationFinal private int state_0_;
 
     private NablaTimeLoopJobRepeatingNodeGen(List<FrameSlot[]> copies, NablaWriteVariableNode indexUpdate, GetFrameNode frameToWrite, NablaJobBlockNode innerJobBlock, NablaExpressionNode conditionNode) {
         super(copies);
@@ -43,12 +43,12 @@ public final class NablaTimeLoopJobRepeatingNodeGen extends NablaTimeLoopJobRepe
 
     @Override
     public boolean executeRepeating(VirtualFrame frameValue) {
-        int state = state_;
+        int state_0 = state_0_;
         Object indexUpdateValue_ = this.indexUpdate_.executeGeneric(frameValue);
         Frame frameToWriteValue_ = this.frameToWrite_.execute(frameValue);
         Object innerJobBlockValue_ = this.innerJobBlock_.executeGeneric(frameValue);
         Object conditionNodeValue_ = this.conditionNode_.executeGeneric(frameValue);
-        if (state != 0 /* is-active doLoop(VirtualFrame, NV0Int, Frame, Object, NV0Bool) */ && indexUpdateValue_ instanceof NV0Int) {
+        if (state_0 != 0 /* is-state_0 doLoop(VirtualFrame, NV0Int, Frame, Object, NV0Bool) */ && indexUpdateValue_ instanceof NV0Int) {
             NV0Int indexUpdateValue__ = (NV0Int) indexUpdateValue_;
             if (conditionNodeValue_ instanceof NV0Bool) {
                 NV0Bool conditionNodeValue__ = (NV0Bool) conditionNodeValue_;
@@ -60,12 +60,12 @@ public final class NablaTimeLoopJobRepeatingNodeGen extends NablaTimeLoopJobRepe
     }
 
     private boolean executeAndSpecialize(VirtualFrame frameValue, Object indexUpdateValue, Frame frameToWriteValue, Object innerJobBlockValue, Object conditionNodeValue) {
-        int state = state_;
+        int state_0 = state_0_;
         if (indexUpdateValue instanceof NV0Int) {
             NV0Int indexUpdateValue_ = (NV0Int) indexUpdateValue;
             if (conditionNodeValue instanceof NV0Bool) {
                 NV0Bool conditionNodeValue_ = (NV0Bool) conditionNodeValue;
-                this.state_ = state = state | 0b1 /* add-active doLoop(VirtualFrame, NV0Int, Frame, Object, NV0Bool) */;
+                this.state_0_ = state_0 = state_0 | 0b1 /* add-state_0 doLoop(VirtualFrame, NV0Int, Frame, Object, NV0Bool) */;
                 return doLoop(frameValue, indexUpdateValue_, frameToWriteValue, innerJobBlockValue, conditionNodeValue_);
             }
         }
@@ -74,8 +74,8 @@ public final class NablaTimeLoopJobRepeatingNodeGen extends NablaTimeLoopJobRepe
 
     @Override
     public NodeCost getCost() {
-        int state = state_;
-        if (state == 0b0) {
+        int state_0 = state_0_;
+        if (state_0 == 0) {
             return NodeCost.UNINITIALIZED;
         } else {
             return NodeCost.MONOMORPHIC;

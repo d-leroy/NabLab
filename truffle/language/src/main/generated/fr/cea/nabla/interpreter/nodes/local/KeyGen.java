@@ -4,50 +4,50 @@ package fr.cea.nabla.interpreter.nodes.local;
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.interop.InteropLibrary;
-import com.oracle.truffle.api.interop.InvalidArrayIndexException;
 import com.oracle.truffle.api.interop.UnsupportedMessageException;
 import com.oracle.truffle.api.library.DynamicDispatchLibrary;
 import com.oracle.truffle.api.library.LibraryExport;
 import com.oracle.truffle.api.library.LibraryFactory;
 import com.oracle.truffle.api.nodes.NodeCost;
-import fr.cea.nabla.interpreter.nodes.local.NablaScopedNode.KeysArray;
+import com.oracle.truffle.api.source.SourceSection;
+import fr.cea.nabla.interpreter.nodes.local.NablaScopedNode.Key;
 
-@GeneratedBy(KeysArray.class)
-final class KeysArrayGen {
+@GeneratedBy(Key.class)
+final class KeyGen {
 
     private static final LibraryFactory<DynamicDispatchLibrary> DYNAMIC_DISPATCH_LIBRARY_ = LibraryFactory.resolve(DynamicDispatchLibrary.class);
 
     static  {
-        LibraryExport.register(KeysArray.class, new InteropLibraryExports());
+        LibraryExport.register(Key.class, new InteropLibraryExports());
     }
 
-    private KeysArrayGen() {
+    private KeyGen() {
     }
 
-    @GeneratedBy(KeysArray.class)
+    @GeneratedBy(Key.class)
     private static final class InteropLibraryExports extends LibraryExport<InteropLibrary> {
 
         private static final Uncached UNCACHED = new Uncached();
         private static final Cached CACHE = new Cached();
 
         private InteropLibraryExports() {
-            super(InteropLibrary.class, KeysArray.class, false);
+            super(InteropLibrary.class, Key.class, false);
         }
 
         @Override
         protected InteropLibrary createUncached(Object receiver) {
-            assert receiver instanceof KeysArray;
+            assert receiver instanceof Key;
             InteropLibrary uncached = InteropLibraryExports.UNCACHED;
             return uncached;
         }
 
         @Override
         protected InteropLibrary createCached(Object receiver) {
-            assert receiver instanceof KeysArray;
+            assert receiver instanceof Key;
             return InteropLibraryExports.CACHE;
         }
 
-        @GeneratedBy(KeysArray.class)
+        @GeneratedBy(Key.class)
         private static final class Cached extends InteropLibrary {
 
             protected Cached() {
@@ -55,8 +55,8 @@ final class KeysArrayGen {
 
             @Override
             public boolean accepts(Object receiver) {
-                assert !(receiver instanceof KeysArray) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
-                return receiver instanceof KeysArray;
+                assert !(receiver instanceof Key) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
+                return receiver instanceof Key;
             }
 
             @Override
@@ -65,31 +65,31 @@ final class KeysArrayGen {
             }
 
             @Override
-            public boolean hasArrayElements(Object receiver) {
+            public boolean isString(Object receiver) {
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
-                return (((KeysArray) receiver)).hasArrayElements();
+                return (((Key) receiver)).isString();
             }
 
             @Override
-            public long getArraySize(Object receiver) throws UnsupportedMessageException {
+            public String asString(Object receiver) throws UnsupportedMessageException {
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
-                return (((KeysArray) receiver)).getArraySize();
+                return (((Key) receiver)).asString();
             }
 
             @Override
-            public boolean isArrayElementReadable(Object receiver, long index) {
+            public boolean hasSourceLocation(Object receiver) {
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
-                return (((KeysArray) receiver)).isArrayElementReadable(index);
+                return (((Key) receiver)).hasSourceLocation();
             }
 
             @Override
-            public Object readArrayElement(Object receiver, long index) throws UnsupportedMessageException, InvalidArrayIndexException {
+            public SourceSection getSourceLocation(Object receiver) throws UnsupportedMessageException {
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
-                return (((KeysArray) receiver)).readArrayElement(index);
+                return (((Key) receiver)).getSourceLocation();
             }
 
         }
-        @GeneratedBy(KeysArray.class)
+        @GeneratedBy(Key.class)
         private static final class Uncached extends InteropLibrary {
 
             protected Uncached() {
@@ -98,8 +98,8 @@ final class KeysArrayGen {
             @Override
             @TruffleBoundary
             public boolean accepts(Object receiver) {
-                assert !(receiver instanceof KeysArray) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
-                return receiver instanceof KeysArray;
+                assert !(receiver instanceof Key) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
+                return receiver instanceof Key;
             }
 
             @Override
@@ -114,34 +114,34 @@ final class KeysArrayGen {
 
             @TruffleBoundary
             @Override
-            public boolean hasArrayElements(Object receiver) {
+            public boolean isString(Object receiver) {
                 // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
-                return ((KeysArray) receiver) .hasArrayElements();
+                return ((Key) receiver) .isString();
             }
 
             @TruffleBoundary
             @Override
-            public long getArraySize(Object receiver) throws UnsupportedMessageException {
+            public String asString(Object receiver) throws UnsupportedMessageException {
                 // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
-                return ((KeysArray) receiver) .getArraySize();
+                return ((Key) receiver) .asString();
             }
 
             @TruffleBoundary
             @Override
-            public boolean isArrayElementReadable(Object receiver, long index) {
+            public boolean hasSourceLocation(Object receiver) {
                 // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
-                return ((KeysArray) receiver) .isArrayElementReadable(index);
+                return ((Key) receiver) .hasSourceLocation();
             }
 
             @TruffleBoundary
             @Override
-            public Object readArrayElement(Object receiver, long index) throws UnsupportedMessageException, InvalidArrayIndexException {
+            public SourceSection getSourceLocation(Object receiver) throws UnsupportedMessageException {
                 // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
-                return ((KeysArray) receiver) .readArrayElement(index);
+                return ((Key) receiver) .getSourceLocation();
             }
 
         }

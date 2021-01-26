@@ -12,7 +12,6 @@ import com.oracle.truffle.api.instrumentation.GenerateWrapper;
 import com.oracle.truffle.api.instrumentation.ProbeNode;
 
 import fr.cea.nabla.interpreter.runtime.NablaInitializationPerformedException;
-import fr.cea.nabla.interpreter.runtime.NablaInternalError;
 import fr.cea.nabla.interpreter.utils.GetFrameNode;
 
 @GenerateWrapper

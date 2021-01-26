@@ -19,7 +19,7 @@ import org.graalvm.polyglot.Value;
 @SuppressWarnings("unused")
 public final class NablaMeshCallNodeGen extends NablaMeshCallNode {
 
-    @CompilationFinal private volatile int state_;
+    @CompilationFinal private volatile int state_0_;
     @CompilationFinal private ContextReference<NablaContext> nablaLanguageContextReference_;
     @CompilationFinal private CachedData cached_cache;
 
@@ -29,8 +29,8 @@ public final class NablaMeshCallNodeGen extends NablaMeshCallNode {
 
     @Override
     public Object executeGeneric(VirtualFrame frameValue) {
-        int state = state_;
-        if (state != 0 /* is-active doCached(VirtualFrame, Value, NablaContext, Value, Assumption) */) {
+        int state_0 = state_0_;
+        if (state_0 != 0 /* is-state_0 doCached(VirtualFrame, Value, NablaContext, Value, Assumption) */) {
             CachedData s1_ = this.cached_cache;
             if (s1_ != null) {
                 if (!Assumption.isValidAssumption(s1_.assumption0_)) {
@@ -53,7 +53,7 @@ public final class NablaMeshCallNodeGen extends NablaMeshCallNode {
         Lock lock = getLock();
         boolean hasLock = true;
         lock.lock();
-        int state = state_;
+        int state_0 = state_0_;
         try {
             {
                 NablaContext context__ = null;
@@ -72,7 +72,7 @@ public final class NablaMeshCallNodeGen extends NablaMeshCallNode {
                         s1_.contextActive_ = contextActive__;
                         s1_.assumption0_ = assumption0;
                         this.cached_cache = s1_;
-                        this.state_ = state = state | 0b1 /* add-active doCached(VirtualFrame, Value, NablaContext, Value, Assumption) */;
+                        this.state_0_ = state_0 = state_0 | 0b1 /* add-state_0 doCached(VirtualFrame, Value, NablaContext, Value, Assumption) */;
                         lock.unlock();
                         hasLock = false;
                         return doCached(frameValue, s1_.member_, context__, s1_.meshWrapper_, contextActive__);
@@ -89,8 +89,8 @@ public final class NablaMeshCallNodeGen extends NablaMeshCallNode {
 
     @Override
     public NodeCost getCost() {
-        int state = state_;
-        if (state == 0b0) {
+        int state_0 = state_0_;
+        if (state_0 == 0) {
             return NodeCost.UNINITIALIZED;
         } else {
             return NodeCost.MONOMORPHIC;
@@ -101,7 +101,7 @@ public final class NablaMeshCallNodeGen extends NablaMeshCallNode {
         Lock lock = getLock();
         lock.lock();
         try {
-            this.state_ = this.state_ & 0xfffffffe /* remove-active doCached(VirtualFrame, Value, NablaContext, Value, Assumption) */;
+            this.state_0_ = this.state_0_ & 0xfffffffe /* remove-state_0 doCached(VirtualFrame, Value, NablaContext, Value, Assumption) */;
             this.cached_cache = null;
         } finally {
             lock.unlock();

@@ -23,7 +23,7 @@ public final class NablaLoopNodeGen extends NablaLoopNode {
     private static final LibraryFactory<NV1IntLibrary> N_V1_INT_LIBRARY_ = LibraryFactory.resolve(NV1IntLibrary.class);
 
     @Child private NablaExpressionNode count_;
-    @CompilationFinal private volatile int state_;
+    @CompilationFinal private volatile int state_0_;
     @CompilationFinal private volatile int exclude_;
     @CompilationFinal private Loop0Data loop0_cache;
     @Child private Loop2Data loop2_cache;
@@ -38,11 +38,11 @@ public final class NablaLoopNodeGen extends NablaLoopNode {
     @ExplodeLoop
     @Override
     public Object executeGeneric(VirtualFrame frameValue) {
-        int state = state_;
+        int state_0 = state_0_;
         Object countValue_ = this.count_.executeGeneric(frameValue);
-        if ((state & 0b11) != 0 /* is-active doLoop(VirtualFrame, NV0Int, int) || doLoop(VirtualFrame, NV0Int) */ && countValue_ instanceof NV0Int) {
+        if ((state_0 & 0b11) != 0 /* is-state_0 doLoop(VirtualFrame, NV0Int, int) || doLoop(VirtualFrame, NV0Int) */ && countValue_ instanceof NV0Int) {
             NV0Int countValue__ = (NV0Int) countValue_;
-            if ((state & 0b1) != 0 /* is-active doLoop(VirtualFrame, NV0Int, int) */) {
+            if ((state_0 & 0b1) != 0 /* is-state_0 doLoop(VirtualFrame, NV0Int, int) */) {
                 Loop0Data s1_ = this.loop0_cache;
                 while (s1_ != null) {
                     if ((countValue__.getData() == s1_.cachedCount_)) {
@@ -51,12 +51,12 @@ public final class NablaLoopNodeGen extends NablaLoopNode {
                     s1_ = s1_.next_;
                 }
             }
-            if ((state & 0b10) != 0 /* is-active doLoop(VirtualFrame, NV0Int) */) {
+            if ((state_0 & 0b10) != 0 /* is-state_0 doLoop(VirtualFrame, NV0Int) */) {
                 return doLoop(frameValue, countValue__);
             }
         }
-        if ((state & 0b111100) != 0 /* is-active doLoop(VirtualFrame, Object, NV1IntLibrary, int) || doLoop(VirtualFrame, Object, NV1IntLibrary, int) || doLoop(VirtualFrame, Object, NV1IntLibrary) || doLoop(VirtualFrame, Object, NV1IntLibrary) */) {
-            if ((state & 0b100) != 0 /* is-active doLoop(VirtualFrame, Object, NV1IntLibrary, int) */) {
+        if ((state_0 & 0b111100) != 0 /* is-state_0 doLoop(VirtualFrame, Object, NV1IntLibrary, int) || doLoop(VirtualFrame, Object, NV1IntLibrary, int) || doLoop(VirtualFrame, Object, NV1IntLibrary) || doLoop(VirtualFrame, Object, NV1IntLibrary) */) {
+            if ((state_0 & 0b100) != 0 /* is-state_0 doLoop(VirtualFrame, Object, NV1IntLibrary, int) */) {
                 Loop2Data s3_ = this.loop2_cache;
                 while (s3_ != null) {
                     if ((s3_.arrays_.accepts(countValue_)) && (s3_.arrays_.isArray(countValue_)) && (s3_.arrays_.length(countValue_) == s3_.cachedCount_)) {
@@ -65,7 +65,7 @@ public final class NablaLoopNodeGen extends NablaLoopNode {
                     s3_ = s3_.next_;
                 }
             }
-            if ((state & 0b1000) != 0 /* is-active doLoop(VirtualFrame, Object, NV1IntLibrary, int) */) {
+            if ((state_0 & 0b1000) != 0 /* is-state_0 doLoop(VirtualFrame, Object, NV1IntLibrary, int) */) {
                 NV1IntLibrary arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                 if ((arrays__.isArray(countValue_))) {
                     Loop3Data s4_ = this.loop3_cache;
@@ -83,7 +83,7 @@ public final class NablaLoopNodeGen extends NablaLoopNode {
                     }
                 }
             }
-            if ((state & 0b10000) != 0 /* is-active doLoop(VirtualFrame, Object, NV1IntLibrary) */) {
+            if ((state_0 & 0b10000) != 0 /* is-state_0 doLoop(VirtualFrame, Object, NV1IntLibrary) */) {
                 Loop4Data s5_ = this.loop4_cache;
                 while (s5_ != null) {
                     if ((s5_.arrays_.accepts(countValue_)) && (s5_.arrays_.isArray(countValue_))) {
@@ -92,7 +92,7 @@ public final class NablaLoopNodeGen extends NablaLoopNode {
                     s5_ = s5_.next_;
                 }
             }
-            if ((state & 0b100000) != 0 /* is-active doLoop(VirtualFrame, Object, NV1IntLibrary) */) {
+            if ((state_0 & 0b100000) != 0 /* is-state_0 doLoop(VirtualFrame, Object, NV1IntLibrary) */) {
                 EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
                 Node prev_ = encapsulating_.set(this);
                 try {
@@ -115,14 +115,14 @@ public final class NablaLoopNodeGen extends NablaLoopNode {
         Lock lock = getLock();
         boolean hasLock = true;
         lock.lock();
-        int state = state_;
+        int state_0 = state_0_;
         int exclude = exclude_;
         try {
             if (countValue instanceof NV0Int) {
                 NV0Int countValue_ = (NV0Int) countValue;
                 int count1_ = 0;
                 Loop0Data s1_ = this.loop0_cache;
-                if ((state & 0b1) != 0 /* is-active doLoop(VirtualFrame, NV0Int, int) */) {
+                if ((state_0 & 0b1) != 0 /* is-state_0 doLoop(VirtualFrame, NV0Int, int) */) {
                     while (s1_ != null) {
                         if ((countValue_.getData() == s1_.cachedCount_)) {
                             break;
@@ -138,7 +138,7 @@ public final class NablaLoopNodeGen extends NablaLoopNode {
                             s1_ = new Loop0Data(loop0_cache);
                             s1_.cachedCount_ = cachedCount__;
                             this.loop0_cache = s1_;
-                            this.state_ = state = state | 0b1 /* add-active doLoop(VirtualFrame, NV0Int, int) */;
+                            this.state_0_ = state_0 = state_0 | 0b1 /* add-state_0 doLoop(VirtualFrame, NV0Int, int) */;
                         }
                     }
                 }
@@ -147,15 +147,15 @@ public final class NablaLoopNodeGen extends NablaLoopNode {
                     hasLock = false;
                     return doLoop(frameValue, countValue_, s1_.cachedCount_);
                 }
-                this.state_ = state = state | 0b10 /* add-active doLoop(VirtualFrame, NV0Int) */;
+                this.state_0_ = state_0 = state_0 | 0b10 /* add-state_0 doLoop(VirtualFrame, NV0Int) */;
                 lock.unlock();
                 hasLock = false;
                 return doLoop(frameValue, countValue_);
             }
-            if (((exclude & 0b1)) == 0 /* is-not-excluded doLoop(VirtualFrame, Object, NV1IntLibrary, int) */) {
+            if (((exclude & 0b1)) == 0 /* is-not-exclude doLoop(VirtualFrame, Object, NV1IntLibrary, int) */) {
                 int count3_ = 0;
                 Loop2Data s3_ = this.loop2_cache;
-                if ((state & 0b100) != 0 /* is-active doLoop(VirtualFrame, Object, NV1IntLibrary, int) */) {
+                if ((state_0 & 0b100) != 0 /* is-state_0 doLoop(VirtualFrame, Object, NV1IntLibrary, int) */) {
                     while (s3_ != null) {
                         if ((s3_.arrays_.accepts(countValue)) && (s3_.arrays_.isArray(countValue)) && (s3_.arrays_.length(countValue) == s3_.cachedCount_)) {
                             break;
@@ -175,7 +175,7 @@ public final class NablaLoopNodeGen extends NablaLoopNode {
                                 s3_.arrays_ = s3_.insertAccessor(arrays__);
                                 s3_.cachedCount_ = cachedCount__1;
                                 this.loop2_cache = s3_;
-                                this.state_ = state = state | 0b100 /* add-active doLoop(VirtualFrame, Object, NV1IntLibrary, int) */;
+                                this.state_0_ = state_0 = state_0 | 0b100 /* add-state_0 doLoop(VirtualFrame, Object, NV1IntLibrary, int) */;
                             }
                         }
                     }
@@ -196,7 +196,7 @@ public final class NablaLoopNodeGen extends NablaLoopNode {
                         try {
                             int count4_ = 0;
                             Loop3Data s4_ = this.loop3_cache;
-                            if ((state & 0b1000) != 0 /* is-active doLoop(VirtualFrame, Object, NV1IntLibrary, int) */) {
+                            if ((state_0 & 0b1000) != 0 /* is-state_0 doLoop(VirtualFrame, Object, NV1IntLibrary, int) */) {
                                 while (s4_ != null) {
                                     if ((arrays__.length(countValue) == s4_.cachedCount_)) {
                                         break;
@@ -212,10 +212,10 @@ public final class NablaLoopNodeGen extends NablaLoopNode {
                                         s4_ = super.insert(new Loop3Data(loop3_cache));
                                         s4_.cachedCount_ = cachedCount__1;
                                         this.loop3_cache = s4_;
-                                        this.exclude_ = exclude = exclude | 0b1 /* add-excluded doLoop(VirtualFrame, Object, NV1IntLibrary, int) */;
+                                        this.exclude_ = exclude = exclude | 0b1 /* add-exclude doLoop(VirtualFrame, Object, NV1IntLibrary, int) */;
                                         this.loop2_cache = null;
-                                        state = state & 0xfffffffb /* remove-active doLoop(VirtualFrame, Object, NV1IntLibrary, int) */;
-                                        this.state_ = state = state | 0b1000 /* add-active doLoop(VirtualFrame, Object, NV1IntLibrary, int) */;
+                                        state_0 = state_0 & 0xfffffffb /* remove-state_0 doLoop(VirtualFrame, Object, NV1IntLibrary, int) */;
+                                        this.state_0_ = state_0 = state_0 | 0b1000 /* add-state_0 doLoop(VirtualFrame, Object, NV1IntLibrary, int) */;
                                     }
                                 }
                             }
@@ -230,10 +230,10 @@ public final class NablaLoopNodeGen extends NablaLoopNode {
                     }
                 }
             }
-            if (((exclude & 0b10)) == 0 /* is-not-excluded doLoop(VirtualFrame, Object, NV1IntLibrary) */) {
+            if (((exclude & 0b10)) == 0 /* is-not-exclude doLoop(VirtualFrame, Object, NV1IntLibrary) */) {
                 int count5_ = 0;
                 Loop4Data s5_ = this.loop4_cache;
-                if ((state & 0b10000) != 0 /* is-active doLoop(VirtualFrame, Object, NV1IntLibrary) */) {
+                if ((state_0 & 0b10000) != 0 /* is-state_0 doLoop(VirtualFrame, Object, NV1IntLibrary) */) {
                     while (s5_ != null) {
                         if ((s5_.arrays_.accepts(countValue)) && (s5_.arrays_.isArray(countValue))) {
                             break;
@@ -250,7 +250,7 @@ public final class NablaLoopNodeGen extends NablaLoopNode {
                             s5_ = super.insert(new Loop4Data(loop4_cache));
                             s5_.arrays_ = s5_.insertAccessor(arrays__1);
                             this.loop4_cache = s5_;
-                            this.state_ = state = state | 0b10000 /* add-active doLoop(VirtualFrame, Object, NV1IntLibrary) */;
+                            this.state_0_ = state_0 = state_0 | 0b10000 /* add-state_0 doLoop(VirtualFrame, Object, NV1IntLibrary) */;
                         }
                     }
                 }
@@ -269,10 +269,10 @@ public final class NablaLoopNodeGen extends NablaLoopNode {
                         {
                             loop5_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                             if ((loop5_arrays__.isArray(countValue))) {
-                                this.exclude_ = exclude = exclude | 0b10 /* add-excluded doLoop(VirtualFrame, Object, NV1IntLibrary) */;
+                                this.exclude_ = exclude = exclude | 0b10 /* add-exclude doLoop(VirtualFrame, Object, NV1IntLibrary) */;
                                 this.loop4_cache = null;
-                                state = state & 0xffffffef /* remove-active doLoop(VirtualFrame, Object, NV1IntLibrary) */;
-                                this.state_ = state = state | 0b100000 /* add-active doLoop(VirtualFrame, Object, NV1IntLibrary) */;
+                                state_0 = state_0 & 0xffffffef /* remove-state_0 doLoop(VirtualFrame, Object, NV1IntLibrary) */;
+                                this.state_0_ = state_0 = state_0 | 0b100000 /* add-state_0 doLoop(VirtualFrame, Object, NV1IntLibrary) */;
                                 lock.unlock();
                                 hasLock = false;
                                 return doLoop(frameValue, countValue, loop5_arrays__);
@@ -293,16 +293,18 @@ public final class NablaLoopNodeGen extends NablaLoopNode {
 
     @Override
     public NodeCost getCost() {
-        int state = state_;
-        if (state == 0b0) {
+        int state_0 = state_0_;
+        if (state_0 == 0) {
             return NodeCost.UNINITIALIZED;
-        } else if ((state & (state - 1)) == 0 /* is-single-active  */) {
-            Loop0Data s1_ = this.loop0_cache;
-            Loop2Data s3_ = this.loop2_cache;
-            Loop3Data s4_ = this.loop3_cache;
-            Loop4Data s5_ = this.loop4_cache;
-            if ((s1_ == null || s1_.next_ == null) && (s3_ == null || s3_.next_ == null) && (s4_ == null || s4_.next_ == null) && (s5_ == null || s5_.next_ == null)) {
-                return NodeCost.MONOMORPHIC;
+        } else {
+            if ((state_0 & (state_0 - 1)) == 0 /* is-single-state_0  */) {
+                Loop0Data s1_ = this.loop0_cache;
+                Loop2Data s3_ = this.loop2_cache;
+                Loop3Data s4_ = this.loop3_cache;
+                Loop4Data s5_ = this.loop4_cache;
+                if ((s1_ == null || s1_.next_ == null) && (s3_ == null || s3_.next_ == null) && (s4_ == null || s4_.next_ == null) && (s5_ == null || s5_.next_ == null)) {
+                    return NodeCost.MONOMORPHIC;
+                }
             }
         }
         return NodeCost.POLYMORPHIC;

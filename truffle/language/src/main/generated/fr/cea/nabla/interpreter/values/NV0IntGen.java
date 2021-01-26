@@ -49,7 +49,7 @@ final class NV0IntGen {
         @GeneratedBy(NV0Int.class)
         private static final class Cached extends InteropLibrary {
 
-            Cached() {
+            protected Cached() {
             }
 
             @Override
@@ -175,11 +175,11 @@ final class NV0IntGen {
         @GeneratedBy(NV0Int.class)
         private static final class Uncached extends InteropLibrary {
 
-            Uncached() {
+            protected Uncached() {
             }
 
-            @TruffleBoundary
             @Override
+            @TruffleBoundary
             public boolean accepts(Object receiver) {
                 assert !(receiver instanceof NV0Int) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof NV0Int;
@@ -198,6 +198,7 @@ final class NV0IntGen {
             @TruffleBoundary
             @Override
             public boolean isNumber(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV0Int) receiver) .isNumber();
             }
@@ -205,6 +206,7 @@ final class NV0IntGen {
             @TruffleBoundary
             @Override
             public boolean fitsInByte(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV0Int) receiver) .fitsInByte();
             }
@@ -212,6 +214,7 @@ final class NV0IntGen {
             @TruffleBoundary
             @Override
             public boolean fitsInShort(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV0Int) receiver) .fitsInShort();
             }
@@ -219,6 +222,7 @@ final class NV0IntGen {
             @TruffleBoundary
             @Override
             public boolean fitsInFloat(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV0Int) receiver) .fitsInFloat();
             }
@@ -226,6 +230,7 @@ final class NV0IntGen {
             @TruffleBoundary
             @Override
             public boolean fitsInLong(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV0Int) receiver) .fitsInLong();
             }
@@ -233,6 +238,7 @@ final class NV0IntGen {
             @TruffleBoundary
             @Override
             public boolean fitsInInt(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV0Int) receiver) .fitsInInt();
             }
@@ -240,6 +246,7 @@ final class NV0IntGen {
             @TruffleBoundary
             @Override
             public boolean fitsInDouble(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV0Int) receiver) .fitsInDouble();
             }
@@ -247,6 +254,7 @@ final class NV0IntGen {
             @TruffleBoundary
             @Override
             public double asDouble(Object receiver) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV0Int) receiver) .asDouble();
             }
@@ -254,6 +262,7 @@ final class NV0IntGen {
             @TruffleBoundary
             @Override
             public long asLong(Object receiver) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV0Int) receiver) .asLong();
             }
@@ -261,6 +270,7 @@ final class NV0IntGen {
             @TruffleBoundary
             @Override
             public byte asByte(Object receiver) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV0Int) receiver) .asByte();
             }
@@ -268,6 +278,7 @@ final class NV0IntGen {
             @TruffleBoundary
             @Override
             public int asInt(Object receiver) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV0Int) receiver) .asInt();
             }
@@ -275,6 +286,7 @@ final class NV0IntGen {
             @TruffleBoundary
             @Override
             public float asFloat(Object receiver) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV0Int) receiver) .asFloat();
             }
@@ -282,6 +294,7 @@ final class NV0IntGen {
             @TruffleBoundary
             @Override
             public short asShort(Object receiver) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV0Int) receiver) .asShort();
             }
@@ -289,6 +302,7 @@ final class NV0IntGen {
             @TruffleBoundary
             @Override
             public boolean hasLanguage(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV0Int) receiver) .hasLanguage();
             }
@@ -296,6 +310,7 @@ final class NV0IntGen {
             @TruffleBoundary
             @Override
             public Class<? extends TruffleLanguage<?>> getLanguage(Object receiver) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV0Int) receiver) .getLanguage();
             }
@@ -303,6 +318,7 @@ final class NV0IntGen {
             @TruffleBoundary
             @Override
             public boolean hasMetaObject(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV0Int) receiver) .hasMetaObject();
             }
@@ -310,6 +326,7 @@ final class NV0IntGen {
             @TruffleBoundary
             @Override
             public Object getMetaObject(Object receiver) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV0Int) receiver) .getMetaObject();
             }
@@ -317,6 +334,7 @@ final class NV0IntGen {
             @TruffleBoundary
             @Override
             public Object toDisplayString(Object receiver, boolean allowSideEffects) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV0Int) receiver) .toDisplayString(allowSideEffects);
             }

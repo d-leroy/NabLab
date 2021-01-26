@@ -2,16 +2,16 @@ package fr.cea.nabla.interpreter.nodes.job;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 
-import fr.cea.nabla.interpreter.nodes.instruction.NablaInstructionBlockNode;
+import fr.cea.nabla.interpreter.nodes.instruction.NablaInstructionNode;
 
 public class NablaInstructionJobNode extends NablaJobNode {
 
 	@Child
-	private NablaInstructionBlockNode instructionBlock;
+	private NablaInstructionNode body;
 	
-	public NablaInstructionJobNode(String name, NablaInstructionBlockNode instructionBlock) {
+	public NablaInstructionJobNode(String name, NablaInstructionNode body) {
 		super(name);
-		this.instructionBlock = instructionBlock;
+		this.body = body;
 	}
 
 	protected NablaInstructionJobNode() {
@@ -19,6 +19,6 @@ public class NablaInstructionJobNode extends NablaJobNode {
 	
 	@Override
 	public Object executeGeneric(VirtualFrame frame) {
-		return instructionBlock.executeGeneric(frame);
+		return body.executeGeneric(frame);
 	}
 }

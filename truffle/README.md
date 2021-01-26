@@ -4,7 +4,7 @@
 
 ### Nabla Interpreter
 
-Download version 20.3.0 of GraalVM, which can be found [here](https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-20.3.0), and extract the archive in a folder (eg /home/username/graalvm/) which we will refer to as the GraalVM home from now on.
+Download version 21.0.0 of GraalVM, which can be found [here](https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-21.0.0), and extract the archive in a folder (eg /home/username/graalvm/) which we will refer to as the GraalVM home from now on.
 Go to your NabLab install folder and run the graalvm-setup.sh script, by providing the path to your GraalVM home as an argument.
 
 ### Monilog Tool

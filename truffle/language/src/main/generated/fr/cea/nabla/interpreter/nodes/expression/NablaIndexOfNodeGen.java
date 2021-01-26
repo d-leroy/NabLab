@@ -22,7 +22,7 @@ public final class NablaIndexOfNodeGen extends NablaIndexOfNode {
 
     @Child private NablaExpressionNode arrayNode_;
     @Child private NablaExpressionNode value_;
-    @CompilationFinal private volatile int state_;
+    @CompilationFinal private volatile int state_0_;
     @CompilationFinal private volatile int exclude_;
     @Child private ReadNV1Int1Index0Data readNV1Int1Index0_cache;
 
@@ -34,12 +34,12 @@ public final class NablaIndexOfNodeGen extends NablaIndexOfNode {
     @ExplodeLoop
     @Override
     public Object executeGeneric(VirtualFrame frameValue) {
-        int state = state_;
+        int state_0 = state_0_;
         Object arrayNodeValue_ = this.arrayNode_.executeGeneric(frameValue);
         Object valueValue_ = this.value_.executeGeneric(frameValue);
-        if (state != 0 /* is-active readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) || readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */ && valueValue_ instanceof NV0Int) {
+        if (state_0 != 0 /* is-state_0 readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) || readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */ && valueValue_ instanceof NV0Int) {
             NV0Int valueValue__ = (NV0Int) valueValue_;
-            if ((state & 0b1) != 0 /* is-active readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */) {
+            if ((state_0 & 0b1) != 0 /* is-state_0 readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */) {
                 ReadNV1Int1Index0Data s1_ = this.readNV1Int1Index0_cache;
                 while (s1_ != null) {
                     if ((s1_.arrays_.accepts(arrayNodeValue_)) && (s1_.arrays_.isArray(arrayNodeValue_))) {
@@ -48,7 +48,7 @@ public final class NablaIndexOfNodeGen extends NablaIndexOfNode {
                     s1_ = s1_.next_;
                 }
             }
-            if ((state & 0b10) != 0 /* is-active readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */) {
+            if ((state_0 & 0b10) != 0 /* is-state_0 readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */) {
                 EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
                 Node prev_ = encapsulating_.set(this);
                 try {
@@ -71,15 +71,15 @@ public final class NablaIndexOfNodeGen extends NablaIndexOfNode {
         Lock lock = getLock();
         boolean hasLock = true;
         lock.lock();
-        int state = state_;
+        int state_0 = state_0_;
         int exclude = exclude_;
         try {
             if (valueValue instanceof NV0Int) {
                 NV0Int valueValue_ = (NV0Int) valueValue;
-                if ((exclude) == 0 /* is-not-excluded readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */) {
+                if ((exclude) == 0 /* is-not-exclude readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */) {
                     int count1_ = 0;
                     ReadNV1Int1Index0Data s1_ = this.readNV1Int1Index0_cache;
-                    if ((state & 0b1) != 0 /* is-active readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */) {
+                    if ((state_0 & 0b1) != 0 /* is-state_0 readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */) {
                         while (s1_ != null) {
                             if ((s1_.arrays_.accepts(arrayNodeValue)) && (s1_.arrays_.isArray(arrayNodeValue))) {
                                 break;
@@ -96,7 +96,7 @@ public final class NablaIndexOfNodeGen extends NablaIndexOfNode {
                                 s1_ = super.insert(new ReadNV1Int1Index0Data(readNV1Int1Index0_cache));
                                 s1_.arrays_ = s1_.insertAccessor(arrays__);
                                 this.readNV1Int1Index0_cache = s1_;
-                                this.state_ = state = state | 0b1 /* add-active readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */;
+                                this.state_0_ = state_0 = state_0 | 0b1 /* add-state_0 readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */;
                             }
                         }
                     }
@@ -115,10 +115,10 @@ public final class NablaIndexOfNodeGen extends NablaIndexOfNode {
                             {
                                 readNV1Int1Index1_arrays__ = (N_V1_INT_LIBRARY_.getUncached());
                                 if ((readNV1Int1Index1_arrays__.isArray(arrayNodeValue))) {
-                                    this.exclude_ = exclude = exclude | 0b1 /* add-excluded readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */;
+                                    this.exclude_ = exclude = exclude | 0b1 /* add-exclude readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */;
                                     this.readNV1Int1Index0_cache = null;
-                                    state = state & 0xfffffffe /* remove-active readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */;
-                                    this.state_ = state = state | 0b10 /* add-active readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */;
+                                    state_0 = state_0 & 0xfffffffe /* remove-state_0 readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */;
+                                    this.state_0_ = state_0 = state_0 | 0b10 /* add-state_0 readNV1Int1Index(VirtualFrame, Object, NV0Int, NV1IntLibrary) */;
                                     lock.unlock();
                                     hasLock = false;
                                     return readNV1Int1Index(frameValue, arrayNodeValue, valueValue_, readNV1Int1Index1_arrays__);
@@ -140,13 +140,15 @@ public final class NablaIndexOfNodeGen extends NablaIndexOfNode {
 
     @Override
     public NodeCost getCost() {
-        int state = state_;
-        if (state == 0b0) {
+        int state_0 = state_0_;
+        if (state_0 == 0) {
             return NodeCost.UNINITIALIZED;
-        } else if ((state & (state - 1)) == 0 /* is-single-active  */) {
-            ReadNV1Int1Index0Data s1_ = this.readNV1Int1Index0_cache;
-            if ((s1_ == null || s1_.next_ == null)) {
-                return NodeCost.MONOMORPHIC;
+        } else {
+            if ((state_0 & (state_0 - 1)) == 0 /* is-single-state_0  */) {
+                ReadNV1Int1Index0Data s1_ = this.readNV1Int1Index0_cache;
+                if ((s1_ == null || s1_.next_ == null)) {
+                    return NodeCost.MONOMORPHIC;
+                }
             }
         }
         return NodeCost.POLYMORPHIC;

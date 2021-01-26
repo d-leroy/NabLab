@@ -50,10 +50,10 @@ final class NodeObjectDescriptorKeysGen {
         @GeneratedBy(NodeObjectDescriptorKeys.class)
         private static final class Cached extends InteropLibrary {
 
-            @CompilationFinal private volatile int state_;
+            @CompilationFinal private volatile int state_0_;
             @CompilationFinal private BranchProfile exception_;
 
-            Cached() {
+            protected Cached() {
             }
 
             @Override
@@ -88,8 +88,8 @@ final class NodeObjectDescriptorKeysGen {
                 assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
                 assert assertAdopted();
                 NodeObjectDescriptorKeys arg0Value = ((NodeObjectDescriptorKeys) arg0Value_);
-                int state = state_;
-                if (state != 0 /* is-active readArrayElement(NodeObjectDescriptorKeys, long, BranchProfile) */) {
+                int state_0 = state_0_;
+                if (state_0 != 0 /* is-state_0 readArrayElement(NodeObjectDescriptorKeys, long, BranchProfile) */) {
                     return arg0Value.readArrayElement(arg1Value, this.exception_);
                 }
                 CompilerDirectives.transferToInterpreterAndInvalidate();
@@ -100,10 +100,10 @@ final class NodeObjectDescriptorKeysGen {
                 Lock lock = getLock();
                 boolean hasLock = true;
                 lock.lock();
-                int state = state_;
+                int state_0 = state_0_;
                 try {
                     this.exception_ = (BranchProfile.create());
-                    this.state_ = state = state | 0b1 /* add-active readArrayElement(NodeObjectDescriptorKeys, long, BranchProfile) */;
+                    this.state_0_ = state_0 = state_0 | 0b1 /* add-state_0 readArrayElement(NodeObjectDescriptorKeys, long, BranchProfile) */;
                     lock.unlock();
                     hasLock = false;
                     return arg0Value.readArrayElement(arg1Value, this.exception_);
@@ -116,8 +116,8 @@ final class NodeObjectDescriptorKeysGen {
 
             @Override
             public NodeCost getCost() {
-                int state = state_;
-                if (state == 0b0) {
+                int state_0 = state_0_;
+                if (state_0 == 0) {
                     return NodeCost.UNINITIALIZED;
                 } else {
                     return NodeCost.MONOMORPHIC;
@@ -128,11 +128,11 @@ final class NodeObjectDescriptorKeysGen {
         @GeneratedBy(NodeObjectDescriptorKeys.class)
         private static final class Uncached extends InteropLibrary {
 
-            Uncached() {
+            protected Uncached() {
             }
 
-            @TruffleBoundary
             @Override
+            @TruffleBoundary
             public boolean accepts(Object receiver) {
                 assert !(receiver instanceof NodeObjectDescriptorKeys) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof NodeObjectDescriptorKeys;
@@ -151,6 +151,7 @@ final class NodeObjectDescriptorKeysGen {
             @TruffleBoundary
             @Override
             public boolean hasArrayElements(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NodeObjectDescriptorKeys) receiver) .hasArrayElements();
             }
@@ -158,6 +159,7 @@ final class NodeObjectDescriptorKeysGen {
             @TruffleBoundary
             @Override
             public boolean isArrayElementReadable(Object receiver, long index) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NodeObjectDescriptorKeys) receiver) .isArrayElementReadable(index);
             }
@@ -165,6 +167,7 @@ final class NodeObjectDescriptorKeysGen {
             @TruffleBoundary
             @Override
             public long getArraySize(Object receiver) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NodeObjectDescriptorKeys) receiver) .getArraySize();
             }
@@ -172,6 +175,7 @@ final class NodeObjectDescriptorKeysGen {
             @TruffleBoundary
             @Override
             public Object readArrayElement(Object arg0Value_, long arg1Value) throws InvalidArrayIndexException {
+                // declared: true
                 assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
                 NodeObjectDescriptorKeys arg0Value = ((NodeObjectDescriptorKeys) arg0Value_);
                 return arg0Value.readArrayElement(arg1Value, (BranchProfile.getUncached()));

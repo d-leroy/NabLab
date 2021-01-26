@@ -1,5 +1,8 @@
 package fr.cea.nabla.interpreter.nodes;
 
+import java.util.stream.Collectors;
+
+import com.google.common.collect.Streams;
 import com.oracle.truffle.api.dsl.TypeSystemReference;
 import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
@@ -21,9 +24,11 @@ import fr.cea.nabla.interpreter.runtime.NablaNull;
 @TypeSystemReference(NablaTypes.class)
 public class NablaModuleNode extends NablaInstructionNode implements InstrumentableNode {
 
+	private static final NablaWriteVariableNode[] EMPTY_ARRAY = new NablaWriteVariableNode[0];
+	
 	@Child
 	private NablaModulePrologNode prologNode;
-
+	
 	@Child
 	private NablaJobBlockNode jobBlock;
 
@@ -58,6 +63,15 @@ public class NablaModuleNode extends NablaInstructionNode implements Instrumenta
 	@Override
 	public boolean hasTag(Class<? extends Tag> tag) {
 		return tag.equals(StandardTags.RootTag.class) || super.hasTag(tag);
+	}
+
+	public NablaWriteVariableNode[] getDeclaredGlobalVariables() {
+		final NablaWriteVariableNode[] wn = Streams.stream(prologNode.getChildren()).map(n -> (NablaWriteVariableNode) n)
+				.collect(Collectors.toList())
+				.toArray(EMPTY_ARRAY);
+		setVisibleVariablesIndexOnEnter(wn.length);
+		setVisibleVariablesIndexOnExit(wn.length);
+		return wn;
 	}
 
 }

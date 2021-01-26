@@ -13,7 +13,7 @@ import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
 @GeneratedBy(NablaIfNode.class)
 public final class NablaIfNodeGen extends NablaIfNode {
 
-    @CompilationFinal private int state_;
+    @CompilationFinal private int state_0_;
 
     private NablaIfNodeGen(NablaExpressionNode conditionNode, NablaInstructionNode thenPartNode, NablaInstructionNode elsePartNode) {
         super(conditionNode, thenPartNode, elsePartNode);
@@ -21,12 +21,12 @@ public final class NablaIfNodeGen extends NablaIfNode {
 
     @Override
     public Object executeGeneric(VirtualFrame frameValue) {
-        int state = state_;
-        if ((state & 0b1) != 0 /* is-active doThenElse(VirtualFrame) */) {
+        int state_0 = state_0_;
+        if ((state_0 & 0b1) != 0 /* is-state_0 doThenElse(VirtualFrame) */) {
             assert (elsePartNode != null);
             return doThenElse(frameValue);
         }
-        if ((state & 0b10) != 0 /* is-active doThen(VirtualFrame) */) {
+        if ((state_0 & 0b10) != 0 /* is-state_0 doThen(VirtualFrame) */) {
             assert (elsePartNode == null);
             return doThen(frameValue);
         }
@@ -35,13 +35,13 @@ public final class NablaIfNodeGen extends NablaIfNode {
     }
 
     private Object executeAndSpecialize(VirtualFrame frameValue) {
-        int state = state_;
+        int state_0 = state_0_;
         if ((elsePartNode != null)) {
-            this.state_ = state = state | 0b1 /* add-active doThenElse(VirtualFrame) */;
+            this.state_0_ = state_0 = state_0 | 0b1 /* add-state_0 doThenElse(VirtualFrame) */;
             return doThenElse(frameValue);
         }
         if ((elsePartNode == null)) {
-            this.state_ = state = state | 0b10 /* add-active doThen(VirtualFrame) */;
+            this.state_0_ = state_0 = state_0 | 0b10 /* add-state_0 doThen(VirtualFrame) */;
             return doThen(frameValue);
         }
         throw new UnsupportedSpecializationException(this, new Node[] {});
@@ -49,11 +49,13 @@ public final class NablaIfNodeGen extends NablaIfNode {
 
     @Override
     public NodeCost getCost() {
-        int state = state_;
-        if (state == 0b0) {
+        int state_0 = state_0_;
+        if (state_0 == 0) {
             return NodeCost.UNINITIALIZED;
-        } else if ((state & (state - 1)) == 0 /* is-single-active  */) {
-            return NodeCost.MONOMORPHIC;
+        } else {
+            if ((state_0 & (state_0 - 1)) == 0 /* is-single-state_0  */) {
+                return NodeCost.MONOMORPHIC;
+            }
         }
         return NodeCost.POLYMORPHIC;
     }

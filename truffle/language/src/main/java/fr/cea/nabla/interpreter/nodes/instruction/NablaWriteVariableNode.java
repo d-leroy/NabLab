@@ -2,6 +2,8 @@ package fr.cea.nabla.interpreter.nodes.instruction;
 
 import java.util.Map;
 
+import org.graalvm.polyglot.Value;
+
 import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.Frame;
@@ -45,6 +47,12 @@ public abstract class NablaWriteVariableNode extends NablaInstructionNode implem
 
 	protected NablaWriteVariableNode() {
 		this.slot = null;
+	}
+	
+	@Specialization
+	protected Object doWrite(Value value, Frame toWrite) {
+		toWrite.setObject(slot, value);
+		return value;
 	}
 
 	@Specialization

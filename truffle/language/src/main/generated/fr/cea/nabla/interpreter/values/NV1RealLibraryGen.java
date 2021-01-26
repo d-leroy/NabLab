@@ -126,7 +126,7 @@ final class NV1RealLibraryGen extends LibraryFactory<NV1RealLibrary> {
             @Child private DynamicDispatchLibrary dynamicDispatch_;
             private final Class<?> dynamicDispatchTarget_;
 
-            Cached(Object receiver) {
+            protected Cached(Object receiver) {
                 this.dynamicDispatch_ = insert(DYNAMIC_DISPATCH_LIBRARY_.create(receiver));
                 this.dynamicDispatchTarget_ = DYNAMIC_DISPATCH_LIBRARY_.getUncached(receiver).dispatch(receiver);
             }
@@ -163,13 +163,13 @@ final class NV1RealLibraryGen extends LibraryFactory<NV1RealLibrary> {
             @Child private DynamicDispatchLibrary dynamicDispatch_;
             private final Class<?> dynamicDispatchTarget_;
 
-            Uncached(Object receiver) {
+            protected Uncached(Object receiver) {
                 this.dynamicDispatch_ = DYNAMIC_DISPATCH_LIBRARY_.getUncached(receiver);
                 this.dynamicDispatchTarget_ = dynamicDispatch_.dispatch(receiver);
             }
 
-            @TruffleBoundary
             @Override
+            @TruffleBoundary
             public boolean accepts(Object receiver) {
                 return dynamicDispatch_.accepts(receiver) && dynamicDispatch_.dispatch(receiver) == dynamicDispatchTarget_;
             }
@@ -187,6 +187,7 @@ final class NV1RealLibraryGen extends LibraryFactory<NV1RealLibrary> {
             @TruffleBoundary
             @Override
             public boolean isArray(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return super.isArray(receiver);
             }
@@ -194,6 +195,7 @@ final class NV1RealLibraryGen extends LibraryFactory<NV1RealLibrary> {
             @TruffleBoundary
             @Override
             public double read(Object receiver, int index) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 throw new AbstractMethodError();
             }
@@ -201,6 +203,7 @@ final class NV1RealLibraryGen extends LibraryFactory<NV1RealLibrary> {
             @TruffleBoundary
             @Override
             public int length(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 throw new AbstractMethodError();
             }

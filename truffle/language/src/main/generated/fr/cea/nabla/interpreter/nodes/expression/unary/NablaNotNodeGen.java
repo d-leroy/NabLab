@@ -13,7 +13,7 @@ import fr.cea.nabla.interpreter.values.NV0Bool;
 public final class NablaNotNodeGen extends NablaNotNode {
 
     @Child private NablaExpressionNode valueNode_;
-    @CompilationFinal private int state_;
+    @CompilationFinal private int state_0_;
 
     private NablaNotNodeGen(NablaExpressionNode valueNode) {
         this.valueNode_ = valueNode;
@@ -21,14 +21,14 @@ public final class NablaNotNodeGen extends NablaNotNode {
 
     @Override
     public Object executeGeneric(VirtualFrame frameValue) {
-        int state = state_;
+        int state_0 = state_0_;
         Object valueNodeValue_ = this.valueNode_.executeGeneric(frameValue);
-        if ((state & 0b1) != 0 /* is-active not(NV0Bool) */ && valueNodeValue_ instanceof NV0Bool) {
+        if ((state_0 & 0b1) != 0 /* is-state_0 not(NV0Bool) */ && valueNodeValue_ instanceof NV0Bool) {
             NV0Bool valueNodeValue__ = (NV0Bool) valueNodeValue_;
             return not(valueNodeValue__);
         }
-        if ((state & 0b10) != 0 /* is-active typeError(Object) */) {
-            if (fallbackGuard_(state, valueNodeValue_)) {
+        if ((state_0 & 0b10) != 0 /* is-state_0 typeError(Object) */) {
+            if (fallbackGuard_(state_0, valueNodeValue_)) {
                 return typeError(valueNodeValue_);
             }
         }
@@ -37,29 +37,31 @@ public final class NablaNotNodeGen extends NablaNotNode {
     }
 
     private Object executeAndSpecialize(Object valueNodeValue) {
-        int state = state_;
+        int state_0 = state_0_;
         if (valueNodeValue instanceof NV0Bool) {
             NV0Bool valueNodeValue_ = (NV0Bool) valueNodeValue;
-            this.state_ = state = state | 0b1 /* add-active not(NV0Bool) */;
+            this.state_0_ = state_0 = state_0 | 0b1 /* add-state_0 not(NV0Bool) */;
             return not(valueNodeValue_);
         }
-        this.state_ = state = state | 0b10 /* add-active typeError(Object) */;
+        this.state_0_ = state_0 = state_0 | 0b10 /* add-state_0 typeError(Object) */;
         return typeError(valueNodeValue);
     }
 
     @Override
     public NodeCost getCost() {
-        int state = state_;
-        if (state == 0b0) {
+        int state_0 = state_0_;
+        if (state_0 == 0) {
             return NodeCost.UNINITIALIZED;
-        } else if ((state & (state - 1)) == 0 /* is-single-active  */) {
-            return NodeCost.MONOMORPHIC;
+        } else {
+            if ((state_0 & (state_0 - 1)) == 0 /* is-single-state_0  */) {
+                return NodeCost.MONOMORPHIC;
+            }
         }
         return NodeCost.POLYMORPHIC;
     }
 
-    private static boolean fallbackGuard_(int state, Object valueNodeValue) {
-        if (((state & 0b1)) == 0 /* is-not-active not(NV0Bool) */ && valueNodeValue instanceof NV0Bool) {
+    private static boolean fallbackGuard_(int state_0, Object valueNodeValue) {
+        if (((state_0 & 0b1)) == 0 /* is-not-state_0 not(NV0Bool) */ && valueNodeValue instanceof NV0Bool) {
             return false;
         }
         return true;

@@ -1,12 +1,10 @@
 package fr.cea.nabla.interpreter.nodes.instruction;
 
-import com.oracle.truffle.api.CompilerDirectives;
-import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
+import org.graalvm.polyglot.Value;
+
 import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
-import com.oracle.truffle.api.frame.Frame;
 import com.oracle.truffle.api.frame.FrameSlot;
-import com.oracle.truffle.api.frame.FrameUtil;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.instrumentation.GenerateWrapper;
 import com.oracle.truffle.api.instrumentation.InstrumentableNode;
@@ -16,9 +14,8 @@ import com.oracle.truffle.api.instrumentation.Tag;
 
 import fr.cea.nabla.interpreter.NablaTypesGen;
 import fr.cea.nabla.interpreter.nodes.expression.NablaExpressionNode;
+import fr.cea.nabla.interpreter.nodes.expression.NablaReadVariableNode;
 import fr.cea.nabla.interpreter.nodes.interop.NodeObjectDescriptor;
-import fr.cea.nabla.interpreter.runtime.NablaInitializationPerformedException;
-import fr.cea.nabla.interpreter.utils.GetFrameNode;
 import fr.cea.nabla.interpreter.values.NV0Int;
 import fr.cea.nabla.interpreter.values.NV0Real;
 import fr.cea.nabla.interpreter.values.NV1Int;
@@ -27,154 +24,138 @@ import fr.cea.nabla.interpreter.values.NV1Real;
 import fr.cea.nabla.interpreter.values.NV1RealJava;
 import fr.cea.nabla.interpreter.values.NV2Int;
 import fr.cea.nabla.interpreter.values.NV2Real;
-import fr.cea.nabla.interpreter.values.NV3Int;
 import fr.cea.nabla.interpreter.values.NV3Real;
-import fr.cea.nabla.interpreter.values.NV4Int;
 import fr.cea.nabla.interpreter.values.NV4Real;
-import fr.cea.nabla.interpreter.values.NablaValue;
 
 @GenerateWrapper
 @NodeChild(value = "value", type = NablaExpressionNode.class)
-@NodeChild(value = "frameToRead", type = GetFrameNode.class)
+@NodeChild(value = "toWrite", type = NablaReadVariableNode.class)
 public abstract class NablaWriteArrayNode extends NablaInstructionNode implements InstrumentableNode {
 
 	private final FrameSlot slot;
+	private final Class<?> baseType;
+	private final int dimensions;
 	@Children
 	private final NablaExpressionNode[] indices;
-	@CompilationFinal
-	private Class<?> arrayClass;
-	@CompilationFinal
-	private boolean initializationRequired = true;
 
-	public NablaWriteArrayNode(FrameSlot slot, NablaExpressionNode[] indices) {
+	public NablaWriteArrayNode(FrameSlot slot, Class<?> baseType, int dimensions, NablaExpressionNode[] indices) {
 		this.slot = slot;
+		this.baseType = baseType;
+		this.dimensions = dimensions;
 		this.indices = indices;
 	}
 
 	protected NablaWriteArrayNode() {
 		this.slot = null;
+		this.baseType = null;
+		this.dimensions = 0;
 		this.indices = null;
 	}
 
-	@Specialization(rewriteOn = NablaInitializationPerformedException.class)
-	public Object write(VirtualFrame frame, Object value, Frame toRead) throws NablaInitializationPerformedException {
-		CompilerDirectives.transferToInterpreterAndInvalidate();
-		NablaValue array = (NablaValue) FrameUtil.getObjectSafe(toRead, slot);
-		this.arrayClass = array.getClass();
-		this.initializationRequired = false;
-		throw new NablaInitializationPerformedException();
-	}
-
 	@Specialization(guards = "isNV1Int()")
-	protected NV1Int writeNV1Int(VirtualFrame frame, NV0Int value, Frame toRead) {
-		NV1IntJava array = (NV1IntJava) NablaTypesGen.asNV1Int(FrameUtil.getObjectSafe(toRead, slot));
+	protected NV1Int writeNV1Int(VirtualFrame frame, NV0Int value, NV1IntJava toWrite) {
 		final int idx = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
-		array.getData()[idx] = value.getData();
-		return array;
+		toWrite.getData()[idx] = value.getData();
+		return toWrite;
 	}
 
 	@Specialization(guards = "isNV2Int()")
-	protected NV2Int writeNV2Int(VirtualFrame frame, NV0Int value, Frame toRead) {
-		NV2Int array = NablaTypesGen.asNV2Int(FrameUtil.getObjectSafe(toRead, slot));
+	protected NV2Int writeNV2Int(VirtualFrame frame, NV0Int value, NV2Int toWrite) {
 		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
 		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
-		array.getData()[idx1][idx2] = value.getData();
-		return array;
+		toWrite.getData()[idx1][idx2] = value.getData();
+		return toWrite;
 	}
 
 	@Specialization(guards = "isNV2Int()")
-	protected NV2Int writeNV2Int(VirtualFrame frame, NV1IntJava value, Frame toRead) {
-		NV2Int array = NablaTypesGen.asNV2Int(FrameUtil.getObjectSafe(toRead, slot));
+	protected NV2Int writeNV2Int(VirtualFrame frame, NV1IntJava value, NV2Int toWrite) {
 		final int idx = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
-		array.getData()[idx] = value.getData();
-		return array;
+		toWrite.getData()[idx] = value.getData();
+		return toWrite;
 	}
 
 	@Specialization(guards = "isNV1Real()")
-	protected NV1Real writeNV1Real(VirtualFrame frame, NV0Real value, Frame toRead) {
-		NV1RealJava array = (NV1RealJava) NablaTypesGen.asNV1Real(FrameUtil.getObjectSafe(toRead, slot));
+	protected NV1Real writeNV1Real(VirtualFrame frame, NV0Real value, NV1RealJava toWrite) {
 		final int idx = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
-		array.getData()[idx] = value.getData();
-		return array;
+		toWrite.getData()[idx] = value.getData();
+		return toWrite;
+	}
+
+	@Specialization(guards = "isNV1Real()")
+	protected Value writeNV1Real(VirtualFrame frame, NV0Real value, Value toWrite) {
+		final int idx = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
+		toWrite.setArrayElement(idx, value.getData());
+		return toWrite;
 	}
 
 	@Specialization(guards = "isNV2Real()")
-	protected NV2Real writeNV2Real(VirtualFrame frame, NV0Real value, Frame toRead) {
-		NV2Real array = NablaTypesGen.asNV2Real(FrameUtil.getObjectSafe(toRead, slot));
+	protected NV2Real writeNV2Real(VirtualFrame frame, NV0Real value, NV2Real toWrite) {
 		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
 		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
-		array.getData()[idx1][idx2] = value.getData();
-		return array;
+		toWrite.getData()[idx1][idx2] = value.getData();
+		return toWrite;
 	}
 
 	@Specialization(guards = "isNV2Real()")
-	protected NV2Real writeNV2Real(VirtualFrame frame, NV1RealJava value, Frame toRead) {
-		NV2Real array = NablaTypesGen.asNV2Real(FrameUtil.getObjectSafe(toRead, slot));
+	protected NV2Real writeNV2Real(VirtualFrame frame, NV1RealJava value, NV2Real toWrite) {
 		final int idx = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
-		array.getData()[idx] = value.getData();
-		return array;
+		toWrite.getData()[idx] = value.getData();
+		return toWrite;
 	}
 
 	@Specialization(guards = "isNV3Real()")
-	protected NV3Real writeNV3Real(VirtualFrame frame, NV1RealJava value, Frame toRead) {
-		NV3Real array = NablaTypesGen.asNV3Real(FrameUtil.getObjectSafe(toRead, slot));
+	protected NV3Real writeNV3Real(VirtualFrame frame, NV1RealJava value, NV3Real toWrite) {
 		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
 		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
-		array.getData()[idx1][idx2] = value.getData();
-		return array;
+		toWrite.getData()[idx1][idx2] = value.getData();
+		return toWrite;
 	}
 
 	@Specialization(guards = "isNV3Real()")
-	protected NV3Real writeNV3Real(VirtualFrame frame, NV2Real value, Frame toRead) {
-		NV3Real array = NablaTypesGen.asNV3Real(FrameUtil.getObjectSafe(toRead, slot));
+	protected NV3Real writeNV3Real(VirtualFrame frame, NV2Real value, NV3Real toWrite) {
 		final int idx = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
-		array.getData()[idx] = value.getData();
-		return array;
+		toWrite.getData()[idx] = value.getData();
+		return toWrite;
 	}
 
 	@Specialization(guards = "isNV4Real()")
-	protected NV4Real writeNV4Real(VirtualFrame frame, NV2Real value, Frame toRead) {
-		NV4Real array = NablaTypesGen.asNV4Real(FrameUtil.getObjectSafe(toRead, slot));
+	protected NV4Real writeNV4Real(VirtualFrame frame, NV2Real value, NV4Real toWrite) {
 		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
 		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
-		array.getData()[idx1][idx2] = value.getData();
-		return array;
-	}
-
-	public FrameSlot getSlot() {
-		return slot;
+		toWrite.getData()[idx1][idx2] = value.getData();
+		return toWrite;
 	}
 
 	protected boolean isNV1Int() {
-		return !initializationRequired && arrayClass == NV1Int.class;
+		return baseType == int.class && dimensions == 1;
 	}
 
 	protected boolean isNV2Int() {
-		return !initializationRequired && arrayClass == NV2Int.class;
+		return baseType == int.class && dimensions == 2;
 	}
 
 	protected boolean isNV3Int() {
-		return !initializationRequired && arrayClass == NV3Int.class;
+		return baseType == int.class && dimensions == 3;
 	}
 
 	protected boolean isNV4Int() {
-		return !initializationRequired && arrayClass == NV4Int.class;
+		return baseType == int.class && dimensions == 4;
 	}
 
 	protected boolean isNV1Real() {
-		return !initializationRequired && arrayClass == NV1RealJava.class;
+		return baseType == double.class && dimensions == 1;
 	}
 
 	protected boolean isNV2Real() {
-		return !initializationRequired && arrayClass == NV2Real.class;
+		return baseType == double.class && dimensions == 2;
 	}
 
 	protected boolean isNV3Real() {
-		return !initializationRequired && arrayClass == NV3Real.class;
+		return baseType == double.class && dimensions == 3;
 	}
 
 	protected boolean isNV4Real() {
-		return !initializationRequired && arrayClass == NV4Real.class;
+		return baseType == double.class && dimensions == 4;
 	}
 
 	@Override
@@ -193,7 +174,7 @@ public abstract class NablaWriteArrayNode extends NablaInstructionNode implement
 	}
 
 	@Override
-    public Object getNodeObject() {
-        return NodeObjectDescriptor.writeVariable(slot.getIdentifier().toString());
-    }
+	public Object getNodeObject() {
+		return NodeObjectDescriptor.writeVariable(slot.getIdentifier().toString());
+	}
 }

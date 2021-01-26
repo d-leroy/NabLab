@@ -53,11 +53,11 @@ final class NablaTypeGen {
         @GeneratedBy(NablaType.class)
         private static final class Cached extends InteropLibrary {
 
-            @CompilationFinal private volatile int state_;
+            @CompilationFinal private volatile int state_0_;
             @CompilationFinal private volatile int exclude_;
             @Child private CachedData cached_cache;
 
-            Cached() {
+            protected Cached() {
             }
 
             @Override
@@ -114,9 +114,9 @@ final class NablaTypeGen {
                 assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
                 assert assertAdopted();
                 NablaType arg0Value = ((NablaType) arg0Value_);
-                int state = state_;
-                if (state != 0 /* is-active doCached(NablaType, Object, NablaType, InteropLibrary) || doGeneric(NablaType, Object) */) {
-                    if ((state & 0b1) != 0 /* is-active doCached(NablaType, Object, NablaType, InteropLibrary) */) {
+                int state_0 = state_0_;
+                if (state_0 != 0 /* is-state_0 doCached(NablaType, Object, NablaType, InteropLibrary) || doGeneric(NablaType, Object) */) {
+                    if ((state_0 & 0b1) != 0 /* is-state_0 doCached(NablaType, Object, NablaType, InteropLibrary) */) {
                         CachedData s1_ = this.cached_cache;
                         while (s1_ != null) {
                             if ((s1_.valueLib_.accepts(arg1Value)) && (arg0Value == s1_.cachedType_)) {
@@ -125,7 +125,7 @@ final class NablaTypeGen {
                             s1_ = s1_.next_;
                         }
                     }
-                    if ((state & 0b10) != 0 /* is-active doGeneric(NablaType, Object) */) {
+                    if ((state_0 & 0b10) != 0 /* is-state_0 doGeneric(NablaType, Object) */) {
                         return IsMetaInstance.doGeneric(arg0Value, arg1Value);
                     }
                 }
@@ -137,13 +137,13 @@ final class NablaTypeGen {
                 Lock lock = getLock();
                 boolean hasLock = true;
                 lock.lock();
-                int state = state_;
+                int state_0 = state_0_;
                 int exclude = exclude_;
                 try {
-                    if ((exclude) == 0 /* is-not-excluded doCached(NablaType, Object, NablaType, InteropLibrary) */) {
+                    if ((exclude) == 0 /* is-not-exclude doCached(NablaType, Object, NablaType, InteropLibrary) */) {
                         int count1_ = 0;
                         CachedData s1_ = this.cached_cache;
-                        if ((state & 0b1) != 0 /* is-active doCached(NablaType, Object, NablaType, InteropLibrary) */) {
+                        if ((state_0 & 0b1) != 0 /* is-state_0 doCached(NablaType, Object, NablaType, InteropLibrary) */) {
                             while (s1_ != null) {
                                 if ((s1_.valueLib_.accepts(arg1Value)) && (arg0Value == s1_.cachedType_)) {
                                     break;
@@ -160,7 +160,7 @@ final class NablaTypeGen {
                                 s1_.cachedType_ = (arg0Value);
                                 s1_.valueLib_ = s1_.insertAccessor((INTEROP_LIBRARY_.create(arg1Value)));
                                 this.cached_cache = s1_;
-                                this.state_ = state = state | 0b1 /* add-active doCached(NablaType, Object, NablaType, InteropLibrary) */;
+                                this.state_0_ = state_0 = state_0 | 0b1 /* add-state_0 doCached(NablaType, Object, NablaType, InteropLibrary) */;
                             }
                         }
                         if (s1_ != null) {
@@ -169,10 +169,10 @@ final class NablaTypeGen {
                             return IsMetaInstance.doCached(arg0Value, arg1Value, s1_.cachedType_, s1_.valueLib_);
                         }
                     }
-                    this.exclude_ = exclude = exclude | 0b1 /* add-excluded doCached(NablaType, Object, NablaType, InteropLibrary) */;
+                    this.exclude_ = exclude = exclude | 0b1 /* add-exclude doCached(NablaType, Object, NablaType, InteropLibrary) */;
                     this.cached_cache = null;
-                    state = state & 0xfffffffe /* remove-active doCached(NablaType, Object, NablaType, InteropLibrary) */;
-                    this.state_ = state = state | 0b10 /* add-active doGeneric(NablaType, Object) */;
+                    state_0 = state_0 & 0xfffffffe /* remove-state_0 doCached(NablaType, Object, NablaType, InteropLibrary) */;
+                    this.state_0_ = state_0 = state_0 | 0b10 /* add-state_0 doGeneric(NablaType, Object) */;
                     lock.unlock();
                     hasLock = false;
                     return IsMetaInstance.doGeneric(arg0Value, arg1Value);
@@ -185,13 +185,15 @@ final class NablaTypeGen {
 
             @Override
             public NodeCost getCost() {
-                int state = state_;
-                if (state == 0b0) {
+                int state_0 = state_0_;
+                if (state_0 == 0) {
                     return NodeCost.UNINITIALIZED;
-                } else if ((state & (state - 1)) == 0 /* is-single-active  */) {
-                    CachedData s1_ = this.cached_cache;
-                    if ((s1_ == null || s1_.next_ == null)) {
-                        return NodeCost.MONOMORPHIC;
+                } else {
+                    if ((state_0 & (state_0 - 1)) == 0 /* is-single-state_0  */) {
+                        CachedData s1_ = this.cached_cache;
+                        if ((s1_ == null || s1_.next_ == null)) {
+                            return NodeCost.MONOMORPHIC;
+                        }
                     }
                 }
                 return NodeCost.POLYMORPHIC;
@@ -222,11 +224,11 @@ final class NablaTypeGen {
         @GeneratedBy(NablaType.class)
         private static final class Uncached extends InteropLibrary {
 
-            Uncached() {
+            protected Uncached() {
             }
 
-            @TruffleBoundary
             @Override
+            @TruffleBoundary
             public boolean accepts(Object receiver) {
                 assert !(receiver instanceof NablaType) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof NablaType;
@@ -245,6 +247,7 @@ final class NablaTypeGen {
             @TruffleBoundary
             @Override
             public boolean hasLanguage(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NablaType) receiver) .hasLanguage();
             }
@@ -252,6 +255,7 @@ final class NablaTypeGen {
             @TruffleBoundary
             @Override
             public Class<? extends TruffleLanguage<?>> getLanguage(Object receiver) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NablaType) receiver) .getLanguage();
             }
@@ -259,6 +263,7 @@ final class NablaTypeGen {
             @TruffleBoundary
             @Override
             public boolean isMetaObject(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NablaType) receiver) .isMetaObject();
             }
@@ -266,6 +271,7 @@ final class NablaTypeGen {
             @TruffleBoundary
             @Override
             public Object getMetaQualifiedName(Object receiver) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NablaType) receiver) .getName();
             }
@@ -273,6 +279,7 @@ final class NablaTypeGen {
             @TruffleBoundary
             @Override
             public Object getMetaSimpleName(Object receiver) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NablaType) receiver) .getName();
             }
@@ -280,6 +287,7 @@ final class NablaTypeGen {
             @TruffleBoundary
             @Override
             public Object toDisplayString(Object receiver, boolean allowSideEffects) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NablaType) receiver) .toDisplayString(allowSideEffects);
             }
@@ -287,6 +295,7 @@ final class NablaTypeGen {
             @TruffleBoundary
             @Override
             public boolean isMetaInstance(Object arg0Value_, Object arg1Value) {
+                // declared: true
                 assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
                 NablaType arg0Value = ((NablaType) arg0Value_);
                 return IsMetaInstance.doGeneric(arg0Value, arg1Value);

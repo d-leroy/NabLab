@@ -20,7 +20,7 @@ public final class NablaReal1ConstantNodeGen extends NablaReal1ConstantNode {
 
     @Child private NablaExpressionNode value_;
     @Child private NablaExpressionNode size_;
-    @CompilationFinal private volatile int state_;
+    @CompilationFinal private volatile int state_0_;
     @CompilationFinal private DefaultCachedData defaultCached_cache;
     @CompilationFinal private CachedData cached_cache;
 
@@ -32,14 +32,14 @@ public final class NablaReal1ConstantNodeGen extends NablaReal1ConstantNode {
     @ExplodeLoop
     @Override
     public Object executeGeneric(VirtualFrame frameValue) {
-        int state = state_;
+        int state_0 = state_0_;
         Object valueValue_ = this.value_.executeGeneric(frameValue);
         Object sizeValue_ = this.size_.executeGeneric(frameValue);
-        if (state != 0 /* is-active doDefaultCached(VirtualFrame, NV0Real, NV0Int, int, NV1Real) || doCached(VirtualFrame, NV0Real, NV0Int, double, int, NV1Real) */ && valueValue_ instanceof NV0Real) {
+        if (state_0 != 0 /* is-state_0 doDefaultCached(VirtualFrame, NV0Real, NV0Int, int, NV1Real) || doCached(VirtualFrame, NV0Real, NV0Int, double, int, NV1Real) */ && valueValue_ instanceof NV0Real) {
             NV0Real valueValue__ = (NV0Real) valueValue_;
             if (sizeValue_ instanceof NV0Int) {
                 NV0Int sizeValue__ = (NV0Int) sizeValue_;
-                if ((state & 0b1) != 0 /* is-active doDefaultCached(VirtualFrame, NV0Real, NV0Int, int, NV1Real) */) {
+                if ((state_0 & 0b1) != 0 /* is-state_0 doDefaultCached(VirtualFrame, NV0Real, NV0Int, int, NV1Real) */) {
                     DefaultCachedData s1_ = this.defaultCached_cache;
                     while (s1_ != null) {
                         if ((s1_.cachedSize_ == sizeValue__.getData()) && (isZero(valueValue__.getData()))) {
@@ -48,7 +48,7 @@ public final class NablaReal1ConstantNodeGen extends NablaReal1ConstantNode {
                         s1_ = s1_.next_;
                     }
                 }
-                if ((state & 0b10) != 0 /* is-active doCached(VirtualFrame, NV0Real, NV0Int, double, int, NV1Real) */) {
+                if ((state_0 & 0b10) != 0 /* is-state_0 doCached(VirtualFrame, NV0Real, NV0Int, double, int, NV1Real) */) {
                     CachedData s2_ = this.cached_cache;
                     while (s2_ != null) {
                         if ((s2_.cachedSize_ == sizeValue__.getData())) {
@@ -67,7 +67,7 @@ public final class NablaReal1ConstantNodeGen extends NablaReal1ConstantNode {
         Lock lock = getLock();
         boolean hasLock = true;
         lock.lock();
-        int state = state_;
+        int state_0 = state_0_;
         try {
             if (valueValue instanceof NV0Real) {
                 NV0Real valueValue_ = (NV0Real) valueValue;
@@ -75,7 +75,7 @@ public final class NablaReal1ConstantNodeGen extends NablaReal1ConstantNode {
                     NV0Int sizeValue_ = (NV0Int) sizeValue;
                     int count1_ = 0;
                     DefaultCachedData s1_ = this.defaultCached_cache;
-                    if ((state & 0b1) != 0 /* is-active doDefaultCached(VirtualFrame, NV0Real, NV0Int, int, NV1Real) */) {
+                    if ((state_0 & 0b1) != 0 /* is-state_0 doDefaultCached(VirtualFrame, NV0Real, NV0Int, int, NV1Real) */) {
                         while (s1_ != null) {
                             if ((s1_.cachedSize_ == sizeValue_.getData()) && (isZero(valueValue_.getData()))) {
                                 break;
@@ -92,7 +92,7 @@ public final class NablaReal1ConstantNodeGen extends NablaReal1ConstantNode {
                                 s1_.cachedSize_ = cachedSize__;
                                 s1_.result_ = (getDefaultResult(cachedSize__));
                                 this.defaultCached_cache = s1_;
-                                this.state_ = state = state | 0b1 /* add-active doDefaultCached(VirtualFrame, NV0Real, NV0Int, int, NV1Real) */;
+                                this.state_0_ = state_0 = state_0 | 0b1 /* add-state_0 doDefaultCached(VirtualFrame, NV0Real, NV0Int, int, NV1Real) */;
                             }
                         }
                     }
@@ -103,7 +103,7 @@ public final class NablaReal1ConstantNodeGen extends NablaReal1ConstantNode {
                     }
                     int count2_ = 0;
                     CachedData s2_ = this.cached_cache;
-                    if ((state & 0b10) != 0 /* is-active doCached(VirtualFrame, NV0Real, NV0Int, double, int, NV1Real) */) {
+                    if ((state_0 & 0b10) != 0 /* is-state_0 doCached(VirtualFrame, NV0Real, NV0Int, double, int, NV1Real) */) {
                         while (s2_ != null) {
                             if ((s2_.cachedSize_ == sizeValue_.getData())) {
                                 break;
@@ -121,7 +121,7 @@ public final class NablaReal1ConstantNodeGen extends NablaReal1ConstantNode {
                                 s2_.cachedSize_ = cachedSize__1;
                                 s2_.result_ = (getResult(s2_.cachedValue_, cachedSize__1));
                                 this.cached_cache = s2_;
-                                this.state_ = state = state | 0b10 /* add-active doCached(VirtualFrame, NV0Real, NV0Int, double, int, NV1Real) */;
+                                this.state_0_ = state_0 = state_0 | 0b10 /* add-state_0 doCached(VirtualFrame, NV0Real, NV0Int, double, int, NV1Real) */;
                             }
                         }
                     }
@@ -142,14 +142,16 @@ public final class NablaReal1ConstantNodeGen extends NablaReal1ConstantNode {
 
     @Override
     public NodeCost getCost() {
-        int state = state_;
-        if (state == 0b0) {
+        int state_0 = state_0_;
+        if (state_0 == 0) {
             return NodeCost.UNINITIALIZED;
-        } else if ((state & (state - 1)) == 0 /* is-single-active  */) {
-            DefaultCachedData s1_ = this.defaultCached_cache;
-            CachedData s2_ = this.cached_cache;
-            if ((s1_ == null || s1_.next_ == null) && (s2_ == null || s2_.next_ == null)) {
-                return NodeCost.MONOMORPHIC;
+        } else {
+            if ((state_0 & (state_0 - 1)) == 0 /* is-single-state_0  */) {
+                DefaultCachedData s1_ = this.defaultCached_cache;
+                CachedData s2_ = this.cached_cache;
+                if ((s1_ == null || s1_.next_ == null) && (s2_ == null || s2_.next_ == null)) {
+                    return NodeCost.MONOMORPHIC;
+                }
             }
         }
         return NodeCost.POLYMORPHIC;

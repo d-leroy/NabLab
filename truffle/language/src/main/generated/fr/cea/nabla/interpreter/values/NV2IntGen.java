@@ -14,7 +14,7 @@ import com.oracle.truffle.api.library.LibraryFactory;
 import com.oracle.truffle.api.nodes.NodeCost;
 
 @GeneratedBy(NV2Int.class)
-final class NV2IntGen {
+public final class NV2IntGen {
 
     private static final LibraryFactory<DynamicDispatchLibrary> DYNAMIC_DISPATCH_LIBRARY_ = LibraryFactory.resolve(DynamicDispatchLibrary.class);
 
@@ -26,7 +26,7 @@ final class NV2IntGen {
     }
 
     @GeneratedBy(NV2Int.class)
-    private static final class InteropLibraryExports extends LibraryExport<InteropLibrary> {
+    public static class InteropLibraryExports extends LibraryExport<InteropLibrary> {
 
         private InteropLibraryExports() {
             super(InteropLibrary.class, NV2Int.class, false);
@@ -46,13 +46,13 @@ final class NV2IntGen {
         }
 
         @GeneratedBy(NV2Int.class)
-        private static final class Cached extends InteropLibrary {
+        public static class Cached extends InteropLibrary {
 
             private final Class<? extends NV2Int> receiverClass_;
 
-            Cached(Object originalReceiver) {
-                NV2Int receiver = ((NV2Int) originalReceiver) ;
-                this.receiverClass_ = receiver.getClass();
+            protected Cached(Object receiver) {
+                NV2Int castReceiver = ((NV2Int) receiver) ;
+                this.receiverClass_ = castReceiver.getClass();
             }
 
             @Override
@@ -117,34 +117,35 @@ final class NV2IntGen {
 
         }
         @GeneratedBy(NV2Int.class)
-        private static final class Uncached extends InteropLibrary {
+        public static class Uncached extends InteropLibrary {
 
             private final Class<? extends NV2Int> receiverClass_;
 
-            Uncached(Object receiver) {
+            protected Uncached(Object receiver) {
                 this.receiverClass_ = ((NV2Int) receiver).getClass();
             }
 
-            @TruffleBoundary
             @Override
+            @TruffleBoundary
             public boolean accepts(Object receiver) {
                 assert receiver.getClass() != this.receiverClass_ || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver.getClass() == this.receiverClass_;
             }
 
             @Override
-            public boolean isAdoptable() {
+            public final boolean isAdoptable() {
                 return false;
             }
 
             @Override
-            public NodeCost getCost() {
+            public final NodeCost getCost() {
                 return NodeCost.MEGAMORPHIC;
             }
 
             @TruffleBoundary
             @Override
             public boolean hasArrayElements(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV2Int) receiver) .hasArrayElements();
             }
@@ -152,6 +153,7 @@ final class NV2IntGen {
             @TruffleBoundary
             @Override
             public long getArraySize(Object receiver) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV2Int) receiver) .getArraySize();
             }
@@ -159,6 +161,7 @@ final class NV2IntGen {
             @TruffleBoundary
             @Override
             public boolean isArrayElementReadable(Object receiver, long index) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV2Int) receiver) .isArrayElementReadable(index);
             }
@@ -166,6 +169,7 @@ final class NV2IntGen {
             @TruffleBoundary
             @Override
             public Object readArrayElement(Object receiver, long index) throws UnsupportedMessageException, InvalidArrayIndexException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV2Int) receiver) .readArrayElement(index);
             }
@@ -173,6 +177,7 @@ final class NV2IntGen {
             @TruffleBoundary
             @Override
             public boolean hasLanguage(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV2Int) receiver) .hasLanguage();
             }
@@ -180,6 +185,7 @@ final class NV2IntGen {
             @TruffleBoundary
             @Override
             public Class<? extends TruffleLanguage<?>> getLanguage(Object receiver) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV2Int) receiver) .getLanguage();
             }
@@ -187,6 +193,7 @@ final class NV2IntGen {
             @TruffleBoundary
             @Override
             public boolean hasMetaObject(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV2Int) receiver) .hasMetaObject();
             }
@@ -194,6 +201,7 @@ final class NV2IntGen {
             @TruffleBoundary
             @Override
             public Object getMetaObject(Object receiver) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV2Int) receiver) .getMetaObject();
             }
@@ -201,6 +209,7 @@ final class NV2IntGen {
             @TruffleBoundary
             @Override
             public Object toDisplayString(Object receiver, boolean allowSideEffects) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((NV2Int) receiver) .toDisplayString(allowSideEffects);
             }

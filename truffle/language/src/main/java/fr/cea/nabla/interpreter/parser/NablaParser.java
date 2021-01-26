@@ -16,8 +16,8 @@ import com.oracle.truffle.api.source.Source;
 import fr.cea.nabla.interpreter.NablaLanguage;
 import fr.cea.nabla.interpreter.NablaOptions;
 import fr.cea.nabla.interpreter.nodes.NablaEvalRootNode;
-import fr.cea.nabla.ir.ir.IrModule;
 import fr.cea.nabla.ir.ir.IrPackage;
+import fr.cea.nabla.ir.ir.IrRoot;
 
 public class NablaParser {
 
@@ -30,7 +30,7 @@ public class NablaParser {
 				String jsonOptionsString = options.get(NablaOptions.OPTIONS);
 				String pathToMeshLibrary = options.get(NablaOptions.MESH_LIB);
 				EPackage.Registry.INSTANCE.put(IrPackage.eNS_URI, IrPackage.eINSTANCE);
-				final IrModule irModule = getIrModule(source, options.get(NablaOptions.GENMODEL));
+				final IrRoot irRoot = getIrRoot(source, options.get(NablaOptions.GENMODEL));
 				final JsonObject jsonOptions;
 				if (jsonOptionsString != null && !jsonOptionsString.isEmpty()) {
 					final Gson gson = new Gson();
@@ -40,7 +40,7 @@ public class NablaParser {
 				}
 				
 				final RootCallTarget moduleCallTarget = Truffle.getRuntime()
-						.createCallTarget(new NablaNodeFactory(nablaLanguage, source).createModule(irModule, jsonOptions, pathToMeshLibrary));
+						.createCallTarget(new NablaNodeFactory(nablaLanguage, source).createModule(irRoot, jsonOptions, pathToMeshLibrary));
 				final RootNode evalModule = new NablaEvalRootNode(nablaLanguage, moduleCallTarget);
 				final RootCallTarget result = Truffle.getRuntime().createCallTarget(evalModule);
 				return result;
@@ -51,11 +51,11 @@ public class NablaParser {
 		}
 	}
 
-	private IrModule getIrModule(Source source, String genModel) {
+	private IrRoot getIrRoot(Source source, String genModel) {
 		final String model = source.getCharacters().toString();
 		NablaInjectorProvider inj = new NablaInjectorProvider();
 		CompilationChainHelper helper = new CompilationChainHelper();
 		inj.getInjector().injectMembers(helper);
-		return helper.getIrModule(model, genModel);
+		return helper.getIrRoot(model, genModel);
 	}
 }

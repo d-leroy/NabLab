@@ -1,7 +1,7 @@
 package fr.cea.nabla.interpreter;
 
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
-import com.oracle.truffle.api.TruffleException;
+import com.oracle.truffle.api.exception.AbstractTruffleException;
 import com.oracle.truffle.api.interop.InteropLibrary;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeInfo;
@@ -9,25 +9,13 @@ import com.oracle.truffle.api.source.SourceSection;
 
 import fr.cea.nabla.interpreter.runtime.NablaContext;
 
-public class NablaException extends RuntimeException implements TruffleException {
+public class NablaException extends AbstractTruffleException {
 
 	private static final long serialVersionUID = 2669879981236062957L;
-	private final Node location;
 
     @TruffleBoundary
     public NablaException(String message, Node location) {
-        super(message);
-        this.location = location;
-    }
-
-    @SuppressWarnings("sync-override")
-    @Override
-    public final Throwable fillInStackTrace() {
-        return this;
-    }
-
-    public Node getLocation() {
-        return location;
+        super(message, location);
     }
     
     @TruffleBoundary

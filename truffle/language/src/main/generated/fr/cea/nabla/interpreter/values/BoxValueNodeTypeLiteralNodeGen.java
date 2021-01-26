@@ -21,7 +21,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
 
     private static final LibraryFactory<InteropLibrary> INTEROP_LIBRARY_ = LibraryFactory.resolve(InteropLibrary.class);
 
-    @CompilationFinal private volatile int state_;
+    @CompilationFinal private volatile int state_0_;
     @CompilationFinal private volatile int exclude_;
     @Child private Bool0Data bool0_cache;
     @Child private Bool11Data bool11_cache;
@@ -46,9 +46,9 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
     @ExplodeLoop
     @Override
     public Object execute(Object arg0Value) {
-        int state = state_;
-        if (state != 0 /* is-active doBool(Object, InteropLibrary) || doBool(Object, InteropLibrary) || doBool1(Object, InteropLibrary) || doBool1(Object, InteropLibrary) || doBool2(Object, InteropLibrary) || doBool2(Object, InteropLibrary) || doBool3(Object, InteropLibrary) || doBool3(Object, InteropLibrary) || doBool4(Object, InteropLibrary) || doBool4(Object, InteropLibrary) || doInt(Object, InteropLibrary) || doInt(Object, InteropLibrary) || doInt1(Object, InteropLibrary) || doInt1(Object, InteropLibrary) || doInt2(Object, InteropLibrary) || doInt2(Object, InteropLibrary) || doInt3(Object, InteropLibrary) || doInt3(Object, InteropLibrary) || doInt4(Object, InteropLibrary) || doInt4(Object, InteropLibrary) || doDouble(Object, InteropLibrary) || doDouble(Object, InteropLibrary) || doDouble1(Object, InteropLibrary) || doDouble1(Object, InteropLibrary) || doDouble2(Object, InteropLibrary) || doDouble2(Object, InteropLibrary) || doDouble3(Object, InteropLibrary) || doDouble3(Object, InteropLibrary) || doDouble4(Object, InteropLibrary) || doDouble4(Object, InteropLibrary) */) {
-            if ((state & 0b1) != 0 /* is-active doBool(Object, InteropLibrary) */) {
+        int state_0 = state_0_;
+        if (state_0 != 0 /* is-state_0 doBool(Object, InteropLibrary) || doBool(Object, InteropLibrary) || doBool1(Object, InteropLibrary) || doBool1(Object, InteropLibrary) || doBool2(Object, InteropLibrary) || doBool2(Object, InteropLibrary) || doBool3(Object, InteropLibrary) || doBool3(Object, InteropLibrary) || doBool4(Object, InteropLibrary) || doBool4(Object, InteropLibrary) || doInt(Object, InteropLibrary) || doInt(Object, InteropLibrary) || doInt1(Object, InteropLibrary) || doInt1(Object, InteropLibrary) || doInt2(Object, InteropLibrary) || doInt2(Object, InteropLibrary) || doInt3(Object, InteropLibrary) || doInt3(Object, InteropLibrary) || doInt4(Object, InteropLibrary) || doInt4(Object, InteropLibrary) || doDouble(Object, InteropLibrary) || doDouble(Object, InteropLibrary) || doDouble1(Object, InteropLibrary) || doDouble1(Object, InteropLibrary) || doDouble2(Object, InteropLibrary) || doDouble2(Object, InteropLibrary) || doDouble3(Object, InteropLibrary) || doDouble3(Object, InteropLibrary) || doDouble4(Object, InteropLibrary) || doDouble4(Object, InteropLibrary) */) {
+            if ((state_0 & 0b1) != 0 /* is-state_0 doBool(Object, InteropLibrary) */) {
                 Bool0Data s1_ = this.bool0_cache;
                 while (s1_ != null) {
                     if ((s1_.objLibrary_.accepts(arg0Value))) {
@@ -58,11 +58,11 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     s1_ = s1_.next_;
                 }
             }
-            if ((state & 0b10) != 0 /* is-active doBool(Object, InteropLibrary) */) {
+            if ((state_0 & 0b10) != 0 /* is-state_0 doBool(Object, InteropLibrary) */) {
                 assert (isBool());
-                return this.bool10Boundary(state, arg0Value);
+                return this.bool10Boundary(state_0, arg0Value);
             }
-            if ((state & 0b100) != 0 /* is-active doBool1(Object, InteropLibrary) */) {
+            if ((state_0 & 0b100) != 0 /* is-state_0 doBool1(Object, InteropLibrary) */) {
                 Bool11Data s3_ = this.bool11_cache;
                 while (s3_ != null) {
                     if ((s3_.objLibrary_.accepts(arg0Value))) {
@@ -72,11 +72,11 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     s3_ = s3_.next_;
                 }
             }
-            if ((state & 0b1000) != 0 /* is-active doBool1(Object, InteropLibrary) */) {
+            if ((state_0 & 0b1000) != 0 /* is-state_0 doBool1(Object, InteropLibrary) */) {
                 assert (isBoolArray1());
-                return this.bool12Boundary(state, arg0Value);
+                return this.bool12Boundary(state_0, arg0Value);
             }
-            if ((state & 0b10000) != 0 /* is-active doBool2(Object, InteropLibrary) */) {
+            if ((state_0 & 0b10000) != 0 /* is-state_0 doBool2(Object, InteropLibrary) */) {
                 Bool20Data s5_ = this.bool20_cache;
                 while (s5_ != null) {
                     if ((s5_.objLibrary_.accepts(arg0Value))) {
@@ -86,11 +86,11 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     s5_ = s5_.next_;
                 }
             }
-            if ((state & 0b100000) != 0 /* is-active doBool2(Object, InteropLibrary) */) {
+            if ((state_0 & 0b100000) != 0 /* is-state_0 doBool2(Object, InteropLibrary) */) {
                 assert (isBoolArray2());
-                return this.bool21Boundary(state, arg0Value);
+                return this.bool21Boundary(state_0, arg0Value);
             }
-            if ((state & 0b1000000) != 0 /* is-active doBool3(Object, InteropLibrary) */) {
+            if ((state_0 & 0b1000000) != 0 /* is-state_0 doBool3(Object, InteropLibrary) */) {
                 Bool30Data s7_ = this.bool30_cache;
                 while (s7_ != null) {
                     if ((s7_.objLibrary_.accepts(arg0Value))) {
@@ -100,11 +100,11 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     s7_ = s7_.next_;
                 }
             }
-            if ((state & 0b10000000) != 0 /* is-active doBool3(Object, InteropLibrary) */) {
+            if ((state_0 & 0b10000000) != 0 /* is-state_0 doBool3(Object, InteropLibrary) */) {
                 assert (isBoolArray3());
-                return this.bool31Boundary(state, arg0Value);
+                return this.bool31Boundary(state_0, arg0Value);
             }
-            if ((state & 0b100000000) != 0 /* is-active doBool4(Object, InteropLibrary) */) {
+            if ((state_0 & 0b100000000) != 0 /* is-state_0 doBool4(Object, InteropLibrary) */) {
                 Bool40Data s9_ = this.bool40_cache;
                 while (s9_ != null) {
                     if ((s9_.objLibrary_.accepts(arg0Value))) {
@@ -114,11 +114,11 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     s9_ = s9_.next_;
                 }
             }
-            if ((state & 0b1000000000) != 0 /* is-active doBool4(Object, InteropLibrary) */) {
+            if ((state_0 & 0b1000000000) != 0 /* is-state_0 doBool4(Object, InteropLibrary) */) {
                 assert (isBoolArray4());
-                return this.bool41Boundary(state, arg0Value);
+                return this.bool41Boundary(state_0, arg0Value);
             }
-            if ((state & 0b10000000000) != 0 /* is-active doInt(Object, InteropLibrary) */) {
+            if ((state_0 & 0b10000000000) != 0 /* is-state_0 doInt(Object, InteropLibrary) */) {
                 Int0Data s11_ = this.int0_cache;
                 while (s11_ != null) {
                     if ((s11_.objLibrary_.accepts(arg0Value))) {
@@ -128,11 +128,11 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     s11_ = s11_.next_;
                 }
             }
-            if ((state & 0b100000000000) != 0 /* is-active doInt(Object, InteropLibrary) */) {
+            if ((state_0 & 0b100000000000) != 0 /* is-state_0 doInt(Object, InteropLibrary) */) {
                 assert (isInt());
-                return this.int10Boundary(state, arg0Value);
+                return this.int10Boundary(state_0, arg0Value);
             }
-            if ((state & 0b1000000000000) != 0 /* is-active doInt1(Object, InteropLibrary) */) {
+            if ((state_0 & 0b1000000000000) != 0 /* is-state_0 doInt1(Object, InteropLibrary) */) {
                 Int11Data s13_ = this.int11_cache;
                 while (s13_ != null) {
                     if ((s13_.objLibrary_.accepts(arg0Value))) {
@@ -142,11 +142,11 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     s13_ = s13_.next_;
                 }
             }
-            if ((state & 0b10000000000000) != 0 /* is-active doInt1(Object, InteropLibrary) */) {
+            if ((state_0 & 0b10000000000000) != 0 /* is-state_0 doInt1(Object, InteropLibrary) */) {
                 assert (isIntArray1());
-                return this.int12Boundary(state, arg0Value);
+                return this.int12Boundary(state_0, arg0Value);
             }
-            if ((state & 0b100000000000000) != 0 /* is-active doInt2(Object, InteropLibrary) */) {
+            if ((state_0 & 0b100000000000000) != 0 /* is-state_0 doInt2(Object, InteropLibrary) */) {
                 Int20Data s15_ = this.int20_cache;
                 while (s15_ != null) {
                     if ((s15_.objLibrary_.accepts(arg0Value))) {
@@ -156,11 +156,11 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     s15_ = s15_.next_;
                 }
             }
-            if ((state & 0b1000000000000000) != 0 /* is-active doInt2(Object, InteropLibrary) */) {
+            if ((state_0 & 0b1000000000000000) != 0 /* is-state_0 doInt2(Object, InteropLibrary) */) {
                 assert (isIntArray2());
-                return this.int21Boundary(state, arg0Value);
+                return this.int21Boundary(state_0, arg0Value);
             }
-            if ((state & 0x10000) != 0 /* is-active doInt3(Object, InteropLibrary) */) {
+            if ((state_0 & 0x10000) != 0 /* is-state_0 doInt3(Object, InteropLibrary) */) {
                 Int30Data s17_ = this.int30_cache;
                 while (s17_ != null) {
                     if ((s17_.objLibrary_.accepts(arg0Value))) {
@@ -170,11 +170,11 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     s17_ = s17_.next_;
                 }
             }
-            if ((state & 0x20000) != 0 /* is-active doInt3(Object, InteropLibrary) */) {
+            if ((state_0 & 0x20000) != 0 /* is-state_0 doInt3(Object, InteropLibrary) */) {
                 assert (isIntArray3());
-                return this.int31Boundary(state, arg0Value);
+                return this.int31Boundary(state_0, arg0Value);
             }
-            if ((state & 0x40000) != 0 /* is-active doInt4(Object, InteropLibrary) */) {
+            if ((state_0 & 0x40000) != 0 /* is-state_0 doInt4(Object, InteropLibrary) */) {
                 Int40Data s19_ = this.int40_cache;
                 while (s19_ != null) {
                     if ((s19_.objLibrary_.accepts(arg0Value))) {
@@ -184,11 +184,11 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     s19_ = s19_.next_;
                 }
             }
-            if ((state & 0x80000) != 0 /* is-active doInt4(Object, InteropLibrary) */) {
+            if ((state_0 & 0x80000) != 0 /* is-state_0 doInt4(Object, InteropLibrary) */) {
                 assert (isIntArray4());
-                return this.int41Boundary(state, arg0Value);
+                return this.int41Boundary(state_0, arg0Value);
             }
-            if ((state & 0x100000) != 0 /* is-active doDouble(Object, InteropLibrary) */) {
+            if ((state_0 & 0x100000) != 0 /* is-state_0 doDouble(Object, InteropLibrary) */) {
                 Double0Data s21_ = this.double0_cache;
                 while (s21_ != null) {
                     if ((s21_.objLibrary_.accepts(arg0Value))) {
@@ -198,11 +198,11 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     s21_ = s21_.next_;
                 }
             }
-            if ((state & 0x200000) != 0 /* is-active doDouble(Object, InteropLibrary) */) {
+            if ((state_0 & 0x200000) != 0 /* is-state_0 doDouble(Object, InteropLibrary) */) {
                 assert (isDouble());
-                return this.double10Boundary(state, arg0Value);
+                return this.double10Boundary(state_0, arg0Value);
             }
-            if ((state & 0x400000) != 0 /* is-active doDouble1(Object, InteropLibrary) */) {
+            if ((state_0 & 0x400000) != 0 /* is-state_0 doDouble1(Object, InteropLibrary) */) {
                 Double11Data s23_ = this.double11_cache;
                 while (s23_ != null) {
                     if ((s23_.objLibrary_.accepts(arg0Value))) {
@@ -212,11 +212,11 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     s23_ = s23_.next_;
                 }
             }
-            if ((state & 0x800000) != 0 /* is-active doDouble1(Object, InteropLibrary) */) {
+            if ((state_0 & 0x800000) != 0 /* is-state_0 doDouble1(Object, InteropLibrary) */) {
                 assert (isDoubleArray1());
-                return this.double12Boundary(state, arg0Value);
+                return this.double12Boundary(state_0, arg0Value);
             }
-            if ((state & 0x1000000) != 0 /* is-active doDouble2(Object, InteropLibrary) */) {
+            if ((state_0 & 0x1000000) != 0 /* is-state_0 doDouble2(Object, InteropLibrary) */) {
                 Double20Data s25_ = this.double20_cache;
                 while (s25_ != null) {
                     if ((s25_.objLibrary_.accepts(arg0Value))) {
@@ -226,11 +226,11 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     s25_ = s25_.next_;
                 }
             }
-            if ((state & 0x2000000) != 0 /* is-active doDouble2(Object, InteropLibrary) */) {
+            if ((state_0 & 0x2000000) != 0 /* is-state_0 doDouble2(Object, InteropLibrary) */) {
                 assert (isDoubleArray2());
-                return this.double21Boundary(state, arg0Value);
+                return this.double21Boundary(state_0, arg0Value);
             }
-            if ((state & 0x4000000) != 0 /* is-active doDouble3(Object, InteropLibrary) */) {
+            if ((state_0 & 0x4000000) != 0 /* is-state_0 doDouble3(Object, InteropLibrary) */) {
                 Double30Data s27_ = this.double30_cache;
                 while (s27_ != null) {
                     if ((s27_.objLibrary_.accepts(arg0Value))) {
@@ -240,11 +240,11 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     s27_ = s27_.next_;
                 }
             }
-            if ((state & 0x8000000) != 0 /* is-active doDouble3(Object, InteropLibrary) */) {
+            if ((state_0 & 0x8000000) != 0 /* is-state_0 doDouble3(Object, InteropLibrary) */) {
                 assert (isDoubleArray3());
-                return this.double31Boundary(state, arg0Value);
+                return this.double31Boundary(state_0, arg0Value);
             }
-            if ((state & 0x10000000) != 0 /* is-active doDouble4(Object, InteropLibrary) */) {
+            if ((state_0 & 0x10000000) != 0 /* is-state_0 doDouble4(Object, InteropLibrary) */) {
                 Double40Data s29_ = this.double40_cache;
                 while (s29_ != null) {
                     if ((s29_.objLibrary_.accepts(arg0Value))) {
@@ -254,9 +254,9 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     s29_ = s29_.next_;
                 }
             }
-            if ((state & 0x20000000) != 0 /* is-active doDouble4(Object, InteropLibrary) */) {
+            if ((state_0 & 0x20000000) != 0 /* is-state_0 doDouble4(Object, InteropLibrary) */) {
                 assert (isDoubleArray4());
-                return this.double41Boundary(state, arg0Value);
+                return this.double41Boundary(state_0, arg0Value);
             }
         }
         CompilerDirectives.transferToInterpreterAndInvalidate();
@@ -265,7 +265,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
 
     @SuppressWarnings("static-method")
     @TruffleBoundary
-    private Object bool10Boundary(int state, Object arg0Value) {
+    private Object bool10Boundary(int state_0, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
         Node prev_ = encapsulating_.set(this);
         try {
@@ -280,7 +280,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
 
     @SuppressWarnings("static-method")
     @TruffleBoundary
-    private Object bool12Boundary(int state, Object arg0Value) {
+    private Object bool12Boundary(int state_0, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
         Node prev_ = encapsulating_.set(this);
         try {
@@ -295,7 +295,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
 
     @SuppressWarnings("static-method")
     @TruffleBoundary
-    private Object bool21Boundary(int state, Object arg0Value) {
+    private Object bool21Boundary(int state_0, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
         Node prev_ = encapsulating_.set(this);
         try {
@@ -310,7 +310,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
 
     @SuppressWarnings("static-method")
     @TruffleBoundary
-    private Object bool31Boundary(int state, Object arg0Value) {
+    private Object bool31Boundary(int state_0, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
         Node prev_ = encapsulating_.set(this);
         try {
@@ -325,7 +325,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
 
     @SuppressWarnings("static-method")
     @TruffleBoundary
-    private Object bool41Boundary(int state, Object arg0Value) {
+    private Object bool41Boundary(int state_0, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
         Node prev_ = encapsulating_.set(this);
         try {
@@ -340,7 +340,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
 
     @SuppressWarnings("static-method")
     @TruffleBoundary
-    private Object int10Boundary(int state, Object arg0Value) {
+    private Object int10Boundary(int state_0, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
         Node prev_ = encapsulating_.set(this);
         try {
@@ -355,7 +355,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
 
     @SuppressWarnings("static-method")
     @TruffleBoundary
-    private Object int12Boundary(int state, Object arg0Value) {
+    private Object int12Boundary(int state_0, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
         Node prev_ = encapsulating_.set(this);
         try {
@@ -370,7 +370,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
 
     @SuppressWarnings("static-method")
     @TruffleBoundary
-    private Object int21Boundary(int state, Object arg0Value) {
+    private Object int21Boundary(int state_0, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
         Node prev_ = encapsulating_.set(this);
         try {
@@ -385,7 +385,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
 
     @SuppressWarnings("static-method")
     @TruffleBoundary
-    private Object int31Boundary(int state, Object arg0Value) {
+    private Object int31Boundary(int state_0, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
         Node prev_ = encapsulating_.set(this);
         try {
@@ -400,7 +400,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
 
     @SuppressWarnings("static-method")
     @TruffleBoundary
-    private Object int41Boundary(int state, Object arg0Value) {
+    private Object int41Boundary(int state_0, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
         Node prev_ = encapsulating_.set(this);
         try {
@@ -415,7 +415,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
 
     @SuppressWarnings("static-method")
     @TruffleBoundary
-    private Object double10Boundary(int state, Object arg0Value) {
+    private Object double10Boundary(int state_0, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
         Node prev_ = encapsulating_.set(this);
         try {
@@ -430,7 +430,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
 
     @SuppressWarnings("static-method")
     @TruffleBoundary
-    private Object double12Boundary(int state, Object arg0Value) {
+    private Object double12Boundary(int state_0, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
         Node prev_ = encapsulating_.set(this);
         try {
@@ -445,7 +445,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
 
     @SuppressWarnings("static-method")
     @TruffleBoundary
-    private Object double21Boundary(int state, Object arg0Value) {
+    private Object double21Boundary(int state_0, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
         Node prev_ = encapsulating_.set(this);
         try {
@@ -460,7 +460,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
 
     @SuppressWarnings("static-method")
     @TruffleBoundary
-    private Object double31Boundary(int state, Object arg0Value) {
+    private Object double31Boundary(int state_0, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
         Node prev_ = encapsulating_.set(this);
         try {
@@ -475,7 +475,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
 
     @SuppressWarnings("static-method")
     @TruffleBoundary
-    private Object double41Boundary(int state, Object arg0Value) {
+    private Object double41Boundary(int state_0, Object arg0Value) {
         EncapsulatingNodeReference encapsulating_ = EncapsulatingNodeReference.getCurrent();
         Node prev_ = encapsulating_.set(this);
         try {
@@ -492,13 +492,13 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
         Lock lock = getLock();
         boolean hasLock = true;
         lock.lock();
-        int state = state_;
+        int state_0 = state_0_;
         int exclude = exclude_;
         try {
-            if (((exclude & 0b1)) == 0 /* is-not-excluded doBool(Object, InteropLibrary) */) {
+            if (((exclude & 0b1)) == 0 /* is-not-exclude doBool(Object, InteropLibrary) */) {
                 int count1_ = 0;
                 Bool0Data s1_ = this.bool0_cache;
-                if ((state & 0b1) != 0 /* is-active doBool(Object, InteropLibrary) */) {
+                if ((state_0 & 0b1) != 0 /* is-state_0 doBool(Object, InteropLibrary) */) {
                     while (s1_ != null) {
                         if ((s1_.objLibrary_.accepts(arg0Value))) {
                             assert (isBool());
@@ -514,7 +514,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                         s1_ = super.insert(new Bool0Data(bool0_cache));
                         s1_.objLibrary_ = s1_.insertAccessor((INTEROP_LIBRARY_.create(arg0Value)));
                         this.bool0_cache = s1_;
-                        this.state_ = state = state | 0b1 /* add-active doBool(Object, InteropLibrary) */;
+                        this.state_0_ = state_0 = state_0 | 0b1 /* add-state_0 doBool(Object, InteropLibrary) */;
                     }
                 }
                 if (s1_ != null) {
@@ -531,10 +531,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     try {
                         if ((isBool())) {
                             bool10_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
-                            this.exclude_ = exclude = exclude | 0b1 /* add-excluded doBool(Object, InteropLibrary) */;
+                            this.exclude_ = exclude = exclude | 0b1 /* add-exclude doBool(Object, InteropLibrary) */;
                             this.bool0_cache = null;
-                            state = state & 0xfffffffe /* remove-active doBool(Object, InteropLibrary) */;
-                            this.state_ = state = state | 0b10 /* add-active doBool(Object, InteropLibrary) */;
+                            state_0 = state_0 & 0xfffffffe /* remove-state_0 doBool(Object, InteropLibrary) */;
+                            this.state_0_ = state_0 = state_0 | 0b10 /* add-state_0 doBool(Object, InteropLibrary) */;
                             lock.unlock();
                             hasLock = false;
                             return doBool(arg0Value, bool10_objLibrary__);
@@ -544,10 +544,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     }
                 }
             }
-            if (((exclude & 0b10)) == 0 /* is-not-excluded doBool1(Object, InteropLibrary) */) {
+            if (((exclude & 0b10)) == 0 /* is-not-exclude doBool1(Object, InteropLibrary) */) {
                 int count3_ = 0;
                 Bool11Data s3_ = this.bool11_cache;
-                if ((state & 0b100) != 0 /* is-active doBool1(Object, InteropLibrary) */) {
+                if ((state_0 & 0b100) != 0 /* is-state_0 doBool1(Object, InteropLibrary) */) {
                     while (s3_ != null) {
                         if ((s3_.objLibrary_.accepts(arg0Value))) {
                             assert (isBoolArray1());
@@ -563,7 +563,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                         s3_ = super.insert(new Bool11Data(bool11_cache));
                         s3_.objLibrary_ = s3_.insertAccessor((INTEROP_LIBRARY_.create(arg0Value)));
                         this.bool11_cache = s3_;
-                        this.state_ = state = state | 0b100 /* add-active doBool1(Object, InteropLibrary) */;
+                        this.state_0_ = state_0 = state_0 | 0b100 /* add-state_0 doBool1(Object, InteropLibrary) */;
                     }
                 }
                 if (s3_ != null) {
@@ -580,10 +580,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     try {
                         if ((isBoolArray1())) {
                             bool12_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
-                            this.exclude_ = exclude = exclude | 0b10 /* add-excluded doBool1(Object, InteropLibrary) */;
+                            this.exclude_ = exclude = exclude | 0b10 /* add-exclude doBool1(Object, InteropLibrary) */;
                             this.bool11_cache = null;
-                            state = state & 0xfffffffb /* remove-active doBool1(Object, InteropLibrary) */;
-                            this.state_ = state = state | 0b1000 /* add-active doBool1(Object, InteropLibrary) */;
+                            state_0 = state_0 & 0xfffffffb /* remove-state_0 doBool1(Object, InteropLibrary) */;
+                            this.state_0_ = state_0 = state_0 | 0b1000 /* add-state_0 doBool1(Object, InteropLibrary) */;
                             lock.unlock();
                             hasLock = false;
                             return doBool1(arg0Value, bool12_objLibrary__);
@@ -593,10 +593,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     }
                 }
             }
-            if (((exclude & 0b100)) == 0 /* is-not-excluded doBool2(Object, InteropLibrary) */) {
+            if (((exclude & 0b100)) == 0 /* is-not-exclude doBool2(Object, InteropLibrary) */) {
                 int count5_ = 0;
                 Bool20Data s5_ = this.bool20_cache;
-                if ((state & 0b10000) != 0 /* is-active doBool2(Object, InteropLibrary) */) {
+                if ((state_0 & 0b10000) != 0 /* is-state_0 doBool2(Object, InteropLibrary) */) {
                     while (s5_ != null) {
                         if ((s5_.objLibrary_.accepts(arg0Value))) {
                             assert (isBoolArray2());
@@ -612,7 +612,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                         s5_ = super.insert(new Bool20Data(bool20_cache));
                         s5_.objLibrary_ = s5_.insertAccessor((INTEROP_LIBRARY_.create(arg0Value)));
                         this.bool20_cache = s5_;
-                        this.state_ = state = state | 0b10000 /* add-active doBool2(Object, InteropLibrary) */;
+                        this.state_0_ = state_0 = state_0 | 0b10000 /* add-state_0 doBool2(Object, InteropLibrary) */;
                     }
                 }
                 if (s5_ != null) {
@@ -629,10 +629,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     try {
                         if ((isBoolArray2())) {
                             bool21_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
-                            this.exclude_ = exclude = exclude | 0b100 /* add-excluded doBool2(Object, InteropLibrary) */;
+                            this.exclude_ = exclude = exclude | 0b100 /* add-exclude doBool2(Object, InteropLibrary) */;
                             this.bool20_cache = null;
-                            state = state & 0xffffffef /* remove-active doBool2(Object, InteropLibrary) */;
-                            this.state_ = state = state | 0b100000 /* add-active doBool2(Object, InteropLibrary) */;
+                            state_0 = state_0 & 0xffffffef /* remove-state_0 doBool2(Object, InteropLibrary) */;
+                            this.state_0_ = state_0 = state_0 | 0b100000 /* add-state_0 doBool2(Object, InteropLibrary) */;
                             lock.unlock();
                             hasLock = false;
                             return doBool2(arg0Value, bool21_objLibrary__);
@@ -642,10 +642,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     }
                 }
             }
-            if (((exclude & 0b1000)) == 0 /* is-not-excluded doBool3(Object, InteropLibrary) */) {
+            if (((exclude & 0b1000)) == 0 /* is-not-exclude doBool3(Object, InteropLibrary) */) {
                 int count7_ = 0;
                 Bool30Data s7_ = this.bool30_cache;
-                if ((state & 0b1000000) != 0 /* is-active doBool3(Object, InteropLibrary) */) {
+                if ((state_0 & 0b1000000) != 0 /* is-state_0 doBool3(Object, InteropLibrary) */) {
                     while (s7_ != null) {
                         if ((s7_.objLibrary_.accepts(arg0Value))) {
                             assert (isBoolArray3());
@@ -661,7 +661,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                         s7_ = super.insert(new Bool30Data(bool30_cache));
                         s7_.objLibrary_ = s7_.insertAccessor((INTEROP_LIBRARY_.create(arg0Value)));
                         this.bool30_cache = s7_;
-                        this.state_ = state = state | 0b1000000 /* add-active doBool3(Object, InteropLibrary) */;
+                        this.state_0_ = state_0 = state_0 | 0b1000000 /* add-state_0 doBool3(Object, InteropLibrary) */;
                     }
                 }
                 if (s7_ != null) {
@@ -678,10 +678,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     try {
                         if ((isBoolArray3())) {
                             bool31_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
-                            this.exclude_ = exclude = exclude | 0b1000 /* add-excluded doBool3(Object, InteropLibrary) */;
+                            this.exclude_ = exclude = exclude | 0b1000 /* add-exclude doBool3(Object, InteropLibrary) */;
                             this.bool30_cache = null;
-                            state = state & 0xffffffbf /* remove-active doBool3(Object, InteropLibrary) */;
-                            this.state_ = state = state | 0b10000000 /* add-active doBool3(Object, InteropLibrary) */;
+                            state_0 = state_0 & 0xffffffbf /* remove-state_0 doBool3(Object, InteropLibrary) */;
+                            this.state_0_ = state_0 = state_0 | 0b10000000 /* add-state_0 doBool3(Object, InteropLibrary) */;
                             lock.unlock();
                             hasLock = false;
                             return doBool3(arg0Value, bool31_objLibrary__);
@@ -691,10 +691,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     }
                 }
             }
-            if (((exclude & 0b10000)) == 0 /* is-not-excluded doBool4(Object, InteropLibrary) */) {
+            if (((exclude & 0b10000)) == 0 /* is-not-exclude doBool4(Object, InteropLibrary) */) {
                 int count9_ = 0;
                 Bool40Data s9_ = this.bool40_cache;
-                if ((state & 0b100000000) != 0 /* is-active doBool4(Object, InteropLibrary) */) {
+                if ((state_0 & 0b100000000) != 0 /* is-state_0 doBool4(Object, InteropLibrary) */) {
                     while (s9_ != null) {
                         if ((s9_.objLibrary_.accepts(arg0Value))) {
                             assert (isBoolArray4());
@@ -710,7 +710,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                         s9_ = super.insert(new Bool40Data(bool40_cache));
                         s9_.objLibrary_ = s9_.insertAccessor((INTEROP_LIBRARY_.create(arg0Value)));
                         this.bool40_cache = s9_;
-                        this.state_ = state = state | 0b100000000 /* add-active doBool4(Object, InteropLibrary) */;
+                        this.state_0_ = state_0 = state_0 | 0b100000000 /* add-state_0 doBool4(Object, InteropLibrary) */;
                     }
                 }
                 if (s9_ != null) {
@@ -727,10 +727,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     try {
                         if ((isBoolArray4())) {
                             bool41_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
-                            this.exclude_ = exclude = exclude | 0b10000 /* add-excluded doBool4(Object, InteropLibrary) */;
+                            this.exclude_ = exclude = exclude | 0b10000 /* add-exclude doBool4(Object, InteropLibrary) */;
                             this.bool40_cache = null;
-                            state = state & 0xfffffeff /* remove-active doBool4(Object, InteropLibrary) */;
-                            this.state_ = state = state | 0b1000000000 /* add-active doBool4(Object, InteropLibrary) */;
+                            state_0 = state_0 & 0xfffffeff /* remove-state_0 doBool4(Object, InteropLibrary) */;
+                            this.state_0_ = state_0 = state_0 | 0b1000000000 /* add-state_0 doBool4(Object, InteropLibrary) */;
                             lock.unlock();
                             hasLock = false;
                             return doBool4(arg0Value, bool41_objLibrary__);
@@ -740,10 +740,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     }
                 }
             }
-            if (((exclude & 0b100000)) == 0 /* is-not-excluded doInt(Object, InteropLibrary) */) {
+            if (((exclude & 0b100000)) == 0 /* is-not-exclude doInt(Object, InteropLibrary) */) {
                 int count11_ = 0;
                 Int0Data s11_ = this.int0_cache;
-                if ((state & 0b10000000000) != 0 /* is-active doInt(Object, InteropLibrary) */) {
+                if ((state_0 & 0b10000000000) != 0 /* is-state_0 doInt(Object, InteropLibrary) */) {
                     while (s11_ != null) {
                         if ((s11_.objLibrary_.accepts(arg0Value))) {
                             assert (isInt());
@@ -759,7 +759,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                         s11_ = super.insert(new Int0Data(int0_cache));
                         s11_.objLibrary_ = s11_.insertAccessor((INTEROP_LIBRARY_.create(arg0Value)));
                         this.int0_cache = s11_;
-                        this.state_ = state = state | 0b10000000000 /* add-active doInt(Object, InteropLibrary) */;
+                        this.state_0_ = state_0 = state_0 | 0b10000000000 /* add-state_0 doInt(Object, InteropLibrary) */;
                     }
                 }
                 if (s11_ != null) {
@@ -776,10 +776,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     try {
                         if ((isInt())) {
                             int10_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
-                            this.exclude_ = exclude = exclude | 0b100000 /* add-excluded doInt(Object, InteropLibrary) */;
+                            this.exclude_ = exclude = exclude | 0b100000 /* add-exclude doInt(Object, InteropLibrary) */;
                             this.int0_cache = null;
-                            state = state & 0xfffffbff /* remove-active doInt(Object, InteropLibrary) */;
-                            this.state_ = state = state | 0b100000000000 /* add-active doInt(Object, InteropLibrary) */;
+                            state_0 = state_0 & 0xfffffbff /* remove-state_0 doInt(Object, InteropLibrary) */;
+                            this.state_0_ = state_0 = state_0 | 0b100000000000 /* add-state_0 doInt(Object, InteropLibrary) */;
                             lock.unlock();
                             hasLock = false;
                             return doInt(arg0Value, int10_objLibrary__);
@@ -789,10 +789,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     }
                 }
             }
-            if (((exclude & 0b1000000)) == 0 /* is-not-excluded doInt1(Object, InteropLibrary) */) {
+            if (((exclude & 0b1000000)) == 0 /* is-not-exclude doInt1(Object, InteropLibrary) */) {
                 int count13_ = 0;
                 Int11Data s13_ = this.int11_cache;
-                if ((state & 0b1000000000000) != 0 /* is-active doInt1(Object, InteropLibrary) */) {
+                if ((state_0 & 0b1000000000000) != 0 /* is-state_0 doInt1(Object, InteropLibrary) */) {
                     while (s13_ != null) {
                         if ((s13_.objLibrary_.accepts(arg0Value))) {
                             assert (isIntArray1());
@@ -808,7 +808,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                         s13_ = super.insert(new Int11Data(int11_cache));
                         s13_.objLibrary_ = s13_.insertAccessor((INTEROP_LIBRARY_.create(arg0Value)));
                         this.int11_cache = s13_;
-                        this.state_ = state = state | 0b1000000000000 /* add-active doInt1(Object, InteropLibrary) */;
+                        this.state_0_ = state_0 = state_0 | 0b1000000000000 /* add-state_0 doInt1(Object, InteropLibrary) */;
                     }
                 }
                 if (s13_ != null) {
@@ -825,10 +825,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     try {
                         if ((isIntArray1())) {
                             int12_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
-                            this.exclude_ = exclude = exclude | 0b1000000 /* add-excluded doInt1(Object, InteropLibrary) */;
+                            this.exclude_ = exclude = exclude | 0b1000000 /* add-exclude doInt1(Object, InteropLibrary) */;
                             this.int11_cache = null;
-                            state = state & 0xffffefff /* remove-active doInt1(Object, InteropLibrary) */;
-                            this.state_ = state = state | 0b10000000000000 /* add-active doInt1(Object, InteropLibrary) */;
+                            state_0 = state_0 & 0xffffefff /* remove-state_0 doInt1(Object, InteropLibrary) */;
+                            this.state_0_ = state_0 = state_0 | 0b10000000000000 /* add-state_0 doInt1(Object, InteropLibrary) */;
                             lock.unlock();
                             hasLock = false;
                             return doInt1(arg0Value, int12_objLibrary__);
@@ -838,10 +838,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     }
                 }
             }
-            if (((exclude & 0b10000000)) == 0 /* is-not-excluded doInt2(Object, InteropLibrary) */) {
+            if (((exclude & 0b10000000)) == 0 /* is-not-exclude doInt2(Object, InteropLibrary) */) {
                 int count15_ = 0;
                 Int20Data s15_ = this.int20_cache;
-                if ((state & 0b100000000000000) != 0 /* is-active doInt2(Object, InteropLibrary) */) {
+                if ((state_0 & 0b100000000000000) != 0 /* is-state_0 doInt2(Object, InteropLibrary) */) {
                     while (s15_ != null) {
                         if ((s15_.objLibrary_.accepts(arg0Value))) {
                             assert (isIntArray2());
@@ -857,7 +857,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                         s15_ = super.insert(new Int20Data(int20_cache));
                         s15_.objLibrary_ = s15_.insertAccessor((INTEROP_LIBRARY_.create(arg0Value)));
                         this.int20_cache = s15_;
-                        this.state_ = state = state | 0b100000000000000 /* add-active doInt2(Object, InteropLibrary) */;
+                        this.state_0_ = state_0 = state_0 | 0b100000000000000 /* add-state_0 doInt2(Object, InteropLibrary) */;
                     }
                 }
                 if (s15_ != null) {
@@ -874,10 +874,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     try {
                         if ((isIntArray2())) {
                             int21_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
-                            this.exclude_ = exclude = exclude | 0b10000000 /* add-excluded doInt2(Object, InteropLibrary) */;
+                            this.exclude_ = exclude = exclude | 0b10000000 /* add-exclude doInt2(Object, InteropLibrary) */;
                             this.int20_cache = null;
-                            state = state & 0xffffbfff /* remove-active doInt2(Object, InteropLibrary) */;
-                            this.state_ = state = state | 0b1000000000000000 /* add-active doInt2(Object, InteropLibrary) */;
+                            state_0 = state_0 & 0xffffbfff /* remove-state_0 doInt2(Object, InteropLibrary) */;
+                            this.state_0_ = state_0 = state_0 | 0b1000000000000000 /* add-state_0 doInt2(Object, InteropLibrary) */;
                             lock.unlock();
                             hasLock = false;
                             return doInt2(arg0Value, int21_objLibrary__);
@@ -887,10 +887,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     }
                 }
             }
-            if (((exclude & 0b100000000)) == 0 /* is-not-excluded doInt3(Object, InteropLibrary) */) {
+            if (((exclude & 0b100000000)) == 0 /* is-not-exclude doInt3(Object, InteropLibrary) */) {
                 int count17_ = 0;
                 Int30Data s17_ = this.int30_cache;
-                if ((state & 0x10000) != 0 /* is-active doInt3(Object, InteropLibrary) */) {
+                if ((state_0 & 0x10000) != 0 /* is-state_0 doInt3(Object, InteropLibrary) */) {
                     while (s17_ != null) {
                         if ((s17_.objLibrary_.accepts(arg0Value))) {
                             assert (isIntArray3());
@@ -906,7 +906,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                         s17_ = super.insert(new Int30Data(int30_cache));
                         s17_.objLibrary_ = s17_.insertAccessor((INTEROP_LIBRARY_.create(arg0Value)));
                         this.int30_cache = s17_;
-                        this.state_ = state = state | 0x10000 /* add-active doInt3(Object, InteropLibrary) */;
+                        this.state_0_ = state_0 = state_0 | 0x10000 /* add-state_0 doInt3(Object, InteropLibrary) */;
                     }
                 }
                 if (s17_ != null) {
@@ -923,10 +923,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     try {
                         if ((isIntArray3())) {
                             int31_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
-                            this.exclude_ = exclude = exclude | 0b100000000 /* add-excluded doInt3(Object, InteropLibrary) */;
+                            this.exclude_ = exclude = exclude | 0b100000000 /* add-exclude doInt3(Object, InteropLibrary) */;
                             this.int30_cache = null;
-                            state = state & 0xfffeffff /* remove-active doInt3(Object, InteropLibrary) */;
-                            this.state_ = state = state | 0x20000 /* add-active doInt3(Object, InteropLibrary) */;
+                            state_0 = state_0 & 0xfffeffff /* remove-state_0 doInt3(Object, InteropLibrary) */;
+                            this.state_0_ = state_0 = state_0 | 0x20000 /* add-state_0 doInt3(Object, InteropLibrary) */;
                             lock.unlock();
                             hasLock = false;
                             return doInt3(arg0Value, int31_objLibrary__);
@@ -936,10 +936,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     }
                 }
             }
-            if (((exclude & 0b1000000000)) == 0 /* is-not-excluded doInt4(Object, InteropLibrary) */) {
+            if (((exclude & 0b1000000000)) == 0 /* is-not-exclude doInt4(Object, InteropLibrary) */) {
                 int count19_ = 0;
                 Int40Data s19_ = this.int40_cache;
-                if ((state & 0x40000) != 0 /* is-active doInt4(Object, InteropLibrary) */) {
+                if ((state_0 & 0x40000) != 0 /* is-state_0 doInt4(Object, InteropLibrary) */) {
                     while (s19_ != null) {
                         if ((s19_.objLibrary_.accepts(arg0Value))) {
                             assert (isIntArray4());
@@ -955,7 +955,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                         s19_ = super.insert(new Int40Data(int40_cache));
                         s19_.objLibrary_ = s19_.insertAccessor((INTEROP_LIBRARY_.create(arg0Value)));
                         this.int40_cache = s19_;
-                        this.state_ = state = state | 0x40000 /* add-active doInt4(Object, InteropLibrary) */;
+                        this.state_0_ = state_0 = state_0 | 0x40000 /* add-state_0 doInt4(Object, InteropLibrary) */;
                     }
                 }
                 if (s19_ != null) {
@@ -972,10 +972,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     try {
                         if ((isIntArray4())) {
                             int41_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
-                            this.exclude_ = exclude = exclude | 0b1000000000 /* add-excluded doInt4(Object, InteropLibrary) */;
+                            this.exclude_ = exclude = exclude | 0b1000000000 /* add-exclude doInt4(Object, InteropLibrary) */;
                             this.int40_cache = null;
-                            state = state & 0xfffbffff /* remove-active doInt4(Object, InteropLibrary) */;
-                            this.state_ = state = state | 0x80000 /* add-active doInt4(Object, InteropLibrary) */;
+                            state_0 = state_0 & 0xfffbffff /* remove-state_0 doInt4(Object, InteropLibrary) */;
+                            this.state_0_ = state_0 = state_0 | 0x80000 /* add-state_0 doInt4(Object, InteropLibrary) */;
                             lock.unlock();
                             hasLock = false;
                             return doInt4(arg0Value, int41_objLibrary__);
@@ -985,10 +985,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     }
                 }
             }
-            if (((exclude & 0b10000000000)) == 0 /* is-not-excluded doDouble(Object, InteropLibrary) */) {
+            if (((exclude & 0b10000000000)) == 0 /* is-not-exclude doDouble(Object, InteropLibrary) */) {
                 int count21_ = 0;
                 Double0Data s21_ = this.double0_cache;
-                if ((state & 0x100000) != 0 /* is-active doDouble(Object, InteropLibrary) */) {
+                if ((state_0 & 0x100000) != 0 /* is-state_0 doDouble(Object, InteropLibrary) */) {
                     while (s21_ != null) {
                         if ((s21_.objLibrary_.accepts(arg0Value))) {
                             assert (isDouble());
@@ -1004,7 +1004,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                         s21_ = super.insert(new Double0Data(double0_cache));
                         s21_.objLibrary_ = s21_.insertAccessor((INTEROP_LIBRARY_.create(arg0Value)));
                         this.double0_cache = s21_;
-                        this.state_ = state = state | 0x100000 /* add-active doDouble(Object, InteropLibrary) */;
+                        this.state_0_ = state_0 = state_0 | 0x100000 /* add-state_0 doDouble(Object, InteropLibrary) */;
                     }
                 }
                 if (s21_ != null) {
@@ -1021,10 +1021,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     try {
                         if ((isDouble())) {
                             double10_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
-                            this.exclude_ = exclude = exclude | 0b10000000000 /* add-excluded doDouble(Object, InteropLibrary) */;
+                            this.exclude_ = exclude = exclude | 0b10000000000 /* add-exclude doDouble(Object, InteropLibrary) */;
                             this.double0_cache = null;
-                            state = state & 0xffefffff /* remove-active doDouble(Object, InteropLibrary) */;
-                            this.state_ = state = state | 0x200000 /* add-active doDouble(Object, InteropLibrary) */;
+                            state_0 = state_0 & 0xffefffff /* remove-state_0 doDouble(Object, InteropLibrary) */;
+                            this.state_0_ = state_0 = state_0 | 0x200000 /* add-state_0 doDouble(Object, InteropLibrary) */;
                             lock.unlock();
                             hasLock = false;
                             return doDouble(arg0Value, double10_objLibrary__);
@@ -1034,10 +1034,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     }
                 }
             }
-            if (((exclude & 0b100000000000)) == 0 /* is-not-excluded doDouble1(Object, InteropLibrary) */) {
+            if (((exclude & 0b100000000000)) == 0 /* is-not-exclude doDouble1(Object, InteropLibrary) */) {
                 int count23_ = 0;
                 Double11Data s23_ = this.double11_cache;
-                if ((state & 0x400000) != 0 /* is-active doDouble1(Object, InteropLibrary) */) {
+                if ((state_0 & 0x400000) != 0 /* is-state_0 doDouble1(Object, InteropLibrary) */) {
                     while (s23_ != null) {
                         if ((s23_.objLibrary_.accepts(arg0Value))) {
                             assert (isDoubleArray1());
@@ -1053,7 +1053,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                         s23_ = super.insert(new Double11Data(double11_cache));
                         s23_.objLibrary_ = s23_.insertAccessor((INTEROP_LIBRARY_.create(arg0Value)));
                         this.double11_cache = s23_;
-                        this.state_ = state = state | 0x400000 /* add-active doDouble1(Object, InteropLibrary) */;
+                        this.state_0_ = state_0 = state_0 | 0x400000 /* add-state_0 doDouble1(Object, InteropLibrary) */;
                     }
                 }
                 if (s23_ != null) {
@@ -1070,10 +1070,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     try {
                         if ((isDoubleArray1())) {
                             double12_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
-                            this.exclude_ = exclude = exclude | 0b100000000000 /* add-excluded doDouble1(Object, InteropLibrary) */;
+                            this.exclude_ = exclude = exclude | 0b100000000000 /* add-exclude doDouble1(Object, InteropLibrary) */;
                             this.double11_cache = null;
-                            state = state & 0xffbfffff /* remove-active doDouble1(Object, InteropLibrary) */;
-                            this.state_ = state = state | 0x800000 /* add-active doDouble1(Object, InteropLibrary) */;
+                            state_0 = state_0 & 0xffbfffff /* remove-state_0 doDouble1(Object, InteropLibrary) */;
+                            this.state_0_ = state_0 = state_0 | 0x800000 /* add-state_0 doDouble1(Object, InteropLibrary) */;
                             lock.unlock();
                             hasLock = false;
                             return doDouble1(arg0Value, double12_objLibrary__);
@@ -1083,10 +1083,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     }
                 }
             }
-            if (((exclude & 0b1000000000000)) == 0 /* is-not-excluded doDouble2(Object, InteropLibrary) */) {
+            if (((exclude & 0b1000000000000)) == 0 /* is-not-exclude doDouble2(Object, InteropLibrary) */) {
                 int count25_ = 0;
                 Double20Data s25_ = this.double20_cache;
-                if ((state & 0x1000000) != 0 /* is-active doDouble2(Object, InteropLibrary) */) {
+                if ((state_0 & 0x1000000) != 0 /* is-state_0 doDouble2(Object, InteropLibrary) */) {
                     while (s25_ != null) {
                         if ((s25_.objLibrary_.accepts(arg0Value))) {
                             assert (isDoubleArray2());
@@ -1102,7 +1102,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                         s25_ = super.insert(new Double20Data(double20_cache));
                         s25_.objLibrary_ = s25_.insertAccessor((INTEROP_LIBRARY_.create(arg0Value)));
                         this.double20_cache = s25_;
-                        this.state_ = state = state | 0x1000000 /* add-active doDouble2(Object, InteropLibrary) */;
+                        this.state_0_ = state_0 = state_0 | 0x1000000 /* add-state_0 doDouble2(Object, InteropLibrary) */;
                     }
                 }
                 if (s25_ != null) {
@@ -1119,10 +1119,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     try {
                         if ((isDoubleArray2())) {
                             double21_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
-                            this.exclude_ = exclude = exclude | 0b1000000000000 /* add-excluded doDouble2(Object, InteropLibrary) */;
+                            this.exclude_ = exclude = exclude | 0b1000000000000 /* add-exclude doDouble2(Object, InteropLibrary) */;
                             this.double20_cache = null;
-                            state = state & 0xfeffffff /* remove-active doDouble2(Object, InteropLibrary) */;
-                            this.state_ = state = state | 0x2000000 /* add-active doDouble2(Object, InteropLibrary) */;
+                            state_0 = state_0 & 0xfeffffff /* remove-state_0 doDouble2(Object, InteropLibrary) */;
+                            this.state_0_ = state_0 = state_0 | 0x2000000 /* add-state_0 doDouble2(Object, InteropLibrary) */;
                             lock.unlock();
                             hasLock = false;
                             return doDouble2(arg0Value, double21_objLibrary__);
@@ -1132,10 +1132,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     }
                 }
             }
-            if (((exclude & 0b10000000000000)) == 0 /* is-not-excluded doDouble3(Object, InteropLibrary) */) {
+            if (((exclude & 0b10000000000000)) == 0 /* is-not-exclude doDouble3(Object, InteropLibrary) */) {
                 int count27_ = 0;
                 Double30Data s27_ = this.double30_cache;
-                if ((state & 0x4000000) != 0 /* is-active doDouble3(Object, InteropLibrary) */) {
+                if ((state_0 & 0x4000000) != 0 /* is-state_0 doDouble3(Object, InteropLibrary) */) {
                     while (s27_ != null) {
                         if ((s27_.objLibrary_.accepts(arg0Value))) {
                             assert (isDoubleArray3());
@@ -1151,7 +1151,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                         s27_ = super.insert(new Double30Data(double30_cache));
                         s27_.objLibrary_ = s27_.insertAccessor((INTEROP_LIBRARY_.create(arg0Value)));
                         this.double30_cache = s27_;
-                        this.state_ = state = state | 0x4000000 /* add-active doDouble3(Object, InteropLibrary) */;
+                        this.state_0_ = state_0 = state_0 | 0x4000000 /* add-state_0 doDouble3(Object, InteropLibrary) */;
                     }
                 }
                 if (s27_ != null) {
@@ -1168,10 +1168,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     try {
                         if ((isDoubleArray3())) {
                             double31_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
-                            this.exclude_ = exclude = exclude | 0b10000000000000 /* add-excluded doDouble3(Object, InteropLibrary) */;
+                            this.exclude_ = exclude = exclude | 0b10000000000000 /* add-exclude doDouble3(Object, InteropLibrary) */;
                             this.double30_cache = null;
-                            state = state & 0xfbffffff /* remove-active doDouble3(Object, InteropLibrary) */;
-                            this.state_ = state = state | 0x8000000 /* add-active doDouble3(Object, InteropLibrary) */;
+                            state_0 = state_0 & 0xfbffffff /* remove-state_0 doDouble3(Object, InteropLibrary) */;
+                            this.state_0_ = state_0 = state_0 | 0x8000000 /* add-state_0 doDouble3(Object, InteropLibrary) */;
                             lock.unlock();
                             hasLock = false;
                             return doDouble3(arg0Value, double31_objLibrary__);
@@ -1181,10 +1181,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     }
                 }
             }
-            if (((exclude & 0b100000000000000)) == 0 /* is-not-excluded doDouble4(Object, InteropLibrary) */) {
+            if (((exclude & 0b100000000000000)) == 0 /* is-not-exclude doDouble4(Object, InteropLibrary) */) {
                 int count29_ = 0;
                 Double40Data s29_ = this.double40_cache;
-                if ((state & 0x10000000) != 0 /* is-active doDouble4(Object, InteropLibrary) */) {
+                if ((state_0 & 0x10000000) != 0 /* is-state_0 doDouble4(Object, InteropLibrary) */) {
                     while (s29_ != null) {
                         if ((s29_.objLibrary_.accepts(arg0Value))) {
                             assert (isDoubleArray4());
@@ -1200,7 +1200,7 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                         s29_ = super.insert(new Double40Data(double40_cache));
                         s29_.objLibrary_ = s29_.insertAccessor((INTEROP_LIBRARY_.create(arg0Value)));
                         this.double40_cache = s29_;
-                        this.state_ = state = state | 0x10000000 /* add-active doDouble4(Object, InteropLibrary) */;
+                        this.state_0_ = state_0 = state_0 | 0x10000000 /* add-state_0 doDouble4(Object, InteropLibrary) */;
                     }
                 }
                 if (s29_ != null) {
@@ -1217,10 +1217,10 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
                     try {
                         if ((isDoubleArray4())) {
                             double41_objLibrary__ = (INTEROP_LIBRARY_.getUncached(arg0Value));
-                            this.exclude_ = exclude = exclude | 0b100000000000000 /* add-excluded doDouble4(Object, InteropLibrary) */;
+                            this.exclude_ = exclude = exclude | 0b100000000000000 /* add-exclude doDouble4(Object, InteropLibrary) */;
                             this.double40_cache = null;
-                            state = state & 0xefffffff /* remove-active doDouble4(Object, InteropLibrary) */;
-                            this.state_ = state = state | 0x20000000 /* add-active doDouble4(Object, InteropLibrary) */;
+                            state_0 = state_0 & 0xefffffff /* remove-state_0 doDouble4(Object, InteropLibrary) */;
+                            this.state_0_ = state_0 = state_0 | 0x20000000 /* add-state_0 doDouble4(Object, InteropLibrary) */;
                             lock.unlock();
                             hasLock = false;
                             return doDouble4(arg0Value, double41_objLibrary__);
@@ -1240,27 +1240,29 @@ public final class BoxValueNodeTypeLiteralNodeGen extends BoxValueNodeTypeLitera
 
     @Override
     public NodeCost getCost() {
-        int state = state_;
-        if (state == 0b0) {
+        int state_0 = state_0_;
+        if (state_0 == 0) {
             return NodeCost.UNINITIALIZED;
-        } else if ((state & (state - 1)) == 0 /* is-single-active  */) {
-            Bool0Data s1_ = this.bool0_cache;
-            Bool11Data s3_ = this.bool11_cache;
-            Bool20Data s5_ = this.bool20_cache;
-            Bool30Data s7_ = this.bool30_cache;
-            Bool40Data s9_ = this.bool40_cache;
-            Int0Data s11_ = this.int0_cache;
-            Int11Data s13_ = this.int11_cache;
-            Int20Data s15_ = this.int20_cache;
-            Int30Data s17_ = this.int30_cache;
-            Int40Data s19_ = this.int40_cache;
-            Double0Data s21_ = this.double0_cache;
-            Double11Data s23_ = this.double11_cache;
-            Double20Data s25_ = this.double20_cache;
-            Double30Data s27_ = this.double30_cache;
-            Double40Data s29_ = this.double40_cache;
-            if ((s1_ == null || s1_.next_ == null) && (s3_ == null || s3_.next_ == null) && (s5_ == null || s5_.next_ == null) && (s7_ == null || s7_.next_ == null) && (s9_ == null || s9_.next_ == null) && (s11_ == null || s11_.next_ == null) && (s13_ == null || s13_.next_ == null) && (s15_ == null || s15_.next_ == null) && (s17_ == null || s17_.next_ == null) && (s19_ == null || s19_.next_ == null) && (s21_ == null || s21_.next_ == null) && (s23_ == null || s23_.next_ == null) && (s25_ == null || s25_.next_ == null) && (s27_ == null || s27_.next_ == null) && (s29_ == null || s29_.next_ == null)) {
-                return NodeCost.MONOMORPHIC;
+        } else {
+            if ((state_0 & (state_0 - 1)) == 0 /* is-single-state_0  */) {
+                Bool0Data s1_ = this.bool0_cache;
+                Bool11Data s3_ = this.bool11_cache;
+                Bool20Data s5_ = this.bool20_cache;
+                Bool30Data s7_ = this.bool30_cache;
+                Bool40Data s9_ = this.bool40_cache;
+                Int0Data s11_ = this.int0_cache;
+                Int11Data s13_ = this.int11_cache;
+                Int20Data s15_ = this.int20_cache;
+                Int30Data s17_ = this.int30_cache;
+                Int40Data s19_ = this.int40_cache;
+                Double0Data s21_ = this.double0_cache;
+                Double11Data s23_ = this.double11_cache;
+                Double20Data s25_ = this.double20_cache;
+                Double30Data s27_ = this.double30_cache;
+                Double40Data s29_ = this.double40_cache;
+                if ((s1_ == null || s1_.next_ == null) && (s3_ == null || s3_.next_ == null) && (s5_ == null || s5_.next_ == null) && (s7_ == null || s7_.next_ == null) && (s9_ == null || s9_.next_ == null) && (s11_ == null || s11_.next_ == null) && (s13_ == null || s13_.next_ == null) && (s15_ == null || s15_.next_ == null) && (s17_ == null || s17_.next_ == null) && (s19_ == null || s19_.next_ == null) && (s21_ == null || s21_.next_ == null) && (s23_ == null || s23_.next_ == null) && (s25_ == null || s25_.next_ == null) && (s27_ == null || s27_.next_ == null) && (s29_ == null || s29_.next_ == null)) {
+                    return NodeCost.MONOMORPHIC;
+                }
             }
         }
         return NodeCost.POLYMORPHIC;

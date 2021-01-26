@@ -50,7 +50,7 @@ final class FunctionNamesObjectGen {
         @GeneratedBy(FunctionNamesObject.class)
         private static final class Cached extends InteropLibrary {
 
-            Cached() {
+            protected Cached() {
             }
 
             @Override
@@ -92,11 +92,11 @@ final class FunctionNamesObjectGen {
         @GeneratedBy(FunctionNamesObject.class)
         private static final class Uncached extends InteropLibrary {
 
-            Uncached() {
+            protected Uncached() {
             }
 
-            @TruffleBoundary
             @Override
+            @TruffleBoundary
             public boolean accepts(Object receiver) {
                 assert !(receiver instanceof FunctionNamesObject) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof FunctionNamesObject;
@@ -115,6 +115,7 @@ final class FunctionNamesObjectGen {
             @TruffleBoundary
             @Override
             public boolean hasArrayElements(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((FunctionNamesObject) receiver) .hasArrayElements();
             }
@@ -122,6 +123,7 @@ final class FunctionNamesObjectGen {
             @TruffleBoundary
             @Override
             public boolean isArrayElementReadable(Object receiver, long index) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((FunctionNamesObject) receiver) .isArrayElementReadable(index);
             }
@@ -129,6 +131,7 @@ final class FunctionNamesObjectGen {
             @TruffleBoundary
             @Override
             public long getArraySize(Object receiver) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((FunctionNamesObject) receiver) .getArraySize();
             }
@@ -136,6 +139,7 @@ final class FunctionNamesObjectGen {
             @TruffleBoundary
             @Override
             public Object readArrayElement(Object receiver, long index) throws UnsupportedMessageException, InvalidArrayIndexException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((FunctionNamesObject) receiver) .readArrayElement(index);
             }

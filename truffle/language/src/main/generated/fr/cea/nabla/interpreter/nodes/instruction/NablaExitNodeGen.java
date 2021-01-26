@@ -12,7 +12,7 @@ import java.util.concurrent.locks.Lock;
 @GeneratedBy(NablaExitNode.class)
 public final class NablaExitNodeGen extends NablaExitNode {
 
-    @CompilationFinal private volatile int state_;
+    @CompilationFinal private volatile int state_0_;
     @CompilationFinal private BranchProfile exception_;
 
     private NablaExitNodeGen(String message) {
@@ -21,8 +21,8 @@ public final class NablaExitNodeGen extends NablaExitNode {
 
     @Override
     public Object executeGeneric(VirtualFrame frameValue) {
-        int state = state_;
-        if (state != 0 /* is-active doDefault(VirtualFrame, BranchProfile) */) {
+        int state_0 = state_0_;
+        if (state_0 != 0 /* is-state_0 doDefault(VirtualFrame, BranchProfile) */) {
             return doDefault(frameValue, this.exception_);
         }
         CompilerDirectives.transferToInterpreterAndInvalidate();
@@ -33,10 +33,10 @@ public final class NablaExitNodeGen extends NablaExitNode {
         Lock lock = getLock();
         boolean hasLock = true;
         lock.lock();
-        int state = state_;
+        int state_0 = state_0_;
         try {
             this.exception_ = (BranchProfile.create());
-            this.state_ = state = state | 0b1 /* add-active doDefault(VirtualFrame, BranchProfile) */;
+            this.state_0_ = state_0 = state_0 | 0b1 /* add-state_0 doDefault(VirtualFrame, BranchProfile) */;
             lock.unlock();
             hasLock = false;
             return doDefault(frameValue, this.exception_);
@@ -49,8 +49,8 @@ public final class NablaExitNodeGen extends NablaExitNode {
 
     @Override
     public NodeCost getCost() {
-        int state = state_;
-        if (state == 0b0) {
+        int state_0 = state_0_;
+        if (state_0 == 0) {
             return NodeCost.UNINITIALIZED;
         } else {
             return NodeCost.MONOMORPHIC;

@@ -49,7 +49,7 @@ final class FunctionsObjectGen {
         @GeneratedBy(FunctionsObject.class)
         private static final class Cached extends InteropLibrary {
 
-            Cached() {
+            protected Cached() {
             }
 
             @Override
@@ -91,11 +91,11 @@ final class FunctionsObjectGen {
         @GeneratedBy(FunctionsObject.class)
         private static final class Uncached extends InteropLibrary {
 
-            Uncached() {
+            protected Uncached() {
             }
 
-            @TruffleBoundary
             @Override
+            @TruffleBoundary
             public boolean accepts(Object receiver) {
                 assert !(receiver instanceof FunctionsObject) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export. Exported receiver with dynamic dispatch found but not expected.";
                 return receiver instanceof FunctionsObject;
@@ -114,6 +114,7 @@ final class FunctionsObjectGen {
             @TruffleBoundary
             @Override
             public boolean hasMembers(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((FunctionsObject) receiver) .hasMembers();
             }
@@ -121,6 +122,7 @@ final class FunctionsObjectGen {
             @TruffleBoundary
             @Override
             public Object readMember(Object receiver, String member) throws UnsupportedMessageException, UnknownIdentifierException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((FunctionsObject) receiver) .readMember(member);
             }
@@ -128,6 +130,7 @@ final class FunctionsObjectGen {
             @TruffleBoundary
             @Override
             public boolean isMemberReadable(Object receiver, String member) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((FunctionsObject) receiver) .isMemberReadable(member);
             }
@@ -135,6 +138,7 @@ final class FunctionsObjectGen {
             @TruffleBoundary
             @Override
             public Object getMembers(Object receiver, boolean includeInternal) throws UnsupportedMessageException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return ((FunctionsObject) receiver) .getMembers(includeInternal);
             }

@@ -17,7 +17,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xtext.testing.InjectWith;
@@ -34,12 +33,12 @@ import com.google.inject.Provider;
 
 import fr.cea.nabla.NablaStandaloneSetup;
 import fr.cea.nabla.NablagenStandaloneSetup;
-import fr.cea.nabla.generator.IrModuleTransformer;
 import fr.cea.nabla.generator.NablagenInterpreter;
 import fr.cea.nabla.ir.ir.IrModule;
+import fr.cea.nabla.ir.ir.IrRoot;
 import fr.cea.nabla.ir.transformers.ReplaceReductions;
 import fr.cea.nabla.nabla.NablaModule;
-import fr.cea.nabla.nablagen.NablagenModule;
+import fr.cea.nabla.nablagen.NablagenRoot;
 
 @InjectWith(NablaInjectorProvider.class)
 @SuppressWarnings("all")
@@ -54,9 +53,6 @@ public class CompilationChainHelper {
 	@Inject
 	private Provider<ResourceSet> resourceSetProvider;
 
-	@Inject
-	private IrModuleTransformer transformer;
-
 	private NablaStandaloneSetup nablaSetup = new NablaStandaloneSetup();
 
 	private Injector nablaInjector = this.nablaSetup.createInjectorAndDoEMFRegistration();
@@ -67,13 +63,13 @@ public class CompilationChainHelper {
 
 	private Injector nablagenInjector = this.nablagenSetup.createInjectorAndDoEMFRegistration();
 
-	private ParseHelper<NablagenModule> nablagenParseHelper = this.nablagenInjector
+	private ParseHelper<NablagenRoot> nablagenParseHelper = this.nablagenInjector
 			.<ParseHelper>getInstance(ParseHelper.class);
 
-	public IrModule getIrModule(final CharSequence model, final CharSequence genModel) {
+	public IrRoot getIrRoot(final CharSequence model, final CharSequence genModel) {
 		final String mathFunctionsPath = "/nablalib/mathfunctions.nabla";
 		final String linearAlgebraFunctionsPath = "/nablalib/linearalgebrafunctions.nabla";
-		return getIrModule(model, genModel, mathFunctionsPath, linearAlgebraFunctionsPath);
+		return getIrRoot(model, genModel, mathFunctionsPath, linearAlgebraFunctionsPath);
 	}
 	
 	private InputStream getNablaResourceAsStream(String path) throws FileNotFoundException {
@@ -87,7 +83,7 @@ public class CompilationChainHelper {
 		return result;
 	}
 
-	public IrModule getIrModule(final CharSequence model, final CharSequence genModel, String mathFunctionsPath,
+	public IrRoot getIrRoot(final CharSequence model, final CharSequence genModel, String mathFunctionsPath,
 			String linearAlgebraFunctionsPath) {
 		try {
 			final InputStream inMath = getNablaResourceAsStream(mathFunctionsPath);
@@ -102,14 +98,14 @@ public class CompilationChainHelper {
 			final NablaModule nablaModule = nablaParseHelper.parse(model, rs);
 			validate(nablaModule);
 			rs.getResources().add(nablaModule.eResource());
-			final NablagenModule nablaGenModule = nablagenParseHelper.parse(genModel, rs);
-			validate(nablaGenModule);
-			if (nablaGenModule.getConfig() != null) {
+			final NablagenRoot nablaGenRoot = nablagenParseHelper.parse(genModel, rs);
+			validate(nablaGenRoot);
+			if (nablaGenRoot != null) {
 				final NablagenInterpreter interpreter = interpreterProvider.get();
-				final IrModule irModule = interpreter.buildIrModule(nablaGenModule.getConfig(), "");
+				final IrRoot irRoot = interpreter.buildIr(nablaGenRoot, "");
 				final ReplaceReductions replaceReductions = new ReplaceReductions(true);
-				transformer.transformIr(replaceReductions, irModule, msg -> InputOutput.<String>println(msg));
-				return irModule;
+				replaceReductions.transformIr(irRoot);
+				return irRoot;
 			} else {
 				return null;
 			}

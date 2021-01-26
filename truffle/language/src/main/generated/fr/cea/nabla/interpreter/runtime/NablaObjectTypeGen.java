@@ -63,7 +63,7 @@ final class NablaObjectTypeGen {
         private static final class Cached extends InteropLibrary {
 
             @Child private DynamicDispatchLibrary dynamicDispatch_;
-            @CompilationFinal private volatile int state_;
+            @CompilationFinal private volatile int state_0_;
             @CompilationFinal private volatile int exclude_;
             @CompilationFinal private GetMembersCachedData getMembers_cached_cache;
             @CompilationFinal private ExistsMemberCachedData existsMember_cached_cache;
@@ -71,9 +71,9 @@ final class NablaObjectTypeGen {
             @CompilationFinal private WriteMemberWriteExistingPropertyCachedData writeMember_writeExistingPropertyCached_cache;
             @CompilationFinal private WriteMemberWriteNewPropertyCachedData writeMember_writeNewPropertyCached_cache;
 
-            Cached(Object originalReceiver) {
-                DynamicObject receiver = ((DynamicObject) originalReceiver) ;
-                this.dynamicDispatch_ = insert(DYNAMIC_DISPATCH_LIBRARY_.create(receiver));
+            protected Cached(Object receiver) {
+                DynamicObject castReceiver = ((DynamicObject) receiver) ;
+                this.dynamicDispatch_ = insert(DYNAMIC_DISPATCH_LIBRARY_.create(castReceiver));
             }
 
             @Override
@@ -102,9 +102,9 @@ final class NablaObjectTypeGen {
                 assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
                 assert assertAdopted();
                 DynamicObject arg0Value = (DynamicObject) dynamicDispatch_.cast(arg0Value_);
-                int state = state_;
-                if ((state & 0b11) != 0 /* is-active doCached(DynamicObject, boolean, Shape, Keys) || doGeneric(DynamicObject, boolean) */) {
-                    if ((state & 0b1) != 0 /* is-active doCached(DynamicObject, boolean, Shape, Keys) */) {
+                int state_0 = state_0_;
+                if ((state_0 & 0b11) != 0 /* is-state_0 doCached(DynamicObject, boolean, Shape, Keys) || doGeneric(DynamicObject, boolean) */) {
+                    if ((state_0 & 0b1) != 0 /* is-state_0 doCached(DynamicObject, boolean, Shape, Keys) */) {
                         GetMembersCachedData s1_ = this.getMembers_cached_cache;
                         while (s1_ != null) {
                             if ((arg0Value.getShape() == s1_.cachedShape_)) {
@@ -113,7 +113,7 @@ final class NablaObjectTypeGen {
                             s1_ = s1_.next_;
                         }
                     }
-                    if ((state & 0b10) != 0 /* is-active doGeneric(DynamicObject, boolean) */) {
+                    if ((state_0 & 0b10) != 0 /* is-state_0 doGeneric(DynamicObject, boolean) */) {
                         return GetMembers.doGeneric(arg0Value, arg1Value);
                     }
                 }
@@ -125,13 +125,13 @@ final class NablaObjectTypeGen {
                 Lock lock = getLock();
                 boolean hasLock = true;
                 lock.lock();
-                int state = state_;
+                int state_0 = state_0_;
                 int exclude = exclude_;
                 try {
-                    if (((exclude & 0b1)) == 0 /* is-not-excluded doCached(DynamicObject, boolean, Shape, Keys) */) {
+                    if (((exclude & 0b1)) == 0 /* is-not-exclude doCached(DynamicObject, boolean, Shape, Keys) */) {
                         int count1_ = 0;
                         GetMembersCachedData s1_ = this.getMembers_cached_cache;
-                        if ((state & 0b1) != 0 /* is-active doCached(DynamicObject, boolean, Shape, Keys) */) {
+                        if ((state_0 & 0b1) != 0 /* is-state_0 doCached(DynamicObject, boolean, Shape, Keys) */) {
                             while (s1_ != null) {
                                 if ((arg0Value.getShape() == s1_.cachedShape_)) {
                                     break;
@@ -148,7 +148,7 @@ final class NablaObjectTypeGen {
                                     s1_.cachedShape_ = cachedShape__;
                                     s1_.cachedKeys_ = (GetMembers.doGeneric(arg0Value, arg1Value));
                                     this.getMembers_cached_cache = s1_;
-                                    this.state_ = state = state | 0b1 /* add-active doCached(DynamicObject, boolean, Shape, Keys) */;
+                                    this.state_0_ = state_0 = state_0 | 0b1 /* add-state_0 doCached(DynamicObject, boolean, Shape, Keys) */;
                                 }
                             }
                         }
@@ -158,10 +158,10 @@ final class NablaObjectTypeGen {
                             return GetMembers.doCached(arg0Value, arg1Value, s1_.cachedShape_, s1_.cachedKeys_);
                         }
                     }
-                    this.exclude_ = exclude = exclude | 0b1 /* add-excluded doCached(DynamicObject, boolean, Shape, Keys) */;
+                    this.exclude_ = exclude = exclude | 0b1 /* add-exclude doCached(DynamicObject, boolean, Shape, Keys) */;
                     this.getMembers_cached_cache = null;
-                    state = state & 0xfffffffe /* remove-active doCached(DynamicObject, boolean, Shape, Keys) */;
-                    this.state_ = state = state | 0b10 /* add-active doGeneric(DynamicObject, boolean) */;
+                    state_0 = state_0 & 0xfffffffe /* remove-state_0 doCached(DynamicObject, boolean, Shape, Keys) */;
+                    this.state_0_ = state_0 = state_0 | 0b10 /* add-state_0 doGeneric(DynamicObject, boolean) */;
                     lock.unlock();
                     hasLock = false;
                     return GetMembers.doGeneric(arg0Value, arg1Value);
@@ -174,13 +174,15 @@ final class NablaObjectTypeGen {
 
             @Override
             public NodeCost getCost() {
-                int state = state_;
-                if ((state & 0b11) == 0b0) {
+                int state_0 = state_0_;
+                if ((state_0 & 0b11) == 0) {
                     return NodeCost.UNINITIALIZED;
-                } else if (((state & 0b11) & ((state & 0b11) - 1)) == 0 /* is-single-active  */) {
-                    GetMembersCachedData s1_ = this.getMembers_cached_cache;
-                    if ((s1_ == null || s1_.next_ == null)) {
-                        return NodeCost.MONOMORPHIC;
+                } else {
+                    if (((state_0 & 0b11) & ((state_0 & 0b11) - 1)) == 0 /* is-single-state_0  */) {
+                        GetMembersCachedData s1_ = this.getMembers_cached_cache;
+                        if ((s1_ == null || s1_.next_ == null)) {
+                            return NodeCost.MONOMORPHIC;
+                        }
                     }
                 }
                 return NodeCost.POLYMORPHIC;
@@ -192,9 +194,9 @@ final class NablaObjectTypeGen {
                 assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
                 assert assertAdopted();
                 DynamicObject arg0Value = (DynamicObject) dynamicDispatch_.cast(arg0Value_);
-                int state = state_;
-                if ((state & 0b1100) != 0 /* is-active doCached(DynamicObject, String, Shape, String, boolean) || doGeneric(DynamicObject, String) */) {
-                    if ((state & 0b100) != 0 /* is-active doCached(DynamicObject, String, Shape, String, boolean) */) {
+                int state_0 = state_0_;
+                if ((state_0 & 0b1100) != 0 /* is-state_0 doCached(DynamicObject, String, Shape, String, boolean) || doGeneric(DynamicObject, String) */) {
+                    if ((state_0 & 0b100) != 0 /* is-state_0 doCached(DynamicObject, String, Shape, String, boolean) */) {
                         ExistsMemberCachedData s1_ = this.existsMember_cached_cache;
                         while (s1_ != null) {
                             if ((arg0Value.getShape() == s1_.cachedShape_) && (s1_.cachedMember_.equals(arg1Value))) {
@@ -203,7 +205,7 @@ final class NablaObjectTypeGen {
                             s1_ = s1_.next_;
                         }
                     }
-                    if ((state & 0b1000) != 0 /* is-active doGeneric(DynamicObject, String) */) {
+                    if ((state_0 & 0b1000) != 0 /* is-state_0 doGeneric(DynamicObject, String) */) {
                         return ExistsMember.doGeneric(arg0Value, arg1Value);
                     }
                 }
@@ -215,13 +217,13 @@ final class NablaObjectTypeGen {
                 Lock lock = getLock();
                 boolean hasLock = true;
                 lock.lock();
-                int state = state_;
+                int state_0 = state_0_;
                 int exclude = exclude_;
                 try {
-                    if (((exclude & 0b10)) == 0 /* is-not-excluded doCached(DynamicObject, String, Shape, String, boolean) */) {
+                    if (((exclude & 0b10)) == 0 /* is-not-exclude doCached(DynamicObject, String, Shape, String, boolean) */) {
                         int count1_ = 0;
                         ExistsMemberCachedData s1_ = this.existsMember_cached_cache;
-                        if ((state & 0b100) != 0 /* is-active doCached(DynamicObject, String, Shape, String, boolean) */) {
+                        if ((state_0 & 0b100) != 0 /* is-state_0 doCached(DynamicObject, String, Shape, String, boolean) */) {
                             while (s1_ != null) {
                                 if ((arg0Value.getShape() == s1_.cachedShape_) && (s1_.cachedMember_.equals(arg1Value))) {
                                     break;
@@ -241,7 +243,7 @@ final class NablaObjectTypeGen {
                                         s1_.cachedMember_ = (arg1Value);
                                         s1_.cachedResult_ = (ExistsMember.doGeneric(arg0Value, arg1Value));
                                         this.existsMember_cached_cache = s1_;
-                                        this.state_ = state = state | 0b100 /* add-active doCached(DynamicObject, String, Shape, String, boolean) */;
+                                        this.state_0_ = state_0 = state_0 | 0b100 /* add-state_0 doCached(DynamicObject, String, Shape, String, boolean) */;
                                     }
                                 }
                             }
@@ -252,10 +254,10 @@ final class NablaObjectTypeGen {
                             return ExistsMember.doCached(arg0Value, arg1Value, s1_.cachedShape_, s1_.cachedMember_, s1_.cachedResult_);
                         }
                     }
-                    this.exclude_ = exclude = exclude | 0b10 /* add-excluded doCached(DynamicObject, String, Shape, String, boolean) */;
+                    this.exclude_ = exclude = exclude | 0b10 /* add-exclude doCached(DynamicObject, String, Shape, String, boolean) */;
                     this.existsMember_cached_cache = null;
-                    state = state & 0xfffffffb /* remove-active doCached(DynamicObject, String, Shape, String, boolean) */;
-                    this.state_ = state = state | 0b1000 /* add-active doGeneric(DynamicObject, String) */;
+                    state_0 = state_0 & 0xfffffffb /* remove-state_0 doCached(DynamicObject, String, Shape, String, boolean) */;
+                    this.state_0_ = state_0 = state_0 | 0b1000 /* add-state_0 doGeneric(DynamicObject, String) */;
                     lock.unlock();
                     hasLock = false;
                     return ExistsMember.doGeneric(arg0Value, arg1Value);
@@ -272,9 +274,9 @@ final class NablaObjectTypeGen {
                 assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
                 assert assertAdopted();
                 DynamicObject arg0Value = (DynamicObject) dynamicDispatch_.cast(arg0Value_);
-                int state = state_;
-                if ((state & 0b1100) != 0 /* is-active doCached(DynamicObject, String, Shape, String, boolean) || doGeneric(DynamicObject, String) */) {
-                    if ((state & 0b100) != 0 /* is-active doCached(DynamicObject, String, Shape, String, boolean) */) {
+                int state_0 = state_0_;
+                if ((state_0 & 0b1100) != 0 /* is-state_0 doCached(DynamicObject, String, Shape, String, boolean) || doGeneric(DynamicObject, String) */) {
+                    if ((state_0 & 0b100) != 0 /* is-state_0 doCached(DynamicObject, String, Shape, String, boolean) */) {
                         ExistsMemberCachedData s1_ = this.existsMember_cached_cache;
                         while (s1_ != null) {
                             if ((arg0Value.getShape() == s1_.cachedShape_) && (s1_.cachedMember_.equals(arg1Value))) {
@@ -283,7 +285,7 @@ final class NablaObjectTypeGen {
                             s1_ = s1_.next_;
                         }
                     }
-                    if ((state & 0b1000) != 0 /* is-active doGeneric(DynamicObject, String) */) {
+                    if ((state_0 & 0b1000) != 0 /* is-state_0 doGeneric(DynamicObject, String) */) {
                         return ExistsMember.doGeneric(arg0Value, arg1Value);
                     }
                 }
@@ -297,9 +299,9 @@ final class NablaObjectTypeGen {
                 assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
                 assert assertAdopted();
                 DynamicObject arg0Value = (DynamicObject) dynamicDispatch_.cast(arg0Value_);
-                int state = state_;
-                if ((state & 0b1100) != 0 /* is-active doCached(DynamicObject, String, Shape, String, boolean) || doGeneric(DynamicObject, String) */) {
-                    if ((state & 0b100) != 0 /* is-active doCached(DynamicObject, String, Shape, String, boolean) */) {
+                int state_0 = state_0_;
+                if ((state_0 & 0b1100) != 0 /* is-state_0 doCached(DynamicObject, String, Shape, String, boolean) || doGeneric(DynamicObject, String) */) {
+                    if ((state_0 & 0b100) != 0 /* is-state_0 doCached(DynamicObject, String, Shape, String, boolean) */) {
                         ExistsMemberCachedData s1_ = this.existsMember_cached_cache;
                         while (s1_ != null) {
                             if ((arg0Value.getShape() == s1_.cachedShape_) && (s1_.cachedMember_.equals(arg1Value))) {
@@ -308,7 +310,7 @@ final class NablaObjectTypeGen {
                             s1_ = s1_.next_;
                         }
                     }
-                    if ((state & 0b1000) != 0 /* is-active doGeneric(DynamicObject, String) */) {
+                    if ((state_0 & 0b1000) != 0 /* is-state_0 doGeneric(DynamicObject, String) */) {
                         return ExistsMember.doGeneric(arg0Value, arg1Value);
                     }
                 }
@@ -333,9 +335,9 @@ final class NablaObjectTypeGen {
                 assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
                 assert assertAdopted();
                 DynamicObject arg0Value = (DynamicObject) dynamicDispatch_.cast(arg0Value_);
-                int state = state_;
-                if ((state & 0b1110000) != 0 /* is-active readCached(DynamicObject, String, String, Shape, Location) || readUncached(DynamicObject, String) || updateShape(DynamicObject, String) */) {
-                    if ((state & 0b10000) != 0 /* is-active readCached(DynamicObject, String, String, Shape, Location) */) {
+                int state_0 = state_0_;
+                if ((state_0 & 0b1110000) != 0 /* is-state_0 readCached(DynamicObject, String, String, Shape, Location) || readUncached(DynamicObject, String) || updateShape(DynamicObject, String) */) {
+                    if ((state_0 & 0b10000) != 0 /* is-state_0 readCached(DynamicObject, String, String, Shape, Location) */) {
                         ReadMemberReadCachedData s1_ = this.readMember_readCached_cache;
                         while (s1_ != null) {
                             if (!Assumption.isValidAssumption(s1_.assumption0_)) {
@@ -349,12 +351,12 @@ final class NablaObjectTypeGen {
                             s1_ = s1_.next_;
                         }
                     }
-                    if ((state & 0b100000) != 0 /* is-active readUncached(DynamicObject, String) */) {
+                    if ((state_0 & 0b100000) != 0 /* is-state_0 readUncached(DynamicObject, String) */) {
                         if ((arg0Value.getShape().isValid())) {
                             return ReadMember.readUncached(arg0Value, arg1Value);
                         }
                     }
-                    if ((state & 0b1000000) != 0 /* is-active updateShape(DynamicObject, String) */) {
+                    if ((state_0 & 0b1000000) != 0 /* is-state_0 updateShape(DynamicObject, String) */) {
                         if ((!(arg0Value.getShape().isValid()))) {
                             return ReadMember.updateShape(arg0Value, arg1Value);
                         }
@@ -368,13 +370,13 @@ final class NablaObjectTypeGen {
                 Lock lock = getLock();
                 boolean hasLock = true;
                 lock.lock();
-                int state = state_;
+                int state_0 = state_0_;
                 int exclude = exclude_;
                 try {
-                    if (((exclude & 0b100)) == 0 /* is-not-excluded readCached(DynamicObject, String, String, Shape, Location) */) {
+                    if (((exclude & 0b100)) == 0 /* is-not-exclude readCached(DynamicObject, String, String, Shape, Location) */) {
                         int count1_ = 0;
                         ReadMemberReadCachedData s1_ = this.readMember_readCached_cache;
-                        if ((state & 0b10000) != 0 /* is-active readCached(DynamicObject, String, String, Shape, Location) */) {
+                        if ((state_0 & 0b10000) != 0 /* is-state_0 readCached(DynamicObject, String, String, Shape, Location) */) {
                             while (s1_ != null) {
                                 if ((arg0Value.getShape() == s1_.cachedShape_) && (s1_.cachedName_.equals(arg1Value)) && (s1_.assumption0_ == null || Assumption.isValidAssumption(s1_.assumption0_))) {
                                     break;
@@ -397,7 +399,7 @@ final class NablaObjectTypeGen {
                                             s1_.location_ = (ReadMember.lookupLocation(cachedShape__, arg1Value));
                                             s1_.assumption0_ = assumption0;
                                             this.readMember_readCached_cache = s1_;
-                                            this.state_ = state = state | 0b10000 /* add-active readCached(DynamicObject, String, String, Shape, Location) */;
+                                            this.state_0_ = state_0 = state_0 | 0b10000 /* add-state_0 readCached(DynamicObject, String, String, Shape, Location) */;
                                         }
                                     }
                                 }
@@ -410,16 +412,16 @@ final class NablaObjectTypeGen {
                         }
                     }
                     if ((arg0Value.getShape().isValid())) {
-                        this.exclude_ = exclude = exclude | 0b100 /* add-excluded readCached(DynamicObject, String, String, Shape, Location) */;
+                        this.exclude_ = exclude = exclude | 0b100 /* add-exclude readCached(DynamicObject, String, String, Shape, Location) */;
                         this.readMember_readCached_cache = null;
-                        state = state & 0xffffffef /* remove-active readCached(DynamicObject, String, String, Shape, Location) */;
-                        this.state_ = state = state | 0b100000 /* add-active readUncached(DynamicObject, String) */;
+                        state_0 = state_0 & 0xffffffef /* remove-state_0 readCached(DynamicObject, String, String, Shape, Location) */;
+                        this.state_0_ = state_0 = state_0 | 0b100000 /* add-state_0 readUncached(DynamicObject, String) */;
                         lock.unlock();
                         hasLock = false;
                         return ReadMember.readUncached(arg0Value, arg1Value);
                     }
                     if ((!(arg0Value.getShape().isValid()))) {
-                        this.state_ = state = state | 0b1000000 /* add-active updateShape(DynamicObject, String) */;
+                        this.state_0_ = state_0 = state_0 | 0b1000000 /* add-state_0 updateShape(DynamicObject, String) */;
                         lock.unlock();
                         hasLock = false;
                         return ReadMember.updateShape(arg0Value, arg1Value);
@@ -451,7 +453,7 @@ final class NablaObjectTypeGen {
                         cur = cur.next_;
                     }
                     if (this.readMember_readCached_cache == null) {
-                        this.state_ = this.state_ & 0xffffffef /* remove-active readCached(DynamicObject, String, String, Shape, Location) */;
+                        this.state_0_ = this.state_0_ & 0xffffffef /* remove-state_0 readCached(DynamicObject, String, String, Shape, Location) */;
                     }
                 } finally {
                     lock.unlock();
@@ -464,9 +466,9 @@ final class NablaObjectTypeGen {
                 assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
                 assert assertAdopted();
                 DynamicObject arg0Value = (DynamicObject) dynamicDispatch_.cast(arg0Value_);
-                int state = state_;
-                if ((state & 0b11110000000) != 0 /* is-active writeExistingPropertyCached(DynamicObject, String, Object, String, Shape, Location) || writeNewPropertyCached(DynamicObject, String, Object, Object, Shape, Location, Shape, Location) || writeUncached(DynamicObject, String, Object) || updateShape(DynamicObject, String, Object) */) {
-                    if ((state & 0b10000000) != 0 /* is-active writeExistingPropertyCached(DynamicObject, String, Object, String, Shape, Location) */) {
+                int state_0 = state_0_;
+                if ((state_0 & 0b11110000000) != 0 /* is-state_0 writeExistingPropertyCached(DynamicObject, String, Object, String, Shape, Location) || writeNewPropertyCached(DynamicObject, String, Object, Object, Shape, Location, Shape, Location) || writeUncached(DynamicObject, String, Object) || updateShape(DynamicObject, String, Object) */) {
+                    if ((state_0 & 0b10000000) != 0 /* is-state_0 writeExistingPropertyCached(DynamicObject, String, Object, String, Shape, Location) */) {
                         WriteMemberWriteExistingPropertyCachedData s1_ = this.writeMember_writeExistingPropertyCached_cache;
                         while (s1_ != null) {
                             if (!Assumption.isValidAssumption(s1_.assumption0_)) {
@@ -485,7 +487,7 @@ final class NablaObjectTypeGen {
                             s1_ = s1_.next_;
                         }
                     }
-                    if ((state & 0b100000000) != 0 /* is-active writeNewPropertyCached(DynamicObject, String, Object, Object, Shape, Location, Shape, Location) */) {
+                    if ((state_0 & 0b100000000) != 0 /* is-state_0 writeNewPropertyCached(DynamicObject, String, Object, Object, Shape, Location, Shape, Location) */) {
                         WriteMemberWriteNewPropertyCachedData s2_ = this.writeMember_writeNewPropertyCached_cache;
                         while (s2_ != null) {
                             if (!Assumption.isValidAssumption(s2_.assumption0_) || !Assumption.isValidAssumption(s2_.assumption1_)) {
@@ -504,13 +506,13 @@ final class NablaObjectTypeGen {
                             s2_ = s2_.next_;
                         }
                     }
-                    if ((state & 0b1000000000) != 0 /* is-active writeUncached(DynamicObject, String, Object) */) {
+                    if ((state_0 & 0b1000000000) != 0 /* is-state_0 writeUncached(DynamicObject, String, Object) */) {
                         if ((arg0Value.getShape().isValid())) {
                             WriteMember.writeUncached(arg0Value, arg1Value, arg2Value);
                             return;
                         }
                     }
-                    if ((state & 0b10000000000) != 0 /* is-active updateShape(DynamicObject, String, Object) */) {
+                    if ((state_0 & 0b10000000000) != 0 /* is-state_0 updateShape(DynamicObject, String, Object) */) {
                         if ((!(arg0Value.getShape().isValid()))) {
                             WriteMember.updateShape(arg0Value, arg1Value, arg2Value);
                             return;
@@ -526,13 +528,13 @@ final class NablaObjectTypeGen {
                 Lock lock = getLock();
                 boolean hasLock = true;
                 lock.lock();
-                int state = state_;
+                int state_0 = state_0_;
                 int exclude = exclude_;
                 try {
-                    if (((exclude & 0b1000)) == 0 /* is-not-excluded writeExistingPropertyCached(DynamicObject, String, Object, String, Shape, Location) */) {
+                    if (((exclude & 0b1000)) == 0 /* is-not-exclude writeExistingPropertyCached(DynamicObject, String, Object, String, Shape, Location) */) {
                         int count1_ = 0;
                         WriteMemberWriteExistingPropertyCachedData s1_ = this.writeMember_writeExistingPropertyCached_cache;
-                        if ((state & 0b10000000) != 0 /* is-active writeExistingPropertyCached(DynamicObject, String, Object, String, Shape, Location) */) {
+                        if ((state_0 & 0b10000000) != 0 /* is-state_0 writeExistingPropertyCached(DynamicObject, String, Object, String, Shape, Location) */) {
                             while (s1_ != null) {
                                 if ((s1_.cachedName_.equals(arg1Value)) && (NablaObjectType.shapeCheck(s1_.shape_, arg0Value))) {
                                     assert (s1_.location_ != null);
@@ -560,7 +562,7 @@ final class NablaObjectTypeGen {
                                                 s1_.location_ = location__;
                                                 s1_.assumption0_ = assumption0;
                                                 this.writeMember_writeExistingPropertyCached_cache = s1_;
-                                                this.state_ = state = state | 0b10000000 /* add-active writeExistingPropertyCached(DynamicObject, String, Object, String, Shape, Location) */;
+                                                this.state_0_ = state_0 = state_0 | 0b10000000 /* add-state_0 writeExistingPropertyCached(DynamicObject, String, Object, String, Shape, Location) */;
                                             }
                                         }
                                     }
@@ -574,10 +576,10 @@ final class NablaObjectTypeGen {
                             return;
                         }
                     }
-                    if (((exclude & 0b10000)) == 0 /* is-not-excluded writeNewPropertyCached(DynamicObject, String, Object, Object, Shape, Location, Shape, Location) */) {
+                    if (((exclude & 0b10000)) == 0 /* is-not-exclude writeNewPropertyCached(DynamicObject, String, Object, Object, Shape, Location, Shape, Location) */) {
                         int count2_ = 0;
                         WriteMemberWriteNewPropertyCachedData s2_ = this.writeMember_writeNewPropertyCached_cache;
-                        if ((state & 0b100000000) != 0 /* is-active writeNewPropertyCached(DynamicObject, String, Object, Object, Shape, Location, Shape, Location) */) {
+                        if ((state_0 & 0b100000000) != 0 /* is-state_0 writeNewPropertyCached(DynamicObject, String, Object, Object, Shape, Location, Shape, Location) */) {
                             while (s2_ != null) {
                                 if ((s2_.cachedName_.equals(arg1Value)) && (arg0Value.getShape() == s2_.oldShape_)) {
                                     assert (s2_.oldLocation_ == null);
@@ -613,7 +615,7 @@ final class NablaObjectTypeGen {
                                                         s2_.assumption0_ = assumption0;
                                                         s2_.assumption1_ = assumption1;
                                                         this.writeMember_writeNewPropertyCached_cache = s2_;
-                                                        this.state_ = state = state | 0b100000000 /* add-active writeNewPropertyCached(DynamicObject, String, Object, Object, Shape, Location, Shape, Location) */;
+                                                        this.state_0_ = state_0 = state_0 | 0b100000000 /* add-state_0 writeNewPropertyCached(DynamicObject, String, Object, Object, Shape, Location, Shape, Location) */;
                                                     }
                                                 }
                                             }
@@ -630,18 +632,18 @@ final class NablaObjectTypeGen {
                         }
                     }
                     if ((arg0Value.getShape().isValid())) {
-                        this.exclude_ = exclude = exclude | 0b11000 /* add-excluded writeExistingPropertyCached(DynamicObject, String, Object, String, Shape, Location), writeNewPropertyCached(DynamicObject, String, Object, Object, Shape, Location, Shape, Location) */;
+                        this.exclude_ = exclude = exclude | 0b11000 /* add-exclude writeExistingPropertyCached(DynamicObject, String, Object, String, Shape, Location), writeNewPropertyCached(DynamicObject, String, Object, Object, Shape, Location, Shape, Location) */;
                         this.writeMember_writeExistingPropertyCached_cache = null;
                         this.writeMember_writeNewPropertyCached_cache = null;
-                        state = state & 0xfffffe7f /* remove-active writeExistingPropertyCached(DynamicObject, String, Object, String, Shape, Location), writeNewPropertyCached(DynamicObject, String, Object, Object, Shape, Location, Shape, Location) */;
-                        this.state_ = state = state | 0b1000000000 /* add-active writeUncached(DynamicObject, String, Object) */;
+                        state_0 = state_0 & 0xfffffe7f /* remove-state_0 writeExistingPropertyCached(DynamicObject, String, Object, String, Shape, Location), writeNewPropertyCached(DynamicObject, String, Object, Object, Shape, Location, Shape, Location) */;
+                        this.state_0_ = state_0 = state_0 | 0b1000000000 /* add-state_0 writeUncached(DynamicObject, String, Object) */;
                         lock.unlock();
                         hasLock = false;
                         WriteMember.writeUncached(arg0Value, arg1Value, arg2Value);
                         return;
                     }
                     if ((!(arg0Value.getShape().isValid()))) {
-                        this.state_ = state = state | 0b10000000000 /* add-active updateShape(DynamicObject, String, Object) */;
+                        this.state_0_ = state_0 = state_0 | 0b10000000000 /* add-state_0 updateShape(DynamicObject, String, Object) */;
                         lock.unlock();
                         hasLock = false;
                         WriteMember.updateShape(arg0Value, arg1Value, arg2Value);
@@ -652,32 +654,6 @@ final class NablaObjectTypeGen {
                     if (hasLock) {
                         lock.unlock();
                     }
-                }
-            }
-
-            void removeWriteExistingPropertyCached_(Object s1_) {
-                Lock lock = getLock();
-                lock.lock();
-                try {
-                    WriteMemberWriteExistingPropertyCachedData prev = null;
-                    WriteMemberWriteExistingPropertyCachedData cur = this.writeMember_writeExistingPropertyCached_cache;
-                    while (cur != null) {
-                        if (cur == s1_) {
-                            if (prev == null) {
-                                this.writeMember_writeExistingPropertyCached_cache = cur.next_;
-                            } else {
-                                prev.next_ = cur.next_;
-                            }
-                            break;
-                        }
-                        prev = cur;
-                        cur = cur.next_;
-                    }
-                    if (this.writeMember_writeExistingPropertyCached_cache == null) {
-                        this.state_ = this.state_ & 0xffffff7f /* remove-active writeExistingPropertyCached(DynamicObject, String, Object, String, Shape, Location) */;
-                    }
-                } finally {
-                    lock.unlock();
                 }
             }
 
@@ -700,7 +676,33 @@ final class NablaObjectTypeGen {
                         cur = cur.next_;
                     }
                     if (this.writeMember_writeNewPropertyCached_cache == null) {
-                        this.state_ = this.state_ & 0xfffffeff /* remove-active writeNewPropertyCached(DynamicObject, String, Object, Object, Shape, Location, Shape, Location) */;
+                        this.state_0_ = this.state_0_ & 0xfffffeff /* remove-state_0 writeNewPropertyCached(DynamicObject, String, Object, Object, Shape, Location, Shape, Location) */;
+                    }
+                } finally {
+                    lock.unlock();
+                }
+            }
+
+            void removeWriteExistingPropertyCached_(Object s1_) {
+                Lock lock = getLock();
+                lock.lock();
+                try {
+                    WriteMemberWriteExistingPropertyCachedData prev = null;
+                    WriteMemberWriteExistingPropertyCachedData cur = this.writeMember_writeExistingPropertyCached_cache;
+                    while (cur != null) {
+                        if (cur == s1_) {
+                            if (prev == null) {
+                                this.writeMember_writeExistingPropertyCached_cache = cur.next_;
+                            } else {
+                                prev.next_ = cur.next_;
+                            }
+                            break;
+                        }
+                        prev = cur;
+                        cur = cur.next_;
+                    }
+                    if (this.writeMember_writeExistingPropertyCached_cache == null) {
+                        this.state_0_ = this.state_0_ & 0xffffff7f /* remove-state_0 writeExistingPropertyCached(DynamicObject, String, Object, String, Shape, Location) */;
                     }
                 } finally {
                     lock.unlock();
@@ -783,12 +785,12 @@ final class NablaObjectTypeGen {
 
             @Child private DynamicDispatchLibrary dynamicDispatch_;
 
-            Uncached(Object receiver) {
+            protected Uncached(Object receiver) {
                 this.dynamicDispatch_ = DYNAMIC_DISPATCH_LIBRARY_.getUncached(receiver);
             }
 
-            @TruffleBoundary
             @Override
+            @TruffleBoundary
             public boolean accepts(Object receiver) {
                 return dynamicDispatch_.accepts(receiver) && dynamicDispatch_.dispatch(receiver) == NablaObjectType.class;
             }
@@ -806,6 +808,7 @@ final class NablaObjectTypeGen {
             @TruffleBoundary
             @Override
             public boolean hasMembers(Object receiver) {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 return NablaObjectType.hasMembers(((DynamicObject) receiver) );
             }
@@ -813,6 +816,7 @@ final class NablaObjectTypeGen {
             @TruffleBoundary
             @Override
             public void removeMember(Object receiver, String member) throws UnsupportedMessageException, UnknownIdentifierException {
+                // declared: true
                 assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
                 NablaObjectType.removeMember(((DynamicObject) receiver) , member);
                 return;
@@ -821,6 +825,7 @@ final class NablaObjectTypeGen {
             @TruffleBoundary
             @Override
             public Object getMembers(Object arg0Value_, boolean arg1Value) {
+                // declared: true
                 assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
                 DynamicObject arg0Value = ((DynamicObject) arg0Value_);
                 return GetMembers.doGeneric(arg0Value, arg1Value);
@@ -829,6 +834,7 @@ final class NablaObjectTypeGen {
             @TruffleBoundary
             @Override
             public boolean isMemberReadable(Object arg0Value_, String arg1Value) {
+                // declared: true
                 assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
                 DynamicObject arg0Value = ((DynamicObject) arg0Value_);
                 return ExistsMember.doGeneric(arg0Value, arg1Value);
@@ -837,6 +843,7 @@ final class NablaObjectTypeGen {
             @TruffleBoundary
             @Override
             public boolean isMemberModifiable(Object arg0Value_, String arg1Value) {
+                // declared: true
                 assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
                 DynamicObject arg0Value = ((DynamicObject) arg0Value_);
                 return ExistsMember.doGeneric(arg0Value, arg1Value);
@@ -845,6 +852,7 @@ final class NablaObjectTypeGen {
             @TruffleBoundary
             @Override
             public boolean isMemberRemovable(Object arg0Value_, String arg1Value) {
+                // declared: true
                 assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
                 DynamicObject arg0Value = ((DynamicObject) arg0Value_);
                 return ExistsMember.doGeneric(arg0Value, arg1Value);
@@ -853,6 +861,7 @@ final class NablaObjectTypeGen {
             @TruffleBoundary
             @Override
             public boolean isMemberInsertable(Object arg0Value_, String arg1Value) {
+                // declared: true
                 assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
                 DynamicObject arg0Value = ((DynamicObject) arg0Value_);
                 return NablaObjectType.isMemberInsertable(arg0Value, arg1Value, (this));
@@ -861,6 +870,7 @@ final class NablaObjectTypeGen {
             @TruffleBoundary
             @Override
             public Object readMember(Object arg0Value_, String arg1Value) throws UnknownIdentifierException {
+                // declared: true
                 assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
                 DynamicObject arg0Value = ((DynamicObject) arg0Value_);
                 if ((arg0Value.getShape().isValid())) {
@@ -875,6 +885,7 @@ final class NablaObjectTypeGen {
             @TruffleBoundary
             @Override
             public void writeMember(Object arg0Value_, String arg1Value, Object arg2Value) {
+                // declared: true
                 assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
                 DynamicObject arg0Value = ((DynamicObject) arg0Value_);
                 if ((arg0Value.getShape().isValid())) {

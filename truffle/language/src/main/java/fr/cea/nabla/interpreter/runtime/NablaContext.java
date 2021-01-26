@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.Collections;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -26,6 +25,8 @@ import com.oracle.truffle.api.TruffleLanguage.Env;
 import com.oracle.truffle.api.frame.Frame;
 import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.instrumentation.AllocationReporter;
+import com.oracle.truffle.api.interop.NodeLibrary;
+import com.oracle.truffle.api.interop.UnsupportedMessageException;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeInfo;
@@ -33,7 +34,6 @@ import com.oracle.truffle.api.object.Layout;
 
 import fr.cea.nabla.interpreter.NablaLanguage;
 import fr.cea.nabla.interpreter.NablaOptions;
-import fr.cea.nabla.interpreter.nodes.local.NablaLexicalScope;
 
 @SuppressWarnings("deprecation")
 public final class NablaContext {
@@ -58,9 +58,9 @@ public final class NablaContext {
 
 	@CompilationFinal
 	private MaterializedFrame globalFrame;
+	
 	@CompilationFinal
-	@Deprecated
-	private Iterable<Scope> topScopes;
+	private Object topScope;
 
 	public NablaContext(NablaLanguage language, TruffleLanguage.Env env) {
 		this.env = env;
@@ -75,13 +75,12 @@ public final class NablaContext {
 		final Set<Entry<String, String>> extensions = options.get(NablaOptions.LIBS).entrySet();
 
 		final String jsonOptionsString = options.get(NablaOptions.OPTIONS);
-		final String jsonContent;
+		final JsonObject jsonOptions;
 		if (jsonOptionsString != null && !jsonOptionsString.isEmpty()) {
 			final Gson gson = new Gson();
-			final JsonObject jsonOptions = gson.fromJson(jsonOptionsString, JsonObject.class);
-			jsonContent = jsonOptions.toString() + "\0";
+			jsonOptions = gson.fromJson(jsonOptionsString, JsonObject.class);
 		} else {
-			jsonContent = "\0";
+			jsonOptions = null;
 		}
 
 		this.nativeLibraries = new Value[extensions.size()];
@@ -98,6 +97,12 @@ public final class NablaContext {
 				Context.getCurrent().eval(source);
 				if (llvmBindings.hasMember(extensionProvider + "_jsonInit")) {
 					final Value jsonInit = llvmBindings.getMember(extensionProvider + "_jsonInit");
+					final String jsonContent;
+					if (jsonOptions == null) {
+						jsonContent = "\0";
+					} else {
+						jsonContent = jsonOptions.get(extensionProvider) + "\0";
+					}
 					this.libraryProviders[iPtr[0]] = extensionProvider;
 					this.nativeLibraries[iPtr[0]] = jsonInit.execute(jsonContent);
 				} else {
@@ -152,13 +157,6 @@ public final class NablaContext {
 		return functionRegistry;
 	}
 
-	// TODO
-	@Deprecated
-	public Iterable<Scope> getTopScopes() {
-		assert topScopes != null;
-		return topScopes;
-	}
-
 	public static NodeInfo lookupNodeInfo(Class<?> clazz) {
 		if (clazz == null) {
 			return null;
@@ -193,15 +191,16 @@ public final class NablaContext {
 
 	public void setGlobalFrame(Node node, MaterializedFrame globalFrame) {
 		this.globalFrame = globalFrame;
-		final NablaLexicalScope scope = NablaLexicalScope.createScope(node, globalFrame);
-		final Scope vscope = Scope.newBuilder(scope.getName(), scope.getVariables(globalFrame)).node(scope.getNode())
-				.arguments(scope.getArguments(globalFrame)).rootInstance(null).build();
-		topScopes = Collections.singleton(vscope);
+		try {
+			this.topScope = NodeLibrary.getUncached(node).getScope(node, globalFrame, true);
+		} catch (UnsupportedMessageException e) {
+			throw new NablaInternalError(e, "Top scope initialization failed");
+		}
 	}
-
-//	public Value getMeshWrapper() {
-//		return meshWrapper;
-//	}
+	
+	public Object getScope() {
+		return topScope;
+	}
 
 	@ExplodeLoop
 	public Value getNativeLibrary(String providerName) {

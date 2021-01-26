@@ -104,18 +104,18 @@
 		<dependency>
 			<groupId>org.graalvm.truffle</groupId>
 			<artifactId>truffle-api</artifactId>
-			<version>20.3.0</version>
+			<version>21.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.graalvm.truffle</groupId>
 			<artifactId>truffle-dsl-processor</artifactId>
-			<version>20.3.0</version>
+			<version>21.0.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.graalvm.truffle</groupId>
 			<artifactId>truffle-tck</artifactId>
-			<version>20.3.0</version>
+			<version>21.0.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
