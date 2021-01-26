@@ -9,10 +9,7 @@
  *******************************************************************************/
 package fr.cea.nabla.ui.wizards
 
-import fr.cea.nabla.nablagen.CppKokkos
-import fr.cea.nabla.nablagen.CppKokkosTeamThread
-import fr.cea.nabla.nablagen.CppStlThread
-import fr.cea.nabla.nablagen.Java
+import fr.cea.nabla.nablaext.TargetType
 import fr.cea.nabla.ui.NablaUiUtils
 import fr.cea.nabla.ui.internal.NablaActivator
 import java.io.ByteArrayInputStream
@@ -150,10 +147,10 @@ class NewNablaProjectWizard extends Wizard implements INewWizard
 				modulesFolder.create(false, true, monitor)
 
 				// Create src-gen-java folder
-				val srcGenFoldersByLanguage = new LinkedHashMap<String, IFolder>
+				val srcGenFoldersByLanguage = new LinkedHashMap<TargetType, IFolder>
 				val srcGenJavaFolder = project.getFolder("src-gen-java")
 				srcGenJavaFolder.create(false, true, monitor)
-				srcGenFoldersByLanguage.put(Java.name, srcGenJavaFolder)
+				srcGenFoldersByLanguage.put(TargetType::JAVA, srcGenJavaFolder)
 
 				// Create src-gen-cpp folder
 				val srcGenCppFolder = project.getFolder("src-gen-cpp")
@@ -162,15 +159,15 @@ class NewNablaProjectWizard extends Wizard implements INewWizard
 				// Create all src-gen-cpp subfolders
 				val srcGenStlThreadFolder = srcGenCppFolder.getFolder("stl-thread")
 				srcGenStlThreadFolder.create(false, true, monitor)
-				srcGenFoldersByLanguage.put(CppStlThread.name, srcGenStlThreadFolder)
+				srcGenFoldersByLanguage.put(TargetType::STL_THREAD, srcGenStlThreadFolder)
 
 				val srcGenKokkosFolder = srcGenCppFolder.getFolder("kokkos")
 				srcGenKokkosFolder.create(false, true, monitor)
-				srcGenFoldersByLanguage.put(CppKokkos.name, srcGenKokkosFolder)
+				srcGenFoldersByLanguage.put(TargetType::KOKKOS, srcGenKokkosFolder)
 
 				val srcGenKokkosTeamFolder = srcGenCppFolder.getFolder("kokkos-team")
 				srcGenKokkosTeamFolder.create(false, true, monitor)
-				srcGenFoldersByLanguage.put(CppKokkosTeamThread.name, srcGenKokkosTeamFolder)
+				srcGenFoldersByLanguage.put(TargetType::KOKKOS_TEAM_THREAD, srcGenKokkosTeamFolder)
 
 				// Create nabla and nablagen models
 				val nablaFile = modulesFolder.getFile(newProjectPage.moduleName + ".nabla")
@@ -299,7 +296,7 @@ class NewNablaProjectWizard extends Wizard implements INewWizard
 		iterate n while (n+1 < maxIter && t^{n+1} < maxTime);
 	'''
 
-	private def getNablagenModelContent(String nablaModuleName, HashMap<String, IFolder> srcGenFoldersByLanguage)
+	private def getNablagenModelContent(String nablaModuleName, HashMap<TargetType, IFolder> srcGenFoldersByLanguage)
 	'''
 		Application «nablaModuleName»;
 
@@ -321,29 +318,39 @@ class NewNablaProjectWizard extends Wizard implements INewWizard
 
 		Java
 		{
-			outputPath = "«srcGenFoldersByLanguage.get(Java.name).fullPath»";
-		}
-
-		StlThread
-		{
-			outputPath = "«srcGenFoldersByLanguage.get(CppStlThread.name).fullPath»";
-			compiler = GNU;
-		//		compiler = LLVM;
-		//		compilerPath = "$ENV{HOME}/Utils/clang-9.0.0/bin/clang++";
+			outputPath = "«srcGenFoldersByLanguage.get(TargetType::JAVA).fullPath»";
 		}
 
 		Kokkos
 		{
-			outputPath = "«srcGenFoldersByLanguage.get(CppKokkos.name).fullPath»";
-			kokkosPath = "$ENV{HOME}/kokkos/kokkos-install";
-			compiler = GNU;
+			outputPath = "«srcGenFoldersByLanguage.get(TargetType::KOKKOS).fullPath»";
+			NABLA_CXX_COMPILER = "/usr/bin/g++";
+			NABLA_KOKKOS_PATH = "$ENV{HOME}/kokkos/kokkos-install";
 		}
 
 		KokkosTeamThread
 		{
-			outputPath = "«srcGenFoldersByLanguage.get(CppKokkosTeamThread.name).fullPath»";
-			kokkosPath = "$ENV{HOME}/kokkos/kokkos-install";
-			compiler = GNU;
+			outputPath = "«srcGenFoldersByLanguage.get(TargetType::KOKKOS_TEAM_THREAD).fullPath»";
+			NABLA_CXX_COMPILER = "/usr/bin/g++";
+			NABLA_KOKKOS_PATH = "$ENV{HOME}/kokkos/kokkos-install";
+		}
+
+		OpenMP
+		{
+			outputPath = "«srcGenFoldersByLanguage.get(TargetType::OPEN_MP).fullPath»";
+			NABLA_CXX_COMPILER = "/usr/bin/g++";
+		}
+
+		CppSequential
+		{
+			outputPath = "«srcGenFoldersByLanguage.get(TargetType::CPP_SEQUENTIAL).fullPath»";
+			NABLA_CXX_COMPILER = "/usr/bin/g++";
+		}
+
+		StlThread
+		{
+			outputPath = "«srcGenFoldersByLanguage.get(TargetType::STL_THREAD).fullPath»";
+			NABLA_CXX_COMPILER = "/usr/bin/g++";
 		}
 	'''
 

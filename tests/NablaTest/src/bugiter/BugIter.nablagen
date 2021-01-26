@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2020 CEA
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ * Contributors: see AUTHORS file
+ *******************************************************************************/
 Application BugIter;
 
 MainModule BugIter bugIter
@@ -18,21 +27,5 @@ Java
 StlThread
 {
 	outputPath = "/NablaTest/src-gen-cpp/stl-thread";
-	compiler = GNU;
-//		compiler = LLVM;
-//		compilerPath = "$ENV{HOME}/Utils/clang-9.0.0/bin/clang++";
+	NABLA_CXX_COMPILER = "/usr/bin/g++";
 }
-//
-//Kokkos
-//{
-//	outputPath = "/NablaExamples/src-gen-cpp/kokkos";
-//	kokkosPath = "$ENV{HOME}/kokkos/kokkos-install";
-//	compiler = GNU;
-//}
-//
-//KokkosTeamThread
-//{
-//	outputPath = "/NablaExamples/src-gen-cpp/kokkos-team";
-//	kokkosPath = "$ENV{HOME}/kokkos/kokkos-install";
-//	compiler = GNU;
-//}

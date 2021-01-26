@@ -24,9 +24,9 @@ import fr.cea.nabla.nabla.TimeIterator
 import fr.cea.nabla.nabla.Var
 import fr.cea.nabla.nabla.VarGroupDeclaration
 import fr.cea.nabla.nablagen.AdditionalModule
+import fr.cea.nabla.nablagen.NablagenRoot
 import fr.cea.nabla.nablagen.NablagenModule
 import fr.cea.nabla.nablagen.NablagenPackage
-import fr.cea.nabla.nablagen.NablagenRoot
 import fr.cea.nabla.nablagen.OutputVar
 import fr.cea.nabla.nablagen.VtkOutput
 import java.util.ArrayList

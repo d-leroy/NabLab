@@ -15,11 +15,10 @@ import fr.cea.nabla.ir.ir.ConnectivityType
 import fr.cea.nabla.ir.ir.ConnectivityVariable
 import fr.cea.nabla.ir.ir.SimpleVariable
 
-import static extension fr.cea.nabla.ir.ArgOrVarExtensions.*
 import static extension fr.cea.nabla.ir.IrTypeExtensions.*
 import static extension fr.cea.nabla.ir.generator.Utils.*
 import static extension fr.cea.nabla.ir.generator.java.ExpressionContentProvider.*
-import static extension fr.cea.nabla.ir.generator.java.Ir2JavaUtils.*
+import static extension fr.cea.nabla.ir.generator.java.JavaGeneratorUtils.*
 
 class ArgOrVarExtensions
 {

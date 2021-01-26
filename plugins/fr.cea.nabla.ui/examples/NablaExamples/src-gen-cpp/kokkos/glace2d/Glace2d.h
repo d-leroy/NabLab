@@ -1,3 +1,5 @@
+/*** GENERATED FILE - DO NOT OVERWRITE ***/
+
 #ifndef GLACE2D_H_
 #define GLACE2D_H_
 
@@ -9,18 +11,24 @@
 #include <cmath>
 #include <Kokkos_Core.hpp>
 #include <Kokkos_hwloc.hpp>
-#include "mesh/CartesianMesh2DFactory.h"
-#include "mesh/CartesianMesh2D.h"
-#include "utils/Utils.h"
-#include "utils/Timer.h"
-#include "types/Types.h"
-#include "mesh/kokkos/PvdFileWriter2D.h"
-#include "utils/kokkos/Parallel.h"
+#include "nablalib/mesh/CartesianMesh2DFactory.h"
+#include "nablalib/mesh/CartesianMesh2D.h"
+#include "nablalib/utils/Utils.h"
+#include "nablalib/utils/Timer.h"
+#include "nablalib/types/Types.h"
+#include "nablalib/mesh/kokkos/PvdFileWriter2D.h"
+#include "nablalib/utils/kokkos/Parallel.h"
 
-using namespace nablalib;
+using namespace nablalib::mesh;
+using namespace nablalib::utils;
+using namespace nablalib::types;
+using namespace nablalib::mesh::kokkos;
+using namespace nablalib::utils::kokkos;
 
 /******************** Free functions declarations ********************/
 
+namespace Glace2dFuncs
+{
 KOKKOS_INLINE_FUNCTION
 double det(RealArray2D<2,2> a);
 KOKKOS_INLINE_FUNCTION
@@ -52,6 +60,7 @@ KOKKOS_INLINE_FUNCTION
 RealArray2D<x,x> sumR2(RealArray2D<x,x> a, RealArray2D<x,x> b);
 KOKKOS_INLINE_FUNCTION
 double minR0(double a, double b);
+}
 
 /******************** Module declaration ********************/
 
@@ -147,9 +156,9 @@ private:
 	PvdFileWriter2D writer;
 
 	// Timers
-	utils::Timer globalTimer;
-	utils::Timer cpuTimer;
-	utils::Timer ioTimer;
+	Timer globalTimer;
+	Timer cpuTimer;
+	Timer ioTimer;
 
 public:
 	// Global variables

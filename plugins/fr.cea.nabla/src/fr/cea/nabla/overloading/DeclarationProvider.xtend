@@ -13,7 +13,7 @@ import com.google.inject.Inject
 import fr.cea.nabla.nabla.BaseType
 import fr.cea.nabla.nabla.Function
 import fr.cea.nabla.nabla.FunctionCall
-import fr.cea.nabla.nabla.NablaModule
+import fr.cea.nabla.nabla.NablaRoot
 import fr.cea.nabla.nabla.Reduction
 import fr.cea.nabla.nabla.ReductionCall
 import fr.cea.nabla.typing.BaseTypeTypeProvider
@@ -96,9 +96,9 @@ class DeclarationProvider
 	 */
 	private def Iterable<Reduction> getCandidates(Reduction r, NablaType callerInType)
 	{
-		val module = EcoreUtil2.getContainerOfType(r, NablaModule)
-		if (module === null) return #[]
-		val candidates = module.reductions.filter[x | x.name == r.name]
+		val root = EcoreUtil2.getContainerOfType(r, NablaRoot)
+		if (root === null) return #[]
+		val candidates = root.reductions.filter[x | x.name == r.name]
 		return candidates.filter[argsMatch(#[typeDeclaration.type], #[callerInType])]
 	}
 
@@ -108,8 +108,8 @@ class DeclarationProvider
 	 */
 	private def Iterable<Function> getCandidates(Function f, List<NablaType> callerInTypes)
 	{
-		val module = EcoreUtil2.getContainerOfType(f, NablaModule)
-		val candidates = module.functions.filter[x | x.name == f.name]
+		val r = EcoreUtil2.getContainerOfType(f, NablaRoot)
+		val candidates = r.functions.filter[x | x.name == f.name]
 		return candidates.filter[argsMatch(typeDeclaration.inTypes, callerInTypes)]
 	}
 

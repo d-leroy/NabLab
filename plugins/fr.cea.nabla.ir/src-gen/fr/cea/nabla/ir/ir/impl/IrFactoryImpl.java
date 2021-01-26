@@ -61,10 +61,12 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 			case IrPackage.IR_ROOT: return createIrRoot();
 			case IrPackage.IR_MODULE: return createIrModule();
 			case IrPackage.POST_PROCESSING: return createPostProcessing();
+			case IrPackage.EXTENSION_PROVIDER: return createExtensionProvider();
 			case IrPackage.ARG: return createArg();
 			case IrPackage.SIMPLE_VARIABLE: return createSimpleVariable();
 			case IrPackage.CONNECTIVITY_VARIABLE: return createConnectivityVariable();
-			case IrPackage.FUNCTION: return createFunction();
+			case IrPackage.INTERN_FUNCTION: return createInternFunction();
+			case IrPackage.EXTERN_FUNCTION: return createExternFunction();
 			case IrPackage.CONNECTIVITY: return createConnectivity();
 			case IrPackage.JOB_CALLER: return createJobCaller();
 			case IrPackage.INSTRUCTION_JOB: return createInstructionJob();
@@ -196,6 +198,17 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 	 * @generated
 	 */
 	@Override
+	public ExtensionProvider createExtensionProvider() {
+		ExtensionProviderImpl extensionProvider = new ExtensionProviderImpl();
+		return extensionProvider;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Arg createArg() {
 		ArgImpl arg = new ArgImpl();
 		return arg;
@@ -229,9 +242,20 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 	 * @generated
 	 */
 	@Override
-	public Function createFunction() {
-		FunctionImpl function = new FunctionImpl();
-		return function;
+	public InternFunction createInternFunction() {
+		InternFunctionImpl internFunction = new InternFunctionImpl();
+		return internFunction;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ExternFunction createExternFunction() {
+		ExternFunctionImpl externFunction = new ExternFunctionImpl();
+		return externFunction;
 	}
 
 	/**

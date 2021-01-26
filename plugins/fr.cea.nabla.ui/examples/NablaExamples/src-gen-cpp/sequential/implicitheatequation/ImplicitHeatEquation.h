@@ -1,3 +1,5 @@
+/*** GENERATED FILE - DO NOT OVERWRITE ***/
+
 #ifndef IMPLICITHEATEQUATION_H_
 #define IMPLICITHEATEQUATION_H_
 
@@ -7,18 +9,24 @@
 #include <limits>
 #include <utility>
 #include <cmath>
-#include "mesh/CartesianMesh2DFactory.h"
-#include "mesh/CartesianMesh2D.h"
-#include "utils/Utils.h"
-#include "utils/Timer.h"
-#include "types/Types.h"
-#include "mesh/stl/PvdFileWriter2D.h"
-#include "linearalgebra/stl/LinearAlgebraFunctions.h"
+#include "nablalib/mesh/CartesianMesh2DFactory.h"
+#include "nablalib/mesh/CartesianMesh2D.h"
+#include "nablalib/utils/Utils.h"
+#include "nablalib/utils/Timer.h"
+#include "nablalib/types/Types.h"
+#include "nablalib/linearalgebra/stl/LinearAlgebra.h"
+#include "nablalib/mesh/stl/PvdFileWriter2D.h"
 
-using namespace nablalib;
+using namespace nablalib::mesh;
+using namespace nablalib::utils;
+using namespace nablalib::types;
+using namespace nablalib::mesh::stl;
+using namespace nablalib::linearalgebra::stl;
 
 /******************** Free functions declarations ********************/
 
+namespace ImplicitHeatEquationFuncs
+{
 template<size_t x>
 double norm(RealArray1D<x> a);
 template<size_t x>
@@ -29,6 +37,7 @@ RealArray1D<x> sumR1(RealArray1D<x> a, RealArray1D<x> b);
 double minR0(double a, double b);
 double sumR0(double a, double b);
 double prodR0(double a, double b);
+}
 
 /******************** Module declaration ********************/
 
@@ -42,7 +51,7 @@ public:
 		double u0;
 		double stopTime;
 		int maxIterations;
-		LinearAlgebraFunctions linearAlgebraFunctions;
+		nablalib::linearalgebra::stl::LinearAlgebra linearAlgebra;
 
 		void jsonInit(const char* jsonContent);
 	};
@@ -77,9 +86,9 @@ private:
 	PvdFileWriter2D writer;
 
 	// Timers
-	utils::Timer globalTimer;
-	utils::Timer cpuTimer;
-	utils::Timer ioTimer;
+	Timer globalTimer;
+	Timer cpuTimer;
+	Timer ioTimer;
 
 public:
 	// Global variables

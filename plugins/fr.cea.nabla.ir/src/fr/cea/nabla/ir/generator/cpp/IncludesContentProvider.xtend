@@ -11,9 +11,8 @@ package fr.cea.nabla.ir.generator.cpp
 
 import fr.cea.nabla.ir.ir.IrModule
 import java.util.LinkedHashSet
-import org.eclipse.xtend.lib.annotations.Accessors
 
-import static fr.cea.nabla.ir.Utils.FunctionReductionPrefix
+import static fr.cea.nabla.ir.ExtensionProviderExtensions.*
 
 import static extension fr.cea.nabla.ir.IrModuleExtensions.*
 import static extension fr.cea.nabla.ir.IrRootExtensions.*
@@ -21,26 +20,24 @@ import static extension fr.cea.nabla.ir.generator.Utils.*
 
 abstract class IncludesContentProvider
 {
-	protected def Iterable<String> getAdditionalSystemIncludes(IrModule m) { #[] }
-	protected def Iterable<String> getAdditionalUserIncludes(IrModule m) { #[] }
-	@Accessors val String levelDBPath
-
-	new(String levelDBPath)
-	{
-		this.levelDBPath = levelDBPath
-	}
-
-	def getContentFor(IrModule m)
+	def getContentFor(IrModule m, String levelDBPath)
 	'''
-	«FOR include : getSystemIncludesFor(m)»
+	«FOR include : getSystemIncludes(m, levelDBPath)»
 	#include <«include»>
 	«ENDFOR»
-	«FOR include : getUserIncludesFor(m)»
+	«FOR include : getUserIncludes(m, levelDBPath)»
 	#include "«include»"
+	«ENDFOR»
+
+	«FOR ns : getSystemNs(m, levelDBPath)»
+	using namespace «ns»;
+	«ENDFOR»
+	«FOR ns : getUserNs(m, levelDBPath)»
+	using namespace «ns»;
 	«ENDFOR»
 	'''
 
-	private def getSystemIncludesFor(IrModule m)
+	protected def getSystemIncludes(IrModule m, String levelDBPath)
 	{
 		val systemIncludes = new LinkedHashSet<String>
 
@@ -55,108 +52,137 @@ abstract class IncludesContentProvider
 			systemIncludes += "leveldb/db.h"
 			systemIncludes += "leveldb/write_batch.h"
 		}
-		systemIncludes += m.additionalSystemIncludes
 
 		return systemIncludes
 	}
 
-	private def getUserIncludesFor(IrModule m)
+	protected def getUserIncludes(IrModule m, String levelDBPath)
 	{
 		val userIncludes = new LinkedHashSet<String>
-		userIncludes += "mesh/CartesianMesh2DFactory.h"
-		userIncludes += "mesh/CartesianMesh2D.h"
-		userIncludes +=  "utils/Utils.h"
-		userIncludes +=  "utils/Timer.h"
-		userIncludes +=  "types/Types.h"
+		userIncludes += "nablalib/mesh/CartesianMesh2DFactory.h"
+		userIncludes += "nablalib/mesh/CartesianMesh2D.h"
+		userIncludes +=  "nablalib/utils/Utils.h"
+		userIncludes +=  "nablalib/utils/Timer.h"
+		userIncludes +=  "nablalib/types/Types.h"
 
-		if (m.functions.exists[f | f.body === null && f.provider == m.className])
-			userIncludes += m.irRoot.name.toLowerCase + "/" + m.className + FunctionReductionPrefix + ".h"
+		for (provider : m.extensionProviders)
+			userIncludes += getNsPrefix(provider, '::', '/') + provider.facadeClass + ".h"
 
 		if (!m.main)
 			userIncludes += m.irRoot.name.toLowerCase + "/" + m.irRoot.mainModule.className + ".h"
 
-		userIncludes += m.additionalUserIncludes
 		return userIncludes
+	}
+
+	protected def getSystemNs(IrModule m, String levelDBPath)
+	{
+		return #[]
+	}
+
+	protected def getUserNs(IrModule m, String levelDBPath)
+	{
+		val userNs = new LinkedHashSet<String>
+		userNs += "nablalib::mesh"
+		userNs +=  "nablalib::utils"
+		userNs +=  "nablalib::types"
+		return userNs
 	}
 }
 
 class StlThreadIncludesContentProvider extends IncludesContentProvider
 {
-	new(String levelDBPath)
+	override getUserIncludes(IrModule m, String levelDBPath)
 	{
-		super(levelDBPath)
+		val includes = super.getUserIncludes(m, levelDBPath)
+		if (m.irRoot.postProcessing !== null) includes += "nablalib/mesh/stl/PvdFileWriter2D.h"
+		includes += "nablalib/utils/stl/Parallel.h"
+		if (!levelDBPath.nullOrEmpty) includes += "nablalib/utils/stl/Serializer.h"
+		return includes
 	}
 
-	override getAdditionalUserIncludes(IrModule m)
+	override getUserNs(IrModule m, String levelDBPath)
 	{
-		val includes = new LinkedHashSet<String>
-		if (m.irRoot.postProcessing !== null) includes += "mesh/stl/PvdFileWriter2D.h"
-		includes += "utils/stl/Parallel.h"
-		if (m.linearAlgebra) includes += "linearalgebra/stl/LinearAlgebraFunctions.h"
-		if (!levelDBPath.nullOrEmpty) includes += "utils/stl/Serializer.h"
-		return includes
+		val userNs = super.getUserNs(m, levelDBPath)
+		userNs += "nablalib::mesh::stl"
+		userNs +=  "nablalib::utils::stl"
+		if (m.linearAlgebra) userNs += "nablalib::linearalgebra::stl"
+		return userNs
 	}
 }
 
 class KokkosIncludesContentProvider extends IncludesContentProvider
 {
-	new(String levelDBPath)
+	override getSystemIncludes(IrModule m, String levelDBPath)
 	{
-		super(levelDBPath)
-	}
-
-	override getAdditionalSystemIncludes(IrModule m)
-	{
-		#["Kokkos_Core.hpp", "Kokkos_hwloc.hpp"]
-	}
-
-	override getAdditionalUserIncludes(IrModule m)
-	{
-		val includes = new LinkedHashSet<String>
-		if (m.irRoot.postProcessing !== null) includes += "mesh/kokkos/PvdFileWriter2D.h"
-		includes += "utils/kokkos/Parallel.h"
-		if (m.linearAlgebra) includes += "linearalgebra/kokkos/LinearAlgebraFunctions.h"
-		if (!levelDBPath.nullOrEmpty) includes += "utils/kokkos/Serializer.h"
+		val includes = super.getSystemIncludes(m, levelDBPath)
+		includes += "Kokkos_Core.hpp"
+		includes += "Kokkos_hwloc.hpp"
 		return includes
+	}
+
+	override getUserIncludes(IrModule m, String levelDBPath)
+	{
+		val includes = super.getUserIncludes(m, levelDBPath)
+		if (m.irRoot.postProcessing !== null) includes += "nablalib/mesh/kokkos/PvdFileWriter2D.h"
+		includes += "nablalib/utils/kokkos/Parallel.h"
+		if (!levelDBPath.nullOrEmpty) includes += "nablalib/utils/kokkos/Serializer.h"
+		return includes
+	}
+
+	override getUserNs(IrModule m, String levelDBPath)
+	{
+		val userNs = super.getUserNs(m, levelDBPath)
+		userNs += "nablalib::mesh::kokkos"
+		userNs +=  "nablalib::utils::kokkos"
+		if (m.linearAlgebra) userNs += "nablalib::linearalgebra::kokkos"
+		return userNs
 	}
 }
 
 class SequentialIncludesContentProvider extends IncludesContentProvider
 {
-	new(String levelDBPath)
+	override getUserIncludes(IrModule m, String levelDBPath)
 	{
-		super(levelDBPath)
+		val includes = super.getUserIncludes(m, levelDBPath)
+		if (m.irRoot.postProcessing !== null) includes += "nablalib/mesh/stl/PvdFileWriter2D.h"
+		if (!levelDBPath.nullOrEmpty) includes += "nablalib/utils/stl/Serializer.h"
+		return includes
 	}
 
-	override getAdditionalUserIncludes(IrModule m)
+	override getUserNs(IrModule m, String levelDBPath)
 	{
-		val includes = new LinkedHashSet<String>
-		if (m.irRoot.postProcessing !== null) includes += "mesh/stl/PvdFileWriter2D.h"
-		if (m.linearAlgebra) includes += "linearalgebra/stl/LinearAlgebraFunctions.h"
-		if (!levelDBPath.nullOrEmpty) includes += "utils/stl/Serializer.h"
-		return includes
+		val userNs = super.getUserNs(m, levelDBPath)
+		userNs += "nablalib::mesh::stl"
+		if (m.linearAlgebra) userNs += "nablalib::linearalgebra::stl"
+		if (!levelDBPath.nullOrEmpty) userNs +=  "nablalib::utils::stl"
+		return userNs
 	}
 }
 
 class OpenMpIncludesContentProvider extends IncludesContentProvider
 {
-	new(String levelDBPath)
+	override getSystemIncludes(IrModule m, String levelDBPath)
 	{
-		super(levelDBPath)
-	}
-
-	override getAdditionalSystemIncludes(IrModule m)
-	{
-		#["omp.h"]
-	}
-
-	override getAdditionalUserIncludes(IrModule m)
-	{
-		val includes = new LinkedHashSet<String>
-		if (m.irRoot.postProcessing !== null) includes += "mesh/stl/PvdFileWriter2D.h"
-		if (m.linearAlgebra) includes += "linearalgebra/stl/LinearAlgebraFunctions.h"
-		if (!levelDBPath.nullOrEmpty) includes += "utils/stl/Serializer.h"
+		val includes = super.getSystemIncludes(m, levelDBPath)
+		includes += "omp.h"
 		return includes
+	}
+
+	override getUserIncludes(IrModule m, String levelDBPath)
+	{
+		val includes = super.getUserIncludes(m, levelDBPath)
+		if (m.irRoot.postProcessing !== null) includes += "nablalib/mesh/stl/PvdFileWriter2D.h"
+		if (!levelDBPath.nullOrEmpty) includes += "nablalib/utils/stl/Serializer.h"
+		return includes
+	}
+
+	override getUserNs(IrModule m, String levelDBPath)
+	{
+		val userNs = super.getUserNs(m, levelDBPath)
+		userNs += "nablalib::mesh::stl"
+		if (m.linearAlgebra) userNs += "nablalib::linearalgebra::stl"
+		if (!levelDBPath.nullOrEmpty) userNs +=  "nablalib::utils::stl"
+		return userNs
 	}
 }
 

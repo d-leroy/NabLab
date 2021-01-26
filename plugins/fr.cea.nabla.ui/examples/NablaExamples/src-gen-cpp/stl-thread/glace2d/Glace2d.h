@@ -1,3 +1,5 @@
+/*** GENERATED FILE - DO NOT OVERWRITE ***/
+
 #ifndef GLACE2D_H_
 #define GLACE2D_H_
 
@@ -7,18 +9,24 @@
 #include <limits>
 #include <utility>
 #include <cmath>
-#include "mesh/CartesianMesh2DFactory.h"
-#include "mesh/CartesianMesh2D.h"
-#include "utils/Utils.h"
-#include "utils/Timer.h"
-#include "types/Types.h"
-#include "mesh/stl/PvdFileWriter2D.h"
-#include "utils/stl/Parallel.h"
+#include "nablalib/mesh/CartesianMesh2DFactory.h"
+#include "nablalib/mesh/CartesianMesh2D.h"
+#include "nablalib/utils/Utils.h"
+#include "nablalib/utils/Timer.h"
+#include "nablalib/types/Types.h"
+#include "nablalib/mesh/stl/PvdFileWriter2D.h"
+#include "nablalib/utils/stl/Parallel.h"
 
-using namespace nablalib;
+using namespace nablalib::mesh;
+using namespace nablalib::utils;
+using namespace nablalib::types;
+using namespace nablalib::mesh::stl;
+using namespace nablalib::utils::stl;
 
 /******************** Free functions declarations ********************/
 
+namespace Glace2dFuncs
+{
 double det(RealArray2D<2,2> a);
 RealArray1D<2> perp(RealArray1D<2> a);
 template<size_t x>
@@ -38,6 +46,7 @@ double sumR0(double a, double b);
 template<size_t x>
 RealArray2D<x,x> sumR2(RealArray2D<x,x> a, RealArray2D<x,x> b);
 double minR0(double a, double b);
+}
 
 /******************** Module declaration ********************/
 
@@ -106,9 +115,9 @@ private:
 	PvdFileWriter2D writer;
 
 	// Timers
-	utils::Timer globalTimer;
-	utils::Timer cpuTimer;
-	utils::Timer ioTimer;
+	Timer globalTimer;
+	Timer cpuTimer;
+	Timer ioTimer;
 
 public:
 	// Global variables

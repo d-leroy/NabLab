@@ -1,17 +1,20 @@
+/*** GENERATED FILE - DO NOT OVERWRITE ***/
+
 #include "implicitheatequation/ImplicitHeatEquation.h"
 #include <rapidjson/document.h>
 #include <rapidjson/istreamwrapper.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
 
-using namespace nablalib;
 
 /******************** Free functions definitions ********************/
 
+namespace ImplicitHeatEquationFuncs
+{
 template<size_t x>
 double norm(RealArray1D<x> a)
 {
-	return std::sqrt(dot(a, a));
+	return std::sqrt(ImplicitHeatEquationFuncs::dot(a, a));
 }
 
 template<size_t x>
@@ -49,6 +52,7 @@ double sumR0(double a, double b)
 double prodR0(double a, double b)
 {
 	return a * b;
+}
 }
 
 /******************** Options definition ********************/
@@ -98,13 +102,13 @@ ImplicitHeatEquation::Options::jsonInit(const char* jsonContent)
 	}
 	else
 		maxIterations = 500000000;
-	// linearAlgebraFunctions
-	if (o.HasMember("linearAlgebraFunctions"))
+	// linearAlgebra
+	if (o.HasMember("linearAlgebra"))
 	{
 		rapidjson::StringBuffer strbuf;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-		o["linearAlgebraFunctions"].Accept(writer);
-		linearAlgebraFunctions.jsonInit(strbuf.GetString());
+		o["linearAlgebra"].Accept(writer);
+		linearAlgebra.jsonInit(strbuf.GetString());
 	}
 }
 
@@ -147,7 +151,7 @@ ImplicitHeatEquation::~ImplicitHeatEquation()
 }
 
 /**
- * Job ComputeFaceLength called @1.0 in simulate method.
+ * Job computeFaceLength called @1.0 in simulate method.
  * In variables: X
  * Out variables: faceLength
  */
@@ -166,7 +170,7 @@ void ImplicitHeatEquation::computeFaceLength() noexcept
 				const Id pPlus1Id(nodesOfFaceF[(pNodesOfFaceF+1+nbNodesOfFace)%nbNodesOfFace]);
 				const size_t pNodes(pId);
 				const size_t pPlus1Nodes(pPlus1Id);
-				reduction0 = sumR0(reduction0, norm(X[pNodes] - X[pPlus1Nodes]));
+				reduction0 = ImplicitHeatEquationFuncs::sumR0(reduction0, ImplicitHeatEquationFuncs::norm(X[pNodes] - X[pPlus1Nodes]));
 			}
 		}
 		faceLength[fFaces] = 0.5 * reduction0;
@@ -174,7 +178,7 @@ void ImplicitHeatEquation::computeFaceLength() noexcept
 }
 
 /**
- * Job ComputeTn called @1.0 in executeTimeLoopN method.
+ * Job computeTn called @1.0 in executeTimeLoopN method.
  * In variables: deltat, t_n
  * Out variables: t_nplus1
  */
@@ -184,7 +188,7 @@ void ImplicitHeatEquation::computeTn() noexcept
 }
 
 /**
- * Job ComputeV called @1.0 in simulate method.
+ * Job computeV called @1.0 in simulate method.
  * In variables: X
  * Out variables: V
  */
@@ -203,7 +207,7 @@ void ImplicitHeatEquation::computeV() noexcept
 				const Id pPlus1Id(nodesOfCellJ[(pNodesOfCellJ+1+nbNodesOfCell)%nbNodesOfCell]);
 				const size_t pNodes(pId);
 				const size_t pPlus1Nodes(pPlus1Id);
-				reduction0 = sumR0(reduction0, det(X[pNodes], X[pPlus1Nodes]));
+				reduction0 = ImplicitHeatEquationFuncs::sumR0(reduction0, ImplicitHeatEquationFuncs::det(X[pNodes], X[pPlus1Nodes]));
 			}
 		}
 		V[jCells] = 0.5 * reduction0;
@@ -211,7 +215,7 @@ void ImplicitHeatEquation::computeV() noexcept
 }
 
 /**
- * Job InitD called @1.0 in simulate method.
+ * Job initD called @1.0 in simulate method.
  * In variables: 
  * Out variables: D
  */
@@ -224,7 +228,7 @@ void ImplicitHeatEquation::initD() noexcept
 }
 
 /**
- * Job InitTime called @1.0 in simulate method.
+ * Job initTime called @1.0 in simulate method.
  * In variables: 
  * Out variables: t_n0
  */
@@ -234,7 +238,7 @@ void ImplicitHeatEquation::initTime() noexcept
 }
 
 /**
- * Job InitXc called @1.0 in simulate method.
+ * Job initXc called @1.0 in simulate method.
  * In variables: X
  * Out variables: Xc
  */
@@ -251,7 +255,7 @@ void ImplicitHeatEquation::initXc() noexcept
 			{
 				const Id pId(nodesOfCellC[pNodesOfCellC]);
 				const size_t pNodes(pId);
-				reduction0 = sumR1(reduction0, X[pNodes]);
+				reduction0 = ImplicitHeatEquationFuncs::sumR1(reduction0, X[pNodes]);
 			}
 		}
 		Xc[cCells] = 0.25 * reduction0;
@@ -259,17 +263,17 @@ void ImplicitHeatEquation::initXc() noexcept
 }
 
 /**
- * Job UpdateU called @1.0 in executeTimeLoopN method.
+ * Job updateU called @1.0 in executeTimeLoopN method.
  * In variables: alpha, u_n
  * Out variables: u_nplus1
  */
 void ImplicitHeatEquation::updateU() noexcept
 {
-	u_nplus1 = options.linearAlgebraFunctions.solveLinearSystem(alpha, u_n);
+	u_nplus1 = options.linearAlgebra.solveLinearSystem(alpha, u_n);
 }
 
 /**
- * Job ComputeDeltaTn called @2.0 in simulate method.
+ * Job computeDeltaTn called @2.0 in simulate method.
  * In variables: D, V
  * Out variables: deltat
  */
@@ -278,13 +282,13 @@ void ImplicitHeatEquation::computeDeltaTn() noexcept
 	double reduction0(numeric_limits<double>::max());
 	for (size_t cCells=0; cCells<nbCells; cCells++)
 	{
-		reduction0 = minR0(reduction0, V[cCells] / D[cCells]);
+		reduction0 = ImplicitHeatEquationFuncs::minR0(reduction0, V[cCells] / D[cCells]);
 	}
 	deltat = reduction0 * 0.24;
 }
 
 /**
- * Job ComputeFaceConductivity called @2.0 in simulate method.
+ * Job computeFaceConductivity called @2.0 in simulate method.
  * In variables: D
  * Out variables: faceConductivity
  */
@@ -301,7 +305,7 @@ void ImplicitHeatEquation::computeFaceConductivity() noexcept
 			{
 				const Id c1Id(cellsOfFaceF[c1CellsOfFaceF]);
 				const size_t c1Cells(c1Id);
-				reduction0 = prodR0(reduction0, D[c1Cells]);
+				reduction0 = ImplicitHeatEquationFuncs::prodR0(reduction0, D[c1Cells]);
 			}
 		}
 		double reduction1(0.0);
@@ -312,7 +316,7 @@ void ImplicitHeatEquation::computeFaceConductivity() noexcept
 			{
 				const Id c2Id(cellsOfFaceF[c2CellsOfFaceF]);
 				const size_t c2Cells(c2Id);
-				reduction1 = sumR0(reduction1, D[c2Cells]);
+				reduction1 = ImplicitHeatEquationFuncs::sumR0(reduction1, D[c2Cells]);
 			}
 		}
 		faceConductivity[fFaces] = 2.0 * reduction0 / reduction1;
@@ -320,7 +324,7 @@ void ImplicitHeatEquation::computeFaceConductivity() noexcept
 }
 
 /**
- * Job InitU called @2.0 in simulate method.
+ * Job initU called @2.0 in simulate method.
  * In variables: Xc, u0, vectOne
  * Out variables: u_n
  */
@@ -328,7 +332,7 @@ void ImplicitHeatEquation::initU() noexcept
 {
 	for (size_t cCells=0; cCells<nbCells; cCells++)
 	{
-		if (norm(Xc[cCells] - vectOne) < 0.5) 
+		if (ImplicitHeatEquationFuncs::norm(Xc[cCells] - vectOne) < 0.5) 
 			u_n[cCells] = options.u0;
 		else
 			u_n[cCells] = 0.0;
@@ -336,7 +340,7 @@ void ImplicitHeatEquation::initU() noexcept
 }
 
 /**
- * Job SetUpTimeLoopN called @2.0 in simulate method.
+ * Job setUpTimeLoopN called @2.0 in simulate method.
  * In variables: t_n0
  * Out variables: t_n
  */
@@ -346,7 +350,7 @@ void ImplicitHeatEquation::setUpTimeLoopN() noexcept
 }
 
 /**
- * Job ComputeAlphaCoeff called @3.0 in simulate method.
+ * Job computeAlphaCoeff called @3.0 in simulate method.
  * In variables: V, Xc, deltat, faceConductivity, faceLength
  * Out variables: alpha
  */
@@ -365,7 +369,7 @@ void ImplicitHeatEquation::computeAlphaCoeff() noexcept
 				const size_t dCells(dId);
 				const Id fId(mesh->getCommonFace(cId, dId));
 				const size_t fFaces(fId);
-				const double alphaExtraDiag(-deltat / V[cCells] * (faceLength[fFaces] * faceConductivity[fFaces]) / norm(Xc[cCells] - Xc[dCells]));
+				const double alphaExtraDiag(-deltat / V[cCells] * (faceLength[fFaces] * faceConductivity[fFaces]) / ImplicitHeatEquationFuncs::norm(Xc[cCells] - Xc[dCells]));
 				alpha(cCells,dCells) = alphaExtraDiag;
 				alphaDiag = alphaDiag + alphaExtraDiag;
 			}
@@ -375,7 +379,7 @@ void ImplicitHeatEquation::computeAlphaCoeff() noexcept
 }
 
 /**
- * Job ExecuteTimeLoopN called @4.0 in simulate method.
+ * Job executeTimeLoopN called @4.0 in simulate method.
  * In variables: alpha, deltat, t_n, u_n
  * Out variables: t_nplus1, u_nplus1
  */
@@ -418,9 +422,9 @@ void ImplicitHeatEquation::executeTimeLoopN() noexcept
 			std::cout << " {CPU: " << __BLUE__ << cpuTimer.print(true) << __RESET__ ", IO: " << __RED__ << "none" << __RESET__ << "} ";
 		
 		// Progress
-		std::cout << utils::progress_bar(n, options.maxIterations, t_n, options.stopTime, 25);
-		std::cout << __BOLD__ << __CYAN__ << utils::Timer::print(
-			utils::eta(n, options.maxIterations, t_n, options.stopTime, deltat, globalTimer), true)
+		std::cout << progress_bar(n, options.maxIterations, t_n, options.stopTime, 25);
+		std::cout << __BOLD__ << __CYAN__ << Timer::print(
+			eta(n, options.maxIterations, t_n, options.stopTime, deltat, globalTimer), true)
 			<< __RESET__ << "\r";
 		std::cout.flush();
 	
@@ -481,7 +485,7 @@ void ImplicitHeatEquation::simulate()
 	executeTimeLoopN(); // @4.0
 	
 	std::cout << __YELLOW__ << "\n\tDone ! Took " << __MAGENTA__ << __BOLD__ << globalTimer.print() << __RESET__ << std::endl;
-	std::cout << "[CG] average iteration: " << options.linearAlgebraFunctions.m_info.m_nb_it / options.linearAlgebraFunctions.m_info.m_nb_call << std::endl;
+	std::cout << "[CG] average iteration: " << options.linearAlgebra.m_info.m_nb_it / options.linearAlgebra.m_info.m_nb_call << std::endl;
 }
 
 int main(int argc, char* argv[]) 

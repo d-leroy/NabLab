@@ -11,16 +11,17 @@ package fr.cea.nabla.ir.generator.java
 
 import fr.cea.nabla.ir.ir.ArgOrVarRef
 import fr.cea.nabla.ir.ir.Function
+import fr.cea.nabla.ir.ir.InternFunction
 import fr.cea.nabla.ir.ir.SimpleVariable
 
 import static extension fr.cea.nabla.ir.generator.java.InstructionContentProvider.*
-import static extension fr.cea.nabla.ir.generator.java.Ir2JavaUtils.*
+import static extension fr.cea.nabla.ir.generator.java.JavaGeneratorUtils.*
 
 class FunctionContentProvider
 {
-	static def getContent(Function it)
+	static def getContent(InternFunction it)
 	'''
-		private «returnType.javaType» «name.toFirstLower»(«FOR a : inArgs SEPARATOR ', '»«a.type.javaType» «a.name»«ENDFOR»)
+		private «headerContent»
 		{
 			«FOR dimVar : variables»
 			final int «dimVar.name» = «getSizeOf(dimVar)»;
@@ -28,6 +29,9 @@ class FunctionContentProvider
 			«body.innerContent»
 		}
 	'''
+
+	static def getHeaderContent(Function it)
+	'''«returnType.javaType» «name.toFirstLower»(«FOR a : inArgs SEPARATOR ', '»«a.type.javaType» «a.name»«ENDFOR»)'''
 
 	private static def getSizeOf(Function it, SimpleVariable v)
 	{

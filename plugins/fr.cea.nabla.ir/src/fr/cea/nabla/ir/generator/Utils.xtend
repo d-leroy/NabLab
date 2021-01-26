@@ -21,6 +21,7 @@ import fr.cea.nabla.ir.ir.JobCaller
 import fr.cea.nabla.ir.ir.Loop
 import fr.cea.nabla.ir.ir.ReductionInstruction
 import fr.cea.nabla.ir.ir.SimpleVariable
+import fr.cea.nabla.ir.ir.Variable
 import org.eclipse.emf.ecore.EObject
 
 import static extension fr.cea.nabla.ir.ArgOrVarExtensions.*
@@ -28,11 +29,15 @@ import static extension fr.cea.nabla.ir.ContainerExtensions.*
 import static extension fr.cea.nabla.ir.IrRootExtensions.*
 import static extension fr.cea.nabla.ir.JobCallerExtensions.*
 import static extension fr.cea.nabla.ir.Utils.*
-import fr.cea.nabla.ir.ir.Variable
 
 class Utils
 {
 	static val extension DefaultVarDependencies = new DefaultVarDependencies
+
+	static def getFileHeader()
+	'''
+	/*** GENERATED FILE - DO NOT OVERWRITE ***/
+	'''
 
 	static def getClassName(IrModule it)
 	{
@@ -105,7 +110,7 @@ class Utils
 	static def getComment(Job it)
 	'''
 		/**
-		 * Job «name» called @«at» in «caller.codeName» method.
+		 * Job «codeName» called @«at» in «caller.codeName» method.
 		 * In variables: «FOR v : inVars.sortBy[name] SEPARATOR ', '»«v.getName»«ENDFOR»
 		 * Out variables: «FOR v : outVars.sortBy[name] SEPARATOR ', '»«v.getName»«ENDFOR»
 		 */

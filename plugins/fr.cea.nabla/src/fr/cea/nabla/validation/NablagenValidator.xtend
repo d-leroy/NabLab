@@ -12,8 +12,8 @@ package fr.cea.nabla.validation
 import com.google.inject.Inject
 import fr.cea.nabla.nabla.Connectivity
 import fr.cea.nabla.nabla.NablaModule
+import fr.cea.nabla.nablaext.TargetType
 import fr.cea.nabla.nablagen.AdditionalModule
-import fr.cea.nabla.nablagen.Cpp
 import fr.cea.nabla.nablagen.NablagenModule
 import fr.cea.nabla.nablagen.NablagenPackage
 import fr.cea.nabla.nablagen.NablagenRoot
@@ -28,6 +28,7 @@ import org.eclipse.xtext.validation.CheckType
  *
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
+ // TODO A unique interpreter
 class NablagenValidator extends AbstractNablagenValidator
 {
 	@Inject extension ArgOrVarTypeProvider
@@ -61,7 +62,7 @@ class NablagenValidator extends AbstractNablagenValidator
 	@Check(CheckType.FAST)
 	def void checkCppMandatoryVariables(NablagenRoot it)
 	{
-		if (targets.exists[x | x instanceof Cpp] && (mainModule !== null && mainModule.iterationMax === null || mainModule.timeMax === null))
+		if (targets.exists[x | x.type != TargetType::JAVA] && (mainModule !== null && mainModule.iterationMax === null || mainModule.timeMax === null))
 			error(getCppMandatoryVariablesMsg(), NablagenPackage.Literals::NABLAGEN_ROOT__MAIN_MODULE, CPP_MANDATORY_VARIABLES)
 	}
 

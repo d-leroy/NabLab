@@ -1,13 +1,16 @@
+/*** GENERATED FILE - DO NOT OVERWRITE ***/
+
 #include "iterativeheatequation/IterativeHeatEquation.h"
 #include <rapidjson/document.h>
 #include <rapidjson/istreamwrapper.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
 
-using namespace nablalib;
 
 /******************** Free functions definitions ********************/
 
+namespace IterativeHeatEquationFuncs
+{
 KOKKOS_INLINE_FUNCTION
 bool check(bool a)
 {
@@ -21,7 +24,7 @@ template<size_t x>
 KOKKOS_INLINE_FUNCTION
 double norm(RealArray1D<x> a)
 {
-	return std::sqrt(dot(a, a));
+	return std::sqrt(IterativeHeatEquationFuncs::dot(a, a));
 }
 
 template<size_t x>
@@ -71,6 +74,7 @@ KOKKOS_INLINE_FUNCTION
 double maxR0(double a, double b)
 {
 	return std::max(a, b);
+}
 }
 
 /******************** Options definition ********************/
@@ -181,7 +185,7 @@ IterativeHeatEquation::~IterativeHeatEquation()
 }
 
 /**
- * Job ComputeFaceLength called @1.0 in simulate method.
+ * Job computeFaceLength called @1.0 in simulate method.
  * In variables: X
  * Out variables: faceLength
  */
@@ -200,7 +204,7 @@ void IterativeHeatEquation::computeFaceLength() noexcept
 				const Id pPlus1Id(nodesOfFaceF[(pNodesOfFaceF+1+nbNodesOfFace)%nbNodesOfFace]);
 				const size_t pNodes(pId);
 				const size_t pPlus1Nodes(pPlus1Id);
-				reduction0 = sumR0(reduction0, norm(X(pNodes) - X(pPlus1Nodes)));
+				reduction0 = IterativeHeatEquationFuncs::sumR0(reduction0, IterativeHeatEquationFuncs::norm(X(pNodes) - X(pPlus1Nodes)));
 			}
 		}
 		faceLength(fFaces) = 0.5 * reduction0;
@@ -208,7 +212,7 @@ void IterativeHeatEquation::computeFaceLength() noexcept
 }
 
 /**
- * Job ComputeTn called @1.0 in executeTimeLoopN method.
+ * Job computeTn called @1.0 in executeTimeLoopN method.
  * In variables: deltat, t_n
  * Out variables: t_nplus1
  */
@@ -218,7 +222,7 @@ void IterativeHeatEquation::computeTn() noexcept
 }
 
 /**
- * Job ComputeV called @1.0 in simulate method.
+ * Job computeV called @1.0 in simulate method.
  * In variables: X
  * Out variables: V
  */
@@ -237,7 +241,7 @@ void IterativeHeatEquation::computeV() noexcept
 				const Id pPlus1Id(nodesOfCellJ[(pNodesOfCellJ+1+nbNodesOfCell)%nbNodesOfCell]);
 				const size_t pNodes(pId);
 				const size_t pPlus1Nodes(pPlus1Id);
-				reduction0 = sumR0(reduction0, det(X(pNodes), X(pPlus1Nodes)));
+				reduction0 = IterativeHeatEquationFuncs::sumR0(reduction0, IterativeHeatEquationFuncs::det(X(pNodes), X(pPlus1Nodes)));
 			}
 		}
 		V(jCells) = 0.5 * reduction0;
@@ -245,7 +249,7 @@ void IterativeHeatEquation::computeV() noexcept
 }
 
 /**
- * Job InitD called @1.0 in simulate method.
+ * Job initD called @1.0 in simulate method.
  * In variables: 
  * Out variables: D
  */
@@ -258,7 +262,7 @@ void IterativeHeatEquation::initD() noexcept
 }
 
 /**
- * Job InitTime called @1.0 in simulate method.
+ * Job initTime called @1.0 in simulate method.
  * In variables: 
  * Out variables: t_n0
  */
@@ -268,7 +272,7 @@ void IterativeHeatEquation::initTime() noexcept
 }
 
 /**
- * Job InitXc called @1.0 in simulate method.
+ * Job initXc called @1.0 in simulate method.
  * In variables: X
  * Out variables: Xc
  */
@@ -285,7 +289,7 @@ void IterativeHeatEquation::initXc() noexcept
 			{
 				const Id pId(nodesOfCellC[pNodesOfCellC]);
 				const size_t pNodes(pId);
-				reduction0 = sumR1(reduction0, X(pNodes));
+				reduction0 = IterativeHeatEquationFuncs::sumR1(reduction0, X(pNodes));
 			}
 		}
 		Xc(cCells) = 0.25 * reduction0;
@@ -293,7 +297,7 @@ void IterativeHeatEquation::initXc() noexcept
 }
 
 /**
- * Job SetUpTimeLoopK called @1.0 in executeTimeLoopN method.
+ * Job setUpTimeLoopK called @1.0 in executeTimeLoopN method.
  * In variables: u_n
  * Out variables: u_nplus1_k
  */
@@ -303,7 +307,7 @@ void IterativeHeatEquation::setUpTimeLoopK() noexcept
 }
 
 /**
- * Job UpdateU called @1.0 in executeTimeLoopK method.
+ * Job updateU called @1.0 in executeTimeLoopK method.
  * In variables: alpha, u_n, u_nplus1_k
  * Out variables: u_nplus1_kplus1
  */
@@ -320,7 +324,7 @@ void IterativeHeatEquation::updateU() noexcept
 			{
 				const Id dId(neighbourCellsC[dNeighbourCellsC]);
 				const size_t dCells(dId);
-				reduction0 = sumR0(reduction0, alpha(cCells,dCells) * u_nplus1_k(dCells));
+				reduction0 = IterativeHeatEquationFuncs::sumR0(reduction0, alpha(cCells,dCells) * u_nplus1_k(dCells));
 			}
 		}
 		u_nplus1_kplus1(cCells) = u_n(cCells) + alpha(cCells,cCells) * u_nplus1_k(cCells) + reduction0;
@@ -328,7 +332,7 @@ void IterativeHeatEquation::updateU() noexcept
 }
 
 /**
- * Job ComputeDeltaTn called @2.0 in simulate method.
+ * Job computeDeltaTn called @2.0 in simulate method.
  * In variables: D, V
  * Out variables: deltat
  */
@@ -337,13 +341,13 @@ void IterativeHeatEquation::computeDeltaTn() noexcept
 	double reduction0;
 	Kokkos::parallel_reduce(nbCells, KOKKOS_LAMBDA(const size_t& cCells, double& accu)
 	{
-		accu = minR0(accu, V(cCells) / D(cCells));
-	}, KokkosJoiner<double>(reduction0, numeric_limits<double>::max(), &minR0));
+		accu = IterativeHeatEquationFuncs::minR0(accu, V(cCells) / D(cCells));
+	}, KokkosJoiner<double>(reduction0, numeric_limits<double>::max(), &IterativeHeatEquationFuncs::minR0));
 	deltat = reduction0 * 0.1;
 }
 
 /**
- * Job ComputeFaceConductivity called @2.0 in simulate method.
+ * Job computeFaceConductivity called @2.0 in simulate method.
  * In variables: D
  * Out variables: faceConductivity
  */
@@ -360,7 +364,7 @@ void IterativeHeatEquation::computeFaceConductivity() noexcept
 			{
 				const Id c1Id(cellsOfFaceF[c1CellsOfFaceF]);
 				const size_t c1Cells(c1Id);
-				reduction0 = prodR0(reduction0, D(c1Cells));
+				reduction0 = IterativeHeatEquationFuncs::prodR0(reduction0, D(c1Cells));
 			}
 		}
 		double reduction1(0.0);
@@ -371,7 +375,7 @@ void IterativeHeatEquation::computeFaceConductivity() noexcept
 			{
 				const Id c2Id(cellsOfFaceF[c2CellsOfFaceF]);
 				const size_t c2Cells(c2Id);
-				reduction1 = sumR0(reduction1, D(c2Cells));
+				reduction1 = IterativeHeatEquationFuncs::sumR0(reduction1, D(c2Cells));
 			}
 		}
 		faceConductivity(fFaces) = 2.0 * reduction0 / reduction1;
@@ -379,7 +383,7 @@ void IterativeHeatEquation::computeFaceConductivity() noexcept
 }
 
 /**
- * Job ComputeResidual called @2.0 in executeTimeLoopK method.
+ * Job computeResidual called @2.0 in executeTimeLoopK method.
  * In variables: u_nplus1_k, u_nplus1_kplus1
  * Out variables: residual
  */
@@ -388,13 +392,13 @@ void IterativeHeatEquation::computeResidual() noexcept
 	double reduction0;
 	Kokkos::parallel_reduce(nbCells, KOKKOS_LAMBDA(const size_t& jCells, double& accu)
 	{
-		accu = maxR0(accu, std::abs(u_nplus1_kplus1(jCells) - u_nplus1_k(jCells)));
-	}, KokkosJoiner<double>(reduction0, -numeric_limits<double>::max(), &maxR0));
+		accu = IterativeHeatEquationFuncs::maxR0(accu, std::abs(u_nplus1_kplus1(jCells) - u_nplus1_k(jCells)));
+	}, KokkosJoiner<double>(reduction0, -numeric_limits<double>::max(), &IterativeHeatEquationFuncs::maxR0));
 	residual = reduction0;
 }
 
 /**
- * Job ExecuteTimeLoopK called @2.0 in executeTimeLoopN method.
+ * Job executeTimeLoopK called @2.0 in executeTimeLoopN method.
  * In variables: alpha, u_n, u_nplus1_k, u_nplus1_kplus1
  * Out variables: residual, u_nplus1_kplus1
  */
@@ -411,7 +415,7 @@ void IterativeHeatEquation::executeTimeLoopK() noexcept
 		
 	
 		// Evaluate loop condition with variables at time n
-		continueLoop = (residual > options.epsilon && check(k + 1 < options.maxIterationsK));
+		continueLoop = (residual > options.epsilon && IterativeHeatEquationFuncs::check(k + 1 < options.maxIterationsK));
 	
 		if (continueLoop)
 		{
@@ -424,7 +428,7 @@ void IterativeHeatEquation::executeTimeLoopK() noexcept
 }
 
 /**
- * Job InitU called @2.0 in simulate method.
+ * Job initU called @2.0 in simulate method.
  * In variables: Xc, u0, vectOne
  * Out variables: u_n
  */
@@ -432,7 +436,7 @@ void IterativeHeatEquation::initU() noexcept
 {
 	Kokkos::parallel_for(nbCells, KOKKOS_LAMBDA(const size_t& cCells)
 	{
-		if (norm(Xc(cCells) - vectOne) < 0.5) 
+		if (IterativeHeatEquationFuncs::norm(Xc(cCells) - vectOne) < 0.5) 
 			u_n(cCells) = options.u0;
 		else
 			u_n(cCells) = 0.0;
@@ -440,7 +444,7 @@ void IterativeHeatEquation::initU() noexcept
 }
 
 /**
- * Job SetUpTimeLoopN called @2.0 in simulate method.
+ * Job setUpTimeLoopN called @2.0 in simulate method.
  * In variables: t_n0
  * Out variables: t_n
  */
@@ -450,7 +454,7 @@ void IterativeHeatEquation::setUpTimeLoopN() noexcept
 }
 
 /**
- * Job ComputeAlphaCoeff called @3.0 in simulate method.
+ * Job computeAlphaCoeff called @3.0 in simulate method.
  * In variables: V, Xc, deltat, faceConductivity, faceLength
  * Out variables: alpha
  */
@@ -469,7 +473,7 @@ void IterativeHeatEquation::computeAlphaCoeff() noexcept
 				const size_t dCells(dId);
 				const Id fId(mesh->getCommonFace(cId, dId));
 				const size_t fFaces(fId);
-				const double alphaExtraDiag(deltat / V(cCells) * (faceLength(fFaces) * faceConductivity(fFaces)) / norm(Xc(cCells) - Xc(dCells)));
+				const double alphaExtraDiag(deltat / V(cCells) * (faceLength(fFaces) * faceConductivity(fFaces)) / IterativeHeatEquationFuncs::norm(Xc(cCells) - Xc(dCells)));
 				alpha(cCells,dCells) = alphaExtraDiag;
 				alphaDiag = alphaDiag + alphaExtraDiag;
 			}
@@ -479,7 +483,7 @@ void IterativeHeatEquation::computeAlphaCoeff() noexcept
 }
 
 /**
- * Job TearDownTimeLoopK called @3.0 in executeTimeLoopN method.
+ * Job tearDownTimeLoopK called @3.0 in executeTimeLoopN method.
  * In variables: u_nplus1_kplus1
  * Out variables: u_nplus1
  */
@@ -489,7 +493,7 @@ void IterativeHeatEquation::tearDownTimeLoopK() noexcept
 }
 
 /**
- * Job ExecuteTimeLoopN called @4.0 in simulate method.
+ * Job executeTimeLoopN called @4.0 in simulate method.
  * In variables: alpha, deltat, t_n, u_n, u_nplus1_k, u_nplus1_kplus1
  * Out variables: residual, t_nplus1, u_nplus1, u_nplus1_k, u_nplus1_kplus1
  */
@@ -534,9 +538,9 @@ void IterativeHeatEquation::executeTimeLoopN() noexcept
 			std::cout << " {CPU: " << __BLUE__ << cpuTimer.print(true) << __RESET__ ", IO: " << __RED__ << "none" << __RESET__ << "} ";
 		
 		// Progress
-		std::cout << utils::progress_bar(n, options.maxIterations, t_n, options.stopTime, 25);
-		std::cout << __BOLD__ << __CYAN__ << utils::Timer::print(
-			utils::eta(n, options.maxIterations, t_n, options.stopTime, deltat, globalTimer), true)
+		std::cout << progress_bar(n, options.maxIterations, t_n, options.stopTime, 25);
+		std::cout << __BOLD__ << __CYAN__ << Timer::print(
+			eta(n, options.maxIterations, t_n, options.stopTime, deltat, globalTimer), true)
 			<< __RESET__ << "\r";
 		std::cout.flush();
 	

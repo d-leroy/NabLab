@@ -1,13 +1,16 @@
+/*** GENERATED FILE - DO NOT OVERWRITE ***/
+
 #include "heatequation/HeatEquation.h"
 #include <rapidjson/document.h>
 #include <rapidjson/istreamwrapper.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
 
-using namespace nablalib;
 
 /******************** Free functions definitions ********************/
 
+namespace HeatEquationFuncs
+{
 double det(RealArray1D<2> a, RealArray1D<2> b)
 {
 	return (a[0] * b[1] - a[1] * b[0]);
@@ -16,7 +19,7 @@ double det(RealArray1D<2> a, RealArray1D<2> b)
 template<size_t x>
 double norm(RealArray1D<x> a)
 {
-	return std::sqrt(dot(a, a));
+	return std::sqrt(HeatEquationFuncs::dot(a, a));
 }
 
 template<size_t x>
@@ -39,6 +42,7 @@ RealArray1D<x> sumR1(RealArray1D<x> a, RealArray1D<x> b)
 double sumR0(double a, double b)
 {
 	return a + b;
+}
 }
 
 /******************** Options definition ********************/
@@ -135,7 +139,7 @@ HeatEquation::~HeatEquation()
 }
 
 /**
- * Job ComputeOutgoingFlux called @1.0 in executeTimeLoopN method.
+ * Job computeOutgoingFlux called @1.0 in executeTimeLoopN method.
  * In variables: V, center, deltat, surface, u_n
  * Out variables: outgoingFlux
  */
@@ -155,8 +159,8 @@ void HeatEquation::computeOutgoingFlux() noexcept
 				const size_t j2Cells(j2Id);
 				const Id cfId(mesh->getCommonFace(j1Id, j2Id));
 				const size_t cfFaces(cfId);
-				double reduction1((u_n[j2Cells] - u_n[j1Cells]) / norm(center[j2Cells] - center[j1Cells]) * surface[cfFaces]);
-				reduction0 = sumR0(reduction0, reduction1);
+				double reduction1((u_n[j2Cells] - u_n[j1Cells]) / HeatEquationFuncs::norm(center[j2Cells] - center[j1Cells]) * surface[cfFaces]);
+				reduction0 = HeatEquationFuncs::sumR0(reduction0, reduction1);
 			}
 		}
 		outgoingFlux[j1Cells] = deltat / V[j1Cells] * reduction0;
@@ -164,7 +168,7 @@ void HeatEquation::computeOutgoingFlux() noexcept
 }
 
 /**
- * Job ComputeSurface called @1.0 in simulate method.
+ * Job computeSurface called @1.0 in simulate method.
  * In variables: X
  * Out variables: surface
  */
@@ -184,7 +188,7 @@ void HeatEquation::computeSurface() noexcept
 				const Id rPlus1Id(nodesOfFaceF[(rNodesOfFaceF+1+nbNodesOfFace)%nbNodesOfFace]);
 				const size_t rNodes(rId);
 				const size_t rPlus1Nodes(rPlus1Id);
-				reduction0 = sumR0(reduction0, norm(X[rNodes] - X[rPlus1Nodes]));
+				reduction0 = HeatEquationFuncs::sumR0(reduction0, HeatEquationFuncs::norm(X[rNodes] - X[rPlus1Nodes]));
 			}
 		}
 		surface[fFaces] = 0.5 * reduction0;
@@ -192,7 +196,7 @@ void HeatEquation::computeSurface() noexcept
 }
 
 /**
- * Job ComputeTn called @1.0 in executeTimeLoopN method.
+ * Job computeTn called @1.0 in executeTimeLoopN method.
  * In variables: deltat, t_n
  * Out variables: t_nplus1
  */
@@ -202,7 +206,7 @@ void HeatEquation::computeTn() noexcept
 }
 
 /**
- * Job ComputeV called @1.0 in simulate method.
+ * Job computeV called @1.0 in simulate method.
  * In variables: X
  * Out variables: V
  */
@@ -222,7 +226,7 @@ void HeatEquation::computeV() noexcept
 				const Id rPlus1Id(nodesOfCellJ[(rNodesOfCellJ+1+nbNodesOfCell)%nbNodesOfCell]);
 				const size_t rNodes(rId);
 				const size_t rPlus1Nodes(rPlus1Id);
-				reduction0 = sumR0(reduction0, det(X[rNodes], X[rPlus1Nodes]));
+				reduction0 = HeatEquationFuncs::sumR0(reduction0, HeatEquationFuncs::det(X[rNodes], X[rPlus1Nodes]));
 			}
 		}
 		V[jCells] = 0.5 * reduction0;
@@ -230,7 +234,7 @@ void HeatEquation::computeV() noexcept
 }
 
 /**
- * Job IniCenter called @1.0 in simulate method.
+ * Job iniCenter called @1.0 in simulate method.
  * In variables: X
  * Out variables: center
  */
@@ -248,7 +252,7 @@ void HeatEquation::iniCenter() noexcept
 			{
 				const Id rId(nodesOfCellJ[rNodesOfCellJ]);
 				const size_t rNodes(rId);
-				reduction0 = sumR1(reduction0, X[rNodes]);
+				reduction0 = HeatEquationFuncs::sumR1(reduction0, X[rNodes]);
 			}
 		}
 		center[jCells] = 0.25 * reduction0;
@@ -256,7 +260,7 @@ void HeatEquation::iniCenter() noexcept
 }
 
 /**
- * Job IniF called @1.0 in simulate method.
+ * Job iniF called @1.0 in simulate method.
  * In variables: 
  * Out variables: f
  */
@@ -270,7 +274,7 @@ void HeatEquation::iniF() noexcept
 }
 
 /**
- * Job IniTime called @1.0 in simulate method.
+ * Job iniTime called @1.0 in simulate method.
  * In variables: 
  * Out variables: t_n0
  */
@@ -280,7 +284,7 @@ void HeatEquation::iniTime() noexcept
 }
 
 /**
- * Job ComputeUn called @2.0 in executeTimeLoopN method.
+ * Job computeUn called @2.0 in executeTimeLoopN method.
  * In variables: deltat, f, outgoingFlux, u_n
  * Out variables: u_nplus1
  */
@@ -294,7 +298,7 @@ void HeatEquation::computeUn() noexcept
 }
 
 /**
- * Job IniUn called @2.0 in simulate method.
+ * Job iniUn called @2.0 in simulate method.
  * In variables: PI, alpha, center
  * Out variables: u_n
  */
@@ -308,7 +312,7 @@ void HeatEquation::iniUn() noexcept
 }
 
 /**
- * Job SetUpTimeLoopN called @2.0 in simulate method.
+ * Job setUpTimeLoopN called @2.0 in simulate method.
  * In variables: t_n0
  * Out variables: t_n
  */
@@ -318,7 +322,7 @@ void HeatEquation::setUpTimeLoopN() noexcept
 }
 
 /**
- * Job ExecuteTimeLoopN called @3.0 in simulate method.
+ * Job executeTimeLoopN called @3.0 in simulate method.
  * In variables: V, center, deltat, f, outgoingFlux, surface, t_n, u_n
  * Out variables: outgoingFlux, t_nplus1, u_nplus1
  */
@@ -362,9 +366,9 @@ void HeatEquation::executeTimeLoopN() noexcept
 			std::cout << " {CPU: " << __BLUE__ << cpuTimer.print(true) << __RESET__ ", IO: " << __RED__ << "none" << __RESET__ << "} ";
 		
 		// Progress
-		std::cout << utils::progress_bar(n, options.maxIterations, t_n, options.stopTime, 25);
-		std::cout << __BOLD__ << __CYAN__ << utils::Timer::print(
-			utils::eta(n, options.maxIterations, t_n, options.stopTime, deltat, globalTimer), true)
+		std::cout << progress_bar(n, options.maxIterations, t_n, options.stopTime, 25);
+		std::cout << __BOLD__ << __CYAN__ << Timer::print(
+			eta(n, options.maxIterations, t_n, options.stopTime, deltat, globalTimer), true)
 			<< __RESET__ << "\r";
 		std::cout.flush();
 	

@@ -12,10 +12,13 @@ package fr.cea.nabla.tests
 import com.google.common.collect.PeekingIterator
 import com.google.gson.Gson
 import com.google.inject.Inject
-import fr.cea.nabla.nablagen.Cpp
-import fr.cea.nabla.nablagen.Java
+import fr.cea.nabla.generator.UnzipHelper
+import fr.cea.nabla.ir.generator.cpp.CppGeneratorUtils
+import fr.cea.nabla.nablaext.TargetType
+import fr.cea.nabla.nablagen.Target
 import java.io.File
 import java.nio.file.Files
+import java.nio.file.Paths
 import org.apache.commons.io.FileUtils
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -53,7 +56,7 @@ class NablaExamplesTest
 		val wsPath = testProjectPath + "/../../"
 		examplesProjectSubPath = "plugins/fr.cea.nabla.ui/examples/NablaExamples/"
 		examplesProjectPath = wsPath + examplesProjectSubPath
-		cppLibPath = wsPath + "plugins/fr.cea.nabla.ir/cppresources/libcppnabla.zip"
+		cppLibPath = wsPath + "plugins/fr.cea.nabla.ir/resources/libcppnabla.zip"
 		javaLibPath = wsPath + "plugins/fr.cea.nabla.javalib/bin/:" + wsPath + "plugins/fr.cea.nabla.javalib/target/*"
 		commonMath3Path = wsPath + "plugins/commons-math3/*"
 		levelDBPath = wsPath + "plugins/leveldb/*"
@@ -141,13 +144,18 @@ class NablaExamplesTest
 		val kokkosPath = System.getenv(kokkosENV)
 		val levelDBPath = System.getenv(levelDBEnv)
 		if (kokkosPath.nullOrEmpty || levelDBPath.nullOrEmpty)
-			Assert.fail("To execute this test, you have to set " + kokkosENV + " and " + levelDBEnv + " variables.")
+		{
+			val envErr = "To execute this test, you have to set " + kokkosENV + " and " + levelDBEnv + " variables."
+			println(envErr)
+			Assert.fail(envErr)
+		}
 
 		val tmp = new File(Files.createTempDirectory("nablaTest-" + moduleName) + "/NablaExamples")
 		println(tmp)
+
 		// We have to create output dir. Simpliest is to copy all NablaExamples tree in tmpDir
 		val sourceLocation= new File(examplesProjectPath)
-		FileUtils.copyDirectory(sourceLocation, tmp);
+		FileUtils.copyDirectory(sourceLocation, tmp)
 
 		val packageName = moduleName.toLowerCase
 		val model = readFileAsString(tmp + "/src/" + packageName + "/" + moduleName + ".nabla")
@@ -157,8 +165,17 @@ class NablaExamplesTest
 		genmodel = genmodel.adaptedGenModel(kokkosPath, levelDBPath)
 		compilationHelper.generateCode(model, genmodel, tmp.toPath.toString)
 
+		// unzip libcppnabla
+		val cppZipFile = new File(cppLibPath)
+		val destDir = new File(tmp + '/..')
+		UnzipHelper.unzip(cppZipFile.toURI, destDir.toURI)
+		val cmakePath = Paths.get(destDir.path, CppGeneratorUtils::CppLibName, 'src', 'CMakeLists.txt')
+		var cmakeContent = Files.readString(cmakePath)
+		cmakeContent = cmakeContent.replaceAll(" -O3 ", " -O2 ")
+		Files.writeString(cmakePath, cmakeContent)
+
 		var nbErrors = 0
-		for (target : compilationHelper.getNgen(model, genmodel).targets)
+		for (target : compilationHelper.getNgen(model, genmodel).targets.filter[!interpreter])
 		{
 			(!testExecute(target, moduleName, tmp.toString) ? nbErrors++)
 		}
@@ -195,7 +212,7 @@ class NablaExamplesTest
 		'''
 	}
 
-	private def dispatch testExecute(Cpp target, String moduleName, String tmp)
+	private def testExecute(Target target, String moduleName, String tmp)
 	{
 		val testProjectPath = System.getProperty("user.dir")
 		val packageName = moduleName.toLowerCase
@@ -203,8 +220,16 @@ class NablaExamplesTest
 		val targetName = outputDir.split("/").last
 		val levelDBRef = testProjectPath + "/results/compiler/" + targetName + "/" + packageName + "/" + moduleName + "DB.ref"
 		val jsonFile = examplesProjectPath + "src/" + packageName + "/" + moduleName + ".json"
-		print("\tStarting " + target.eClass.name)
-//		println("$1= " + outputDir)
+
+		print("\tStarting " + target.type.literal)
+		if (target.type == TargetType::JAVA)
+			testExecuteJava(outputDir, packageName, levelDBRef, jsonFile, moduleName)
+		else
+			testExecuteCpp(outputDir, packageName, levelDBRef, jsonFile, moduleName)
+	}
+
+	private def testExecuteCpp(String outputDir, String packageName, String levelDBRef, String jsonFile, String moduleName)
+	{
 //		println("$2= " + cppLibPath)
 //		println("$3= " + packageName)
 //		println("$4= " + levelDBRef)
@@ -213,7 +238,6 @@ class NablaExamplesTest
 		var pb = new ProcessBuilder("/bin/bash",
 			System.getProperty("user.dir") + "/src/fr/cea/nabla/tests/executeCppNablaExample.sh",
 			outputDir, // output src-gen path
-			cppLibPath, // cpp lib zip	 path
 			packageName,
 			levelDBRef,
 			jsonFile,
@@ -246,18 +270,11 @@ class NablaExamplesTest
 		return true
 	}
 
-	private def dispatch testExecute(Java target, String moduleName, String tmp)
+	private def testExecuteJava(String outputDir, String packageName, String levelDBRef, String jsonFile, String moduleName)
 	{
-		val testProjectPath = System.getProperty("user.dir")
-		val packageName = moduleName.toLowerCase
-		val outputDir = tmp + "/.." + target.outputDir
-		val targetName = outputDir.split("/").last
 		val gsonPath = Gson.protectionDomain.codeSource.location.toString
-		val levelDBRef = testProjectPath + "/results/compiler/" + targetName + "/" + packageName + "/" + moduleName + "DB.ref"
 		val guavaPath = PeekingIterator.protectionDomain.codeSource.location.toString
 		val apacheCommonIOPath = FileUtils.protectionDomain.codeSource.location.toString
-		val jsonFile = examplesProjectPath + "src/" + packageName + "/" + moduleName + ".json"
-		print("\tStarting " + target.eClass.name)
 //		println("$1= " + outputDir)
 //		println("$2= " + packageName)
 //		println("$3= " + moduleName)
@@ -291,13 +308,13 @@ class NablaExamplesTest
 			println(" -> Ok")
 		if (exitVal.equals(10))
 		{
-			val logPath = simplifyPath(tmp + "/" + targetName + "/" + packageName + "/javac.err")
+			val logPath = simplifyPath(outputDir + "/" + packageName + "/javac.err")
 			println(" -> Compile Error. See " + logPath)
 			return false
 		}
 		if (exitVal.equals(20))
 		{
-			val logPath = simplifyPath(tmp + "/" + targetName + "/" + packageName + "/exec.err")
+			val logPath = simplifyPath(outputDir + "/" + packageName + "/exec.err")
 			println(" -> Execute Error. See " + logPath)
 			return false
 		}

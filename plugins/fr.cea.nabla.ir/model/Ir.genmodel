@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/fr.cea.nabla.ir/src-gen" modelPluginID="fr.cea.nabla.ir"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/fr.cea.nabla.ir/src-gen" editDirectory="/fr.cea.nabla.ir.edit/src-gen"
+    editorDirectory="/fr.cea.nabla.ir.editor/src-gen" modelPluginID="fr.cea.nabla.ir"
     runtimeJar="true" modelName="NablaIR" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     testsDirectory="/fr.cea.nabla.ir.tests/src" booleanFlagsField="" booleanFlagsReservedBits="8"
     importerID="org.eclipse.emf.importer.ecore" containmentProxies="true" complianceLevel="8.0"
@@ -21,7 +22,7 @@
   <foreignModel>Ir.ecore</foreignModel>
   <modelPluginVariables>org.eclipse.xtext.xbase.lib</modelPluginVariables>
   <modelPluginVariables>org.eclipse.emf.ecore.xcore.lib</modelPluginVariables>
-  <genPackages prefix="Ir" basePackage="fr.cea.nabla.ir" disposableProviderFactory="true"
+  <genPackages prefix="Ir" basePackage="fr.cea.nabla.ir" resource="XMI" disposableProviderFactory="true"
       fileExtensions="nablair" ecorePackage="Ir.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="Ir.ecore#//PrimitiveType">
       <genEnumLiterals ecoreEnumLiteral="Ir.ecore#//PrimitiveType/Int"/>
@@ -50,6 +51,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ir.ecore#//IrRoot/timeVariable"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ir.ecore#//IrRoot/timeStepVariable"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ir.ecore#//IrRoot/postProcessing"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ir.ecore#//IrRoot/providers"/>
     </genClasses>
     <genClasses ecoreClass="Ir.ecore#//IrModule">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ir.ecore#//IrModule/name"/>
@@ -63,6 +65,15 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ir.ecore#//PostProcessing/periodReference"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ir.ecore#//PostProcessing/periodValue"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ir.ecore#//PostProcessing/lastDumpVariable"/>
+    </genClasses>
+    <genClasses ecoreClass="Ir.ecore#//ExtensionProvider">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ir.ecore#//ExtensionProvider/extensionName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ir.ecore#//ExtensionProvider/providerName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ir.ecore#//ExtensionProvider/projectDir"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ir.ecore#//ExtensionProvider/installDir"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ir.ecore#//ExtensionProvider/facadeClass"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ir.ecore#//ExtensionProvider/facadeNamespace"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ir.ecore#//ExtensionProvider/libName"/>
     </genClasses>
     <genClasses image="false" ecoreClass="Ir.ecore#//ArgOrVar">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ir.ecore#//ArgOrVar/name"/>
@@ -83,14 +94,19 @@
     <genClasses ecoreClass="Ir.ecore#//ConnectivityVariable">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ir.ecore#//ConnectivityVariable/type"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ir.ecore#//ConnectivityVariable/defaultValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ir.ecore#//ConnectivityVariable/linearAlgebra"/>
     </genClasses>
     <genClasses ecoreClass="Ir.ecore#//Function">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ir.ecore#//Function/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ir.ecore#//Function/returnType"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ir.ecore#//Function/provider"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ir.ecore#//Function/variables"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ir.ecore#//Function/inArgs"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ir.ecore#//Function/body"/>
+    </genClasses>
+    <genClasses ecoreClass="Ir.ecore#//InternFunction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ir.ecore#//InternFunction/body"/>
+    </genClasses>
+    <genClasses ecoreClass="Ir.ecore#//ExternFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ir.ecore#//ExternFunction/provider"/>
     </genClasses>
     <genClasses ecoreClass="Ir.ecore#//Connectivity">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ir.ecore#//Connectivity/name"/>
@@ -107,6 +123,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ir.ecore#//Job/at"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ir.ecore#//Job/onCycle"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ir.ecore#//Job/caller"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ir.ecore#//Job/previousJobsWithSameCaller"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ir.ecore#//Job/nextJobsWithSameCaller"/>
     </genClasses>
     <genClasses ecoreClass="Ir.ecore#//InstructionJob">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ir.ecore#//InstructionJob/instruction"/>

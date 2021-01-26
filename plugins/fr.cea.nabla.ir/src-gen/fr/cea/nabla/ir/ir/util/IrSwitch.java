@@ -99,6 +99,13 @@ public class IrSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case IrPackage.EXTENSION_PROVIDER: {
+				ExtensionProvider extensionProvider = (ExtensionProvider)theEObject;
+				T result = caseExtensionProvider(extensionProvider);
+				if (result == null) result = caseIrAnnotable(extensionProvider);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case IrPackage.ARG_OR_VAR: {
 				ArgOrVar argOrVar = (ArgOrVar)theEObject;
 				T result = caseArgOrVar(argOrVar);
@@ -144,6 +151,22 @@ public class IrSwitch<T> extends Switch<T> {
 				Function function = (Function)theEObject;
 				T result = caseFunction(function);
 				if (result == null) result = caseIrAnnotable(function);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case IrPackage.INTERN_FUNCTION: {
+				InternFunction internFunction = (InternFunction)theEObject;
+				T result = caseInternFunction(internFunction);
+				if (result == null) result = caseFunction(internFunction);
+				if (result == null) result = caseIrAnnotable(internFunction);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case IrPackage.EXTERN_FUNCTION: {
+				ExternFunction externFunction = (ExternFunction)theEObject;
+				T result = caseExternFunction(externFunction);
+				if (result == null) result = caseFunction(externFunction);
+				if (result == null) result = caseIrAnnotable(externFunction);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -651,6 +674,21 @@ public class IrSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Extension Provider</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Extension Provider</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseExtensionProvider(ExtensionProvider object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Arg Or Var</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -737,6 +775,36 @@ public class IrSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseFunction(Function object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Intern Function</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Intern Function</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseInternFunction(InternFunction object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Extern Function</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Extern Function</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseExternFunction(ExternFunction object) {
 		return null;
 	}
 

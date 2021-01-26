@@ -33,8 +33,8 @@ import org.eclipse.xtend.lib.annotations.Data
 import static extension fr.cea.nabla.ir.ArgOrVarExtensions.*
 import static extension fr.cea.nabla.ir.ContainerExtensions.*
 import static extension fr.cea.nabla.ir.generator.Utils.*
-import static extension fr.cea.nabla.ir.generator.cpp.Ir2CppUtils.*
 import static extension fr.cea.nabla.ir.generator.cpp.ItemIndexAndIdValueContentProvider.*
+import static extension fr.cea.nabla.ir.generator.cpp.CppGeneratorUtils.*
 
 @Data
 abstract class InstructionContentProvider
@@ -204,19 +204,19 @@ class StlThreadInstructionContentProvider extends InstructionContentProvider
 	'''
 		«result.cppType» «result.name»;
 		«iterationBlock.defineInterval('''
-		«result.name» = parallel::parallel_reduce(«iterationBlock.nbElems», «result.defaultValue.content», [&](«result.cppType»& accu, const size_t& «iterationBlock.indexName»)
+		«result.name» = parallel_reduce(«iterationBlock.nbElems», «result.defaultValue.content», [&](«result.cppType»& accu, const size_t& «iterationBlock.indexName»)
 			{
 				«FOR innerInstruction : innerInstructions»
 				«innerInstruction.content»
 				«ENDFOR»
 				return (accu = «binaryFunction.codeName»(accu, «lambda.content»));
 			},
-			&«binaryFunction.name»);''')»
+			&«binaryFunction.codeName»);''')»
 	'''
 
 	override getParallelLoopContent(Loop it)
 	'''
-		parallel::parallel_exec(«iterationBlock.nbElems», [&](const size_t& «iterationBlock.indexName»)
+		parallel_exec(«iterationBlock.nbElems», [&](const size_t& «iterationBlock.indexName»)
 		{
 			«body.innerContent»
 		});
@@ -236,7 +236,7 @@ class KokkosInstructionContentProvider extends InstructionContentProvider
 			«innerInstruction.content»
 			«ENDFOR»
 			accu = «binaryFunction.codeName»(accu, «lambda.content»);
-		}, KokkosJoiner<«result.cppType»>(«result.name», «result.defaultValue.content», &«binaryFunction.name»));''')»
+		}, KokkosJoiner<«result.cppType»>(«result.name», «result.defaultValue.content», &«binaryFunction.codeName»));''')»
 	'''
 
 	override getParallelLoopContent(Loop it)

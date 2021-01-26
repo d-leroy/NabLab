@@ -14,6 +14,7 @@ import com.google.inject.Provider
 import fr.cea.nabla.ir.IrModuleExtensions
 import fr.cea.nabla.ir.ir.ArgOrVarRef
 import fr.cea.nabla.ir.ir.ConnectivityVariable
+import fr.cea.nabla.ir.ir.ExternFunction
 import fr.cea.nabla.ir.ir.IrFactory
 import fr.cea.nabla.ir.ir.IrModule
 import fr.cea.nabla.ir.ir.IrRoot
@@ -43,6 +44,12 @@ class Nablagen2Ir
 		name = ngen.name
 		main = IrFactory::eINSTANCE.createJobCaller
 
+		// create language extension providers
+		ngen.mainModule.type.imports.forEach[x | providers += x.importedNamespace.moduleName.toIrExtensionProvider]
+		for (adModule : ngen.additionalModules)
+			adModule.type.imports.forEach[x | providers += x.importedNamespace.moduleName.toIrExtensionProvider]
+
+		// create modules
 		val nabla2ir = nabla2IrProvider.get
 		createIrModule(it, nabla2ir, ngen.mainModule)
 		ngen.additionalModules.forEach[x | createIrModule(it, nabla2ir, x)]
@@ -71,6 +78,10 @@ class Nablagen2Ir
 		nodeCoordVariable = getCurrentIrVariable(mainIrModule, ngen.mainModule.nodeCoord) as ConnectivityVariable
 		timeVariable = getCurrentIrVariable(mainIrModule, ngen.mainModule.time) as SimpleVariable
 		timeStepVariable = getCurrentIrVariable(mainIrModule, ngen.mainModule.timeStep) as SimpleVariable
+
+		// set providers
+		for (f : functions.filter(ExternFunction))
+			providers += f.provider
 
 		// post processing
 		if (ngen.vtkOutput !== null)
@@ -182,5 +193,13 @@ class Nablagen2Ir
 			case BOOL: f.createBoolConstant => [ value = false ]
 			default: f.createMinConstant => [ type = f.createBaseType => [ primitive = t] ]
 		}
+	}
+
+	private def getModuleName(String qualifiedNameWithWildcards)
+	{
+		if (qualifiedNameWithWildcards.contains('.'))
+			qualifiedNameWithWildcards.split('\\.').head
+		else
+			qualifiedNameWithWildcards
 	}
 }

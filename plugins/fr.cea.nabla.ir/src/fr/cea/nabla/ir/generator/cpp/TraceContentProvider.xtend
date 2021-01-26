@@ -14,12 +14,12 @@ import org.eclipse.xtend.lib.annotations.Data
 
 import static extension fr.cea.nabla.ir.IrModuleExtensions.*
 import static extension fr.cea.nabla.ir.generator.Utils.*
+import org.eclipse.xtend.lib.annotations.Accessors
 
-@Data
 class TraceContentProvider
 {
-	val String maxIterationsVarName
-	val String stopTimeVarName
+	@Accessors String maxIterationsVarName
+	@Accessors String stopTimeVarName
 
 	protected def getHwlocTraceContent()
 	'''
@@ -66,9 +66,11 @@ class TraceContentProvider
 			std::cout << " {CPU: " << __BLUE__ << cpuTimer.print(true) << __RESET__ ", IO: " << __RED__ << "none" << __RESET__ << "} ";
 
 		// Progress
-		std::cout << utils::progress_bar(«iterationVarName», «maxIterationsVar.codeName», «ir.timeVariable.codeName», «stopTimeVar.codeName», 25);
-		std::cout << __BOLD__ << __CYAN__ << utils::Timer::print(
-			utils::eta(«iterationVarName», «maxIterationsVar.codeName», «ir.timeVariable.codeName», «stopTimeVar.codeName», «ir.timeStepVariable.codeName», globalTimer), true)
+		«IF maxIterationsVar !== null && stopTimeVarName !== null»
+		std::cout << progress_bar(«iterationVarName», «maxIterationsVar.codeName», «ir.timeVariable.codeName», «stopTimeVar.codeName», 25);
+		«ENDIF»
+		std::cout << __BOLD__ << __CYAN__ << Timer::print(
+			eta(«iterationVarName», «maxIterationsVar.codeName», «ir.timeVariable.codeName», «stopTimeVar.codeName», «ir.timeStepVariable.codeName», globalTimer), true)
 			<< __RESET__ << "\r";
 		std::cout.flush();
 		«ENDIF»
@@ -77,7 +79,7 @@ class TraceContentProvider
 	def getEndOfSimuTrace(boolean isLinearAlgebra)
 	'''
 		std::cout << __YELLOW__ << "\n\tDone ! Took " << __MAGENTA__ << __BOLD__ << globalTimer.print() << __RESET__ << std::endl;
-		«IF isLinearAlgebra»std::cout << "[CG] average iteration: " << options.linearAlgebraFunctions.m_info.m_nb_it / options.linearAlgebraFunctions.m_info.m_nb_call << std::endl;«ENDIF»
+		«IF isLinearAlgebra»std::cout << "[CG] average iteration: " << options.linearAlgebra.m_info.m_nb_it / options.linearAlgebra.m_info.m_nb_call << std::endl;«ENDIF»
 	'''
 }
 

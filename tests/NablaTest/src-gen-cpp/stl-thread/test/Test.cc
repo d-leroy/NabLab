@@ -1,3 +1,5 @@
+/*** GENERATED FILE - DO NOT OVERWRITE ***/
+
 #include "test/Test.h"
 #include <rapidjson/document.h>
 #include <rapidjson/istreamwrapper.h>
@@ -77,7 +79,7 @@ Test::~Test()
 }
 
 /**
- * Job ComputeE1 called @1.0 in executeTimeLoopN method.
+ * Job computeE1 called @1.0 in executeTimeLoopN method.
  * In variables: e_n
  * Out variables: e1
  */
@@ -90,7 +92,7 @@ void Test::computeE1() noexcept
 }
 
 /**
- * Job ComputeE2 called @1.0 in executeTimeLoopK method.
+ * Job computeE2 called @1.0 in executeTimeLoopK method.
  * In variables: e2_nplus1_k
  * Out variables: e2_nplus1_kplus1
  */
@@ -103,7 +105,7 @@ void Test::computeE2() noexcept
 }
 
 /**
- * Job InitE called @1.0 in simulate method.
+ * Job initE called @1.0 in simulate method.
  * In variables: 
  * Out variables: e_n0
  */
@@ -116,7 +118,7 @@ void Test::initE() noexcept
 }
 
 /**
- * Job InitTime called @1.0 in simulate method.
+ * Job initTime called @1.0 in simulate method.
  * In variables: 
  * Out variables: t_n0
  */
@@ -126,7 +128,7 @@ void Test::initTime() noexcept
 }
 
 /**
- * Job UpdateT called @1.0 in executeTimeLoopN method.
+ * Job updateT called @1.0 in executeTimeLoopN method.
  * In variables: deltat, t_n
  * Out variables: t_nplus1
  */
@@ -136,7 +138,7 @@ void Test::updateT() noexcept
 }
 
 /**
- * Job InitE2 called @2.0 in executeTimeLoopN method.
+ * Job initE2 called @2.0 in executeTimeLoopN method.
  * In variables: e1
  * Out variables: e2_nplus1_k0
  */
@@ -149,7 +151,7 @@ void Test::initE2() noexcept
 }
 
 /**
- * Job SetUpTimeLoopN called @2.0 in simulate method.
+ * Job setUpTimeLoopN called @2.0 in simulate method.
  * In variables: e_n0, t_n0
  * Out variables: e_n, t_n
  */
@@ -161,8 +163,8 @@ void Test::setUpTimeLoopN() noexcept
 }
 
 /**
- * Job ExecuteTimeLoopN called @3.0 in simulate method.
- * In variables: deltat, e1, e2_n, e2_nplus1, e2_nplus1_k, e2_nplus1_k0, e2_nplus1_kplus1, e_n, t_n
+ * Job executeTimeLoopN called @3.0 in simulate method.
+ * In variables: deltat, e1, e2_nplus1, e2_nplus1_k, e2_nplus1_k0, e2_nplus1_kplus1, e_n, t_n
  * Out variables: e1, e2_nplus1, e2_nplus1_k, e2_nplus1_k0, e2_nplus1_kplus1, e_nplus1, t_nplus1
  */
 void Test::executeTimeLoopN() noexcept
@@ -217,20 +219,18 @@ void Test::executeTimeLoopN() noexcept
 }
 
 /**
- * Job SetUpTimeLoopK called @3.0 in executeTimeLoopN method.
- * In variables: e2_n, e2_nplus1_k0
- * Out variables: e2_nplus1_k, e2_nplus1_k
+ * Job setUpTimeLoopK called @3.0 in executeTimeLoopN method.
+ * In variables: e2_nplus1_k0
+ * Out variables: e2_nplus1_k
  */
 void Test::setUpTimeLoopK() noexcept
 {
 	for (size_t i1(0) ; i1<e2_nplus1_k.size() ; i1++)
 		e2_nplus1_k[i1] = e2_nplus1_k0[i1];
-	for (size_t i1(0) ; i1<e2_nplus1_k.size() ; i1++)
-		e2_nplus1_k[i1] = e2_n[i1];
 }
 
 /**
- * Job ExecuteTimeLoopK called @4.0 in executeTimeLoopN method.
+ * Job executeTimeLoopK called @4.0 in executeTimeLoopN method.
  * In variables: e2_nplus1_k
  * Out variables: e2_nplus1_kplus1
  */
@@ -259,7 +259,7 @@ void Test::executeTimeLoopK() noexcept
 }
 
 /**
- * Job TearDownTimeLoopK called @5.0 in executeTimeLoopN method.
+ * Job tearDownTimeLoopK called @5.0 in executeTimeLoopN method.
  * In variables: e2_nplus1_kplus1
  * Out variables: e2_nplus1
  */
@@ -270,7 +270,7 @@ void Test::tearDownTimeLoopK() noexcept
 }
 
 /**
- * Job UpdateE called @6.0 in executeTimeLoopN method.
+ * Job updateE called @6.0 in executeTimeLoopN method.
  * In variables: e2_nplus1
  * Out variables: e_nplus1
  */

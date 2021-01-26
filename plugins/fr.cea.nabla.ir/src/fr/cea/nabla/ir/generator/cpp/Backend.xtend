@@ -17,118 +17,122 @@ abstract class Backend
 {
 	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) String name
 	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) IrTransformationStep irTransformationStep = null
-	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) Ir2Cmake ir2Cmake
-	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) TraceContentProvider traceContentProvider
-	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) IncludesContentProvider includesContentProvider
+	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) CMakeContentProvider cmakeContentProvider
 	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) TypeContentProvider typeContentProvider
 	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) ExpressionContentProvider expressionContentProvider
-	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) JsonContentProvider jsonContentProvider
 	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) ArgOrVarContentProvider argOrVarContentProvider
 	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) InstructionContentProvider instructionContentProvider
 	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) FunctionContentProvider functionContentProvider
+	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) TraceContentProvider traceContentProvider
+	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) IncludesContentProvider includesContentProvider
+	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) JsonContentProvider jsonContentProvider
 	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) JobCallerContentProvider jobCallerContentProvider
 	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) JobContentProvider jobContentProvider
 	@Accessors(PUBLIC_GETTER, PROTECTED_SETTER) MainContentProvider mainContentProvider
 }
 
+/** Expected variables: NABLA_CXX_COMPILER */
 class SequentialBackend extends Backend
 {
-	new(String maxIterationVarName, String stopTimeVarName, String compiler, String compilerPath, String levelDBPath)
+	new()
 	{
 		name = 'Sequential'
 		irTransformationStep = new ReplaceReductions(true)
-		ir2Cmake = new SequentialIr2Cmake(compiler, compilerPath, levelDBPath)
-		traceContentProvider = new TraceContentProvider(maxIterationVarName, stopTimeVarName)
-		includesContentProvider = new SequentialIncludesContentProvider(levelDBPath)
+		cmakeContentProvider = new SequentialCMakeContentProvider
 		typeContentProvider = new StlTypeContentProvider
 		argOrVarContentProvider = new StlArgOrVarContentProvider(typeContentProvider)
 		expressionContentProvider = new ExpressionContentProvider(argOrVarContentProvider)
-		jsonContentProvider = new JsonContentProvider(expressionContentProvider)
 		instructionContentProvider = new SequentialInstructionContentProvider(argOrVarContentProvider, expressionContentProvider)
 		functionContentProvider = new FunctionContentProvider(typeContentProvider, instructionContentProvider)
+		traceContentProvider = new TraceContentProvider
+		includesContentProvider = new SequentialIncludesContentProvider
+		jsonContentProvider = new JsonContentProvider(expressionContentProvider)
 		jobCallerContentProvider = new JobCallerContentProvider
-		jobContentProvider = new JobContentProvider(traceContentProvider, expressionContentProvider, instructionContentProvider, getJobCallerContentProvider)
-		mainContentProvider = new MainContentProvider(levelDBPath, jsonContentProvider)
+		jobContentProvider = new JobContentProvider(traceContentProvider, expressionContentProvider, instructionContentProvider, jobCallerContentProvider)
+		mainContentProvider = new MainContentProvider(jsonContentProvider)
 	}
 }
 
+/** Expected variables: NABLA_CXX_COMPILER */
 class StlThreadBackend extends Backend
 {
-	new(String maxIterationVarName, String stopTimeVarName, String compiler, String compilerPath, String levelDBPath)
+	new()
 	{
 		name = 'StlThread'
-		ir2Cmake = new StlIr2Cmake(compiler, compilerPath, levelDBPath)
-		traceContentProvider = new TraceContentProvider(maxIterationVarName, stopTimeVarName)
-		includesContentProvider = new StlThreadIncludesContentProvider(levelDBPath)
+		cmakeContentProvider = new StlCMakeContentProvider
 		typeContentProvider = new StlTypeContentProvider
 		argOrVarContentProvider = new StlArgOrVarContentProvider(typeContentProvider)
 		expressionContentProvider = new ExpressionContentProvider(argOrVarContentProvider)
-		jsonContentProvider = new JsonContentProvider(expressionContentProvider)
 		instructionContentProvider = new StlThreadInstructionContentProvider(argOrVarContentProvider, expressionContentProvider)
 		functionContentProvider = new FunctionContentProvider(typeContentProvider, instructionContentProvider)
+		traceContentProvider = new TraceContentProvider
+		includesContentProvider = new StlThreadIncludesContentProvider
+		jsonContentProvider = new JsonContentProvider(expressionContentProvider)
 		jobCallerContentProvider = new JobCallerContentProvider
-		jobContentProvider = new JobContentProvider(traceContentProvider, expressionContentProvider, instructionContentProvider, getJobCallerContentProvider)
-		mainContentProvider = new MainContentProvider(levelDBPath, jsonContentProvider)
+		jobContentProvider = new JobContentProvider(traceContentProvider, expressionContentProvider, instructionContentProvider, jobCallerContentProvider)
+		mainContentProvider = new MainContentProvider(jsonContentProvider)
 	}
 }
 
+/** Expected variables: NABLA_CXX_COMPILER, NABLA_KOKKOS_PATH */
 class KokkosBackend extends Backend
 {
-	new(String maxIterationVarName, String stopTimeVarName, String compiler, String compilerPath, String kokkosPath, String levelDBPath)
+	new()
 	{
 		name = 'Kokkos'
-		ir2Cmake = new KokkosIr2Cmake(compiler, compilerPath, kokkosPath, levelDBPath)
-		traceContentProvider = new KokkosTraceContentProvider(maxIterationVarName, stopTimeVarName)
-		includesContentProvider = new KokkosIncludesContentProvider(levelDBPath)
+		cmakeContentProvider = new KokkosCMakeContentProvider
 		typeContentProvider = new KokkosTypeContentProvider
 		argOrVarContentProvider = new KokkosArgOrVarContentProvider(typeContentProvider)
 		expressionContentProvider = new ExpressionContentProvider(argOrVarContentProvider)
-		jsonContentProvider = new JsonContentProvider(expressionContentProvider)
 		instructionContentProvider = new KokkosInstructionContentProvider(argOrVarContentProvider, expressionContentProvider)
 		functionContentProvider = new KokkosFunctionContentProvider(typeContentProvider, instructionContentProvider)
+		traceContentProvider = new KokkosTraceContentProvider
+		includesContentProvider = new KokkosIncludesContentProvider
+		jsonContentProvider = new JsonContentProvider(expressionContentProvider)
 		jobCallerContentProvider = new JobCallerContentProvider
-		jobContentProvider = new KokkosJobContentProvider(traceContentProvider, expressionContentProvider, instructionContentProvider, getJobCallerContentProvider)
-		mainContentProvider = new KokkosMainContentProvider(levelDBPath, jsonContentProvider)
+		jobContentProvider = new KokkosJobContentProvider(traceContentProvider, expressionContentProvider, instructionContentProvider, jobCallerContentProvider)
+		mainContentProvider = new KokkosMainContentProvider(jsonContentProvider)
 	}
 }
 
+/** Expected variables: NABLA_CXX_COMPILER, NABLA_KOKKOS_PATH */
 class KokkosTeamThreadBackend extends Backend
 {
-	new(String maxIterationVarName, String stopTimeVarName, String compiler, String compilerPath, String kokkosPath, String levelDBPath)
+	new()
 	{
 		name = 'Kokkos Team Thread'
-		ir2Cmake = new KokkosIr2Cmake(compiler, compilerPath, kokkosPath, levelDBPath)
-		traceContentProvider = new KokkosTraceContentProvider(maxIterationVarName, stopTimeVarName)
-		includesContentProvider = new KokkosIncludesContentProvider(levelDBPath)
+		cmakeContentProvider = new KokkosCMakeContentProvider
 		typeContentProvider = new KokkosTypeContentProvider
 		argOrVarContentProvider = new KokkosArgOrVarContentProvider(typeContentProvider)
 		expressionContentProvider = new ExpressionContentProvider(argOrVarContentProvider)
-		jsonContentProvider = new JsonContentProvider(expressionContentProvider)
 		instructionContentProvider = new KokkosTeamThreadInstructionContentProvider(argOrVarContentProvider, expressionContentProvider)
 		functionContentProvider = new KokkosFunctionContentProvider(typeContentProvider, instructionContentProvider)
+		traceContentProvider = new KokkosTraceContentProvider
+		includesContentProvider = new KokkosIncludesContentProvider
+		jsonContentProvider = new JsonContentProvider(expressionContentProvider)
 		jobCallerContentProvider = new KokkosTeamThreadJobCallerContentProvider
-		jobContentProvider = new KokkosTeamThreadJobContentProvider(traceContentProvider, expressionContentProvider, instructionContentProvider, getJobCallerContentProvider)
-		mainContentProvider = new KokkosMainContentProvider(levelDBPath, jsonContentProvider)
+		jobContentProvider = new KokkosTeamThreadJobContentProvider(traceContentProvider, expressionContentProvider, instructionContentProvider, jobCallerContentProvider)
+		mainContentProvider = new KokkosMainContentProvider(jsonContentProvider)
 	}
 }
 
+/** Expected variables: NABLA_CXX_COMPILER */
 class OpenMpBackend extends Backend
 {
-	new(String maxIterationVarName, String stopTimeVarName, String compiler, String compilerPath, String levelDBPath)
+	new()
 	{
 		name = 'OpenMP'
-		ir2Cmake = new OpenMpCmake(compiler, compilerPath, levelDBPath)
-		traceContentProvider = new TraceContentProvider(maxIterationVarName, stopTimeVarName)
-		includesContentProvider = new OpenMpIncludesContentProvider(levelDBPath)
+		cmakeContentProvider = new OpenMpCMakeContentProvider
 		typeContentProvider = new StlTypeContentProvider
 		argOrVarContentProvider = new StlArgOrVarContentProvider(typeContentProvider)
 		expressionContentProvider = new ExpressionContentProvider(argOrVarContentProvider)
-		jsonContentProvider = new JsonContentProvider(expressionContentProvider)
 		instructionContentProvider = new OpenMpInstructionContentProvider(argOrVarContentProvider, expressionContentProvider)
 		functionContentProvider = new FunctionContentProvider(typeContentProvider, instructionContentProvider)
+		traceContentProvider = new TraceContentProvider
+		includesContentProvider = new OpenMpIncludesContentProvider
+		jsonContentProvider = new JsonContentProvider(expressionContentProvider)
 		jobCallerContentProvider = new JobCallerContentProvider
-		jobContentProvider = new JobContentProvider(traceContentProvider, expressionContentProvider, instructionContentProvider, getJobCallerContentProvider)
-		mainContentProvider = new MainContentProvider(levelDBPath, jsonContentProvider)
+		jobContentProvider = new JobContentProvider(traceContentProvider, expressionContentProvider, instructionContentProvider, jobCallerContentProvider)
+		mainContentProvider = new MainContentProvider(jsonContentProvider)
 	}
 }
-

@@ -47,6 +47,8 @@
         eType="#//SimpleVariable"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="postProcessing" eType="#//PostProcessing"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="providers" upperBound="-1"
+        eType="#//ExtensionProvider" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IrModule" eSuperTypes="#//IrAnnotable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" unique="false" lowerBound="1"
@@ -68,6 +70,22 @@
         eType="#//SimpleVariable"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="lastDumpVariable" lowerBound="1"
         eType="#//SimpleVariable"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ExtensionProvider" eSuperTypes="#//IrAnnotable">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="extensionName" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="providerName" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="projectDir" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="installDir" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="facadeClass" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="facadeNamespace" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="libName" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ArgOrVar" abstract="true" eSuperTypes="#//IrAnnotable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -96,20 +114,25 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="defaultValue" eType="#//ArgOrVarRef"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="linearAlgebra" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Function" eSuperTypes="#//IrAnnotable">
+  <eClassifiers xsi:type="ecore:EClass" name="Function" abstract="true" eSuperTypes="#//IrAnnotable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" unique="false" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="returnType" eType="#//BaseType"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="provider" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="variables" upperBound="-1"
         eType="#//SimpleVariable" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="inArgs" upperBound="-1"
         eType="#//Arg" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InternFunction" eSuperTypes="#//Function">
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//Instruction"
         containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ExternFunction" eSuperTypes="#//Function">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="provider" eType="#//ExtensionProvider"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Connectivity" eSuperTypes="#//IrAnnotable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" unique="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -135,6 +158,10 @@
         lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="caller" eType="#//JobCaller"
         eOpposite="#//JobCaller/calls"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="previousJobsWithSameCaller"
+        upperBound="-1" eType="#//Job"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="nextJobsWithSameCaller"
+        upperBound="-1" eType="#//Job"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="InstructionJob" eSuperTypes="#//Job">
     <eStructuralFeatures xsi:type="ecore:EReference" name="instruction" lowerBound="1"

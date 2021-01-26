@@ -8,22 +8,23 @@
  * Contributors: see AUTHORS file
  *******************************************************************************/
 
-grammar fr.cea.nabla.Nablagen 
-with fr.cea.nabla.Nabla 
+grammar fr.cea.nabla.Nablagen
+with fr.cea.nabla.Nablaext
 
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 import "http://www.cea.fr/nabla/Nabla" as nabla
+import "http://www.cea.fr/nabla/Nablaext" as nablaext
 
 generate nablagen "http://www.cea.fr/nabla/Nablagen"
 
-NablagenRoot:
-	(writeIR?='[WriteIr]')?
+NablagenRoot: 
 	'Application' name=ID ';'
-	mainModule = MainModule
-	additionalModules += AdditionalModule*
-	(vtkOutput = VtkOutput)?
-	(levelDB = LevelDB)?
-	targets += Target*;
+	mainModule=MainModule
+	additionalModules+=AdditionalModule*
+	extensionConfigs+=ExtensionConfig*
+	(vtkOutput=VtkOutput)?
+	(levelDB=LevelDB)?
+	targets+=Target*;
 
 NablagenModule: MainModule | AdditionalModule;
 
@@ -42,7 +43,7 @@ MainModule:
 AdditionalModule:
 	'AdditionalModule' type=[nabla::NablaModule] name=ID
 	'{'
-		varLinks += VarLink*
+		varLinks+=VarLink*
 	'}';
 
 VarLink:
@@ -52,7 +53,7 @@ VtkOutput:
 	'VtkOutput'
 	'{'
 		'periodReferenceVariable' '=' periodReferenceModule=[MainModule] '.'periodReferenceVar=[nabla::ArgOrVar] ';'
-		'outputVariables' '=' vars += OutputVar (',' vars += OutputVar)* ';'
+		'outputVariables' '=' vars+=OutputVar (',' vars+=OutputVar)* ';'
 	'}';
 
 OutputVar:
@@ -61,52 +62,30 @@ OutputVar:
 LevelDB:
 	'LevelDB'
 	'{'
-		'levelDBPath' '=' levelDBPath = STRING ';'
+		'levelDBPath' '=' levelDBPath=STRING ';'
 	'}';
 
-Target: Java | Cpp;
-Cpp: CppSequential | CppStlThread | CppOpenMP | CppKokkos | CppKokkosTeamThread;
+/*
+ * Java is the first enum literal i.e. the default value for interpreter.
+ * Thanks to this, interpreter is considered as a Target.
+ * 
+ * Validation checks that there is a unique interpreter.
+ * If multiple interpreter configurations are needed, the launcher
+ * should integrate the outputPath as a new launch parameter
+ * to identify which interpreter to launch.
+ */
+Target:
+	(writeIR?='[WriteIr]')?
+	(interpreter?='Interpreter' | type=TargetType)
+	'{'
+		'outputPath' '=' outputDir=STRING ';'
+		extensionConfigs+=ExtensionConfig*
+		variables+=TargetVar*
+	'}';
 
-Java: 'Java'
-'{'
-	'outputPath' '=' outputDir=STRING ';'
-'}';
+ExtensionConfig:
+	'extension' extension=[nabla::NablaExtension] 'providedBy' provider=[nablaext::ExtensionProvider] ';';
 
-CppSequential: 'CppSequential'
-'{'
-	'outputPath' '=' outputDir=STRING ';'
-	'compiler' '=' compiler=CppCompiler ';'
-	('compilerPath' '=' compilerPath = STRING ';')?
-'}';
-
-CppStlThread: 'StlThread'
-'{'
-	'outputPath' '=' outputDir=STRING ';'
-	'compiler' '=' compiler=CppCompiler ';'
-	('compilerPath' '=' compilerPath = STRING ';')?
-'}';
-
-CppOpenMP: 'OpenMP'
-'{'
-	'outputPath' '=' outputDir=STRING ';'
-	'compiler' '=' compiler=CppCompiler ';'
-	('compilerPath' '=' compilerPath = STRING ';')?
-'}';
-
-CppKokkos: 'Kokkos'
-'{'
-	'outputPath' '=' outputDir=STRING ';'
-	'kokkosPath' '=' kokkosPath = STRING ';'
-	'compiler' '=' compiler=CppCompiler ';'
-	('compilerPath' '=' compilerPath = STRING ';')?
-'}';
-
-CppKokkosTeamThread: 'KokkosTeamThread'
-'{'
-	'outputPath' '=' outputDir=STRING ';'
-	'kokkosPath' '=' kokkosPath = STRING ';'
-	'compiler' '=' compiler=CppCompiler ';'
-	('compilerPath' '=' compilerPath = STRING ';')?
-'}';
-
-enum CppCompiler: GNU | LLVM;
+TargetVar:
+	key=ID '=' value=STRING ';';
+	
