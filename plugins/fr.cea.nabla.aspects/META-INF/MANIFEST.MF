@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: fr.cea.nabla.aspects
+Bundle-SymbolicName: fr.cea.nabla.aspects;singleton:=true
+Bundle-Version: 0.3.3.qualifier
+Bundle-Activator: fr.cea.nabla.aspects.Activator
+Bundle-Vendor: CEA
+Require-Bundle: org.eclipse.core.runtime,
+ fr.cea.nabla.ir;bundle-version="0.3.3",
+ org.aspectj.runtime;bundle-version="1.9.6",
+ org.aspectj.weaver;bundle-version="1.9.6",
+ org.eclipse.equinox.weaving.aspectj;bundle-version="1.0.400",
+ org.gemoc.instrument;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Automatic-Module-Name: fr.cea.nabla.aspects
+Bundle-ActivationPolicy: lazy
+Export-Package: fr.cea.nabla.aspects;aspects="NablaAspect"
+Eclipse-SupplementBundle: fr.cea.nabla.ir
+
