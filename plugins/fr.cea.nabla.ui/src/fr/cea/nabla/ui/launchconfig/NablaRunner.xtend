@@ -12,6 +12,8 @@ package fr.cea.nabla.ui.launchconfig
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import fr.cea.nabla.generator.NablaGeneratorMessageDispatcher.MessageType
+import fr.cea.nabla.ir.interpreter.IrInterpreter
+import fr.cea.nabla.ir.ir.IrRoot
 import fr.cea.nabla.ui.NabLabConsoleFactory
 import java.io.BufferedReader
 import java.io.File
@@ -20,9 +22,13 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
+import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.Map
+import java.util.logging.ConsoleHandler
+import java.util.logging.Level
+import java.util.logging.SimpleFormatter
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.Path
 import org.eclipse.debug.core.ILaunchConfiguration
@@ -33,11 +39,13 @@ import org.graalvm.polyglot.Source
 @Singleton
 class NablaRunner {
 	@Inject NabLabConsoleFactory consoleFactory
+//	@Inject CompilationChainHelper compilationHelper
 
-	static val Engine engine = Engine.newBuilder() //
+	val Engine engine = Engine.newBuilder() //
 				.allowExperimentalOptions(true) //
 //				.option("engine.TraceCompilation", "true")
-				.option("engine.TraceCompilationDetails", "true")
+//				.option("engine.TraceNodeExpansion", "true")
+//				.option("engine.TraceCompilationDetails", "true")
 //				.option("engine.TraceAssumptions", "true")
 //				.option("engine.TraceTransferToInterpreter", "true")
 //				.option("engine.OSRCompilationThreshold", "2")
@@ -50,7 +58,7 @@ class NablaRunner {
 
 	package def launch(ILaunchConfiguration configuration) {
 		val graalVMHome = configuration.getAttribute(NablaLaunchConstants::GRAAL_HOME_LOCATION, '')
-		val source = ResourcesPlugin.workspace.root.getFile(new Path(configuration.getAttribute(NablaLaunchConstants::SOURCE_FILE_LOCATION, '')))	
+		val source = ResourcesPlugin.workspace.root.getFile(new Path(configuration.getAttribute(NablaLaunchConstants::SOURCE_FILE_LOCATION, '')))
 				.rawLocation.makeAbsolute.toString
 		val gen = ResourcesPlugin.workspace.root.getFile(new Path(configuration.getAttribute(NablaLaunchConstants::GEN_FILE_LOCATION, '')))
 				.rawLocation.makeAbsolute.toString
@@ -60,6 +68,8 @@ class NablaRunner {
 							ResourcesPlugin.workspace.root.getFile(new Path(m)).rawLocation.makeAbsolute.toString]
 
 		val name = source.substring(source.lastIndexOf(File::separator) + 1)
+		
+		Thread.currentThread.contextClassLoader = engine.class.classLoader
 
 		consoleFactory.openConsole
 		val thread = new Thread([
@@ -73,9 +83,38 @@ class NablaRunner {
 			consoleFactory.printConsole(MessageType.End, 'End of execution: ' + name + ' (' + t + 's)')
 		])
 		
-		thread.contextClassLoader = engine.class.classLoader
 		
 		thread.start
+	}
+	
+//	private def double doJava(String source, String gen, String options) {
+//		val model = readFileAsString(source)
+//		val genmodel = readFileAsString(gen)
+//		var jsonContent = readFileAsString(options)
+//		val ir = compilationHelper.getIrForInterpretation(model, genmodel)
+//		val handler = new ConsoleHandler
+//		val formatter = new SimpleFormatter
+//		handler.setFormatter(formatter)
+//		handler.level = Level::FINE
+//		val irInterpreter = new IrInterpreter(ir, handler)
+//		irInterpreter.classloaderUrls = getClassLoaderUrls(ir, "")
+//		var long t0 = System::nanoTime
+//		irInterpreter.interprete(jsonContent)
+//		handler.close
+//		return (System::nanoTime - t0) * 0.000000001
+//	}
+	
+	private def URL[] getClassLoaderUrls(IrRoot it, String moduleName)
+	{
+//		if (moduleName == "ImplicitHeatEquation")
+//		{
+//			// apache and javaLib for linear algebra
+//			val linearAlgebraFunctionsPath = wsPath + "tests/fr.cea.nabla.tests/bin/"
+//			val classPath = #[linearAlgebraFunctionsPath]
+//			return classPath.map[x | new URL("file://" + x)]
+//		}
+//		else
+			return null
 	}
 	
 	private def double doGraal(String source, String gen, String options, Iterable<String> moniloggers) {
@@ -89,10 +128,20 @@ class NablaRunner {
 		optionsMap.put("nabla.options", optionsContent);
 		
 		if (!moniloggers.empty) {
-			optionsMap.put("monilogger.files", moniloggers.reduce [ s1, s2 |
-				s1 + ',' + s2
-			])
+			// TODO get appender and layout classes from plugins, add to classpath
+			val moniloggerFiles = moniloggers.reduce [ s1, s2 | s1 + ',' + s2 ] +
+					", /home/dleroy/nablab/workspace/MoniloggerExamples/moniloglib.mnlg"
+			optionsMap.put("monilogger.files", moniloggerFiles)
 		}
+		
+//		println(ClassLoaderUtils::showClassLoaderHierarchy(Engine.classLoader))
+//		println
+//		println(ClassLoaderUtils::showClassLoaderHierarchy(Debugger.classLoader))
+//		
+//		val d = Debugger
+		
+//		val Debugger o = Debugger::find(engine)
+//		println(o)
 		
 //		val Debugger debugger = Debugger::find(engine)
 //		val DebuggerSession session = debugger.startSession([s|println("stopped") s.session.suspendAll s.session.resumeAll])
@@ -102,19 +151,42 @@ class NablaRunner {
 		val consoleIn = new PipedInputStream(out)
 		var long t0
 		
+		val parentClassLoader = Thread.currentThread.contextClassLoader
+		val hostClassLoader = new ExtensionClassLoader(#{"org.gemoc.monilog.appender", "org.gemoc.monilog.layout"}, parentClassLoader)
+		
 		try (val context = Context.newBuilder().err(out).out(out).engine(engine) //
 				.allowAllAccess(true) //
+				.hostClassLoader(hostClassLoader)
 				.option("nabla.extlib.CartesianMesh2D", "/home/dleroy/git/NabLab/plugins/fr.cea.nabla.cpplib/src/libcppnabla.so") //
 				.options(optionsMap) //
-				.option("python.Executable", "/home/dleroy/venv-graal/bin/graalpython") //
+				.option("python.Executable", "/home/dleroy/venv-graalpython/bin/graalpython") //
 				.option("python.ForceImportSite", "true") //
 				.build();
 		) {
+			
+//			val proxySource = Source.newBuilder("python",
+//				'''
+//				class proxy:
+//				    def __init__(self, a):
+//				        self.a = a
+//				    def __len__(self):
+//				        return self.a.__len__()
+//				    def __getitem__(self, idx):
+//				        return self.a.item(idx)
+//				    def __setitem__(self, idx, value):
+//				        return self.a.__setitem__(idx, value)
+//				    def __str__(self):
+//				        return self.a.__str__()
+//				
+//				''', "np-proxy").buildLiteral();
+			
 			val nablaSource = Source.newBuilder('nabla', new File(source)).build()
 			val outputGobbler = new StreamGobbler(consoleIn, consoleFactory)
 			outputGobbler.start()
 			t0 = System::nanoTime
-			context.eval(nablaSource)
+//			context.eval(proxySource)
+			val parsedSource = context.parse(nablaSource)
+			parsedSource.execute
 		}
 		
 		out.close

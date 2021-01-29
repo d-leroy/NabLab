@@ -125,7 +125,8 @@ CartesianMesh2D::getCellsOfNode(const Id& nodeId) const noexcept
 vector<Id>
 CartesianMesh2D::getCellsOfFace(const Id& faceId) const
 {
-	vector<Id> cells;	
+	vector<Id> cells;
+	std::cout << "";
 	size_t i_f = static_cast<size_t>(faceId) / (2 * m_nb_x_quads + 1);
 	size_t k_f = static_cast<size_t>(faceId) - i_f * (2 * m_nb_x_quads + 1);
 	

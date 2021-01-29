@@ -127,6 +127,8 @@ import fr.cea.nabla.ir.ir.ContractedIf;
 import fr.cea.nabla.ir.ir.ExecuteTimeLoopJob;
 import fr.cea.nabla.ir.ir.Exit;
 import fr.cea.nabla.ir.ir.Expression;
+import fr.cea.nabla.ir.ir.ExtensionProvider;
+import fr.cea.nabla.ir.ir.ExternFunction;
 import fr.cea.nabla.ir.ir.Function;
 import fr.cea.nabla.ir.ir.FunctionCall;
 import fr.cea.nabla.ir.ir.If;
@@ -134,6 +136,7 @@ import fr.cea.nabla.ir.ir.Instruction;
 import fr.cea.nabla.ir.ir.InstructionBlock;
 import fr.cea.nabla.ir.ir.InstructionJob;
 import fr.cea.nabla.ir.ir.IntConstant;
+import fr.cea.nabla.ir.ir.InternFunction;
 import fr.cea.nabla.ir.ir.Interval;
 import fr.cea.nabla.ir.ir.IrAnnotable;
 import fr.cea.nabla.ir.ir.IrAnnotation;
@@ -478,8 +481,8 @@ public class NablaNodeFactory {
 
 		Iterators.filter(root.eAllContents(), Function.class)
 				.forEachRemaining(f -> functions.put(f, new NablaUndefinedFunctionRootNode(language, f.getName())));
-		root.getFunctions().stream().filter(f -> f.getBody() != null)
-				.forEach(f -> functions.computeIfAbsent(f, function -> createNablaFunctionNode(function)));
+		root.getFunctions().stream().filter(f -> f instanceof InternFunction).map(f -> (InternFunction) f)
+				.forEach(f -> functions.computeIfAbsent(f, function -> createNablaFunctionNode((InternFunction) function)));
 
 		final NablaRootNode[] jobNodes = root.getMain().getCalls().stream().map(j -> createNablaJobNode(j))
 				.collect(Collectors.toList()).toArray(new NablaRootNode[0]);
@@ -714,8 +717,9 @@ public class NablaNodeFactory {
 	}
 
 	private NablaExpressionNode createNablaExternalCallNode(FunctionCall functionCall) {
-		final Function function = functionCall.getFunction();
-		final String providerName = Strings.toFirstLower(function.getProvider());
+		final ExternFunction function = (ExternFunction) functionCall.getFunction();
+		final ExtensionProvider functionProvider = function.getProvider();
+		final String providerName = Strings.toFirstLower(functionProvider.getProviderName());
 		final BaseType baseReturnType = function.getReturnType();
 		final Class<?> javaReturnType = FunctionCallHelper.getJavaType(baseReturnType.getPrimitive(),
 				IrTypeExtensions.getDimension(baseReturnType));
@@ -746,10 +750,10 @@ public class NablaNodeFactory {
 	}
 
 	private NablaExpressionNode createNablaBuiltinOrExternalFunctionCallNode(FunctionCall functionCall) {
-		final Function function = functionCall.getFunction();
+		final ExternFunction function = (ExternFunction) functionCall.getFunction();
 		final String methodName = function.getName();
-		final String provider = function.getProvider();
-		if (provider.equals("Math")) { // sqrt, min, max, abs
+		final ExtensionProvider provider = function.getProvider();
+		if (provider.getProviderName().equals("Math")) { // sqrt, min, max, abs
 			switch (methodName) {
 			case "abs":
 				return NablaAbsNodeGen.create(createNablaExpressionNode(functionCall.getArgs().get(0)));
@@ -784,11 +788,11 @@ public class NablaNodeFactory {
 	}
 
 	private NablaExpressionNode createNablaFunctionCallNode(FunctionCall functionCall) {
-		if (functionCall.getFunction().getBody() != null) {
+		if (functionCall.getFunction() instanceof InternFunction) {
 			final NablaRootNode rootNode = functions.compute(functionCall.getFunction(), (f, v) -> {
 				if (v != null) {
 					if (v instanceof NablaUndefinedFunctionRootNode) {
-						return createNablaFunctionNode(f);
+						return createNablaFunctionNode((InternFunction) f);
 					} else {
 						return v;
 					}
@@ -804,7 +808,7 @@ public class NablaNodeFactory {
 		}
 	}
 
-	private NablaRootNode createNablaFunctionNode(Function function) {
+	private NablaRootNode createNablaFunctionNode(InternFunction function) {
 		lexicalScope = new LexicalScope(lexicalScope, true);
 		final List<NablaInstructionNode> functionProlog = new ArrayList<>();
 		final Set<String> sizeVarSet = new HashSet<>();

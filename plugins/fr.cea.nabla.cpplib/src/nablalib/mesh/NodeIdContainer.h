@@ -15,6 +15,8 @@
 #include <type_traits>
 #include <utility>
 
+#include "types/Types.h"
+
 using namespace std;
 using namespace nablalib::types;
 

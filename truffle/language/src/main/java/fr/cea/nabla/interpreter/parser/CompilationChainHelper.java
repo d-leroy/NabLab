@@ -102,7 +102,7 @@ public class CompilationChainHelper {
 			validate(nablaGenRoot);
 			if (nablaGenRoot != null) {
 				final NablagenInterpreter interpreter = interpreterProvider.get();
-				final IrRoot irRoot = interpreter.buildIr(nablaGenRoot, "");
+				final IrRoot irRoot = interpreter.buildInterpreterIr(nablaGenRoot, "");
 				final ReplaceReductions replaceReductions = new ReplaceReductions(true);
 				replaceReductions.transformIr(irRoot);
 				return irRoot;

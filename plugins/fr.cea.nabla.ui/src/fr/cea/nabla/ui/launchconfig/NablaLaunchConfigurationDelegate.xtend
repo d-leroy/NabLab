@@ -22,6 +22,7 @@ class NablaLaunchConfigurationDelegate implements ILaunchConfigurationDelegate
 
 	override launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException 
 	{
-		runner.launch(configuration)
+//		runner.launch(configuration)
+		throw new UnsupportedOperationException
 	}
 }
