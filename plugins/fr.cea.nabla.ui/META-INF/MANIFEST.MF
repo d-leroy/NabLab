@@ -38,7 +38,10 @@ Require-Bundle: fr.cea.nabla,
  org.eclipse.ui.navigator,
  org.eclipse.zest.core,
  org.eclipse.zest.layouts,
- org.eclipse.core.expressions
+ org.eclipse.core.expressions,
+ fr.cea.nabla.aspects;bundle-version="0.3.3",
+ org.gemoc.instrument;bundle-version="1.0.0",
+ org.gemoc.monilog.instrument;bundle-version="1.0.0"
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: fr.cea.nabla.ui,

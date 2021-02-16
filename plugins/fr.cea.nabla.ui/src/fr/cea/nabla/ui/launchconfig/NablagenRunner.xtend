@@ -21,6 +21,7 @@ import fr.cea.nabla.ir.ir.ExtensionProvider
 import fr.cea.nabla.nablagen.NablagenRoot
 import fr.cea.nabla.ui.NabLabConsoleFactory
 import fr.cea.nabla.ui.NabLabConsoleHandler
+import fr.cea.nabla.ui.internal.NablaActivator
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
@@ -33,6 +34,8 @@ import org.eclipse.core.resources.IResource
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.gemoc.instrument.InstrumentRegistry
+import org.gemoc.monilog.instrument.MoniLogInstrumentProvider
 
 @Singleton
 class NablagenRunner
@@ -75,10 +78,24 @@ class NablagenRunner
 				val handler = new NabLabConsoleHandler(consoleFactory)
 				handler.level = Level.FINE
 				val irInterpreter = new IrInterpreter(ir, handler)
+				
+				
 				irInterpreter.classloaderUrls = buildUrls(ir.providers)
 				if (jsonFile === null || !jsonFile.exists) throw new RuntimeException("Invalid file: " + jsonFile.fullPath)
 				val jsonContent = new BufferedReader(new InputStreamReader(jsonFile.contents)).lines().collect(Collectors.joining("\n"))
+				
+				val context = NablaActivator.instance.context
+				val registryServiceReference = context.getServiceReference(InstrumentRegistry)
+				val monilogServiceReference = context.getServiceReference(MoniLogInstrumentProvider)
+				val prov = context.getService(monilogServiceReference)
+				val instr = prov.getMoniLogInstrument(#["/home/dleroy/nablab/workspace/MoniloggerExamples/monitor-iterative.mnlg"])
+				val InstrumentRegistry instrumentRegistry = context.getService(registryServiceReference)
+				instrumentRegistry.registerInstrument(instr)
+				
 				irInterpreter.interprete(jsonContent)
+				
+				instrumentRegistry.unregisterInstrument(instr)
+				
 				val endTime = System.currentTimeMillis
 				consoleFactory.printConsole(MessageType.Exec, "Code interpretation ended in " + (endTime-startTime)/1000.0 + "s")
 
