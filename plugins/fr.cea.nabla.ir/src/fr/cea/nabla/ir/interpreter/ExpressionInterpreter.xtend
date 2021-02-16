@@ -22,13 +22,15 @@ import fr.cea.nabla.ir.ir.Function
 import fr.cea.nabla.ir.ir.FunctionCall
 import fr.cea.nabla.ir.ir.IntConstant
 import fr.cea.nabla.ir.ir.InternFunction
+import fr.cea.nabla.ir.ir.IrType
 import fr.cea.nabla.ir.ir.Iterator
+import fr.cea.nabla.ir.ir.LinearAlgebraType
 import fr.cea.nabla.ir.ir.MaxConstant
 import fr.cea.nabla.ir.ir.MinConstant
 import fr.cea.nabla.ir.ir.Parenthesis
 import fr.cea.nabla.ir.ir.RealConstant
-import fr.cea.nabla.ir.ir.SimpleVariable
 import fr.cea.nabla.ir.ir.UnaryExpression
+import fr.cea.nabla.ir.ir.Variable
 import fr.cea.nabla.ir.ir.VectorConstant
 import java.util.Arrays
 
@@ -217,9 +219,9 @@ class ExpressionInterpreter
 			ExternFunction:
 			{
 				// Use method cache instead of resolving on each iteration
-				val javaValues = argValues.map[x|FunctionCallHelper.getJavaValue(x)].toArray
+				val javaValues = argValues.map[x|FunctionCallHelper.getJavaValue(x, context.linearAlgebra)].toArray
 				val result = invokeMethod(context, f, javaValues)
-				return FunctionCallHelper.createNablaValue(result)
+				return FunctionCallHelper.createNablaValue(result, context.linearAlgebra)
 			}
 			InternFunction:
 			{
@@ -232,11 +234,11 @@ class ExpressionInterpreter
 					val callerArgTypeSizes = getIntSizes(callerArg.type, context)
 					for (iSize : 0..<callerArgTypeSizes.length)
 					{
-						val callerArgTypeTypeSize = callerArgTypeSizes.get(iSize)
+						val callerArgTypeSize = callerArgTypeSizes.get(iSize)
 						val calleeArgTypeDimension = calleeArg.type.sizes.get(iSize)
 						if (calleeArgTypeDimension instanceof ArgOrVarRef)
-							if (calleeArgTypeDimension.target instanceof SimpleVariable)
-								innerContext.addVariableValue(calleeArgTypeDimension.target, new NV0Int(callerArgTypeTypeSize))
+							if (calleeArgTypeDimension.target instanceof Variable)
+								innerContext.addVariableValue(calleeArgTypeDimension.target, new NV0Int(callerArgTypeSize))
 					}
 	
 					// set argument value
@@ -345,5 +347,15 @@ class ExpressionInterpreter
 		val providerInstance = pair.key
 		val method = pair.value
 		return method.invoke(providerInstance, args)
+	}
+
+	private static def getSizes(IrType it)
+	{
+		switch it
+		{
+			BaseType: sizes
+			LinearAlgebraType: sizes
+			default: throw new RuntimeException("Unsuported argument")
+		}
 	}
 }

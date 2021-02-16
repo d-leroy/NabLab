@@ -2,9 +2,9 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-set(LIBCPPNABLA_DIR $ENV{HOME}/workspaces/NabLab/tests/fr.cea.nabla.tests/../../plugins/fr.cea.nabla.ui/examples/NablaExamples//../LibCppNabla CACHE STRING "")
+set(LIBCPPNABLA_DIR $ENV{HOME}/workspaces/NabLab/plugins/fr.cea.nabla.ui/examples/NablaExamples/../LibCppNabla CACHE STRING "")
 set(NABLA_CXX_COMPILER /usr/bin/g++)
-set(LINEARALGEBRA_DIR $ENV{HOME}/workspaces/NabLab/tests/fr.cea.nabla.tests/../../plugins/fr.cea.nabla.ui/examples/NablaExamples//../LibCppNabla)
+set(LINEARALGEBRA_DIR $ENV{HOME}/workspaces/NabLab/plugins/fr.cea.nabla.ui/examples/NablaExamples/../LibCppNabla)
 
 project(ImplicitHeatEquationProject CXX)
 
@@ -21,9 +21,9 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 endif()
 
 find_package(OpenMP)
-add_subdirectory(${LINEARALGEBRA_DIR}/src ${CMAKE_BINARY_DIR}/LibCppNablaStl EXCLUDE_FROM_ALL)
+add_subdirectory(${LINEARALGEBRA_DIR} ${CMAKE_BINARY_DIR}/LibCppNablaStl EXCLUDE_FROM_ALL)
 if(NOT TARGET cppnabla)
-	add_subdirectory(${LIBCPPNABLA_DIR}/src ${CMAKE_BINARY_DIR}/LibCppNabla EXCLUDE_FROM_ALL)
+	add_subdirectory(${LIBCPPNABLA_DIR} ${CMAKE_BINARY_DIR}/LibCppNabla EXCLUDE_FROM_ALL)
 endif()
 
 

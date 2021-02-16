@@ -99,6 +99,12 @@ public class IrSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case IrPackage.POST_PROCESSED_VARIABLE: {
+				PostProcessedVariable postProcessedVariable = (PostProcessedVariable)theEObject;
+				T result = casePostProcessedVariable(postProcessedVariable);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case IrPackage.EXTENSION_PROVIDER: {
 				ExtensionProvider extensionProvider = (ExtensionProvider)theEObject;
 				T result = caseExtensionProvider(extensionProvider);
@@ -126,24 +132,6 @@ public class IrSwitch<T> extends Switch<T> {
 				T result = caseVariable(variable);
 				if (result == null) result = caseArgOrVar(variable);
 				if (result == null) result = caseIrAnnotable(variable);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case IrPackage.SIMPLE_VARIABLE: {
-				SimpleVariable simpleVariable = (SimpleVariable)theEObject;
-				T result = caseSimpleVariable(simpleVariable);
-				if (result == null) result = caseVariable(simpleVariable);
-				if (result == null) result = caseArgOrVar(simpleVariable);
-				if (result == null) result = caseIrAnnotable(simpleVariable);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case IrPackage.CONNECTIVITY_VARIABLE: {
-				ConnectivityVariable connectivityVariable = (ConnectivityVariable)theEObject;
-				T result = caseConnectivityVariable(connectivityVariable);
-				if (result == null) result = caseVariable(connectivityVariable);
-				if (result == null) result = caseArgOrVar(connectivityVariable);
-				if (result == null) result = caseIrAnnotable(connectivityVariable);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -527,6 +515,14 @@ public class IrSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case IrPackage.LINEAR_ALGEBRA_TYPE: {
+				LinearAlgebraType linearAlgebraType = (LinearAlgebraType)theEObject;
+				T result = caseLinearAlgebraType(linearAlgebraType);
+				if (result == null) result = caseIrType(linearAlgebraType);
+				if (result == null) result = caseIrAnnotable(linearAlgebraType);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case IrPackage.CONTAINER: {
 				Container container = (Container)theEObject;
 				T result = caseContainer(container);
@@ -734,32 +730,17 @@ public class IrSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Simple Variable</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Post Processed Variable</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Simple Variable</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Post Processed Variable</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSimpleVariable(SimpleVariable object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Connectivity Variable</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Connectivity Variable</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseConnectivityVariable(ConnectivityVariable object) {
+	public T casePostProcessedVariable(PostProcessedVariable object) {
 		return null;
 	}
 
@@ -1615,6 +1596,21 @@ public class IrSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseItemIndexValue(ItemIndexValue object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Linear Algebra Type</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Linear Algebra Type</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseLinearAlgebraType(LinearAlgebraType object) {
 		return null;
 	}
 

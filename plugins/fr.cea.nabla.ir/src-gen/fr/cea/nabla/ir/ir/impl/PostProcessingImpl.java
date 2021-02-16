@@ -3,10 +3,9 @@
 package fr.cea.nabla.ir.ir.impl;
 
 import fr.cea.nabla.ir.ir.IrPackage;
+import fr.cea.nabla.ir.ir.PostProcessedVariable;
 import fr.cea.nabla.ir.ir.PostProcessing;
-import fr.cea.nabla.ir.ir.SimpleVariable;
 import fr.cea.nabla.ir.ir.Variable;
-
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -45,7 +44,7 @@ public class PostProcessingImpl extends IrAnnotableImpl implements PostProcessin
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Variable> outputVariables;
+	protected EList<PostProcessedVariable> outputVariables;
 
 	/**
 	 * The cached value of the '{@link #getPeriodReference() <em>Period Reference</em>}' reference.
@@ -55,7 +54,7 @@ public class PostProcessingImpl extends IrAnnotableImpl implements PostProcessin
 	 * @generated
 	 * @ordered
 	 */
-	protected SimpleVariable periodReference;
+	protected Variable periodReference;
 
 	/**
 	 * The cached value of the '{@link #getPeriodValue() <em>Period Value</em>}' reference.
@@ -65,7 +64,7 @@ public class PostProcessingImpl extends IrAnnotableImpl implements PostProcessin
 	 * @generated
 	 * @ordered
 	 */
-	protected SimpleVariable periodValue;
+	protected Variable periodValue;
 
 	/**
 	 * The cached value of the '{@link #getLastDumpVariable() <em>Last Dump Variable</em>}' reference.
@@ -75,7 +74,7 @@ public class PostProcessingImpl extends IrAnnotableImpl implements PostProcessin
 	 * @generated
 	 * @ordered
 	 */
-	protected SimpleVariable lastDumpVariable;
+	protected Variable lastDumpVariable;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -102,9 +101,9 @@ public class PostProcessingImpl extends IrAnnotableImpl implements PostProcessin
 	 * @generated
 	 */
 	@Override
-	public EList<Variable> getOutputVariables() {
+	public EList<PostProcessedVariable> getOutputVariables() {
 		if (outputVariables == null) {
-			outputVariables = new EObjectResolvingEList<Variable>(Variable.class, this, IrPackage.POST_PROCESSING__OUTPUT_VARIABLES);
+			outputVariables = new EObjectResolvingEList<PostProcessedVariable>(PostProcessedVariable.class, this, IrPackage.POST_PROCESSING__OUTPUT_VARIABLES);
 		}
 		return outputVariables;
 	}
@@ -115,10 +114,10 @@ public class PostProcessingImpl extends IrAnnotableImpl implements PostProcessin
 	 * @generated
 	 */
 	@Override
-	public SimpleVariable getPeriodReference() {
+	public Variable getPeriodReference() {
 		if (periodReference != null && periodReference.eIsProxy()) {
 			InternalEObject oldPeriodReference = (InternalEObject)periodReference;
-			periodReference = (SimpleVariable)eResolveProxy(oldPeriodReference);
+			periodReference = (Variable)eResolveProxy(oldPeriodReference);
 			if (periodReference != oldPeriodReference) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, IrPackage.POST_PROCESSING__PERIOD_REFERENCE, oldPeriodReference, periodReference));
@@ -132,7 +131,7 @@ public class PostProcessingImpl extends IrAnnotableImpl implements PostProcessin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public SimpleVariable basicGetPeriodReference() {
+	public Variable basicGetPeriodReference() {
 		return periodReference;
 	}
 
@@ -142,8 +141,8 @@ public class PostProcessingImpl extends IrAnnotableImpl implements PostProcessin
 	 * @generated
 	 */
 	@Override
-	public void setPeriodReference(SimpleVariable newPeriodReference) {
-		SimpleVariable oldPeriodReference = periodReference;
+	public void setPeriodReference(Variable newPeriodReference) {
+		Variable oldPeriodReference = periodReference;
 		periodReference = newPeriodReference;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, IrPackage.POST_PROCESSING__PERIOD_REFERENCE, oldPeriodReference, periodReference));
@@ -155,10 +154,10 @@ public class PostProcessingImpl extends IrAnnotableImpl implements PostProcessin
 	 * @generated
 	 */
 	@Override
-	public SimpleVariable getPeriodValue() {
+	public Variable getPeriodValue() {
 		if (periodValue != null && periodValue.eIsProxy()) {
 			InternalEObject oldPeriodValue = (InternalEObject)periodValue;
-			periodValue = (SimpleVariable)eResolveProxy(oldPeriodValue);
+			periodValue = (Variable)eResolveProxy(oldPeriodValue);
 			if (periodValue != oldPeriodValue) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, IrPackage.POST_PROCESSING__PERIOD_VALUE, oldPeriodValue, periodValue));
@@ -172,7 +171,7 @@ public class PostProcessingImpl extends IrAnnotableImpl implements PostProcessin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public SimpleVariable basicGetPeriodValue() {
+	public Variable basicGetPeriodValue() {
 		return periodValue;
 	}
 
@@ -182,8 +181,8 @@ public class PostProcessingImpl extends IrAnnotableImpl implements PostProcessin
 	 * @generated
 	 */
 	@Override
-	public void setPeriodValue(SimpleVariable newPeriodValue) {
-		SimpleVariable oldPeriodValue = periodValue;
+	public void setPeriodValue(Variable newPeriodValue) {
+		Variable oldPeriodValue = periodValue;
 		periodValue = newPeriodValue;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, IrPackage.POST_PROCESSING__PERIOD_VALUE, oldPeriodValue, periodValue));
@@ -195,10 +194,10 @@ public class PostProcessingImpl extends IrAnnotableImpl implements PostProcessin
 	 * @generated
 	 */
 	@Override
-	public SimpleVariable getLastDumpVariable() {
+	public Variable getLastDumpVariable() {
 		if (lastDumpVariable != null && lastDumpVariable.eIsProxy()) {
 			InternalEObject oldLastDumpVariable = (InternalEObject)lastDumpVariable;
-			lastDumpVariable = (SimpleVariable)eResolveProxy(oldLastDumpVariable);
+			lastDumpVariable = (Variable)eResolveProxy(oldLastDumpVariable);
 			if (lastDumpVariable != oldLastDumpVariable) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, IrPackage.POST_PROCESSING__LAST_DUMP_VARIABLE, oldLastDumpVariable, lastDumpVariable));
@@ -212,7 +211,7 @@ public class PostProcessingImpl extends IrAnnotableImpl implements PostProcessin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public SimpleVariable basicGetLastDumpVariable() {
+	public Variable basicGetLastDumpVariable() {
 		return lastDumpVariable;
 	}
 
@@ -222,8 +221,8 @@ public class PostProcessingImpl extends IrAnnotableImpl implements PostProcessin
 	 * @generated
 	 */
 	@Override
-	public void setLastDumpVariable(SimpleVariable newLastDumpVariable) {
-		SimpleVariable oldLastDumpVariable = lastDumpVariable;
+	public void setLastDumpVariable(Variable newLastDumpVariable) {
+		Variable oldLastDumpVariable = lastDumpVariable;
 		lastDumpVariable = newLastDumpVariable;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, IrPackage.POST_PROCESSING__LAST_DUMP_VARIABLE, oldLastDumpVariable, lastDumpVariable));
@@ -263,16 +262,16 @@ public class PostProcessingImpl extends IrAnnotableImpl implements PostProcessin
 		switch (featureID) {
 			case IrPackage.POST_PROCESSING__OUTPUT_VARIABLES:
 				getOutputVariables().clear();
-				getOutputVariables().addAll((Collection<? extends Variable>)newValue);
+				getOutputVariables().addAll((Collection<? extends PostProcessedVariable>)newValue);
 				return;
 			case IrPackage.POST_PROCESSING__PERIOD_REFERENCE:
-				setPeriodReference((SimpleVariable)newValue);
+				setPeriodReference((Variable)newValue);
 				return;
 			case IrPackage.POST_PROCESSING__PERIOD_VALUE:
-				setPeriodValue((SimpleVariable)newValue);
+				setPeriodValue((Variable)newValue);
 				return;
 			case IrPackage.POST_PROCESSING__LAST_DUMP_VARIABLE:
-				setLastDumpVariable((SimpleVariable)newValue);
+				setLastDumpVariable((Variable)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -290,13 +289,13 @@ public class PostProcessingImpl extends IrAnnotableImpl implements PostProcessin
 				getOutputVariables().clear();
 				return;
 			case IrPackage.POST_PROCESSING__PERIOD_REFERENCE:
-				setPeriodReference((SimpleVariable)null);
+				setPeriodReference((Variable)null);
 				return;
 			case IrPackage.POST_PROCESSING__PERIOD_VALUE:
-				setPeriodValue((SimpleVariable)null);
+				setPeriodValue((Variable)null);
 				return;
 			case IrPackage.POST_PROCESSING__LAST_DUMP_VARIABLE:
-				setLastDumpVariable((SimpleVariable)null);
+				setLastDumpVariable((Variable)null);
 				return;
 		}
 		super.eUnset(featureID);

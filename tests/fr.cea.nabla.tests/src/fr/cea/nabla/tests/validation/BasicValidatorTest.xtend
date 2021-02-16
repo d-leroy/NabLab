@@ -25,17 +25,57 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import fr.cea.nabla.nabla.NablaExtension
+import fr.cea.nabla.nabla.NablaRoot
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(NablaInjectorProvider))
 class BasicValidatorTest
 {
-	@Inject ParseHelper<NablaModule> parseHelper
+	@Inject ParseHelper<NablaRoot> parseHelper
 	@Inject ParseHelper<NablaExtension> extensionParseHelper
 	@Inject extension ValidationUtils
 	@Inject extension TestUtils
 	@Inject extension ValidationTestHelper
 	@Inject extension NablaModuleExtensions
+
+	// ===== Module ====
+
+	@Test
+	def void testCheckModuleBase()
+	{
+		val moduleKo = parseHelper.parse(
+			'''
+			module Test;
+			def g: → ℝ, () → return 3.0;
+			''')
+		moduleKo.assertError(NablaPackage.eINSTANCE.nablaRoot,
+			BasicValidator::MODULE_BASE,
+			BasicValidator::getModuleBaseMsg())
+
+		val moduleOk = parseHelper.parse(
+			'''
+			module Test;
+			ℝ a;
+			''')
+		Assert.assertNotNull(moduleOk)
+		moduleOk.assertNoErrors
+
+		val moduleOk2 = parseHelper.parse(
+			'''
+			module Test;
+			iterate n while (true);
+			''')
+		Assert.assertNotNull(moduleOk2)
+		moduleOk2.assertNoErrors
+
+		val moduleOk3 = parseHelper.parse(
+			'''
+			module Test;
+			J: let ℝ x = 3.3;
+			''')
+		Assert.assertNotNull(moduleOk3)
+		moduleOk3.assertNoErrors
+	}
 
 	// ===== Interval =====
 
@@ -44,8 +84,7 @@ class BasicValidatorTest
 	{
 		val moduleKo = parseHelper.parse(
 			'''
-			«emptyTestModule»
-			«defaultConnectivities»
+			extension Test;
 			def g: → ℝ, () →
 			{
 				ℝ[4] n;
@@ -59,8 +98,7 @@ class BasicValidatorTest
 
 		val moduleOk = parseHelper.parse(
 			'''
-			«emptyTestModule»
-			«defaultConnectivities»
+			extension Test;
 			def g: → ℝ, () →
 			{
 				ℝ[4] n;
@@ -77,8 +115,7 @@ class BasicValidatorTest
 	{
 		val moduleKo1 = parseHelper.parse(
 			'''
-			«emptyTestModule»
-			«defaultConnectivities»
+			extension Test;
 			def g: → ℝ, () →
 			{
 				ℝ[4] n;
@@ -92,8 +129,7 @@ class BasicValidatorTest
 
 		val moduleKo2 = parseHelper.parse(
 			'''
-			«emptyTestModule»
-			«defaultConnectivities»
+			extension Test;
 			def g: → ℝ, () →
 			{
 				let ℝ x = 6.7;
@@ -109,8 +145,7 @@ class BasicValidatorTest
 
 		val moduleOk = parseHelper.parse(
 			'''
-			«emptyTestModule»
-			«defaultConnectivities»
+			extension Test;
 			def g: → ℝ, () →
 			{
 				ℝ[4] n;
@@ -127,12 +162,12 @@ class BasicValidatorTest
 	@Test
 	def void testCheckName()
 	{
-		val moduleKo = parseHelper.parse('''module test;''')
+		val moduleKo = parseHelper.parse('''extension test;''')
 		Assert.assertNotNull(moduleKo)
 		moduleKo.assertError(NablaPackage.eINSTANCE.nablaRoot,
 			BasicValidator::UPPER_CASE_START_NAME,
 			BasicValidator::getUpperCaseNameMsg())
-		val moduleOk = parseHelper.parse('''module Test;''')
+		val moduleOk = parseHelper.parse('''extension Test;''')
 		Assert.assertNotNull(moduleOk)
 		moduleOk.assertNoErrors
 
@@ -390,7 +425,7 @@ class BasicValidatorTest
 			IniX1: ∀j∈cells(), ∀r∈nodes(j), X{r} = orig;
 			IniX2: ∀r∈nodes(), ∀j∈nodesOfCell(r), X{r} = orig;
 			'''
-		)
+		) as NablaModule
 		Assert.assertNotNull(moduleKo)
 
 		moduleKo.assertError(NablaPackage.eINSTANCE.connectivityCall,

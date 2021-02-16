@@ -9,8 +9,11 @@
  *******************************************************************************/
 package fr.cea.nabla.ir.interpreter
 
-import fr.cea.nabla.ir.ir.ConnectivityVariable
-import fr.cea.nabla.ir.ir.SimpleVariable
+import fr.cea.nabla.ir.ir.BaseType
+import fr.cea.nabla.ir.ir.ConnectivityType
+import fr.cea.nabla.ir.ir.Expression
+import fr.cea.nabla.ir.ir.LinearAlgebraType
+import fr.cea.nabla.ir.ir.PrimitiveType
 
 import static fr.cea.nabla.ir.interpreter.BaseTypeValueFactory.*
 import static fr.cea.nabla.ir.interpreter.ExpressionInterpreter.*
@@ -22,7 +25,7 @@ import static extension fr.cea.nabla.ir.IrTypeExtensions.*
 
 class VariableValueFactory
 {
-	static def dispatch NablaValue createValue(SimpleVariable it, Context context)
+	static def dispatch NablaValue createValue(BaseType type, Expression defaultValue, Context context)
 	{
 		if (type.sizes.empty)
 		{
@@ -40,22 +43,29 @@ class VariableValueFactory
 		}
 	}
 
-	static def dispatch NablaValue createValue(ConnectivityVariable it, Context context)
+	static def dispatch NablaValue createValue(ConnectivityType type, Expression defaultValue, Context context)
 	{
-		if (defaultValue === null)
+		val sizes = getIntSizes(type, context)
+		val p = type.primitive
+		switch sizes.size
 		{
-			val sizes = getIntSizes(type, context)
-			val p = type.primitive
-			switch sizes.size
-			{
-				case 1: createValue(p, sizes.get(0), linearAlgebra)
-				case 2: createValue(p, sizes.get(0), sizes.get(1), linearAlgebra)
-				case 3: createValue(p, sizes.get(0), sizes.get(1), sizes.get(2))
-				case 4: createValue(p, sizes.get(0), sizes.get(1), sizes.get(2), sizes.get(3))
-				default: throw new RuntimeException("Dimension not yet implemented: " + sizes.size + " for variable " + name)
-			}
+			case 1: createValue(p, sizes.get(0), null)
+			case 2: createValue(p, sizes.get(0), sizes.get(1), null)
+			case 3: createValue(p, sizes.get(0), sizes.get(1), sizes.get(2))
+			case 4: createValue(p, sizes.get(0), sizes.get(1), sizes.get(2), sizes.get(3))
+			default: throw new RuntimeException("Dimension not yet implemented: " + sizes.size)
 		}
-		else
-			interprete(defaultValue, context)
+	}
+
+	static def dispatch NablaValue createValue(LinearAlgebraType type, Expression defaultValue, Context context)
+	{
+		val sizes = getIntSizes(type, context)
+		val p = PrimitiveType.REAL
+		switch sizes.size
+		{
+			case 1: createValue(p, sizes.get(0), context.linearAlgebra)
+			case 2: createValue(p, sizes.get(0), sizes.get(1), context.linearAlgebra)
+			default: throw new RuntimeException("Dimension not yet implemented: " + sizes.size)
+		}
 	}
 }

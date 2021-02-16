@@ -11,7 +11,6 @@ package fr.cea.nabla.ir.generator.java
 
 import fr.cea.nabla.ir.ir.Affectation
 import fr.cea.nabla.ir.ir.ConnectivityCall
-import fr.cea.nabla.ir.ir.ConnectivityVariable
 import fr.cea.nabla.ir.ir.Exit
 import fr.cea.nabla.ir.ir.If
 import fr.cea.nabla.ir.ir.Instruction
@@ -24,15 +23,15 @@ import fr.cea.nabla.ir.ir.Loop
 import fr.cea.nabla.ir.ir.ReductionInstruction
 import fr.cea.nabla.ir.ir.Return
 import fr.cea.nabla.ir.ir.SetDefinition
-import fr.cea.nabla.ir.ir.SimpleVariable
+import fr.cea.nabla.ir.ir.Variable
 import fr.cea.nabla.ir.ir.VariableDeclaration
 import fr.cea.nabla.ir.ir.While
 
 import static extension fr.cea.nabla.ir.ArgOrVarExtensions.*
 import static extension fr.cea.nabla.ir.ContainerExtensions.*
 import static extension fr.cea.nabla.ir.generator.Utils.*
-import static extension fr.cea.nabla.ir.generator.java.ArgOrVarExtensions.*
 import static extension fr.cea.nabla.ir.generator.java.ExpressionContentProvider.*
+import static extension fr.cea.nabla.ir.generator.java.IrTypeExtensions.*
 import static extension fr.cea.nabla.ir.generator.java.ItemIndexAndIdValueContentProvider.*
 import static extension fr.cea.nabla.ir.generator.java.JavaGeneratorUtils.*
 
@@ -40,7 +39,7 @@ class InstructionContentProvider
 {
 	static def dispatch CharSequence getContent(VariableDeclaration it)
 	'''
-		«IF variable.const»final «ENDIF»«variable.javaType» «variable.name»«variable.defaultValueContent»;
+		«IF variable.const»final «ENDIF»«variable.type.javaType» «variable.name»«variable.defaultValueContent»;
 	'''
 
 	static def dispatch CharSequence getContent(InstructionBlock it)
@@ -54,7 +53,7 @@ class InstructionContentProvider
 	static def dispatch CharSequence getContent(Affectation it)
 	'''
 		«IF left.target.linearAlgebra && !(left.iterators.empty && left.indices.empty)»
-			«left.target.codeName».set(«FOR r : left.iterators SEPARATOR ', ' AFTER ', '»«r.name»«ENDFOR»«FOR d : left.indices SEPARATOR ', ' AFTER ', '»«d»«ENDFOR»«right.content»);
+			«left.target.codeName».set(«FOR r : left.iterators SEPARATOR ', ' AFTER ', '»«r.name»«ENDFOR»«FOR d : left.indices SEPARATOR ', ' AFTER ', '»«d.content»«ENDFOR»«right.content»);
 		«ELSE»
 			«left.content» = «right.content»;
 		«ENDIF»
@@ -62,7 +61,7 @@ class InstructionContentProvider
 
 	static def dispatch CharSequence getContent(ReductionInstruction it)
 	'''
-		«result.javaType» «result.name»«result.defaultValueContent»;
+		«result.type.javaType» «result.name»«result.defaultValueContent»;
 		«iterationBlock.defineInterval('''
 		«result.name» = IntStream.range(0, «iterationBlock.nbElems»).boxed().parallel().reduce
 		(
@@ -149,16 +148,11 @@ class InstructionContentProvider
 		«ENDFOR»
 	'''
 
-	private static def dispatch getDefaultValueContent(SimpleVariable it)
+	private static def getDefaultValueContent(Variable it)
 	{
-		if (defaultValue === null)
-			javaAllocation
-		else
-			''' = «defaultValue.content»'''
+		if (defaultValue === null) type.javaAllocation
+		else ''' = «defaultValue.content»'''
 	}
-
-	private static def dispatch getDefaultValueContent(ConnectivityVariable it)
-	'''«IF defaultValue !== null» = «defaultValue.content»«ENDIF»'''
 
 	// ### IterationBlock Extensions ###
 	private static def dispatch defineInterval(Iterator it, CharSequence innerContent)

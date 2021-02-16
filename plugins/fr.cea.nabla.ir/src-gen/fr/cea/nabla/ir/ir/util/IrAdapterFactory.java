@@ -88,6 +88,10 @@ public class IrAdapterFactory extends AdapterFactoryImpl {
 				return createPostProcessingAdapter();
 			}
 			@Override
+			public Adapter casePostProcessedVariable(PostProcessedVariable object) {
+				return createPostProcessedVariableAdapter();
+			}
+			@Override
 			public Adapter caseExtensionProvider(ExtensionProvider object) {
 				return createExtensionProviderAdapter();
 			}
@@ -102,14 +106,6 @@ public class IrAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseVariable(Variable object) {
 				return createVariableAdapter();
-			}
-			@Override
-			public Adapter caseSimpleVariable(SimpleVariable object) {
-				return createSimpleVariableAdapter();
-			}
-			@Override
-			public Adapter caseConnectivityVariable(ConnectivityVariable object) {
-				return createConnectivityVariableAdapter();
 			}
 			@Override
 			public Adapter caseFunction(Function object) {
@@ -304,6 +300,10 @@ public class IrAdapterFactory extends AdapterFactoryImpl {
 				return createConnectivityTypeAdapter();
 			}
 			@Override
+			public Adapter caseLinearAlgebraType(LinearAlgebraType object) {
+				return createLinearAlgebraTypeAdapter();
+			}
+			@Override
 			public Adapter caseContainer(Container object) {
 				return createContainerAdapter();
 			}
@@ -486,30 +486,16 @@ public class IrAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link fr.cea.nabla.ir.ir.SimpleVariable <em>Simple Variable</em>}'.
+	 * Creates a new adapter for an object of class '{@link fr.cea.nabla.ir.ir.PostProcessedVariable <em>Post Processed Variable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see fr.cea.nabla.ir.ir.SimpleVariable
+	 * @see fr.cea.nabla.ir.ir.PostProcessedVariable
 	 * @generated
 	 */
-	public Adapter createSimpleVariableAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link fr.cea.nabla.ir.ir.ConnectivityVariable <em>Connectivity Variable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see fr.cea.nabla.ir.ir.ConnectivityVariable
-	 * @generated
-	 */
-	public Adapter createConnectivityVariableAdapter() {
+	public Adapter createPostProcessedVariableAdapter() {
 		return null;
 	}
 
@@ -1308,6 +1294,20 @@ public class IrAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createItemIndexValueAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link fr.cea.nabla.ir.ir.LinearAlgebraType <em>Linear Algebra Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see fr.cea.nabla.ir.ir.LinearAlgebraType
+	 * @generated
+	 */
+	public Adapter createLinearAlgebraTypeAdapter() {
 		return null;
 	}
 

@@ -8,7 +8,6 @@
 #include "hydroremap/R1.h"
 #include "hydroremap/R2.h"
 
-using namespace nablalib;
 
 /******************** Options definition ********************/
 
@@ -85,7 +84,7 @@ H::~H()
  */
 void H::hj1() noexcept
 {
-	parallel::parallel_exec(nbCells, [&](const size_t& cCells)
+	parallel_exec(nbCells, [&](const size_t& cCells)
 	{
 		hv3[cCells] = hv2[cCells];
 	});
@@ -98,7 +97,7 @@ void H::hj1() noexcept
  */
 void H::hj2() noexcept
 {
-	parallel::parallel_exec(nbCells, [&](const size_t& cCells)
+	parallel_exec(nbCells, [&](const size_t& cCells)
 	{
 		hv5[cCells] = hv3[cCells];
 	});
@@ -111,7 +110,7 @@ void H::hj2() noexcept
  */
 void H::hj3() noexcept
 {
-	parallel::parallel_exec(nbCells, [&](const size_t& cCells)
+	parallel_exec(nbCells, [&](const size_t& cCells)
 	{
 		hv7[cCells] = hv4[cCells] + hv5[cCells] + hv6[cCells];
 	});

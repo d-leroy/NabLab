@@ -9,15 +9,15 @@
  *******************************************************************************/
 package fr.cea.nabla.ir
 
-import fr.cea.nabla.ir.ir.ConnectivityVariable
 import fr.cea.nabla.ir.ir.IrRoot
-import fr.cea.nabla.ir.ir.SimpleVariable
+
+import static extension fr.cea.nabla.ir.ArgOrVarExtensions.*
 
 class IrRootExtensions
 {
 	static def getOptions(IrRoot it)
 	{
-		variables.filter(SimpleVariable).filter[option]
+		variables.filter[option]
 	}
 
 	static def getMainModule(IrRoot it)
@@ -27,6 +27,6 @@ class IrRootExtensions
 
 	static def isLinearAlgebra(IrRoot it)
 	{
-		variables.filter(ConnectivityVariable).exists[x | x.linearAlgebra]
+		variables.exists[v | v.linearAlgebra]
 	}
 }

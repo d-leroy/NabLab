@@ -17,25 +17,16 @@
 			class="fr.cea.nabla.ui.NablaExecutableExtensionFactory:fr.cea.nabla.ui.NablaDslEditor"
 			contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
 			default="true"
-			extensions="nabla"
+			extensions="n"
 			icon="icons/NabLab.gif"
 			id="fr.cea.nabla.Nabla"
 			name="Nabla Editor">
 		</editor>
 		<editor
-			class="fr.cea.nabla.ui.NablaextExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
-			contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
-			default="true"
-			extensions="nablaext"
-			icon="icons/Nablaext.gif"
-			id="fr.cea.nabla.Nablaext"
-			name="Nablaext Editor">
-		</editor>
-		<editor
 			class="fr.cea.nabla.ui.NablagenExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
 			contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
 			default="true"
-			extensions="nablagen"
+			extensions="ngen"
 			icon="icons/Nablagen.gif"
 			id="fr.cea.nabla.Nablagen"
 			name="Nablagen Editor">
@@ -236,7 +227,7 @@
 	<extension point="org.eclipse.core.contenttype.contentTypes">
 		<content-type
 			base-type="org.eclipse.core.runtime.text"
-			file-extensions="nabla"
+			file-extensions="n"
 			id="fr.cea.nabla.Nabla.contenttype"
 			name="Nabla File"
 			priority="normal">
@@ -247,29 +238,21 @@
 		point="org.eclipse.emf.ecore.extension_parser">
 		<parser
 			class="fr.cea.nabla.ui.NablaExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
-			type="nabla">
-		</parser>
-		<parser
-			class="fr.cea.nabla.ui.NablaextExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
-			type="nablaext">
+			type="n">
 		</parser>
 		<parser
 			class="fr.cea.nabla.ui.NablagenExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
-			type="nablagen">
+			type="ngen">
 		</parser>
 	</extension>
 	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
 		<resourceServiceProvider
 			class="fr.cea.nabla.ui.NablaExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
-			uriExtension="nabla">
-		</resourceServiceProvider>
-		<resourceServiceProvider
-			class="fr.cea.nabla.ui.NablaextExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
-			uriExtension="nablaext">
+			uriExtension="n">
 		</resourceServiceProvider>
 		<resourceServiceProvider
 			class="fr.cea.nabla.ui.NablagenExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
-			uriExtension="nablagen">
+			uriExtension="ngen">
 		</resourceServiceProvider>
 	</extension>
 	<!-- marker definitions for fr.cea.nabla.Nabla -->
@@ -298,12 +281,6 @@
 		<participant
 			class="fr.cea.nabla.ui.NablaExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
 			fileExtensions="nabla"/>
-	</extension>
-	<extension point="org.eclipse.xtext.builder.participant">
-		<participant
-			class="fr.cea.nabla.ui.NablaextExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
-			fileExtensions="nablaext">
-		</participant>
 	</extension>
 	<extension point="org.eclipse.xtext.builder.participant">
 		<participant
@@ -452,7 +429,7 @@
 	<extension point="org.eclipse.compare.contentViewers">
 		<viewer id="fr.cea.nabla.Nabla.compare.contentViewers"
 			class="fr.cea.nabla.ui.NablaExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-			extensions="nabla">
+			extensions="n">
 		</viewer>
 		<contentTypeBinding
 			contentTypeId="fr.cea.nabla.Nabla.contenttype"
@@ -461,7 +438,7 @@
 	<extension point="org.eclipse.compare.contentMergeViewers">
 		<viewer id="fr.cea.nabla.Nabla.compare.contentMergeViewers"
 			class="fr.cea.nabla.ui.NablaExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-			extensions="nabla" label="Nabla Compare">
+			extensions="n" label="Nabla Compare">
 		</viewer>
 		<contentTypeBinding
 			contentTypeId="fr.cea.nabla.Nabla.contenttype"
@@ -470,12 +447,12 @@
 	<extension point="org.eclipse.ui.editors.documentProviders">
 		<provider id="fr.cea.nabla.Nabla.editors.documentProviders"
 			class="fr.cea.nabla.ui.NablaExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
-			extensions="nabla">
+			extensions="n">
 		</provider>
 	</extension>
 	<extension point="org.eclipse.team.core.fileTypes">
 		<fileTypes
-			extension="nabla"
+			extension="n"
 			type="text">
 		</fileTypes>
 	</extension>
@@ -508,7 +485,7 @@
 		point="org.eclipse.debug.ui.launchShortcuts">
 		<shortcut
 			class="fr.cea.nabla.ui.NablagenExecutableExtensionFactory:fr.cea.nabla.ui.launchconfig.NablagenShortcut"
-			icon="icons/NabLab.gif"
+			icon="icons/Nablagen.gif"
 			id="fr.cea.nabla.ui.launchconfig.NablagenShortcut"
 			label="Start Interpretation"
 			modes="run">
@@ -519,7 +496,7 @@
 						<iterate>
 							<adapt type="org.eclipse.core.resources.IResource">
 								<and>
-									<test property="org.eclipse.core.resources.extension" value="nablagen">
+									<test property="org.eclipse.core.resources.extension" value="ngen">
 									</test>
 								</and>
 							</adapt>
@@ -852,7 +829,7 @@
 		</propertyTester>
 	</extension>
 
-	<!-- Generate menus for nablagen (simulator generation), nabla file (nablaext file generation) and nablaext file (provider generation) -->
+	<!-- Generate menus for nablagen (code generation), nabla file (provider generation) -->
 	<extension
 		id="fr.cea.nabla.ui.menus"
 		name="fr.cea.nabla.ui.menus"
@@ -865,48 +842,32 @@
 				visible="true">
 			</separator>
 			<command
-				commandId="fr.cea.nabla.GenerateApplicationCommand"
+				commandId="fr.cea.nabla.GenerateCodeCommand"
 				icon="icons/Nablagen.gif"
-				label="Generate application"
+				label="Generate code"
 				style="push">
 				<visibleWhen checkEnabled="false">
 					<with variable="activeMenuSelection">
 						<count value="1"/>
 						<iterate>
 							<adapt type="org.eclipse.core.resources.IResource">
-								<test property="org.eclipse.core.resources.extension" value="nablagen"/>
+								<test property="org.eclipse.core.resources.extension" value="ngen"/>
 							</adapt>
 						</iterate>
 					</with>
 				</visibleWhen>
 			</command>
 			<command
-				commandId="fr.cea.nabla.GenerateNablaextFileCommand"
+				commandId="fr.cea.nabla.GenerateNablagenCommand"
 				icon="icons/NabLab.gif"
-				label="Generate nablaext file"
+				label="Generate nablagen provider file"
 				style="push">
 				<visibleWhen checkEnabled="false">
 					<with variable="activeMenuSelection">
 						<count value="1"/>
 						<iterate>
 							<adapt type="org.eclipse.core.resources.IResource">
-								<test property="org.eclipse.core.resources.extension" value="nabla"/>
-							</adapt>
-						</iterate>
-					</with>
-				</visibleWhen>
-			</command>
-			<command
-				commandId="fr.cea.nabla.GenerateProvidersCommand"
-				icon="icons/Nablaext.gif"
-				label="Generate extension providers"
-				style="push">
-				<visibleWhen checkEnabled="false">
-					<with variable="activeMenuSelection">
-						<count value="1"/>
-						<iterate>
-							<adapt type="org.eclipse.core.resources.IResource">
-								<test property="org.eclipse.core.resources.extension" value="nablaext"/>
+								<test property="org.eclipse.core.resources.extension" value="n"/>
 							</adapt>
 						</iterate>
 					</with>
@@ -919,37 +880,32 @@
 		</menuContribution>
 	</extension>
 
-	<!-- Generate commands for nablagen (simulator generation), nabla file (nablaext file generation) and nablaext file (provider generation) -->
+	<!-- Generate commands for nablagen (code generation), nabla file (provider generation) -->
 	<extension
 		id="fr.cea.nabla.ui.commands"
 		name="fr.cea.nabla.ui.commands"
 		point="org.eclipse.ui.commands">
 		<command 
-			defaultHandler="fr.cea.nabla.ui.NablaExecutableExtensionFactory:fr.cea.nabla.ui.handlers.GenerateApplicationHandler"
-			id="fr.cea.nabla.GenerateApplicationCommand"
-			name="Generate application">
+			defaultHandler="fr.cea.nabla.ui.NablaExecutableExtensionFactory:fr.cea.nabla.ui.handlers.GenerateCodeHandler"
+			id="fr.cea.nabla.GenerateCodeCommand"
+			name="Generate code">
 		</command>
 		<command 
-			id="fr.cea.nabla.GenerateNablaextFileCommand"
-			name="Generate nablaext file">
-		</command>
-		<command 
-			defaultHandler="fr.cea.nabla.ui.NablaExecutableExtensionFactory:fr.cea.nabla.ui.handlers.GenerateProvidersHandler"
-			id="fr.cea.nabla.GenerateProvidersCommand"
-			name="Generate extension providers">
+			id="fr.cea.nabla.GenerateNablagenCommand"
+			name="Generate nablagen provider file">
 		</command>
 	</extension>
 
-	<!-- Generate handler for nabla file. Not a default command handler to disable the menu when it is not an extension (module) or file already exists -->
+	<!-- Generate handlers for nablagen (code generation), nabla file (provider generation) -->
 	<extension point="org.eclipse.ui.handlers">
 		<handler
-			class="fr.cea.nabla.ui.NablaExecutableExtensionFactory:fr.cea.nabla.ui.handlers.GenerateNablaextFileHandler"
-			commandId="fr.cea.nabla.GenerateNablaextFileCommand">
+			class="fr.cea.nabla.ui.NablaExecutableExtensionFactory:fr.cea.nabla.ui.handlers.GenerateNablagenHandler"
+			commandId="fr.cea.nabla.GenerateNablagenCommand">
 			<enabledWhen>
 				<with variable="selection">
 					<iterate>
 						<adapt type="org.eclipse.core.resources.IResource">
-							<test property="org.eclipse.core.resources.extension" value="nabla"/>
+							<test property="org.eclipse.core.resources.extension" value="n"/>
 						</adapt>
 						<and/>
 						<test

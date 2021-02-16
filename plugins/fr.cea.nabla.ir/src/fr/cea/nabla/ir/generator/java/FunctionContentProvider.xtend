@@ -10,12 +10,15 @@
 package fr.cea.nabla.ir.generator.java
 
 import fr.cea.nabla.ir.ir.ArgOrVarRef
+import fr.cea.nabla.ir.ir.BaseType
 import fr.cea.nabla.ir.ir.Function
 import fr.cea.nabla.ir.ir.InternFunction
-import fr.cea.nabla.ir.ir.SimpleVariable
+import fr.cea.nabla.ir.ir.IrType
+import fr.cea.nabla.ir.ir.LinearAlgebraType
+import fr.cea.nabla.ir.ir.Variable
 
 import static extension fr.cea.nabla.ir.generator.java.InstructionContentProvider.*
-import static extension fr.cea.nabla.ir.generator.java.JavaGeneratorUtils.*
+import static extension fr.cea.nabla.ir.generator.java.IrTypeExtensions.*
 
 class FunctionContentProvider
 {
@@ -33,7 +36,7 @@ class FunctionContentProvider
 	static def getHeaderContent(Function it)
 	'''«returnType.javaType» «name.toFirstLower»(«FOR a : inArgs SEPARATOR ', '»«a.type.javaType» «a.name»«ENDFOR»)'''
 
-	private static def getSizeOf(Function it, SimpleVariable v)
+	private static def getSizeOf(Function it, Variable v)
 	{
 		for (a : inArgs)
 		{
@@ -46,5 +49,15 @@ class FunctionContentProvider
 			}
 		}
 		throw new RuntimeException("No arg corresponding to dimension symbol " + v.name)
+	}
+
+	private static def getSizes(IrType it)
+	{
+		switch it
+		{
+			BaseType: sizes
+			LinearAlgebraType: sizes
+			default: throw new RuntimeException("Unsuported argument")
+		}
 	}
 }

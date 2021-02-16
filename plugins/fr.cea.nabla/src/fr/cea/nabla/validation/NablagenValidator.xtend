@@ -10,16 +10,23 @@
 package fr.cea.nabla.validation
 
 import com.google.inject.Inject
+import fr.cea.nabla.UniqueNameHelper
+import fr.cea.nabla.generator.NablagenExtensionHelper
 import fr.cea.nabla.nabla.Connectivity
+import fr.cea.nabla.nabla.FunctionCall
 import fr.cea.nabla.nabla.NablaModule
-import fr.cea.nabla.nablaext.TargetType
+import fr.cea.nabla.nabla.NablaRoot
 import fr.cea.nabla.nablagen.AdditionalModule
+import fr.cea.nabla.nablagen.NablagenApplication
 import fr.cea.nabla.nablagen.NablagenModule
 import fr.cea.nabla.nablagen.NablagenPackage
-import fr.cea.nabla.nablagen.NablagenRoot
+import fr.cea.nabla.nablagen.NablagenProvider
+import fr.cea.nabla.nablagen.Target
+import fr.cea.nabla.nablagen.TargetType
 import fr.cea.nabla.nablagen.VarLink
 import fr.cea.nabla.typing.ArgOrVarTypeProvider
 import java.util.HashSet
+import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.CheckType
 
@@ -28,28 +35,41 @@ import org.eclipse.xtext.validation.CheckType
  *
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
- // TODO A unique interpreter
 class NablagenValidator extends AbstractNablagenValidator
 {
 	@Inject extension ArgOrVarTypeProvider
+	@Inject NablagenExtensionHelper nablagenExtensionHelper
 
-	public static val NGEN_APPLICATION_NAME = "NablagenValidator::ApplicationName"
+	public static val NGEN_ELEMENT_NAME = "NablagenValidator::ElementName"
 	public static val NGEN_MODULE_NAME = "NablagenValidator::ModuleName"
+	public static val UNIQUE_INTERPRETER = "NablagenValidator::UniqueInterpreter"
 	public static val CPP_MANDATORY_VARIABLES = "NablagenValidator::CppMandatoryVariables"
 	public static val CONNECTIVITY_CONSISTENCY = "NablagenValidator::ConnectivityConsistency"
+	public static val NO_TIME_ITERATOR_DEFINITION = "NablagenValidator::NoTimeIteratorDefinition"
 	public static val VAR_LINK_MAIN_VAR_TYPE = "NablagenValidator::VarLinkMainVarType"
+	public static val PROVIDER_FOR_EACH_EXTENSION = "NablagenValidator::ProviderForEachExtension"
 
-	static def getNgenApplicationNameMsg() { "Application name must start with an upper case" }
+	static def getNgenElementNameMsg() { "Application/Provider name must start with an upper case" }
 	static def getNgenModuleNameMsg() { "Nabla module instance name must start with a lower case" }
+	static def getUniqueInterpreterMsg() { "Only one interpreter target allowed" }
 	static def getCppMandatoryVariablesMsg() { "'iterationMax' and 'timeMax' simulation variables must be defined (after timeStep) when using C++ code generator" }
 	static def getConnectivityConsistencyMsg(String a, String b) { "Connectivities with same name must be identical: " + a + " \u2260 " + b}
+	static def getNoTimeIteratorDefinitionMsg() { "Iterate keyword not allowed in additional module" }
 	static def getVarLinkMainVarTypeMsg(String v1Type, String v2Type) { "Variables must have the same type: " + v1Type + " \u2260 " + v2Type }
+	static def getProviderForEachExtensionMsg(String extensionName) { "No provider found for extension: " + extensionName }
 
 	@Check(CheckType.FAST)
-	def checkName(NablagenRoot it)
+	def checkName(NablagenApplication it)
 	{
 		if (!name.nullOrEmpty && Character::isLowerCase(name.charAt(0)))
-			error(getNgenApplicationNameMsg(), NablagenPackage.Literals.NABLAGEN_ROOT__NAME, NGEN_APPLICATION_NAME)
+			error(getNgenElementNameMsg(), NablagenPackage.Literals.NABLAGEN_APPLICATION__NAME, NGEN_ELEMENT_NAME)
+	}
+
+	@Check(CheckType.FAST)
+	def checkName(NablagenProvider it)
+	{
+		if (!name.nullOrEmpty && Character::isLowerCase(name.charAt(0)))
+			error(getNgenElementNameMsg(), NablagenPackage.Literals.NABLAGEN_PROVIDER__NAME, NGEN_ELEMENT_NAME)
 	}
 
 	@Check(CheckType.FAST)
@@ -60,21 +80,32 @@ class NablagenValidator extends AbstractNablagenValidator
 	}
 
 	@Check(CheckType.FAST)
-	def void checkCppMandatoryVariables(NablagenRoot it)
+	def checkUniqueInterpreter(Target it)
+	{
+		if (interpreter)
+		{
+			val app = EcoreUtil2.getContainerOfType(it, NablagenApplication)
+			if (app !== null && app.targets.exists[x | x.interpreter && x !== it])
+				error(getUniqueInterpreterMsg(), NablagenPackage.Literals.TARGET__INTERPRETER, UNIQUE_INTERPRETER)
+		}
+	}
+
+	@Check(CheckType.FAST)
+	def void checkCppMandatoryVariables(NablagenApplication it)
 	{
 		if (targets.exists[x | x.type != TargetType::JAVA] && (mainModule !== null && mainModule.iterationMax === null || mainModule.timeMax === null))
-			error(getCppMandatoryVariablesMsg(), NablagenPackage.Literals::NABLAGEN_ROOT__MAIN_MODULE, CPP_MANDATORY_VARIABLES)
+			error(getCppMandatoryVariablesMsg(), NablagenPackage.Literals::NABLAGEN_APPLICATION__MAIN_MODULE, CPP_MANDATORY_VARIABLES)
 	}
 
 	@Check(CheckType.FAST)
 	def void checkConnectivityConsistency(AdditionalModule it)
 	{
 		// Look for all referenced NablaModule 
-		val root = eContainer as NablagenRoot
+		val ngenApp = eContainer as NablagenApplication
 		val otherNablaModules = new HashSet<NablaModule>
-		if (root.mainModule.type !== null && root.mainModule.type !== type)
-			otherNablaModules += root.mainModule.type
-		for (am : root.additionalModules)
+		if (ngenApp.mainModule.type !== null && ngenApp.mainModule.type !== type)
+			otherNablaModules += ngenApp.mainModule.type
+		for (am : ngenApp.additionalModules)
 			if (am !== it && am.type !== null && am.type !== type)
 				otherNablaModules += am.type
 
@@ -84,6 +115,13 @@ class NablagenValidator extends AbstractNablagenValidator
 				for (b : nablaModule.connectivities)
 					if (!areConsistent(a, b))
 						error(getConnectivityConsistencyMsg(a.msgId, b.msgId), NablagenPackage.Literals::NABLAGEN_MODULE__NAME, CONNECTIVITY_CONSISTENCY)
+	}
+
+	@Check(CheckType.FAST)
+	def void checkNoTimeIteratorDefinition(AdditionalModule it)
+	{
+		if (type.iteration !== null)
+			error(getNoTimeIteratorDefinitionMsg(), NablagenPackage.Literals::NABLAGEN_MODULE__NAME, NO_TIME_ITERATOR_DEFINITION)
 	}
 
 	@Check(CheckType.FAST)
@@ -103,6 +141,21 @@ class NablagenValidator extends AbstractNablagenValidator
 					error(getVarLinkMainVarTypeMsg(avTypeLabel, mvTypeLabel), NablagenPackage.Literals::VAR_LINK__MAIN_VARIABLE, VAR_LINK_MAIN_VAR_TYPE)
 			}
 		}
+	}
+
+	@Check(CheckType.FAST)
+	def void checkProviderForEachExtension(Target it)
+	{
+		val ngen = eContainer as NablagenApplication
+		val neededExtensionNames = new HashSet<String>
+		neededExtensionNames += ngen.mainModule.type.extensionNames
+		ngen.additionalModules.forEach[x | neededExtensionNames += x.type.extensionNames]
+		for (neededExtensionName : neededExtensionNames.filter[x | x != "Math"])
+			if (nablagenExtensionHelper.getTargetProvider(it, neededExtensionName) === null)
+			{
+				val structuralFeature = (interpreter ? NablagenPackage.Literals::TARGET__INTERPRETER : NablagenPackage.Literals::TARGET__TYPE)
+				warning(getProviderForEachExtensionMsg(neededExtensionName), structuralFeature, PROVIDER_FOR_EACH_EXTENSION)
+			}
 	}
 
 	/**
@@ -125,5 +178,11 @@ class NablagenValidator extends AbstractNablagenValidator
 	private def getMsgId(Connectivity it)
 	{
 		(eContainer as NablaModule).name + "::" + name
+	}
+
+	private def getExtensionNames(NablaRoot it)
+	{
+		val usedFunctions = eAllContents.filter(FunctionCall).map[function].filter[external]
+		usedFunctions.toIterable.map[x | UniqueNameHelper.getUniqueExtensionName(x)]
 	}
 }

@@ -61,10 +61,10 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 			case IrPackage.IR_ROOT: return createIrRoot();
 			case IrPackage.IR_MODULE: return createIrModule();
 			case IrPackage.POST_PROCESSING: return createPostProcessing();
+			case IrPackage.POST_PROCESSED_VARIABLE: return createPostProcessedVariable();
 			case IrPackage.EXTENSION_PROVIDER: return createExtensionProvider();
 			case IrPackage.ARG: return createArg();
-			case IrPackage.SIMPLE_VARIABLE: return createSimpleVariable();
-			case IrPackage.CONNECTIVITY_VARIABLE: return createConnectivityVariable();
+			case IrPackage.VARIABLE: return createVariable();
 			case IrPackage.INTERN_FUNCTION: return createInternFunction();
 			case IrPackage.EXTERN_FUNCTION: return createExternFunction();
 			case IrPackage.CONNECTIVITY: return createConnectivity();
@@ -106,6 +106,7 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 			case IrPackage.IR_TYPE: return createIrType();
 			case IrPackage.BASE_TYPE: return createBaseType();
 			case IrPackage.CONNECTIVITY_TYPE: return createConnectivityType();
+			case IrPackage.LINEAR_ALGEBRA_TYPE: return createLinearAlgebraType();
 			case IrPackage.CONNECTIVITY_CALL: return createConnectivityCall();
 			case IrPackage.SET_REF: return createSetRef();
 			case IrPackage.ITEM_ID: return createItemId();
@@ -220,9 +221,9 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 	 * @generated
 	 */
 	@Override
-	public SimpleVariable createSimpleVariable() {
-		SimpleVariableImpl simpleVariable = new SimpleVariableImpl();
-		return simpleVariable;
+	public Variable createVariable() {
+		VariableImpl variable = new VariableImpl();
+		return variable;
 	}
 
 	/**
@@ -231,9 +232,9 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 	 * @generated
 	 */
 	@Override
-	public ConnectivityVariable createConnectivityVariable() {
-		ConnectivityVariableImpl connectivityVariable = new ConnectivityVariableImpl();
-		return connectivityVariable;
+	public PostProcessedVariable createPostProcessedVariable() {
+		PostProcessedVariableImpl postProcessedVariable = new PostProcessedVariableImpl();
+		return postProcessedVariable;
 	}
 
 	/**
@@ -762,6 +763,17 @@ public class IrFactoryImpl extends EFactoryImpl implements IrFactory {
 	public ItemIndexValue createItemIndexValue() {
 		ItemIndexValueImpl itemIndexValue = new ItemIndexValueImpl();
 		return itemIndexValue;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public LinearAlgebraType createLinearAlgebraType() {
+		LinearAlgebraTypeImpl linearAlgebraType = new LinearAlgebraTypeImpl();
+		return linearAlgebraType;
 	}
 
 	/**

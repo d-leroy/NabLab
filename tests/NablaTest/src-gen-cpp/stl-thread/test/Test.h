@@ -9,14 +9,17 @@
 #include <limits>
 #include <utility>
 #include <cmath>
-#include "mesh/CartesianMesh2DFactory.h"
-#include "mesh/CartesianMesh2D.h"
-#include "utils/Utils.h"
-#include "utils/Timer.h"
-#include "types/Types.h"
-#include "utils/stl/Parallel.h"
+#include "nablalib/mesh/CartesianMesh2DFactory.h"
+#include "nablalib/mesh/CartesianMesh2D.h"
+#include "nablalib/utils/Utils.h"
+#include "nablalib/utils/Timer.h"
+#include "nablalib/types/Types.h"
+#include "nablalib/utils/stl/Parallel.h"
 
-using namespace nablalib;
+using namespace nablalib::mesh;
+using namespace nablalib::utils;
+using namespace nablalib::types;
+using namespace nablalib::utils::stl;
 
 /******************** Module declaration ********************/
 
@@ -58,9 +61,9 @@ private:
 	Options& options;
 
 	// Timers
-	utils::Timer globalTimer;
-	utils::Timer cpuTimer;
-	utils::Timer ioTimer;
+	Timer globalTimer;
+	Timer cpuTimer;
+	Timer ioTimer;
 
 public:
 	// Global variables
@@ -79,6 +82,8 @@ public:
 	std::vector<double> e_n;
 	std::vector<double> e_nplus1;
 	std::vector<double> e_n0;
+	RealArray1D<0> v;
+	RealArray2D<0,0> M;
 };
 
 #endif

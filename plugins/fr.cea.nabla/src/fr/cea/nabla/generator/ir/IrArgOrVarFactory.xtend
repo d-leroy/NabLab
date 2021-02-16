@@ -27,7 +27,7 @@ import fr.cea.nabla.nabla.SimpleVar
 import fr.cea.nabla.nabla.TimeIterator
 import fr.cea.nabla.nabla.Var
 import fr.cea.nabla.typing.ArgOrVarTypeProvider
-import fr.cea.nabla.typing.NablaSimpleType
+import fr.cea.nabla.typing.BaseTypeTypeProvider
 import java.util.LinkedHashSet
 import org.eclipse.xtext.EcoreUtil2
 
@@ -38,10 +38,9 @@ class IrArgOrVarFactory
 	@Inject extension TimeIteratorExtensions
 	@Inject extension IrExpressionFactory
 	@Inject extension IrJobFactory
-	@Inject extension IrBasicFactory
 	@Inject extension IrAnnotationHelper
 	@Inject extension ArgOrVarTypeProvider
-	@Inject extension LinearAlgebraUtils
+	@Inject extension BaseTypeTypeProvider
 	@Inject NablaType2IrType nablaType2IrType
 
 	/**
@@ -123,36 +122,35 @@ class IrArgOrVarFactory
 		val name = v.name + timeSuffix
 		switch v
 		{
-			SimpleVar : toIrSimpleVariable(v, name)
-			ConnectivityVar : toIrConnectivityVariable(v, name)
+			SimpleVar : toIrVariable(v, name)
+			ConnectivityVar : toIrVariable(v, name)
 			Arg: toIrArg(v, name)
 			TimeIterator: toIrIterationCounter(v)
 		}
 	}
 
-	// fonctions générales retournent des Var
-	def dispatch Variable toIrVariable(SimpleVar v) { toIrSimpleVariable(v, v.name) }
-	def dispatch Variable toIrVariable(ConnectivityVar v) { toIrConnectivityVariable(v, v.name) }
+	def dispatch Variable toIrVariable(SimpleVar v) { toIrVariable(v, v.name) }
+	def dispatch Variable toIrVariable(ConnectivityVar v) { toIrVariable(v, v.name) }
 
 	def create IrFactory::eINSTANCE.createArg toIrArg(BaseType nablaType, String nablaName)
 	{
 		annotations += nablaType.toIrAnnotation
 		name = nablaName
-		type = nablaType.toIrBaseType
+		type = nablaType2IrType.toIrType(nablaType.typeFor)
 	}
 
 	def create IrFactory::eINSTANCE.createArg toIrArg(Arg v, String varName)
 	{
 		annotations += v.toIrAnnotation
 		name = varName
-		type = v.type.toIrBaseType
+		type = nablaType2IrType.toIrType(v.typeFor)
 	}
 
-	def create IrFactory::eINSTANCE.createSimpleVariable toIrSimpleVariable(SimpleVar v, String varName)
+	def create IrFactory::eINSTANCE.createVariable toIrVariable(SimpleVar v, String varName)
 	{
 		annotations += v.toIrAnnotation
 		name = varName
-		type = nablaType2IrType.toIrBaseType(v.typeFor as NablaSimpleType)
+		type = nablaType2IrType.toIrType(v.typeFor)
 		const = v.const
 		constExpr = v.constExpr
 		option = false
@@ -160,15 +158,17 @@ class IrArgOrVarFactory
 		if (value !== null) defaultValue = value.toIrExpression
 	}
 
-	def create IrFactory::eINSTANCE.createConnectivityVariable toIrConnectivityVariable(ConnectivityVar v, String varName)
+	def create IrFactory::eINSTANCE.createVariable toIrVariable(ConnectivityVar v, String varName)
 	{
 		annotations += v.toIrAnnotation
 		name = varName
-		type = toIrConnectivityType(v.type, v.supports)
-		linearAlgebra = v.linearAlgebra
+		type = nablaType2IrType.toIrType(v.typeFor)
+		const = false
+		constExpr = false
+		option = false
 	}
 
-	def create IrFactory::eINSTANCE.createSimpleVariable toIrIterationCounter(TimeIterator t)
+	def create IrFactory::eINSTANCE.createVariable toIrIterationCounter(TimeIterator t)
 	{
 		annotations += t.toIrAnnotation
 		name = t.name
@@ -189,8 +189,8 @@ class IrArgOrVarFactory
 		val name = v.name + getIrVarTimeSuffix(ti, timeIteratorSuffix)
 		return switch v
 		{
-			SimpleVar : toIrSimpleVariable(v, name) => [const = false]
-			ConnectivityVar : toIrConnectivityVariable(v, name)
+			SimpleVar : toIrVariable(v, name) => [const = false]
+			ConnectivityVar : toIrVariable(v, name)
 		}
 	}
 

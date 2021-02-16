@@ -17,9 +17,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import fr.cea.nabla.javalib.types.*;
+import fr.cea.nabla.javalib.*;
 import fr.cea.nabla.javalib.mesh.*;
-import fr.cea.nabla.javalib.utils.*;
 
 @SuppressWarnings("all")
 public final class DepthInit
@@ -29,7 +28,7 @@ public final class DepthInit
 		public double maxTime;
 		public int maxIter;
 		public double deltat;
-		public batilib.BatiLibCppJni batiLib;
+		public batilib.BatiLibJava batiLib;
 		public String nonRegression;
 
 		public void jsonInit(final String jsonContent)
@@ -66,7 +65,7 @@ public final class DepthInit
 			else
 				deltat = 1.0;
 			// batiLib
-			batiLib = new batilib.BatiLibCppJni();
+			batiLib = new batilib.BatiLibJava();
 			if (o.has("batiLib"))
 				batiLib.jsonInit(o.get("batiLib").toString());
 			// Non regression

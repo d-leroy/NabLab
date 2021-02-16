@@ -43,9 +43,9 @@ class ArgOrVarRefValidatorTest
 			'''
 			«emptyTestModule»
 			let ℕ[2,2] a = ℕ[2,2](0);
-			let ℕ[2] b = a[0];
+			let ℕ[2] b = a[0]; // Wrong number of args
 			let ℕ[2] c = ℕ[2](0);
-			let ℕ d = c[0,1];
+			let ℕ d = c[0,1]; // Wrong number of args
 			'''
 		)
 		Assert.assertNotNull(moduleKo)
@@ -239,6 +239,35 @@ class ArgOrVarRefValidatorTest
 			let ℕ m = a[2];
 			let ℕ o = a[b];
 			let ℕ p = a[b + 4];
+			'''
+		)
+		Assert.assertNotNull(moduleOk)
+		moduleOk.assertNoErrors
+	}
+
+	@Test
+	def void testCheckNullType()
+	{
+		val moduleKo = parseHelper.parse(
+			'''
+			«testModuleForSimulation»
+			ℝ[2] X{nodes};
+			ℝ x{nodes};
+			InitY : y = X[1]; // wrong syntax. Precise space iterator before indice
+			'''
+		)
+		Assert.assertNotNull(moduleKo)
+
+		moduleKo.assertError(NablaPackage.eINSTANCE.argOrVarRef,
+			ArgOrVarRefValidator::NULL_TYPE,
+			ArgOrVarRefValidator::getNullTypeMsg())
+
+		val moduleOk =  parseHelper.parse(
+			'''
+			«testModuleForSimulation»
+			ℝ[2] X{nodes};
+			ℝ y{nodes};
+			InitY : ∀r ∈nodes(), y{r} = X{r}[1];
 			'''
 		)
 		Assert.assertNotNull(moduleOk)
