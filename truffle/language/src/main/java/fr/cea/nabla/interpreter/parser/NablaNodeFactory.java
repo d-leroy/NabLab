@@ -488,7 +488,7 @@ public class NablaNodeFactory {
 
 		Iterators.filter(root.eAllContents(), Function.class)
 				.forEachRemaining(f -> functions.put(f, new NablaUndefinedFunctionRootNode(language, f.getName())));
-		root.getFunctions().stream().filter(f -> f instanceof InternFunction).map(f -> (InternFunction) f).forEach(
+		root.getModules().stream().flatMap(m -> m.getFunctions().stream()).filter(f -> f instanceof InternFunction).map(f -> (InternFunction) f).forEach(
 				f -> functions.computeIfAbsent(f, function -> createNablaFunctionNode((InternFunction) function)));
 
 		final NablaRootNode[] jobNodes = root.getMain().getCalls().stream().map(j -> createNablaJobNode(j))
@@ -742,14 +742,27 @@ public class NablaNodeFactory {
 		final ExternFunction function = (ExternFunction) functionCall.getFunction();
 		final ExtensionProvider functionProvider = function.getProvider();
 		final String providerName = Strings.toFirstLower(functionProvider.getProviderName());
-		final BaseType baseReturnType = function.getReturnType();
-		final Class<?> javaReturnType = FunctionCallHelper.getJavaType(baseReturnType.getPrimitive(),
-				IrTypeExtensions.getDimension(baseReturnType));
+		final IrType irReturnType = function.getReturnType();
+		final Class<?> javaReturnType = FunctionCallHelper.getJavaType(getPrimitiveType(irReturnType),
+				IrTypeExtensions.getDimension(irReturnType));
 		final String ast = getMangledFunctionName(function);
 		final NablaExpressionNode[] args = functionCall.getArgs().stream().map(e -> createNablaExpressionNode(e))
 				.collect(Collectors.toList()).toArray(emptyExpressionArray);
 
 		return CreateNablaValueNodeGen.create(javaReturnType, NablaMeshCallNodeGen.create(providerName, ast, args));
+	}
+
+	private NablaExpressionNode createNablaExternalFunctionCallNode(FunctionCall functionCall,
+			String receiverClassName) {
+		final Function function = functionCall.getFunction();
+		final String methodName = function.getName();
+		final IrType irReturnType = function.getReturnType();
+		final Class<?> javaReturnType = FunctionCallHelper.getJavaType(getPrimitiveType(irReturnType),
+				IrTypeExtensions.getDimension(irReturnType));
+		final NablaExpressionNode[] argNodes = functionCall.getArgs().stream().map(e -> createNablaExpressionNode(e))
+				.collect(Collectors.toList()).toArray(emptyExpressionArray);
+		return CreateNablaValueNodeGen.create(javaReturnType,
+				new NablaExternalMethodCallNode(receiverClassName, methodName, javaReturnType, argNodes));
 	}
 
 	private NablaExpressionNode createNablaMeshCallNode(ConnectivityCall connectivityCall) {
@@ -794,19 +807,6 @@ public class NablaNodeFactory {
 		} else {
 			return createNablaExternalCallNode(functionCall);
 		}
-	}
-
-	private NablaExpressionNode createNablaExternalFunctionCallNode(FunctionCall functionCall,
-			String receiverClassName) {
-		final Function function = functionCall.getFunction();
-		final String methodName = function.getName();
-		final BaseType baseReturnType = function.getReturnType();
-		final Class<?> javaReturnType = FunctionCallHelper.getJavaType(baseReturnType.getPrimitive(),
-				IrTypeExtensions.getDimension(baseReturnType));
-		final NablaExpressionNode[] argNodes = functionCall.getArgs().stream().map(e -> createNablaExpressionNode(e))
-				.collect(Collectors.toList()).toArray(emptyExpressionArray);
-		return CreateNablaValueNodeGen.create(javaReturnType,
-				new NablaExternalMethodCallNode(receiverClassName, methodName, javaReturnType, argNodes));
 	}
 
 	private NablaExpressionNode createNablaFunctionCallNode(FunctionCall functionCall) {
@@ -922,7 +922,7 @@ public class NablaNodeFactory {
 			if (argOrVarRef.getIterators().isEmpty() && argOrVarRef.getIndices().isEmpty()) {
 				instructionNode = createNablaWriteVariableNode(name, right);
 			} else {
-				instructionNode = createNablaWriteArrayNode(name, getBaseType(argOrVar), getDimensions(argOrVar),
+				instructionNode = createNablaWriteArrayNode(name, getBaseType(argOrVar.getType()), getDimensions(argOrVar),
 						getArrayIndices(argOrVarRef), right);
 			}
 		}
@@ -1384,8 +1384,7 @@ public class NablaNodeFactory {
 		return result;
 	}
 
-	private Class<?> getBaseType(ArgOrVar argOrVar) {
-		final IrType irType = argOrVar.getType();
+	private Class<?> getBaseType(IrType irType) {
 		switch (irType.eClass().getClassifierID()) {
 		case IrPackage.BASE_TYPE: {
 			final BaseType type = (BaseType) irType;
@@ -1402,7 +1401,25 @@ public class NablaNodeFactory {
 			throw new IllegalArgumentException("Unknown IR type.");
 		}
 	}
-
+	
+	private PrimitiveType getPrimitiveType(IrType irType) {
+		switch (irType.eClass().getClassifierID()) {
+		case IrPackage.BASE_TYPE: {
+			final BaseType type = (BaseType) irType;
+			return type.getPrimitive();
+		}
+		case IrPackage.CONNECTIVITY_TYPE: {
+			final ConnectivityType type = (ConnectivityType) irType;
+			return type.getBase().getPrimitive();
+		}
+		case IrPackage.LINEAR_ALGEBRA_TYPE: {
+			return PrimitiveType.REAL;
+		}
+		default:
+			throw new IllegalArgumentException("Unknown IR type.");
+		}
+	}
+	
 	private Class<?> getBaseType(PrimitiveType primitiveType) {
 		switch (primitiveType) {
 		case BOOL:
