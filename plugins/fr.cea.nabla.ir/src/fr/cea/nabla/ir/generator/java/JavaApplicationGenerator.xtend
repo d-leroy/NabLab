@@ -14,9 +14,11 @@ import fr.cea.nabla.ir.generator.ApplicationGenerator
 import fr.cea.nabla.ir.generator.GenerationContent
 import fr.cea.nabla.ir.ir.BaseType
 import fr.cea.nabla.ir.ir.Connectivity
+import fr.cea.nabla.ir.ir.ConnectivityType
 import fr.cea.nabla.ir.ir.InternFunction
 import fr.cea.nabla.ir.ir.IrModule
 import fr.cea.nabla.ir.ir.IrRoot
+import fr.cea.nabla.ir.ir.LinearAlgebraType
 import fr.cea.nabla.ir.ir.Variable
 import java.util.ArrayList
 
@@ -35,6 +37,13 @@ import static extension fr.cea.nabla.ir.generator.java.TypeContentProvider.*
 
 class JavaApplicationGenerator implements ApplicationGenerator
 {
+	val boolean hasLevelDB
+
+	new(boolean hasLevelDB)
+	{
+		this.hasLevelDB = hasLevelDB
+	}
+
 	override getName() { 'Java' }
 
 	override getIrTransformationStep() { null }
@@ -61,9 +70,11 @@ class JavaApplicationGenerator implements ApplicationGenerator
 		import java.io.FileReader;
 		import java.io.IOException;
 		import java.util.stream.IntStream;
+		«IF hasLevelDB»
 
 		import org.iq80.leveldb.DB;
 		import org.iq80.leveldb.WriteBatch;
+		«ENDIF»
 
 		import com.google.gson.JsonElement;
 		import com.google.gson.JsonObject;
@@ -111,13 +122,15 @@ class JavaApplicationGenerator implements ApplicationGenerator
 					if (o.has("«vName»"))
 						«vName».jsonInit(o.get("«vName»").toString());
 					«ENDFOR»
-					// Non regression
 					«val nrName = Utils.NonRegressionNameAndValue.key»
+					«IF hasLevelDB»
+					// Non regression
 					if (o.has("«nrName»"))
 					{
 						final JsonElement «nrName.jsonName» = o.get("«nrName»");
 						«nrName» = «nrName.jsonName».getAsJsonPrimitive().getAsString();
 					}
+					«ENDIF»
 				}
 			}
 
@@ -127,7 +140,7 @@ class JavaApplicationGenerator implements ApplicationGenerator
 
 			// User options
 			private final Options options;
-			«IF postProcessing !== null»private final FileWriter writer;«ENDIF»
+			«IF postProcessing !== null»private final PvdFileWriter2D writer;«ENDIF»
 
 			«IF irRoot.modules.size > 1»
 				«IF main»
@@ -143,7 +156,7 @@ class JavaApplicationGenerator implements ApplicationGenerator
 			«ENDIF»
 			// Global variables
 			«FOR v : variables.filter[!option]»
-			protected «IF v instanceof Variable && (v as Variable).const»final «ENDIF»«v.type.javaType» «v.name»;
+			protected «IF v.const»final «ENDIF»«v.type.javaType» «v.name»;
 			«ENDFOR»
 
 			public «className»(«javaMeshClassName» aMesh, Options aOptions)
@@ -219,6 +232,7 @@ class JavaApplicationGenerator implements ApplicationGenerator
 
 					// Start simulation
 					«name».simulate();
+					«IF hasLevelDB»
 
 					«val dbName = irRoot.name + "DB"»
 					// Non regression testing
@@ -232,6 +246,7 @@ class JavaApplicationGenerator implements ApplicationGenerator
 						LevelDBUtils.destroyDB("«dbName».current");
 						System.exit(ret);
 					}
+					«ENDIF»
 				}
 				else
 				{
@@ -246,15 +261,44 @@ class JavaApplicationGenerator implements ApplicationGenerator
 			{
 				if (!writer.isDisabled())
 				{
-					VtkFileContent content = new VtkFileContent(iteration, «irRoot.timeVariable.name», «irRoot.nodeCoordVariable.name», mesh.getGeometry().getQuads());
-					«FOR v : postProcessing.outputVariables»
-					content.add«v.support.name.toFirstUpper»Variable("«v.outputName»", «v.target.name»);
-					«ENDFOR»
-					writer.writeFile(content);
-					«postProcessing.lastDumpVariable.name» = «postProcessing.periodReference.name»;
+					try
+					{
+						Quad[] quads = mesh.getGeometry().getQuads();
+						writer.startVtpFile(iteration, «irRoot.timeVariable.name», «irRoot.nodeCoordVariable.name», quads);
+						«val outputVarsByConnectivities = irRoot.postProcessing.outputVariables.groupBy(x | x.support.name)»
+						writer.openNodeData();
+						«val nodeVariables = outputVarsByConnectivities.get("node")»
+						«IF !nodeVariables.nullOrEmpty»
+							«FOR v : nodeVariables»
+								writer.openNodeArray("«v.outputName»", «v.target.type.sizesSize»);
+								for (int i=0 ; i<nbNodes ; ++i)
+									writer.write(«v.target.writeCallContent»);
+								writer.closeNodeArray();
+							«ENDFOR»
+						«ENDIF»
+						writer.closeNodeData();
+						writer.openCellData();
+						«val cellVariables = outputVarsByConnectivities.get("cell")»
+						«IF !cellVariables.nullOrEmpty»
+							«FOR v : cellVariables»
+								writer.openCellArray("«v.outputName»", «v.target.type.sizesSize»);
+								for (int i=0 ; i<nbCells ; ++i)
+									writer.write(«v.target.writeCallContent»);
+								writer.closeCellArray();
+							«ENDFOR»
+						«ENDIF»
+						writer.closeCellData();
+						writer.closeVtpFile();
+						«postProcessing.lastDumpVariable.name» = «postProcessing.periodReference.name»;
+					}
+					catch (java.io.FileNotFoundException e)
+					{
+						System.out.println("* WARNING: no dump of variables. FileNotFoundException: " + e.getMessage());
+					}
 				}
 			}
 			«ENDIF»
+			«IF hasLevelDB»
 
 			private void createDB(String db_name) throws IOException
 			{
@@ -284,6 +328,7 @@ class JavaApplicationGenerator implements ApplicationGenerator
 				db.close();
 				System.out.println("Reference database " + db_name + " created.");
 			}
+			«ENDIF»
 			«ELSE /* !main */»
 			public void setMainModule(«mainModule.className» aMainModule)
 			{
@@ -313,5 +358,16 @@ class JavaApplicationGenerator implements ApplicationGenerator
 	private def String getJavaMeshClassName(IrModule it)
 	{
 		meshClassName.replace('::', '.')
+	}
+
+	private def getWriteCallContent(Variable v)
+	{
+		val t = v.type
+		switch t
+		{
+			ConnectivityType: '''«v.name»«formatIteratorsAndIndices(t, #["i"])»'''
+			LinearAlgebraType: '''«v.name».getValue(i)'''
+			default: throw new RuntimeException("Unexpected type: " + class.name)
+		}
 	}
 }

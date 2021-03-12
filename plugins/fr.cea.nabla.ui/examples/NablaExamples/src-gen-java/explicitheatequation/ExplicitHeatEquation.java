@@ -10,9 +10,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.stream.IntStream;
 
-import org.iq80.leveldb.DB;
-import org.iq80.leveldb.WriteBatch;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -74,12 +71,6 @@ public final class ExplicitHeatEquation
 			}
 			else
 				maxIterations = 500000000;
-			// Non regression
-			if (o.has("nonRegression"))
-			{
-				final JsonElement valueof_nonRegression = o.get("nonRegression");
-				nonRegression = valueof_nonRegression.getAsJsonPrimitive().getAsString();
-			}
 		}
 	}
 
@@ -89,7 +80,7 @@ public final class ExplicitHeatEquation
 
 	// User options
 	private final Options options;
-	private final FileWriter writer;
+	private final PvdFileWriter2D writer;
 
 	// Global variables
 	protected int lastDump;
@@ -516,18 +507,6 @@ public final class ExplicitHeatEquation
 
 			// Start simulation
 			explicitHeatEquation.simulate();
-
-			// Non regression testing
-			if (explicitHeatEquationOptions.nonRegression != null && explicitHeatEquationOptions.nonRegression.equals("CreateReference"))
-				explicitHeatEquation.createDB("ExplicitHeatEquationDB.ref");
-			if (explicitHeatEquationOptions.nonRegression != null && explicitHeatEquationOptions.nonRegression.equals("CompareToReference"))
-			{
-				explicitHeatEquation.createDB("ExplicitHeatEquationDB.current");
-				if (!LevelDBUtils.compareDB("ExplicitHeatEquationDB.current", "ExplicitHeatEquationDB.ref"))
-					ret = 1;
-				LevelDBUtils.destroyDB("ExplicitHeatEquationDB.current");
-				System.exit(ret);
-			}
 		}
 		else
 		{
@@ -541,52 +520,25 @@ public final class ExplicitHeatEquation
 	{
 		if (!writer.isDisabled())
 		{
-			VtkFileContent content = new VtkFileContent(iteration, t_n, X, mesh.getGeometry().getQuads());
-			content.addCellVariable("Temperature", u_n);
-			writer.writeFile(content);
-			lastDump = n;
+			try
+			{
+				Quad[] quads = mesh.getGeometry().getQuads();
+				writer.startVtpFile(iteration, t_n, X, quads);
+				writer.openNodeData();
+				writer.closeNodeData();
+				writer.openCellData();
+				writer.openCellArray("Temperature", 0);
+				for (int i=0 ; i<nbCells ; ++i)
+					writer.write(u_n[i]);
+				writer.closeCellArray();
+				writer.closeCellData();
+				writer.closeVtpFile();
+				lastDump = n;
+			}
+			catch (java.io.FileNotFoundException e)
+			{
+				System.out.println("* WARNING: no dump of variables. FileNotFoundException: " + e.getMessage());
+			}
 		}
-	}
-
-	private void createDB(String db_name) throws IOException
-	{
-		org.iq80.leveldb.Options levelDBOptions = new org.iq80.leveldb.Options();
-
-		// Destroy if exists
-		factory.destroy(new File(db_name), levelDBOptions);
-
-		// Create data base
-		levelDBOptions.createIfMissing(true);
-		DB db = factory.open(new File(db_name), levelDBOptions);
-
-		WriteBatch batch = db.createWriteBatch();
-		try
-		{
-			batch.put(bytes("lastDump"), LevelDBUtils.serialize(lastDump));
-			batch.put(bytes("n"), LevelDBUtils.serialize(n));
-			batch.put(bytes("vectOne"), LevelDBUtils.serialize(vectOne));
-			batch.put(bytes("deltat"), LevelDBUtils.serialize(deltat));
-			batch.put(bytes("t_n"), LevelDBUtils.serialize(t_n));
-			batch.put(bytes("t_nplus1"), LevelDBUtils.serialize(t_nplus1));
-			batch.put(bytes("t_n0"), LevelDBUtils.serialize(t_n0));
-			batch.put(bytes("X"), LevelDBUtils.serialize(X));
-			batch.put(bytes("Xc"), LevelDBUtils.serialize(Xc));
-			batch.put(bytes("u_n"), LevelDBUtils.serialize(u_n));
-			batch.put(bytes("u_nplus1"), LevelDBUtils.serialize(u_nplus1));
-			batch.put(bytes("V"), LevelDBUtils.serialize(V));
-			batch.put(bytes("D"), LevelDBUtils.serialize(D));
-			batch.put(bytes("faceLength"), LevelDBUtils.serialize(faceLength));
-			batch.put(bytes("faceConductivity"), LevelDBUtils.serialize(faceConductivity));
-			batch.put(bytes("alpha"), LevelDBUtils.serialize(alpha));
-
-			db.write(batch);
-		}
-		finally
-		{
-			// Make sure you close the batch to avoid resource leaks.
-			batch.close();
-		}
-		db.close();
-		System.out.println("Reference database " + db_name + " created.");
 	}
 };

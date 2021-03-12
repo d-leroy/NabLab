@@ -367,7 +367,7 @@ class CppApplicationGenerator extends CppGenerator implements ApplicationGenerat
 			«ENDIF»
 			writer.closeCellData();
 			writer.closeVtpFile();
-			«irRoot.postProcessing.lastDumpVariable.name» = «irRoot.postProcessing.periodReference.name»;
+			«postProcessing.lastDumpVariable.name» = «postProcessing.periodReference.name»;
 			if (useTimer)
 			{
 				ioTimer.stop();
@@ -498,8 +498,8 @@ class CppApplicationGenerator extends CppGenerator implements ApplicationGenerat
 	{
 		switch v
 		{
-			Variable case v.constExpr: '''static constexpr «typeContentProvider.getCppType(v.type)» «v.name» = «expressionContentProvider.getContent(v.defaultValue)»;'''
-			Variable case v.const: '''const «typeContentProvider.getCppType(v.type)» «v.name»;'''
+			case v.constExpr: '''static constexpr «typeContentProvider.getCppType(v.type)» «v.name» = «expressionContentProvider.getContent(v.defaultValue)»;'''
+			case v.const: '''const «typeContentProvider.getCppType(v.type)» «v.name»;'''
 			default: '''«typeContentProvider.getCppType(v.type)» «v.name»;'''
 		}
 	}
