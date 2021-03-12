@@ -23,6 +23,8 @@ public class NablaOptions {
 	public static final OptionKey<List<String>> NABLAPATH = new OptionKey<>(new ArrayList<>(), STRING_LIST_TYPE);
 	@Option(name = "options", help = "Model to run", category = OptionCategory.USER, stability = OptionStability.STABLE)
 	public static final OptionKey<String> OPTIONS = new OptionKey<>("");
-	@Option(name = "extlib", help = "External library", category = OptionCategory.USER, stability = OptionStability.STABLE)
+	@Option(name = "extlib", help = "External libraries (comma-spearated list of paths)", category = OptionCategory.USER, stability = OptionStability.STABLE)
 	public static final OptionKey<OptionMap<String>> LIBS = OptionKey.mapOf(String.class);
+	@Option(name = "mesh", help = "Mesh library", category = OptionCategory.USER, stability = OptionStability.STABLE)
+	public static final OptionKey<String> MESH = new OptionKey<String>("");
 }

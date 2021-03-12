@@ -15,15 +15,15 @@ import fr.cea.nabla.interpreter.runtime.NablaContext;
 import java.util.concurrent.locks.Lock;
 import org.graalvm.polyglot.Value;
 
-@GeneratedBy(NablaMeshCallNode.class)
+@GeneratedBy(NablaNativeCallNode.class)
 @SuppressWarnings("unused")
-public final class NablaMeshCallNodeGen extends NablaMeshCallNode {
+public final class NablaNativeCallNodeGen extends NablaNativeCallNode {
 
     @CompilationFinal private volatile int state_0_;
     @CompilationFinal private ContextReference<NablaContext> nablaLanguageContextReference_;
     @CompilationFinal private CachedData cached_cache;
 
-    private NablaMeshCallNodeGen(String providerName, String memberName, NablaExpressionNode[] args) {
+    private NablaNativeCallNodeGen(String providerName, String memberName, NablaExpressionNode[] args) {
         super(providerName, memberName, args);
     }
 
@@ -108,11 +108,11 @@ public final class NablaMeshCallNodeGen extends NablaMeshCallNode {
         }
     }
 
-    public static NablaMeshCallNode create(String providerName, String memberName, NablaExpressionNode[] args) {
-        return new NablaMeshCallNodeGen(providerName, memberName, args);
+    public static NablaNativeCallNode create(String providerName, String memberName, NablaExpressionNode[] args) {
+        return new NablaNativeCallNodeGen(providerName, memberName, args);
     }
 
-    @GeneratedBy(NablaMeshCallNode.class)
+    @GeneratedBy(NablaNativeCallNode.class)
     private static final class CachedData {
 
         @CompilationFinal Value member_;

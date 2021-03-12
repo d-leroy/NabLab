@@ -657,32 +657,6 @@ final class NablaObjectTypeGen {
                 }
             }
 
-            void removeWriteNewPropertyCached_(Object s2_) {
-                Lock lock = getLock();
-                lock.lock();
-                try {
-                    WriteMemberWriteNewPropertyCachedData prev = null;
-                    WriteMemberWriteNewPropertyCachedData cur = this.writeMember_writeNewPropertyCached_cache;
-                    while (cur != null) {
-                        if (cur == s2_) {
-                            if (prev == null) {
-                                this.writeMember_writeNewPropertyCached_cache = cur.next_;
-                            } else {
-                                prev.next_ = cur.next_;
-                            }
-                            break;
-                        }
-                        prev = cur;
-                        cur = cur.next_;
-                    }
-                    if (this.writeMember_writeNewPropertyCached_cache == null) {
-                        this.state_0_ = this.state_0_ & 0xfffffeff /* remove-state_0 writeNewPropertyCached(DynamicObject, String, Object, Object, Shape, Location, Shape, Location) */;
-                    }
-                } finally {
-                    lock.unlock();
-                }
-            }
-
             void removeWriteExistingPropertyCached_(Object s1_) {
                 Lock lock = getLock();
                 lock.lock();
@@ -703,6 +677,32 @@ final class NablaObjectTypeGen {
                     }
                     if (this.writeMember_writeExistingPropertyCached_cache == null) {
                         this.state_0_ = this.state_0_ & 0xffffff7f /* remove-state_0 writeExistingPropertyCached(DynamicObject, String, Object, String, Shape, Location) */;
+                    }
+                } finally {
+                    lock.unlock();
+                }
+            }
+
+            void removeWriteNewPropertyCached_(Object s2_) {
+                Lock lock = getLock();
+                lock.lock();
+                try {
+                    WriteMemberWriteNewPropertyCachedData prev = null;
+                    WriteMemberWriteNewPropertyCachedData cur = this.writeMember_writeNewPropertyCached_cache;
+                    while (cur != null) {
+                        if (cur == s2_) {
+                            if (prev == null) {
+                                this.writeMember_writeNewPropertyCached_cache = cur.next_;
+                            } else {
+                                prev.next_ = cur.next_;
+                            }
+                            break;
+                        }
+                        prev = cur;
+                        cur = cur.next_;
+                    }
+                    if (this.writeMember_writeNewPropertyCached_cache == null) {
+                        this.state_0_ = this.state_0_ & 0xfffffeff /* remove-state_0 writeNewPropertyCached(DynamicObject, String, Object, Object, Shape, Location, Shape, Location) */;
                     }
                 } finally {
                     lock.unlock();

@@ -17,8 +17,6 @@ class TestMeshWrapper {
 		File file = new File("libcppnabla.so");
 		Source source = Source.newBuilder("llvm", file).build();
 		Value library = polyglot.eval(source);
-//		Value wrapper = library.getMember("jsonInit").execute(
-//				"/home/dleroy/nablab/workspace/NablaExamples/src/iterativeheatequation/IterativeHeatEquation.json\0");
 		Value wrapper = library.getMember("jsonInit").execute("{\n" + 
 				"	\"mesh\":\n" + 
 				"	{\n" + 

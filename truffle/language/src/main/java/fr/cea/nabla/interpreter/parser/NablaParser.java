@@ -33,9 +33,6 @@ public class NablaParser {
 
 	public RootCallTarget parseNabla(NablaLanguage nablaLanguage, Source source) {
 
-		// TODO: include all .n files in resource set, parse source with resource set,
-		// execute 2Ir
-
 		try {
 			return CompilerDirectives.interpreterOnly(() -> {
 				LogManager.shutdown();

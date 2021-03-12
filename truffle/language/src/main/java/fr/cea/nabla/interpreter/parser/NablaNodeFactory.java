@@ -9,20 +9,17 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.xtext.util.Strings;
-import org.graalvm.options.OptionValues;
 
 import com.google.common.collect.Iterators;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.oracle.truffle.api.Truffle;
-import com.oracle.truffle.api.TruffleLanguage.Env;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.source.Source;
 
 import fr.cea.nabla.interpreter.NablaLanguage;
-import fr.cea.nabla.interpreter.NablaOptions;
 import fr.cea.nabla.interpreter.nodes.NablaModuleNode;
 import fr.cea.nabla.interpreter.nodes.NablaNode;
 import fr.cea.nabla.interpreter.nodes.NablaRootNode;
@@ -38,7 +35,7 @@ import fr.cea.nabla.interpreter.nodes.expression.NablaInitializeVariableFromJson
 import fr.cea.nabla.interpreter.nodes.expression.NablaInitializeVariableFromJsonNodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.NablaInt1NodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.NablaInt2NodeGen;
-import fr.cea.nabla.interpreter.nodes.expression.NablaMeshCallNodeGen;
+import fr.cea.nabla.interpreter.nodes.expression.NablaNativeCallNodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.NablaParenthesisNodeGen;
 import fr.cea.nabla.interpreter.nodes.expression.NablaReadArgumentNode;
 import fr.cea.nabla.interpreter.nodes.expression.NablaReadArgumentNodeGen;
@@ -213,14 +210,9 @@ public class NablaNodeFactory {
 	private final NablaWriteVariableNode[] emptyWriteArray = new NablaWriteVariableNode[0];
 	private final NablaInstructionNode[] emptyInstructionArray = new NablaInstructionNode[0];
 
-	private final OptionValues options;
-
 	public NablaNodeFactory(NablaLanguage language, Source source) {
 		this.language = language;
 		this.source = source;
-		final Env env = NablaLanguage.getCurrentContext().getEnv();
-		this.options = env.getOptions();
-		options.get(NablaOptions.LIBS).entrySet().forEach(e -> providerToFilepath.put(e.getKey(), e.getValue()));
 	}
 
 	private Variable collectSizeVariable(Expression expression) {
@@ -421,18 +413,22 @@ public class NablaNodeFactory {
 	}
 
 	private JsonObject jsonFileContent;
+	
+	private String meshClassName;
 
 	public NablaRootNode createModule(IrRoot root, JsonObject jsonFileContent) {
 		assert lexicalScope == null;
 
 		this.jsonFileContent = jsonFileContent;
+		
+		this.meshClassName = root.getMeshClassName();
 
 		lexicalScope = new LexicalScope(lexicalScope);
 
 		moduleFrameDescriptor = lexicalScope.descriptor;
 
 		final String rootName = root.getName();
-
+		
 		final NablaWriteVariableNode[] connectivitySizeNodes;
 		connectivitySizeNodes = root.getConnectivities().stream().filter(c -> c.isMultiple()).map(c -> {
 			final String connectivityName = c.getName();
@@ -442,7 +438,7 @@ public class NablaNodeFactory {
 			final String ast = "get" + (c.getInTypes().isEmpty() ? "" : "Max") + "Nb"
 					+ Strings.toFirstUpper(connectivityName);
 			final NablaExpressionNode nbNodes = CreateNablaValueNodeGen.create(int.class,
-					NablaMeshCallNodeGen.create("CartesianMesh2D", ast, emptyExpressionArray));
+					NablaNativeCallNodeGen.create(meshClassName, ast, emptyExpressionArray));
 			final NablaWriteVariableNode result = getWriteVariableNode(frameSlot, nbNodes);
 			setSourceSection(c, result);
 			return result;
@@ -476,7 +472,7 @@ public class NablaNodeFactory {
 				FrameSlotKind.Illegal);
 		lexicalScope.locals.put(nodeCoordName, coordinatesSlot);
 		final NablaExpressionNode nodes = CreateNablaValueNodeGen.create(double[][].class,
-				NablaMeshCallNodeGen.create("CartesianMesh2D", "getNodes", emptyExpressionArray));
+				NablaNativeCallNodeGen.create(meshClassName, "getNodes", emptyExpressionArray));
 		final NablaWriteVariableNode nodeCoords = getWriteVariableNode(coordinatesSlot, nodes);
 
 		final List<NablaWriteVariableNode> variableDefinitionList = root.getVariables().stream()
@@ -712,8 +708,6 @@ public class NablaNodeFactory {
 		return expressionNode;
 	}
 
-	private final Map<String, String> providerToFilepath = new HashMap<>();
-
 	private String getMangledTypeName(IrType irType) {
 		final int dimension = IrTypeExtensions.getDimension(irType);
 		switch (irType.eClass().getClassifierID()) {
@@ -749,7 +743,7 @@ public class NablaNodeFactory {
 		final NablaExpressionNode[] args = functionCall.getArgs().stream().map(e -> createNablaExpressionNode(e))
 				.collect(Collectors.toList()).toArray(emptyExpressionArray);
 
-		return CreateNablaValueNodeGen.create(javaReturnType, NablaMeshCallNodeGen.create(providerName, ast, args));
+		return CreateNablaValueNodeGen.create(javaReturnType, NablaNativeCallNodeGen.create(providerName, ast, args));
 	}
 
 	private NablaExpressionNode createNablaExternalFunctionCallNode(FunctionCall functionCall,
@@ -781,7 +775,7 @@ public class NablaNodeFactory {
 				.map(s -> lexicalScope.locals.get(s)).map(s -> getReadVariableNode(s)).collect(Collectors.toList())
 				.toArray(emptyExpressionArray);
 		return CreateNablaValueNodeGen.create(typeClass,
-				NablaMeshCallNodeGen.create("CartesianMesh2D", getterName, args));
+				NablaNativeCallNodeGen.create(meshClassName, getterName, args));
 	}
 
 	private NablaExpressionNode createNablaBuiltinOrExternalFunctionCallNode(FunctionCall functionCall) {

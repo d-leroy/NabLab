@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -87,15 +89,18 @@ public final class NablaContext {
 	}
 	
 	public void initializeNativeExtensions() {
-		final Set<Entry<String, String>> extensions = env.getOptions().get(NablaOptions.LIBS).entrySet();
-
+		final Map<String, String> extensions = new HashMap<>();
+		env.getOptions().get(NablaOptions.LIBS).entrySet().stream().forEach(e -> extensions.put(e.getKey(), e.getValue()));
+		// TODO dynamicize
+		extensions.put("CartesianMesh2D", env.getOptions().get(NablaOptions.MESH));
+		
 		final JsonObject jsonOptions = getJsonOptions();
 
 		this.nativeLibraries = new Value[extensions.size()];
 		this.libraryProviders = new String[extensions.size()];
 		final int[] iPtr = new int[] { 0 };
 
-		extensions.forEach(extension -> {
+		extensions.entrySet().forEach(extension -> {
 			final String extensionProvider = extension.getKey();
 			final String pathToNativeLibrary = extension.getValue();
 			try {
@@ -109,7 +114,11 @@ public final class NablaContext {
 					if (jsonOptions == null) {
 						jsonContent = "\0";
 					} else {
-						jsonContent = jsonOptions.get(extensionProvider) + "\0";
+						if (extensionProvider.equals("CartesianMesh2D")) {
+							jsonContent = jsonOptions.get("mesh") + "\0";
+						} else {
+							jsonContent = jsonOptions.get(extensionProvider) + "\0";
+						}
 					}
 					this.libraryProviders[iPtr[0]] = extensionProvider;
 					this.nativeLibraries[iPtr[0]] = jsonInit.execute(jsonContent);
@@ -123,30 +132,6 @@ public final class NablaContext {
 				iPtr[0]++;
 			}
 		});
-
-//		final OptionValues options = env.getOptions();
-//		String jsonOptionsString = options.get(NablaOptions.OPTIONS);
-//		String pathToMeshLibrary = options.get(NablaOptions.MESH_LIB);
-//		if (jsonOptionsString != null && !jsonOptionsString.isEmpty()) {
-//			final Gson gson = new Gson();
-//			final JsonObject jsonOptions = gson.fromJson(jsonOptionsString, JsonObject.class);
-//			final String jsonContent = jsonOptions.toString() + "\0";
-//			
-//			try {
-//				final Value llvmBindings = Context.getCurrent().getBindings("llvm");
-//				final org.graalvm.polyglot.Source source = org.graalvm.polyglot.Source.newBuilder("llvm", new File(pathToMeshLibrary)).internal(true).build();
-//				Context.getCurrent().eval(source);
-//				if (llvmBindings.hasMember("MeshWrapper_jsonInit")) {
-//					final Value jsonInit = llvmBindings.getMember("MeshWrapper_jsonInit");
-//					this.meshWrapper = jsonInit.execute(jsonContent);
-//				} else {
-//					throw new IllegalArgumentException(
-//							"Library " + pathToMeshLibrary + " is missing a \"MeshWrapper_jsonInit(const void *value)\" function.");
-//				}
-//			} catch (IOException e) {
-//				CompilerDirectives.shouldNotReachHere(e);
-//			}
-//		}
 	}
 
 	public Env getEnv() {
