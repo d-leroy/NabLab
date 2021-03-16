@@ -75,10 +75,9 @@ class NablaRunner {
 
 		val name = ngenPath.substring(ngenPath.lastIndexOf(File::separator) + 1)
 		
-		Thread.currentThread.contextClassLoader = engine.class.classLoader
-
 		consoleFactory.openConsole
 		val thread = new Thread([
+			Thread.currentThread.contextClassLoader = engine.class.classLoader
 			consoleFactory.clearAndActivateConsole
 			consoleFactory.printConsole(MessageType.Start, 'Starting execution: ' + name)
 			val t0 = System::nanoTime
@@ -90,6 +89,7 @@ class NablaRunner {
 		])
 		
 		thread.start
+		
 	}
 	
 	private def double doGraal(File ngenFile, String wd, String nPath, String jsonPath, Iterable<String> moniloggers, String pythonExecPath) {
