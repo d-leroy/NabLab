@@ -35,20 +35,7 @@ class NablaRunner {
 	@Inject Provider<XtextResourceSet> resourceSetProvider
 	@Inject NabLabConsoleFactory consoleFactory
 	
-	val Engine engine = Engine.newBuilder() //
-				.allowExperimentalOptions(true) //
-//				.option("engine.TraceCompilation", "true")
-//				.option("engine.TraceNodeExpansion", "true")
-//				.option("engine.TraceCompilationDetails", "true")
-//				.option("engine.TraceAssumptions", "true")
-//				.option("engine.TraceTransferToInterpreter", "true")
-//				.option("engine.OSRCompilationThreshold", "2")
-//				.option("engine.CompileImmediately", "true")
-//				.option("engine.CompilationFailureAction", "Print")
-//				.option("engine.TraceInlining", "true")
-//				.option("engine.TraceInliningDetails", "true")
-//				.option("engine.TracePerformanceWarnings", "all")
-				.build()
+	val Engine engine = Engine.newBuilder().build()
 
 	package def launch(ILaunchConfiguration configuration) {
 		val project = NablaLaunchConstants::getProject(configuration)
