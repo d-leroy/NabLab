@@ -22,6 +22,7 @@ class NablaLaunchConstants {
 	package static val NGEN_FILE_LOCATION = 'Nablagen File location'
 	package static val N_FILE_LOCATION = 'Nabla File location'
 	package static val JSON_FILE_LOCATION = 'Json file location'
+	package static val PYTHON_EXEC_LOCATION = 'Python executable location'
 
 	package static def getProject(ILaunchConfiguration configuration) {
 		val projectName = configuration.getAttribute(NablaLaunchConstants::PROJECT, '')

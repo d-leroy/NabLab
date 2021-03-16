@@ -5,13 +5,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.eclipse.xtext.util.Strings;
 import org.graalvm.options.OptionKey;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
@@ -50,6 +54,7 @@ public final class NablaContext {
 	private Value[] nativeLibraries;
 	@CompilationFinal(dimensions = 1)
 	private String[] libraryProviders;
+	private final CartesianMesh2DWrapper meshWrapper = new CartesianMesh2DWrapper();
 
 	private final Assumption contextActive = Truffle.getRuntime().createAssumption("context active");
 
@@ -88,11 +93,32 @@ public final class NablaContext {
 		return null;
 	}
 	
+	public void setProvider(String providerName, Value providerValue) {
+		final int length = this.nativeLibraries.length;
+		final Value[] nativeLibraries = new Value[length + 1];
+		final String[] libraryProviders = new String[length + 1];
+		System.arraycopy(this.nativeLibraries, 0, nativeLibraries, 0, length);
+		System.arraycopy(this.libraryProviders, 0, libraryProviders, 0, length);
+		this.nativeLibraries = nativeLibraries;
+		this.libraryProviders = libraryProviders;
+		this.nativeLibraries[length] = providerValue;
+		this.libraryProviders[length] = providerName;
+	}
+	
+	public void initializeMesh() {
+		final JsonObject jsonOptions = getJsonOptions().getAsJsonObject("mesh");
+		meshWrapper.initialize(jsonOptions);
+	}
+	
+	public CartesianMesh2DWrapper getMeshWrapper() {
+		return meshWrapper;
+	}
+	
 	public void initializeNativeExtensions() {
 		final Map<String, String> extensions = new HashMap<>();
-		env.getOptions().get(NablaOptions.LIBS).entrySet().stream().forEach(e -> extensions.put(e.getKey(), e.getValue()));
+		env.getOptions().get(NablaOptions.NAT_LIBS).entrySet().stream().forEach(e -> extensions.put(e.getKey(), e.getValue()));
 		// TODO dynamicize
-		extensions.put("CartesianMesh2D", env.getOptions().get(NablaOptions.MESH));
+//		extensions.put("CartesianMesh2D", env.getOptions().get(NablaOptions.MESH));
 		
 		final JsonObject jsonOptions = getJsonOptions();
 
@@ -174,7 +200,11 @@ public final class NablaContext {
 		return allocationReporter;
 	}
 
-	public boolean getOption(OptionKey<Boolean> key) {
+	public boolean getBooleanOption(OptionKey<Boolean> key) {
+		return this.getEnv().getOptions().get(key);
+	}
+
+	public String getStringOption(OptionKey<String> key) {
 		return this.getEnv().getOptions().get(key);
 	}
 

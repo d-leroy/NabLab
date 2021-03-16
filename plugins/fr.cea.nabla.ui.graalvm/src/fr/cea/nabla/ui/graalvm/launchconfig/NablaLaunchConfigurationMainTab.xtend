@@ -40,6 +40,7 @@ class NablaLaunchConfigurationMainTab extends AbstractLaunchConfigurationTab
 	Text fTxtNGenFile
 	Text fTxtOptionsFile
 	Text fTxtMoniloggerFile
+	Text fTxtPythonExec
 
 	override createControl(Composite parent) 
 	{
@@ -97,6 +98,19 @@ class NablaLaunchConfigurationMainTab extends AbstractLaunchConfigurationTab
 		val btnBrowseMonilogger = new Button(grpMonilogger, SWT::NONE)
 		btnBrowseMonilogger.addSelectionListener(new MoniloggerFileSelectionAdapter(parent, fTxtMoniloggerFile))
 		btnBrowseMonilogger.setText("Browse...")
+		
+		val grpPythonExec = new Group(topControl, SWT.NONE)
+		grpPythonExec.setLayout(new GridLayout(2, false))
+		grpPythonExec.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1))
+		grpPythonExec.setText("Python Executable")
+
+		fTxtPythonExec = new Text(grpPythonExec, SWT.BORDER)
+		fTxtPythonExec.addModifyListener([e | if (!fDisableUpdate) updateLaunchConfigurationDialog])
+		fTxtPythonExec.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1))
+
+//		val btnBrowsePythonExec = new Button(grpPythonExec, SWT::NONE)
+//		btnBrowsePythonExec.addSelectionListener(new MoniloggerFileSelectionAdapter(parent, fTxtPythonExec))
+//		btnBrowsePythonExec.setText("Browse...")
 
 		setControl(topControl)
 	}
@@ -114,6 +128,7 @@ class NablaLaunchConfigurationMainTab extends AbstractLaunchConfigurationTab
 		fTxtNGenFile.text = ''
 		fTxtOptionsFile.text = ''
 		fTxtMoniloggerFile.text = ''
+		fTxtPythonExec.text = ''
 
 		try
 		{
@@ -122,6 +137,7 @@ class NablaLaunchConfigurationMainTab extends AbstractLaunchConfigurationTab
 			fTxtOptionsFile.text = configuration.getAttribute(NablaLaunchConstants::JSON_FILE_LOCATION, '')
 			val moniloggers = configuration.getAttribute(NablaLaunchConstants::MONILOGGER_FILES_LOCATIONS, newArrayList)
 			fTxtMoniloggerFile.text = if (moniloggers.empty) '' else moniloggers.head
+			fTxtPythonExec.text = configuration.getAttribute(NablaLaunchConstants::PYTHON_EXEC_LOCATION, '')
 		}
 		catch (CoreException e)
 		{
@@ -135,6 +151,7 @@ class NablaLaunchConfigurationMainTab extends AbstractLaunchConfigurationTab
 		configuration.setAttribute(NablaLaunchConstants::NGEN_FILE_LOCATION, fTxtNGenFile.text)
 		configuration.setAttribute(NablaLaunchConstants::JSON_FILE_LOCATION, fTxtOptionsFile.text)
 		configuration.setAttribute(NablaLaunchConstants::MONILOGGER_FILES_LOCATIONS, newArrayList(fTxtMoniloggerFile.text))
+		configuration.setAttribute(NablaLaunchConstants::PYTHON_EXEC_LOCATION, fTxtPythonExec.text)
 	}
 
 	override setDefaults(ILaunchConfigurationWorkingCopy configuration)
@@ -143,6 +160,7 @@ class NablaLaunchConfigurationMainTab extends AbstractLaunchConfigurationTab
 		configuration.setAttribute(NablaLaunchConstants::NGEN_FILE_LOCATION, '')
 		configuration.setAttribute(NablaLaunchConstants::JSON_FILE_LOCATION, '')
 		configuration.setAttribute(NablaLaunchConstants::MONILOGGER_FILES_LOCATIONS, newArrayList)
+		configuration.setAttribute(NablaLaunchConstants::PYTHON_EXEC_LOCATION, '')
 	}
 }
 

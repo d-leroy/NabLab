@@ -20,10 +20,6 @@ public class CartesianMesh2DWrapper {
 
 	@CompilationFinal
 	private Value meshWrapper;
-	@CompilationFinal
-	private Value meshInstance;
-	@CompilationFinal
-	private CartesianMesh2D mesh;
 
 	@TruffleBoundary
 	public CartesianMesh2DWrapper() {
@@ -31,26 +27,12 @@ public class CartesianMesh2DWrapper {
 
 	@TruffleBoundary
 	public void initialize(JsonObject jsonMesh) {
-		assert (this.meshInstance == null);
 		assert (jsonMesh != null);
 		CompilerDirectives.transferToInterpreterAndInvalidate();
 		Gson gson = new Gson();
-		CartesianMesh2DFactory f = gson.fromJson(jsonMesh, CartesianMesh2DFactory.class);
-		this.mesh = f.create();
+		final CartesianMesh2DFactory f = gson.fromJson(jsonMesh, CartesianMesh2DFactory.class);
+		final CartesianMesh2D mesh = f.create();
 		this.meshWrapper = Context.getCurrent().asValue(mesh);
-//		final Context polyglot = Context.getCurrent();
-//		final File file = new File(pathToMeshLibrary);
-//		try {
-//			meshWrapper = polyglot.eval(Source.newBuilder("llvm", file).build());
-//			meshInstance = meshWrapper.getMember("get_wrapper").execute(nbXQuads, nbYQuads, xSize, ySize);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			throw NablaInternalError.shouldNotReachHere();
-//		}
-	}
-
-	public Value getMeshInstance() {
-		return meshInstance;
 	}
 
 	public Value getMeshWrapper() {
@@ -59,13 +41,19 @@ public class CartesianMesh2DWrapper {
 
 	// FIXME ugly getNb
 	public Value connectivityGetter(String connectivityName) {
-		final String getterName;
 		if (connectivityName.equals("nodes") || connectivityName.equals("cells")) {
-			getterName = "getNb" + Strings.toFirstUpper(connectivityName);
+			return meshWrapper.getMember("getNb" + Strings.toFirstUpper(connectivityName));
+		} else if (connectivityName.startsWith("Max")) {
+			return Context.getCurrent().asValue(this).getMember("get" + connectivityName);
+		} else if (connectivityName.startsWith("get")) {
+			if (connectivityName.equals("getNodes")) {
+				return Context.getCurrent().asValue(this).getMember(connectivityName);
+			} else {
+				return meshWrapper.getMember(connectivityName);
+			}
 		} else {
-			getterName = "get" + Strings.toFirstUpper(connectivityName);
+			return meshWrapper.getMember("get" + Strings.toFirstUpper(connectivityName));
 		}
-		return meshWrapper.getMember(getterName);
 	}
 
 //	@TruffleBoundary
@@ -168,37 +156,61 @@ public class CartesianMesh2DWrapper {
 //		return _switchResult;
 //	}
 
-//	@TruffleBoundary
-//	public int getMaxNbElems(final String connectivityName) {
-//		int _switchResult = (int) 0;
-//		if (connectivityName != null) {
-//			switch (connectivityName) {
-//			case "nodesOfCell":
-//				_switchResult = CartesianMesh2D.MaxNbNodesOfCell;
-//				break;
-//			case "nodesOfFace":
-//				_switchResult = CartesianMesh2D.MaxNbNodesOfFace;
-//				break;
-//			case "cellsOfNode":
-//				_switchResult = CartesianMesh2D.MaxNbCellsOfNode;
-//				break;
-//			case "cellsOfFace":
-//				_switchResult = CartesianMesh2D.MaxNbCellsOfFace;
-//				break;
-//			case "neighbourCells":
-//				_switchResult = CartesianMesh2D.MaxNbNeighbourCells;
-//				break;
-//			case "facesOfCell":
-//				_switchResult = CartesianMesh2D.MaxNbFacesOfCell;
-//				break;
-//			default:
-//				throw new RuntimeException("Not implemented yet");
-//			}
-//		} else {
-//			throw new RuntimeException("Not implemented yet");
-//		}
-//		return _switchResult;
-//	}
+	public int getMaxNbNodesOfCell() {
+		return CartesianMesh2D.MaxNbNodesOfCell;
+	}
+
+	public int getMaxNbNodesOfFace() {
+		return CartesianMesh2D.MaxNbNodesOfFace;
+	}
+
+	public int getMaxNbCellsOfNode() {
+		return CartesianMesh2D.MaxNbCellsOfNode;
+	}
+
+	public int getMaxNbCellsOfFace() {
+		return CartesianMesh2D.MaxNbCellsOfFace;
+	}
+
+	public int getMaxNbNeighbourCells() {
+		return CartesianMesh2D.MaxNbNeighbourCells;
+	}
+
+	public int getMaxNbFacesOfCell() {
+		return CartesianMesh2D.MaxNbFacesOfCell;
+	}
+	
+	@TruffleBoundary
+	public int getMaxNbElems(final String connectivityName) {
+		int _switchResult = (int) 0;
+		if (connectivityName != null) {
+			switch (connectivityName) {
+			case "MaxNbNodesOfCell":
+				_switchResult = CartesianMesh2D.MaxNbNodesOfCell;
+				break;
+			case "MaxNbNodesOfFace":
+				_switchResult = CartesianMesh2D.MaxNbNodesOfFace;
+				break;
+			case "MaxNbCellsOfNode":
+				_switchResult = CartesianMesh2D.MaxNbCellsOfNode;
+				break;
+			case "MaxNbCellsOfFace":
+				_switchResult = CartesianMesh2D.MaxNbCellsOfFace;
+				break;
+			case "MaxNbNeighbourCells":
+				_switchResult = CartesianMesh2D.MaxNbNeighbourCells;
+				break;
+			case "MaxNbFacesOfCell":
+				_switchResult = CartesianMesh2D.MaxNbFacesOfCell;
+				break;
+			default:
+				throw new RuntimeException("Not implemented yet");
+			}
+		} else {
+			throw new RuntimeException("Not implemented yet");
+		}
+		return _switchResult;
+	}
 
 //	@TruffleBoundary
 //	public Quad[] getQuads() {

@@ -66,35 +66,6 @@ class NablaShortcut implements ILaunchShortcut {
 					configuration.setAttribute(NablaLaunchConstants.N_FILE_LOCATION, file.projectRelativePath.toPortableString.replace(".ngen", ".n"))
 					configuration.setAttribute(NablaLaunchConstants.JSON_FILE_LOCATION, file.projectRelativePath.toPortableString.replace(".ngen", ".json"))
 					
-//					configuration.setAttribute(NablaLaunchConstants.SOURCE_FILE_LOCATION, file.fullPath.makeRelative.toPortableString)
-//					
-//					val relativePath = file.fullPath.makeRelative.removeFileExtension
-//					val rawPath = file.rawLocation.makeAbsolute.removeFileExtension
-//					
-//					val rawGenPath = rawPath.addFileExtension("nablagen")
-//					if (rawGenPath.toFile.exists) {
-//						configuration.setAttribute(NablaLaunchConstants.GEN_FILE_LOCATION, relativePath.addFileExtension("nablagen").toPortableString)
-//					} else {
-//						canLaunch = false
-//						errors.add("\t- nablagen file can't be found")
-//					}
-//
-//					val rawOptionsPath = rawPath.addFileExtension("json")
-//					if (rawOptionsPath.toFile.exists) {
-//						configuration.setAttribute(NablaLaunchConstants.OPTIONS_FILE_LOCATION, relativePath.addFileExtension("json").makeRelative.toPortableString)
-//					} else {
-//						canLaunch = false
-//						errors.add("\t- options file can't be found")
-//					}
-//
-//					val graalvmHome = InstanceScope.INSTANCE.getNode('fr.cea.nabla.ui').get('graalvm.home', '')
-//					if (graalvmHome.blank) {
-//						canLaunch = false
-//						errors.add("\t- GraalVM home is not configured")
-//					} else {
-//						configuration.setAttribute(NablaLaunchConstants::GRAAL_HOME_LOCATION, graalvmHome)
-//					}
-
 					// save and return new configuration
 					configuration.doSave
 

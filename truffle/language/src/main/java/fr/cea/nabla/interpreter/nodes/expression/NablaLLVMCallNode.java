@@ -13,14 +13,14 @@ import com.oracle.truffle.api.nodes.ExplodeLoop;
 import fr.cea.nabla.interpreter.NablaLanguage;
 import fr.cea.nabla.interpreter.runtime.NablaContext;
 
-public abstract class NablaNativeCallNode extends NablaExpressionNode {
+public abstract class NablaLLVMCallNode extends NablaExpressionNode {
 
 	@Children
 	private final NablaExpressionNode[] args;
 	protected final String providerName;
 	private final String memberName;
 
-	public NablaNativeCallNode(String providerName, String memberName, NablaExpressionNode[] args) {
+	public NablaLLVMCallNode(String providerName, String memberName, NablaExpressionNode[] args) {
 		this.providerName = providerName;
 		this.memberName = memberName;
 		this.args = args;

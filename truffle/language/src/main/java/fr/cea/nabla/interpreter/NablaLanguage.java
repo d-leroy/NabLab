@@ -56,6 +56,7 @@ public final class NablaLanguage extends TruffleLanguage<NablaContext> {
 	
 	@Override
 	protected void initializeContext(NablaContext context) throws Exception {
+		context.initializeMesh();
 		context.initializeNativeExtensions();
 	}
 	

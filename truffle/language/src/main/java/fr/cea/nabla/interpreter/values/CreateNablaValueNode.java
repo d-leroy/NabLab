@@ -28,9 +28,24 @@ public abstract class CreateNablaValueNode extends NablaExpressionNode {
 		return v;
 	}
 
+	@Specialization(guards = { "value.isHostObject()", "expectsDouble1()" })
+	protected Object doHostObjectValueDouble1(Value value) {
+		return new NV1RealJava(value.asHostObject());
+	}
+
 	@Specialization(guards = { "value.isHostObject()", "expectsDouble2()" })
-	protected Object doHostObjectValue(Value value) {
+	protected Object doHostObjectValueDouble2(Value value) {
 		return new NV2Real(value.asHostObject());
+	}
+	
+	@Specialization(guards = { "value.isHostObject()", "expectsInt1()" })
+	protected Object doHostObjectValueInt1(Value value) {
+		return new NV1IntJava(value.asHostObject());
+	}
+	
+	@Specialization(guards = { "value.isHostObject()", "expectsInt2()" })
+	protected Object doHostObjectValueInt2(Value value) {
+		return new NV2Int(value.asHostObject());
 	}
 	
 	@Specialization(guards = "env.isHostObject(value)")
@@ -120,6 +135,10 @@ public abstract class CreateNablaValueNode extends NablaExpressionNode {
 	
 	protected boolean expectsInt1() {
 		return expectedType.equals(int[].class);
+	}
+	
+	protected boolean expectsInt2() {
+		return expectedType.equals(int[][].class);
 	}
 	
 	protected boolean expectsDouble1() {

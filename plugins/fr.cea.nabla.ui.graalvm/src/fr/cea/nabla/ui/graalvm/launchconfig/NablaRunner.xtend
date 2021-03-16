@@ -10,8 +10,10 @@
 package fr.cea.nabla.ui.graalvm.launchconfig
 
 import com.google.inject.Inject
+import com.google.inject.Provider
 import com.google.inject.Singleton
 import fr.cea.nabla.generator.NablaGeneratorMessageDispatcher.MessageType
+import fr.cea.nabla.nablagen.NablagenApplication
 import fr.cea.nabla.ui.NabLabConsoleFactory
 import fr.cea.nabla.ui.NabLabConsoleHandler
 import java.io.File
@@ -19,6 +21,10 @@ import java.util.Map
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.Path
 import org.eclipse.debug.core.ILaunchConfiguration
+import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.xtext.resource.XtextResource
+import org.eclipse.xtext.resource.XtextResourceSet
 import org.gemoc.monilog.api.MoniLogLibraryLocator
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Engine
@@ -26,9 +32,9 @@ import org.graalvm.polyglot.Source
 
 @Singleton
 class NablaRunner {
-
+	@Inject Provider<XtextResourceSet> resourceSetProvider
 	@Inject NabLabConsoleFactory consoleFactory
-
+	
 	val Engine engine = Engine.newBuilder() //
 				.allowExperimentalOptions(true) //
 //				.option("engine.TraceCompilation", "true")
@@ -46,11 +52,34 @@ class NablaRunner {
 
 	package def launch(ILaunchConfiguration configuration) {
 		val project = NablaLaunchConstants::getProject(configuration)
-		val ngenPath = NablaLaunchConstants::getFile(project, configuration, NablaLaunchConstants.NGEN_FILE_LOCATION).rawLocation.toString
-		val nPath = NablaLaunchConstants::getFile(project, configuration, NablaLaunchConstants.N_FILE_LOCATION).rawLocation.toString
+		val ngenFile = NablaLaunchConstants::getFile(project, configuration, NablaLaunchConstants.NGEN_FILE_LOCATION)
+		val ngenPath = ngenFile.rawLocation.toString
+		val nPath = newArrayList(NablaLaunchConstants::getFile(project, configuration, NablaLaunchConstants.N_FILE_LOCATION).rawLocation.toString)
 		val jsonPath = NablaLaunchConstants::getFile(project, configuration, NablaLaunchConstants.JSON_FILE_LOCATION).rawLocation.toString
+		val pythonExecPath = configuration.getAttribute(NablaLaunchConstants.PYTHON_EXEC_LOCATION, '')
+		val wsLocation = "file:" + ResourcesPlugin.workspace.root.location
+
+		if (ngenFile === null || !ngenFile.exists) throw new RuntimeException("Invalid file: " + ngenFile.fullPath)
+		val plaftormUri = URI::createPlatformResourceURI(ngenFile.project.name + '/' + ngenFile.projectRelativePath, true)
+		val resourceSet = resourceSetProvider.get
+		resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE)
+		val uriMap = resourceSet.URIConverter.URIMap
+		uriMap.put(URI::createURI('platform:/resource/fr.cea.nabla/'), URI::createURI('platform:/plugin/fr.cea.nabla/'))
+		val emfResource = resourceSet.createResource(plaftormUri)
+		emfResource.load(null)
+		EcoreUtil::resolveAll(resourceSet)
+
+		val ngenApp = emfResource.contents.filter(NablagenApplication).head
+		val configs = ngenApp.targets.map[t|t.extensionConfigs].flatten
 		
-		val ngenFile = new File(ngenPath)
+		configs.forEach[e|
+			val ext = e.extension
+			val prov = e.provider
+			val extensionWSRelativePath = ext.eResource.URI.toPlatformString(true)
+			val providerWSRelativePath = prov.eResource.URI.toPlatformString(true)
+			nPath += ResourcesPlugin.workspace.root.findFilesForLocationURI(new java.net.URI(wsLocation + extensionWSRelativePath)).get(0).rawLocation.toString
+			nPath += ResourcesPlugin.workspace.root.findFilesForLocationURI(new java.net.URI(wsLocation + providerWSRelativePath)).get(0).rawLocation.toString
+		]
 		
 		consoleFactory.printConsole(MessageType.Start, "Starting interpretation process for: " + ngenFile.name)
 
@@ -67,7 +96,7 @@ class NablaRunner {
 			consoleFactory.printConsole(MessageType.Start, 'Starting execution: ' + name)
 			val t0 = System::nanoTime
 			
-			doGraal(ngenFile, nPath, jsonPath, moniloggers)
+			doGraal(new File(ngenPath), wsLocation, nPath.reduce[s1, s2| s1 + ':' + s2], jsonPath, moniloggers, pythonExecPath)
 			
 			val t = (System::nanoTime - t0) * 0.000000001
 			consoleFactory.printConsole(MessageType.End, 'End of execution: ' + name + ' (' + t + 's)')
@@ -76,7 +105,7 @@ class NablaRunner {
 		thread.start
 	}
 	
-	private def double doGraal(File ngenFile, String nPath, String jsonPath, Iterable<String> moniloggers) {
+	private def double doGraal(File ngenFile, String wd, String nPath, String jsonPath, Iterable<String> moniloggers, String pythonExecPath) {
 		
 		val Map<String, String> optionsMap = newHashMap
 		
@@ -86,8 +115,7 @@ class NablaRunner {
 					+ ", " + urls.reduce[ s1, s2 | s1 + ', ' + s2 ].get
 			
 			optionsMap.put("monilogger.files", moniloggerFiles)
-			// TODO
-			optionsMap.put("python.Executable", "/home/dleroy/venv-graalpython/bin/graalpython")
+			optionsMap.put("python.Executable", pythonExecPath)
 			optionsMap.put("python.ForceImportSite", "true")
 		}
 		
@@ -99,10 +127,9 @@ class NablaRunner {
 		
 		try (val context = Context.newBuilder().engine(engine) //
 				.allowAllAccess(true)
+				.option("nabla.wd", wd)
 				.option("nabla.np", nPath)
 				.option("nabla.options", jsonPath)
-				// TODO
-				.option("nabla.mesh", "/home/dleroy/git/NabLab/plugins/fr.cea.nabla.cpplib/src/libcppnabla.so")
 				.options(optionsMap)
 				.logHandler(new NabLabConsoleHandler(consoleFactory))
 				.build()
