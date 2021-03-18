@@ -27,6 +27,8 @@ import org.eclipse.swt.widgets.Group
 import org.eclipse.swt.widgets.Text
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog
 import org.eclipse.ui.model.WorkbenchLabelProvider
+import fr.cea.nabla.ui.launchconfig.ProjectContentProvider
+import fr.cea.nabla.ui.launchconfig.NablagenProjectSelectionAdapter
 
 class NablaLaunchConfigurationMainTab extends AbstractLaunchConfigurationTab
 {
@@ -36,6 +38,7 @@ class NablaLaunchConfigurationMainTab extends AbstractLaunchConfigurationTab
 	public static val MoniloggerFileExtension = 'mnlg'
 	boolean fDisableUpdate = false
 
+	Text fTxtProject
 	Text fTxtNFile
 	Text fTxtNGenFile
 	Text fTxtOptionsFile
@@ -46,6 +49,19 @@ class NablaLaunchConfigurationMainTab extends AbstractLaunchConfigurationTab
 	{
 		val topControl = new Composite(parent, SWT.NONE)
 		topControl.setLayout(new GridLayout(1, false))
+
+		val grpProject = new Group(topControl, SWT.NONE)
+		grpProject.setLayout(new GridLayout(2, false))
+		grpProject.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1))
+		grpProject.setText("Project")
+
+		fTxtProject = new Text(grpProject, SWT.BORDER)
+		fTxtProject.addModifyListener([e | if (!fDisableUpdate) updateLaunchConfigurationDialog])
+		fTxtProject.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1))
+		
+		val fBtnBrowseProject = new Button(grpProject, SWT.NONE)
+		fBtnBrowseProject.addSelectionListener(new NablagenProjectSelectionAdapter(parent, fTxtProject))
+		fBtnBrowseProject.setText("Browse...");
 
 		val grpSource = new Group(topControl, SWT.NONE)
 		grpSource.setLayout(new GridLayout(2, false))
@@ -132,6 +148,7 @@ class NablaLaunchConfigurationMainTab extends AbstractLaunchConfigurationTab
 
 		try
 		{
+			fTxtProject.text = configuration.getAttribute(NablaLaunchConstants::PROJECT, '')
 			fTxtNFile.text = configuration.getAttribute(NablaLaunchConstants::N_FILE_LOCATION, '')
 			fTxtNGenFile.text = configuration.getAttribute(NablaLaunchConstants::NGEN_FILE_LOCATION, '')
 			fTxtOptionsFile.text = configuration.getAttribute(NablaLaunchConstants::JSON_FILE_LOCATION, '')
@@ -147,6 +164,7 @@ class NablaLaunchConfigurationMainTab extends AbstractLaunchConfigurationTab
 
 	override performApply(ILaunchConfigurationWorkingCopy configuration)
 	{
+		configuration.setAttribute(NablaLaunchConstants::PROJECT, fTxtProject.text)
 		configuration.setAttribute(NablaLaunchConstants::N_FILE_LOCATION, fTxtNFile.text)
 		configuration.setAttribute(NablaLaunchConstants::NGEN_FILE_LOCATION, fTxtNGenFile.text)
 		configuration.setAttribute(NablaLaunchConstants::JSON_FILE_LOCATION, fTxtOptionsFile.text)
@@ -156,6 +174,7 @@ class NablaLaunchConfigurationMainTab extends AbstractLaunchConfigurationTab
 
 	override setDefaults(ILaunchConfigurationWorkingCopy configuration)
 	{
+		configuration.setAttribute(NablaLaunchConstants::PROJECT, '')
 		configuration.setAttribute(NablaLaunchConstants::N_FILE_LOCATION, '')
 		configuration.setAttribute(NablaLaunchConstants::NGEN_FILE_LOCATION, '')
 		configuration.setAttribute(NablaLaunchConstants::JSON_FILE_LOCATION, '')

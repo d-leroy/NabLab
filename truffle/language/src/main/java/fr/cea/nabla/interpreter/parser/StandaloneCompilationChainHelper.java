@@ -13,7 +13,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -32,19 +31,17 @@ import org.eclipse.xtext.xbase.lib.Extension;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
+import com.oracle.truffle.api.source.Source;
 
 import fr.cea.nabla.NablaStandaloneSetup;
 import fr.cea.nabla.NablagenStandaloneSetup;
 import fr.cea.nabla.generator.ir.IrRootBuilder;
 import fr.cea.nabla.ir.ir.IrRoot;
 import fr.cea.nabla.nabla.NablaModule;
-import fr.cea.nabla.nabla.SimpleVar;
-import fr.cea.nabla.nablagen.MainModule;
 import fr.cea.nabla.nablagen.NablagenApplication;
 
 @InjectWith(NablaInjectorProvider.class)
-@SuppressWarnings("all")
-public class CompilationChainHelper {
+public class StandaloneCompilationChainHelper implements ICompilationChainHelper {
 	@Inject
 	@Extension
 	private ValidationTestHelper validationTestHelper;
@@ -59,16 +56,20 @@ public class CompilationChainHelper {
 
 	private Injector nablaInjector = this.nablaSetup.createInjectorAndDoEMFRegistration();
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private ParseHelper<NablaModule> nablaParseHelper = this.nablaInjector.<ParseHelper>getInstance(ParseHelper.class);
 
 	private NablagenStandaloneSetup nablagenSetup = new NablagenStandaloneSetup();
 
 	private Injector nablagenInjector = this.nablagenSetup.createInjectorAndDoEMFRegistration();
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private ParseHelper<NablagenApplication> nablagenParseHelper = this.nablagenInjector
 			.<ParseHelper>getInstance(ParseHelper.class);
 
-	public IrRoot getIrRoot(final CharSequence nablaGenModel, final List<URI> nablaPaths) {
+	@Override
+	public IrRoot getIrRoot(Source source, final List<URI> nablaPaths) {
+		final String nablaGenModel = source.getCharacters().toString();
 		final String mathPath = "/math.n";
 		final String linearAlgebraPath = "/linearalgebra.n";
 		final String linearAlgebraProviderPath = "/linearalgebra.ngen";
@@ -86,7 +87,7 @@ public class CompilationChainHelper {
 		return result;
 	}
 
-	public IrRoot getIrRoot(final CharSequence genModel, final List<URI> nablaPaths, String mathPath,
+	public IrRoot getIrRoot(String genModel, final List<URI> nablaPaths, String mathPath,
 			String linearAlgebraPath, String linearAlgebraProviderPath) {
 		try {
 			final InputStream inMath = getNablaResourceAsStream(mathPath);
@@ -108,11 +109,12 @@ public class CompilationChainHelper {
 			nablaParseHelper.parse(linearAlgebra, rs);
 			
 			nablaPaths.forEach(p -> {
-				try {
-					rs.createResource(p).load(null);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+//				try {
+					rs.getResource(p, true);
+//					rs.createResource(p).load(null);
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
 			});
 			
 			EcoreUtil.resolveAll(rs);

@@ -65,10 +65,12 @@ public final class NablaLanguage extends TruffleLanguage<NablaContext> {
 		context.getContextActive().invalidate("context closed");
 	}
 
+	private final NablaParser parser = new NablaParser();
+	
 	@Override
 	protected CallTarget parse(ParsingRequest request) throws Exception {
 		Source source = request.getSource();
-		return (new NablaParser()).parseNabla(this, source);
+		return parser.parseNabla(this, source);
 	}
 
 	@Override

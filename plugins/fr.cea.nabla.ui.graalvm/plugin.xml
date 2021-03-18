@@ -48,7 +48,7 @@
 			delegate="fr.cea.nabla.ui.graalvm.NablaGraalVMExecutableExtensionFactory:fr.cea.nabla.ui.graalvm.launchconfig.NablaLaunchConfigurationDelegate"
 			id="fr.cea.nabla.ui.graalvm.launchconfig.NablaLaunchConfigurationType"
 			modes="run, debug"
-			name="Nabla Truffle-Based Interpreter Launch">
+			name="NabLab Truffle-Based Interpreter Launch">
 		</launchConfigurationType>
 	</extension>
 	<extension

@@ -127,6 +127,7 @@ class NablaRunner {
 			try {
 				parsedSource.execute
 			} catch (Exception e) {
+				e.printStackTrace
 				consoleFactory.printConsole(MessageType.Error, e.message)
 			} finally {
 				Thread.currentThread.contextClassLoader = parent

@@ -5,17 +5,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import org.eclipse.xtext.util.Strings;
 import org.graalvm.options.OptionKey;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
@@ -93,17 +87,17 @@ public final class NablaContext {
 		return null;
 	}
 	
-	public void setProvider(String providerName, Value providerValue) {
-		final int length = this.nativeLibraries.length;
-		final Value[] nativeLibraries = new Value[length + 1];
-		final String[] libraryProviders = new String[length + 1];
-		System.arraycopy(this.nativeLibraries, 0, nativeLibraries, 0, length);
-		System.arraycopy(this.libraryProviders, 0, libraryProviders, 0, length);
-		this.nativeLibraries = nativeLibraries;
-		this.libraryProviders = libraryProviders;
-		this.nativeLibraries[length] = providerValue;
-		this.libraryProviders[length] = providerName;
-	}
+//	public void setProvider(String providerName, Value providerValue) {
+//		final int length = this.nativeLibraries.length;
+//		final Value[] nativeLibraries = new Value[length + 1];
+//		final String[] libraryProviders = new String[length + 1];
+//		System.arraycopy(this.nativeLibraries, 0, nativeLibraries, 0, length);
+//		System.arraycopy(this.libraryProviders, 0, libraryProviders, 0, length);
+//		this.nativeLibraries = nativeLibraries;
+//		this.libraryProviders = libraryProviders;
+//		this.nativeLibraries[length] = providerValue;
+//		this.libraryProviders[length] = providerName;
+//	}
 	
 	public void initializeMesh() {
 		final JsonObject jsonOptions = getJsonOptions().getAsJsonObject("mesh");

@@ -31,8 +31,9 @@ import fr.cea.nabla.ir.ir.IrRoot;
 
 public class NablaParser {
 
+	private ICompilationChainHelper compilationChainHelper;
+	
 	public RootCallTarget parseNabla(NablaLanguage nablaLanguage, Source source) {
-
 		try {
 			return CompilerDirectives.interpreterOnly(() -> {
 				LogManager.shutdown();
@@ -72,10 +73,11 @@ public class NablaParser {
 	}
 	
 	private IrRoot getIrRoot(Source source, List<URI> nablaFileUris) {
-		final String model = source.getCharacters().toString();
-		NablaInjectorProvider inj = new NablaInjectorProvider();
-		CompilationChainHelper helper = new CompilationChainHelper();
-		inj.getInjector().injectMembers(helper);
-		return helper.getIrRoot(model, nablaFileUris);
+		if (compilationChainHelper == null) {
+			compilationChainHelper = new StandaloneCompilationChainHelper();
+			NablaInjectorProvider inj = new NablaInjectorProvider();
+			inj.getInjector().injectMembers(compilationChainHelper);
+		}
+		return compilationChainHelper.getIrRoot(source, nablaFileUris);
 	}
 }

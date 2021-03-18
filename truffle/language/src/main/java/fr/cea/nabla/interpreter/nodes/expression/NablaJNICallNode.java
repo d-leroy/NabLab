@@ -11,16 +11,19 @@ import com.oracle.truffle.api.nodes.ExplodeLoop;
 
 import fr.cea.nabla.interpreter.NablaLanguage;
 import fr.cea.nabla.interpreter.runtime.NablaContext;
+import fr.cea.nabla.interpreter.runtime.NablaProviderObject;
 
 public abstract class NablaJNICallNode extends NablaExpressionNode {
 
 	@Children
 	private final NablaExpressionNode[] args;
+	protected final NablaProviderObject providerObject;
 	protected final String providerName;
 	private final String memberName;
 
-	public NablaJNICallNode(String providerName, String memberName, NablaExpressionNode[] args) {
-		this.providerName = providerName;
+	public NablaJNICallNode(NablaProviderObject providerObject, String memberName, NablaExpressionNode[] args) {
+		this.providerObject = providerObject;
+		this.providerName = providerObject.getProviderName();
 		this.memberName = memberName;
 		this.args = args;
 	}
@@ -29,7 +32,8 @@ public abstract class NablaJNICallNode extends NablaExpressionNode {
 	@Specialization(assumptions = "contextActive")
 	public Object doCached(VirtualFrame frame,
 			@CachedContext(NablaLanguage.class) NablaContext context,
-			@Cached("context.getNativeLibrary(providerName)") Value facadeObject,
+//			@Cached("context.getNativeLibrary(providerName)") Value facadeObject,
+			@Cached("providerObject.initialize()") Value facadeObject,
 			@Cached("getMember(facadeObject)") Value methodMember,
 			@Cached("context.getContextActive()") Assumption contextActive) {
 		final Object[] argumentValues = new Object[args.length];

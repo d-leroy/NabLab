@@ -12,6 +12,7 @@ import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
 import fr.cea.nabla.interpreter.NablaLanguage;
 import fr.cea.nabla.interpreter.runtime.NablaContext;
+import fr.cea.nabla.interpreter.runtime.NablaProviderObject;
 import java.util.concurrent.locks.Lock;
 import org.graalvm.polyglot.Value;
 
@@ -23,8 +24,8 @@ public final class NablaJNICallNodeGen extends NablaJNICallNode {
     @CompilationFinal private ContextReference<NablaContext> nablaLanguageContextReference_;
     @CompilationFinal private CachedData cached_cache;
 
-    private NablaJNICallNodeGen(String providerName, String memberName, NablaExpressionNode[] args) {
-        super(providerName, memberName, args);
+    private NablaJNICallNodeGen(NablaProviderObject providerObject, String memberName, NablaExpressionNode[] args) {
+        super(providerObject, memberName, args);
     }
 
     @Override
@@ -67,7 +68,7 @@ public final class NablaJNICallNodeGen extends NablaJNICallNode {
                     Assumption assumption0 = (contextActive__);
                     if (Assumption.isValidAssumption(assumption0)) {
                         CachedData s1_ = new CachedData();
-                        s1_.facadeObject_ = (context__.getNativeLibrary(providerName));
+                        s1_.facadeObject_ = (providerObject.initialize());
                         s1_.methodMember_ = (getMember(s1_.facadeObject_));
                         s1_.contextActive_ = contextActive__;
                         s1_.assumption0_ = assumption0;
@@ -108,8 +109,8 @@ public final class NablaJNICallNodeGen extends NablaJNICallNode {
         }
     }
 
-    public static NablaJNICallNode create(String providerName, String memberName, NablaExpressionNode[] args) {
-        return new NablaJNICallNodeGen(providerName, memberName, args);
+    public static NablaJNICallNode create(NablaProviderObject providerObject, String memberName, NablaExpressionNode[] args) {
+        return new NablaJNICallNodeGen(providerObject, memberName, args);
     }
 
     @GeneratedBy(NablaJNICallNode.class)

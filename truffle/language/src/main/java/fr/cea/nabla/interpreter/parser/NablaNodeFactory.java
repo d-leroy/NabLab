@@ -418,32 +418,35 @@ public class NablaNodeFactory {
 	}
 
 	private JsonObject jsonFileContent;
-	
+
 	private JsonObject appJsonOptions;
-	
+
 	private String meshClassName;
-	
+
 	private final Map<ExternFunction, NablaProviderObject> functionToProvider = new HashMap<>();
 
 	public NablaRootNode createModule(IrRoot root, JsonObject jsonFileContent) {
 		assert lexicalScope == null;
-		
-		final String wd = NablaContext.getCurrent().getStringOption(NablaOptions.WD);
-		
-		root.getProviders().stream().filter(p -> p.getProviderName() != null && p.getProviderName().endsWith("JNI")).forEach(p -> {
-			final String pName = p.getProviderName();
-			final String eName = p.getExtensionName();
-			final String outputPath = wd + p.getOutputPath() + '/' + pName.toLowerCase() + '/' + "lib" + '/' + pName.toLowerCase() + ".jar";
-			final NablaProviderObject providerObject = new NablaJNIProviderObject(pName, eName, outputPath);
-			p.getFunctions().forEach(f -> functionToProvider.put(f, providerObject));
-		});
-		
+
 		final String rootName = root.getName();
-		
+
 		this.jsonFileContent = jsonFileContent;
-		
+
 		this.appJsonOptions = jsonFileContent.getAsJsonObject(Strings.toFirstLower(rootName));
-		
+
+		final String wd = NablaContext.getCurrent().getStringOption(NablaOptions.WD);
+
+		root.getProviders().stream().filter(p -> p.getProviderName() != null && p.getProviderName().endsWith("JNI"))
+				.forEach(p -> {
+					final String pName = p.getProviderName();
+					final String eName = p.getExtensionName();
+					final String outputPath = wd + p.getOutputPath() + '/' + pName.toLowerCase() + '/' + "lib" + '/'
+							+ pName.toLowerCase() + ".jar";
+					final NablaProviderObject providerObject = new NablaJNIProviderObject(pName, eName, outputPath,
+							appJsonOptions.deepCopy());
+					p.getFunctions().forEach(f -> functionToProvider.put(f, providerObject));
+				});
+
 		this.meshClassName = root.getMeshClassName();
 
 		lexicalScope = new LexicalScope(lexicalScope);
@@ -468,8 +471,9 @@ public class NablaNodeFactory {
 
 		final Map<String, JsonObject> moduleNameToOptions = new HashMap<>();
 		final Map<String, String> variableNameToModuleName = new HashMap<>();
-		
-		// TODO check option changes are taken into account from one execution to the next (beware of ast caching).
+
+		// TODO check option changes are taken into account from one execution to the
+		// next (beware of ast caching).
 		final NablaWriteVariableNode[] optionDefinitions = root.getModules().stream().flatMap(m -> {
 			final String moduleName = m.getName();
 			moduleNameToOptions.put(moduleName, this.jsonFileContent.getAsJsonObject(moduleName));
@@ -478,7 +482,8 @@ public class NablaNodeFactory {
 					variableNameToModuleName.put(v.getName(), moduleName);
 					return true;
 				}
-				return false;});
+				return false;
+			});
 		}).map(o -> {
 			final JsonObject jsonOptions = moduleNameToOptions.get(variableNameToModuleName.get(o.getName()));
 			if (jsonOptions != null && jsonOptions.has(o.getName())) {
@@ -508,8 +513,9 @@ public class NablaNodeFactory {
 
 		Iterators.filter(root.eAllContents(), Function.class)
 				.forEachRemaining(f -> functions.put(f, new NablaUndefinedFunctionRootNode(language, f.getName())));
-		root.getModules().stream().flatMap(m -> m.getFunctions().stream()).filter(f -> f instanceof InternFunction).map(f -> (InternFunction) f).forEach(
-				f -> functions.computeIfAbsent(f, function -> createNablaFunctionNode((InternFunction) function)));
+		root.getModules().stream().flatMap(m -> m.getFunctions().stream()).filter(f -> f instanceof InternFunction)
+				.map(f -> (InternFunction) f).forEach(f -> functions.computeIfAbsent(f,
+						function -> createNablaFunctionNode((InternFunction) function)));
 
 		final NablaRootNode[] jobNodes = root.getMain().getCalls().stream().map(j -> createNablaJobNode(j))
 				.collect(Collectors.toList()).toArray(new NablaRootNode[0]);
@@ -751,23 +757,19 @@ public class NablaNodeFactory {
 		}
 	}
 
-//	private String getMangledFunctionName(Function function) {
-//		return function.getName() + function.getInArgs().stream().map(a -> getMangledTypeName(a.getType()))
-//				.reduce((s1, s2) -> s1 + s2).orElse("") + "R" + getMangledTypeName(function.getReturnType());
-//	}
-
 	private NablaExpressionNode createNablaExternalCallNode(FunctionCall functionCall) {
 		final ExternFunction function = (ExternFunction) functionCall.getFunction();
 		final NablaProviderObject providerObj = functionToProvider.get(function);
-		final String providerName = function.getProvider().getProviderName();
-		NablaContext.getCurrent().setProvider(providerName, providerObj.initialize(appJsonOptions));
+//		final String providerName = function.getProvider().getProviderName();
+//		NablaContext.getCurrent().setProvider(providerName, providerObj.initialize(appJsonOptions));
 		final IrType irReturnType = function.getReturnType();
 		final Class<?> javaReturnType = FunctionCallHelper.getJavaType(getPrimitiveType(irReturnType),
 				IrTypeExtensions.getDimension(irReturnType));
 		final NablaExpressionNode[] args = functionCall.getArgs().stream().map(e -> createNablaExpressionNode(e))
 				.collect(Collectors.toList()).toArray(emptyExpressionArray);
 
-		return CreateNablaValueNodeGen.create(javaReturnType, NablaJNICallNodeGen.create(providerName, function.getName(), args));
+		return CreateNablaValueNodeGen.create(javaReturnType,
+				NablaJNICallNodeGen.create(providerObj, function.getName(), args));
 	}
 
 	private NablaExpressionNode createNablaExternalFunctionCallNode(FunctionCall functionCall,
@@ -941,8 +943,8 @@ public class NablaNodeFactory {
 			if (argOrVarRef.getIterators().isEmpty() && argOrVarRef.getIndices().isEmpty()) {
 				instructionNode = createNablaWriteVariableNode(name, right);
 			} else {
-				instructionNode = createNablaWriteArrayNode(name, getBaseType(argOrVar.getType()), getDimensions(argOrVar),
-						getArrayIndices(argOrVarRef), right);
+				instructionNode = createNablaWriteArrayNode(name, getBaseType(argOrVar.getType()),
+						getDimensions(argOrVar), getArrayIndices(argOrVarRef), right);
 			}
 		}
 			break;
@@ -1420,7 +1422,7 @@ public class NablaNodeFactory {
 			throw new IllegalArgumentException("Unknown IR type.");
 		}
 	}
-	
+
 	private PrimitiveType getPrimitiveType(IrType irType) {
 		switch (irType.eClass().getClassifierID()) {
 		case IrPackage.BASE_TYPE: {
@@ -1438,7 +1440,7 @@ public class NablaNodeFactory {
 			throw new IllegalArgumentException("Unknown IR type.");
 		}
 	}
-	
+
 	private Class<?> getBaseType(PrimitiveType primitiveType) {
 		switch (primitiveType) {
 		case BOOL:
