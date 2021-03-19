@@ -104,6 +104,15 @@ public abstract class NablaWriteArrayNode extends NablaInstructionNode implement
 	}
 
 	@Specialization(guards = "isNV3Real()")
+	protected NV3Real writeNV3Real(VirtualFrame frame, NV0Real value, NV3Real toWrite) {
+		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
+		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
+		final int idx3 = NablaTypesGen.asNV0Int(indices[2].executeGeneric(frame)).getData();
+		toWrite.getData()[idx1][idx2][idx3] = value.getData();
+		return toWrite;
+	}
+
+	@Specialization(guards = "isNV3Real()")
 	protected NV3Real writeNV3Real(VirtualFrame frame, NV1RealJava value, NV3Real toWrite) {
 		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
 		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
@@ -119,10 +128,36 @@ public abstract class NablaWriteArrayNode extends NablaInstructionNode implement
 	}
 
 	@Specialization(guards = "isNV4Real()")
+	protected NV4Real writeNV4Real(VirtualFrame frame, NV0Real value, NV4Real toWrite) {
+		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
+		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
+		final int idx3 = NablaTypesGen.asNV0Int(indices[2].executeGeneric(frame)).getData();
+		final int idx4 = NablaTypesGen.asNV0Int(indices[3].executeGeneric(frame)).getData();
+		toWrite.getData()[idx1][idx2][idx3][idx4] = value.getData();
+		return toWrite;
+	}
+
+	@Specialization(guards = "isNV4Real()")
+	protected NV4Real writeNV4Real(VirtualFrame frame, NV1RealJava value, NV4Real toWrite) {
+		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
+		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
+		final int idx3 = NablaTypesGen.asNV0Int(indices[2].executeGeneric(frame)).getData();
+		toWrite.getData()[idx1][idx2][idx3] = value.getData();
+		return toWrite;
+	}
+
+	@Specialization(guards = "isNV4Real()")
 	protected NV4Real writeNV4Real(VirtualFrame frame, NV2Real value, NV4Real toWrite) {
 		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
 		final int idx2 = NablaTypesGen.asNV0Int(indices[1].executeGeneric(frame)).getData();
 		toWrite.getData()[idx1][idx2] = value.getData();
+		return toWrite;
+	}
+
+	@Specialization(guards = "isNV4Real()")
+	protected NV4Real writeNV4Real(VirtualFrame frame, NV3Real value, NV4Real toWrite) {
+		final int idx1 = NablaTypesGen.asNV0Int(indices[0].executeGeneric(frame)).getData();
+		toWrite.getData()[idx1] = value.getData();
 		return toWrite;
 	}
 

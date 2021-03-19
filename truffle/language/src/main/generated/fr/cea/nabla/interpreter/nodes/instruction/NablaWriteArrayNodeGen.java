@@ -83,28 +83,51 @@ public final class NablaWriteArrayNodeGen extends NablaWriteArrayNode {
                 return writeNV2Real(frameValue, valueValue__, toWriteValue__);
             }
         }
-        if ((state_0 & 0b11000000) != 0 /* is-state_0 writeNV2Real(VirtualFrame, NV1RealJava, NV2Real) || writeNV3Real(VirtualFrame, NV1RealJava, NV3Real) */ && valueValue_ instanceof NV1RealJava) {
+        if ((state_0 & 0b1000000) != 0 /* is-state_0 writeNV2Real(VirtualFrame, NV1RealJava, NV2Real) */ && valueValue_ instanceof NV1RealJava) {
             NV1RealJava valueValue__ = (NV1RealJava) valueValue_;
-            if ((state_0 & 0b1000000) != 0 /* is-state_0 writeNV2Real(VirtualFrame, NV1RealJava, NV2Real) */ && toWriteValue_ instanceof NV2Real) {
+            if (toWriteValue_ instanceof NV2Real) {
                 NV2Real toWriteValue__ = (NV2Real) toWriteValue_;
                 assert (isNV2Real());
                 return writeNV2Real(frameValue, valueValue__, toWriteValue__);
             }
-            if ((state_0 & 0b10000000) != 0 /* is-state_0 writeNV3Real(VirtualFrame, NV1RealJava, NV3Real) */ && toWriteValue_ instanceof NV3Real) {
-                NV3Real toWriteValue__ = (NV3Real) toWriteValue_;
+        }
+        if ((state_0 & 0b1110000000) != 0 /* is-state_0 writeNV3Real(VirtualFrame, NV0Real, NV3Real) || writeNV3Real(VirtualFrame, NV1RealJava, NV3Real) || writeNV3Real(VirtualFrame, NV2Real, NV3Real) */ && toWriteValue_ instanceof NV3Real) {
+            NV3Real toWriteValue__ = (NV3Real) toWriteValue_;
+            if ((state_0 & 0b10000000) != 0 /* is-state_0 writeNV3Real(VirtualFrame, NV0Real, NV3Real) */ && valueValue_ instanceof NV0Real) {
+                NV0Real valueValue__ = (NV0Real) valueValue_;
+                assert (isNV3Real());
+                return writeNV3Real(frameValue, valueValue__, toWriteValue__);
+            }
+            if ((state_0 & 0b100000000) != 0 /* is-state_0 writeNV3Real(VirtualFrame, NV1RealJava, NV3Real) */ && valueValue_ instanceof NV1RealJava) {
+                NV1RealJava valueValue__ = (NV1RealJava) valueValue_;
+                assert (isNV3Real());
+                return writeNV3Real(frameValue, valueValue__, toWriteValue__);
+            }
+            if ((state_0 & 0b1000000000) != 0 /* is-state_0 writeNV3Real(VirtualFrame, NV2Real, NV3Real) */ && valueValue_ instanceof NV2Real) {
+                NV2Real valueValue__ = (NV2Real) valueValue_;
                 assert (isNV3Real());
                 return writeNV3Real(frameValue, valueValue__, toWriteValue__);
             }
         }
-        if ((state_0 & 0b1100000000) != 0 /* is-state_0 writeNV3Real(VirtualFrame, NV2Real, NV3Real) || writeNV4Real(VirtualFrame, NV2Real, NV4Real) */ && valueValue_ instanceof NV2Real) {
-            NV2Real valueValue__ = (NV2Real) valueValue_;
-            if ((state_0 & 0b100000000) != 0 /* is-state_0 writeNV3Real(VirtualFrame, NV2Real, NV3Real) */ && toWriteValue_ instanceof NV3Real) {
-                NV3Real toWriteValue__ = (NV3Real) toWriteValue_;
-                assert (isNV3Real());
-                return writeNV3Real(frameValue, valueValue__, toWriteValue__);
+        if ((state_0 & 0b11110000000000) != 0 /* is-state_0 writeNV4Real(VirtualFrame, NV0Real, NV4Real) || writeNV4Real(VirtualFrame, NV1RealJava, NV4Real) || writeNV4Real(VirtualFrame, NV2Real, NV4Real) || writeNV4Real(VirtualFrame, NV3Real, NV4Real) */ && toWriteValue_ instanceof NV4Real) {
+            NV4Real toWriteValue__ = (NV4Real) toWriteValue_;
+            if ((state_0 & 0b10000000000) != 0 /* is-state_0 writeNV4Real(VirtualFrame, NV0Real, NV4Real) */ && valueValue_ instanceof NV0Real) {
+                NV0Real valueValue__ = (NV0Real) valueValue_;
+                assert (isNV4Real());
+                return writeNV4Real(frameValue, valueValue__, toWriteValue__);
             }
-            if ((state_0 & 0b1000000000) != 0 /* is-state_0 writeNV4Real(VirtualFrame, NV2Real, NV4Real) */ && toWriteValue_ instanceof NV4Real) {
-                NV4Real toWriteValue__ = (NV4Real) toWriteValue_;
+            if ((state_0 & 0b100000000000) != 0 /* is-state_0 writeNV4Real(VirtualFrame, NV1RealJava, NV4Real) */ && valueValue_ instanceof NV1RealJava) {
+                NV1RealJava valueValue__ = (NV1RealJava) valueValue_;
+                assert (isNV4Real());
+                return writeNV4Real(frameValue, valueValue__, toWriteValue__);
+            }
+            if ((state_0 & 0b1000000000000) != 0 /* is-state_0 writeNV4Real(VirtualFrame, NV2Real, NV4Real) */ && valueValue_ instanceof NV2Real) {
+                NV2Real valueValue__ = (NV2Real) valueValue_;
+                assert (isNV4Real());
+                return writeNV4Real(frameValue, valueValue__, toWriteValue__);
+            }
+            if ((state_0 & 0b10000000000000) != 0 /* is-state_0 writeNV4Real(VirtualFrame, NV3Real, NV4Real) */ && valueValue_ instanceof NV3Real) {
+                NV3Real valueValue__ = (NV3Real) valueValue_;
                 assert (isNV4Real());
                 return writeNV4Real(frameValue, valueValue__, toWriteValue__);
             }
@@ -175,27 +198,58 @@ public final class NablaWriteArrayNodeGen extends NablaWriteArrayNode {
                     return writeNV2Real(frameValue, valueValue_, toWriteValue_);
                 }
             }
-            if (toWriteValue instanceof NV3Real) {
-                NV3Real toWriteValue_ = (NV3Real) toWriteValue;
+        }
+        if (toWriteValue instanceof NV3Real) {
+            NV3Real toWriteValue_ = (NV3Real) toWriteValue;
+            if (valueValue instanceof NV0Real) {
+                NV0Real valueValue_ = (NV0Real) valueValue;
                 if ((isNV3Real())) {
-                    this.state_0_ = state_0 = state_0 | 0b10000000 /* add-state_0 writeNV3Real(VirtualFrame, NV1RealJava, NV3Real) */;
+                    this.state_0_ = state_0 = state_0 | 0b10000000 /* add-state_0 writeNV3Real(VirtualFrame, NV0Real, NV3Real) */;
+                    return writeNV3Real(frameValue, valueValue_, toWriteValue_);
+                }
+            }
+            if (valueValue instanceof NV1RealJava) {
+                NV1RealJava valueValue_ = (NV1RealJava) valueValue;
+                if ((isNV3Real())) {
+                    this.state_0_ = state_0 = state_0 | 0b100000000 /* add-state_0 writeNV3Real(VirtualFrame, NV1RealJava, NV3Real) */;
+                    return writeNV3Real(frameValue, valueValue_, toWriteValue_);
+                }
+            }
+            if (valueValue instanceof NV2Real) {
+                NV2Real valueValue_ = (NV2Real) valueValue;
+                if ((isNV3Real())) {
+                    this.state_0_ = state_0 = state_0 | 0b1000000000 /* add-state_0 writeNV3Real(VirtualFrame, NV2Real, NV3Real) */;
                     return writeNV3Real(frameValue, valueValue_, toWriteValue_);
                 }
             }
         }
-        if (valueValue instanceof NV2Real) {
-            NV2Real valueValue_ = (NV2Real) valueValue;
-            if (toWriteValue instanceof NV3Real) {
-                NV3Real toWriteValue_ = (NV3Real) toWriteValue;
-                if ((isNV3Real())) {
-                    this.state_0_ = state_0 = state_0 | 0b100000000 /* add-state_0 writeNV3Real(VirtualFrame, NV2Real, NV3Real) */;
-                    return writeNV3Real(frameValue, valueValue_, toWriteValue_);
+        if (toWriteValue instanceof NV4Real) {
+            NV4Real toWriteValue_ = (NV4Real) toWriteValue;
+            if (valueValue instanceof NV0Real) {
+                NV0Real valueValue_ = (NV0Real) valueValue;
+                if ((isNV4Real())) {
+                    this.state_0_ = state_0 = state_0 | 0b10000000000 /* add-state_0 writeNV4Real(VirtualFrame, NV0Real, NV4Real) */;
+                    return writeNV4Real(frameValue, valueValue_, toWriteValue_);
                 }
             }
-            if (toWriteValue instanceof NV4Real) {
-                NV4Real toWriteValue_ = (NV4Real) toWriteValue;
+            if (valueValue instanceof NV1RealJava) {
+                NV1RealJava valueValue_ = (NV1RealJava) valueValue;
                 if ((isNV4Real())) {
-                    this.state_0_ = state_0 = state_0 | 0b1000000000 /* add-state_0 writeNV4Real(VirtualFrame, NV2Real, NV4Real) */;
+                    this.state_0_ = state_0 = state_0 | 0b100000000000 /* add-state_0 writeNV4Real(VirtualFrame, NV1RealJava, NV4Real) */;
+                    return writeNV4Real(frameValue, valueValue_, toWriteValue_);
+                }
+            }
+            if (valueValue instanceof NV2Real) {
+                NV2Real valueValue_ = (NV2Real) valueValue;
+                if ((isNV4Real())) {
+                    this.state_0_ = state_0 = state_0 | 0b1000000000000 /* add-state_0 writeNV4Real(VirtualFrame, NV2Real, NV4Real) */;
+                    return writeNV4Real(frameValue, valueValue_, toWriteValue_);
+                }
+            }
+            if (valueValue instanceof NV3Real) {
+                NV3Real valueValue_ = (NV3Real) valueValue;
+                if ((isNV4Real())) {
+                    this.state_0_ = state_0 = state_0 | 0b10000000000000 /* add-state_0 writeNV4Real(VirtualFrame, NV3Real, NV4Real) */;
                     return writeNV4Real(frameValue, valueValue_, toWriteValue_);
                 }
             }
