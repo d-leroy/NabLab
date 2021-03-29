@@ -41,10 +41,10 @@ import static fr.cea.nabla.ir.interpreter.NablaValueSetter.*
 import static extension fr.cea.nabla.ir.ArgOrVarExtensions.*
 import static extension fr.cea.nabla.ir.ContainerExtensions.*
 import static extension fr.cea.nabla.ir.interpreter.NablaValueExtensions.*
+import fr.cea.nabla.ir.Utils
 
 class ExpressionInterpreter
 {
-
 	// Switch to more efficient dispatch (also clearer for profiling)
 	static def NablaValue interprete(Expression e, Context context)
 	{
@@ -219,8 +219,8 @@ class ExpressionInterpreter
 		{
 			ExternFunction:
 			{
-				val provider = ExtensionProviderCache.Instance.get(f.provider)
-				return provider.invokeMethod(f, argValues)
+				val provider = context.extensionProviderCache.get(f.provider)
+				return provider.invokeMethod(Utils.getIrModule(it), f, argValues)
 			}
 			InternFunction:
 			{

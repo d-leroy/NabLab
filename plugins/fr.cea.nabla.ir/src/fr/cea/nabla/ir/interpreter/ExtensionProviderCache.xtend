@@ -18,38 +18,32 @@ import static extension fr.cea.nabla.ir.ExtensionProviderExtensions.*
  * Native library (.so) can only be loaded once.
  * Consequently, JNI classes, containing the static loadLibrary instruction,
  * must not be load more than once to prevent IllegalAccessException.
- * This class is a singleton cache for provider classes.
+ * Libraries are unloaded when associated classLoader is deleted (need 2 calls to System.gc)
  */
 class ExtensionProviderCache
 {
 	val classByProviders = new HashMap<ExtensionProvider, ExtensionProviderHelper>
-	public static val Instance = new ExtensionProviderCache
 
-	private new()
+	new(Iterable<ExtensionProvider> providers, String wsPath)
 	{
-	}
-
-	def ExtensionProviderHelper get(ExtensionProvider p, ClassLoader cl, String wsPath)
-	{
-		var c = classByProviders.get(p)
-		if (c === null)
+		for (p : providers)
 		{
 			try
 			{
-				c = switch p
+				val c = switch p
 				{
-					case p.extensionName == "Math": new StaticExtensionProviderHelper(p, cl, "java.lang")
-					case p.linearAlgebra: new LinearAlgebraExtensionProviderHelper(p, cl, wsPath)
-					default: new DefaultExtensionProviderHelper(p, cl, wsPath)
+					case p.extensionName == "Math": new MathExtensionProviderHelper
+					case p.linearAlgebra: new LinearAlgebraExtensionProviderHelper(p, wsPath)
+					default: new DefaultExtensionProviderHelper(p, wsPath)
 				}
+				c.initFunctions(p.functions)
+				classByProviders.put(p, c)
 			}
 			catch (ClassNotFoundException e)
 			{
 				throw new ExtensionProviderNotFoundException(p)
 			}
-			classByProviders.put(p, c)
 		}
-		return c
 	}
 
 	def ExtensionProviderHelper get(ExtensionProvider p)
