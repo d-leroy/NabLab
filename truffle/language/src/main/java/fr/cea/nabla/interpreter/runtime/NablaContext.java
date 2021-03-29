@@ -58,7 +58,7 @@ public final class NablaContext {
 
 	@CompilationFinal
 	private MaterializedFrame globalFrame;
-	
+
 	@CompilationFinal
 	private Object topScope;
 
