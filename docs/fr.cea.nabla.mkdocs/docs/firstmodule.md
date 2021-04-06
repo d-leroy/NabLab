@@ -1,3 +1,5 @@
+# My first module
+
 ## Presentation of the problem
 
 The aim of this tutorial is to implement a simple equation of diffusion in NabLab:
@@ -48,16 +50,20 @@ $$
 
 Just click on the main menu *File > New > NabLab Project* to create a new project: 
 
-<img src="/images/tuto/NabLab_new_menu.png" alt="NabLab New Project" title="NabLab New Project" width="60%" height="60%" />
+<img src="img/NabLab_new_menu.png" alt="NabLab New Project" title="NabLab New Project" width="60%" height="60%" />
 
 A new wizard is launched, asking for a project name and a module name:
 
-<img src="/images/tuto/NabLab_new_project_wizard.png" alt="NabLab New Project Wizard" title="NabLab New Project Wizard" width="50%" height="50%" />
+<img src="img/NabLab_new_project_wizard.png" alt="NabLab New Project Wizard" title="NabLab New Project Wizard" width="50%" height="50%" />
 
 Enter *Tutorial* as project name and *HeatEquation* as module name and click on the *Finish* button to create the new project. The new project is available in the *Model Explorer* on the left of the window. It contains two files (*HeatEquation.n*, and *HeatEquation.ngen*) in the *Tutorial/src/heatequation/* folder:
 
-<img src="/images/tuto/NabLab_new_project_result.png" alt="NabLab New Project Result" title="NabLab New Project Result" width="30%" height="30%" />
+<img src="img/NabLab_new_project_result.png" alt="NabLab New Project Result" title="NabLab New Project Result" width="30%" height="30%" />
 
+
+## Implementation
+
+### Items and connectivities
 
 **TO BE CONTINUED**
 
