@@ -11,7 +11,6 @@ package fr.cea.nabla.generator.ir
 
 import com.google.inject.Inject
 import fr.cea.nabla.ir.ir.IrFactory
-import fr.cea.nabla.nabla.Job
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.resource.ILocationInFileProvider
 
@@ -21,28 +20,17 @@ class IrAnnotationHelper
 {
 	@Inject ILocationInFileProvider locationProvider
 
-	def dispatch toIrAnnotation(Job it)
+	def toIrAnnotation(EObject it)
 	{
-		val annotation = createIrAnnot
-		annotation.details.put(ANNOTATION_URI_DETAIL, eResource.URI.toString)
-		return annotation
-	}
-
-	def dispatch toIrAnnotation(EObject it)
-	{
-		createIrAnnot
-	}
-
-	private def createIrAnnot(EObject nablaElt)
-	{
-		val region = locationProvider.getFullTextRegion(nablaElt)
-		if (region === null) throw new RuntimeException('Ooops : impossible de créer une annotation pour : ' + nablaElt)
+		val region = locationProvider.getFullTextRegion(it)
+		if (region === null) throw new RuntimeException('Ooops : impossible de créer une annotation pour : ' + it)
 
 		IrFactory::eINSTANCE.createIrAnnotation => 
 		[
 			source = ANNOTATION_NABLA_ORIGIN_SOURCE
 			details.put(ANNOTATION_OFFSET_DETAIL, region.offset.toString)
 			details.put(ANNOTATION_LENGTH_DETAIL, region.length.toString)
+			details.put(ANNOTATION_URI_DETAIL, eResource.URI.toString)
 		]
 	}
 }
